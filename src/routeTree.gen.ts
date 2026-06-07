@@ -9,38 +9,117 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppReportsRouteImport } from './routes/_app/reports'
+import { Route as AppNewScanRouteImport } from './routes/_app/new-scan'
+import { Route as AppFindingsRouteImport } from './routes/_app/findings'
+import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AppReportsReportIdRouteImport } from './routes/_app/reports.$reportId'
 
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNewScanRoute = AppNewScanRouteImport.update({
+  id: '/new-scan',
+  path: '/new-scan',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFindingsRoute = AppFindingsRouteImport.update({
+  id: '/findings',
+  path: '/findings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReportsReportIdRoute = AppReportsReportIdRouteImport.update({
+  id: '/$reportId',
+  path: '/$reportId',
+  getParentRoute: () => AppReportsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/findings': typeof AppFindingsRoute
+  '/new-scan': typeof AppNewScanRoute
+  '/reports': typeof AppReportsRouteWithChildren
+  '/reports/$reportId': typeof AppReportsReportIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/findings': typeof AppFindingsRoute
+  '/new-scan': typeof AppNewScanRoute
+  '/reports': typeof AppReportsRouteWithChildren
+  '/reports/$reportId': typeof AppReportsReportIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/findings': typeof AppFindingsRoute
+  '/_app/new-scan': typeof AppNewScanRoute
+  '/_app/reports': typeof AppReportsRouteWithChildren
+  '/_app/reports/$reportId': typeof AppReportsReportIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/findings'
+    | '/new-scan'
+    | '/reports'
+    | '/reports/$reportId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/findings'
+    | '/new-scan'
+    | '/reports'
+    | '/reports/$reportId'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/_app/dashboard'
+    | '/_app/findings'
+    | '/_app/new-scan'
+    | '/_app/reports'
+    | '/_app/reports/$reportId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +127,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/reports': {
+      id: '/_app/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/new-scan': {
+      id: '/_app/new-scan'
+      path: '/new-scan'
+      fullPath: '/new-scan'
+      preLoaderRoute: typeof AppNewScanRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/findings': {
+      id: '/_app/findings'
+      path: '/findings'
+      fullPath: '/findings'
+      preLoaderRoute: typeof AppFindingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/reports/$reportId': {
+      id: '/_app/reports/$reportId'
+      path: '/$reportId'
+      fullPath: '/reports/$reportId'
+      preLoaderRoute: typeof AppReportsReportIdRouteImport
+      parentRoute: typeof AppReportsRoute
+    }
   }
 }
 
+interface AppReportsRouteChildren {
+  AppReportsReportIdRoute: typeof AppReportsReportIdRoute
+}
+
+const AppReportsRouteChildren: AppReportsRouteChildren = {
+  AppReportsReportIdRoute: AppReportsReportIdRoute,
+}
+
+const AppReportsRouteWithChildren = AppReportsRoute._addFileChildren(
+  AppReportsRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppFindingsRoute: typeof AppFindingsRoute
+  AppNewScanRoute: typeof AppNewScanRoute
+  AppReportsRoute: typeof AppReportsRouteWithChildren
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppDashboardRoute: AppDashboardRoute,
+  AppFindingsRoute: AppFindingsRoute,
+  AppNewScanRoute: AppNewScanRoute,
+  AppReportsRoute: AppReportsRouteWithChildren,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
