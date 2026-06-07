@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppReportsRouteImport } from './routes/_app/reports'
 import { Route as AppNewScanRouteImport } from './routes/_app/new-scan'
 import { Route as AppFindingsRouteImport } from './routes/_app/findings'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppNewScanRoute = AppNewScanRouteImport.update({
   id: '/new-scan',
@@ -45,12 +51,14 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AppDashboardRoute
   '/findings': typeof AppFindingsRoute
   '/new-scan': typeof AppNewScanRoute
+  '/reports': typeof AppReportsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof AppDashboardRoute
   '/findings': typeof AppFindingsRoute
   '/new-scan': typeof AppNewScanRoute
+  '/reports': typeof AppReportsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,12 +67,13 @@ export interface FileRoutesById {
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/findings': typeof AppFindingsRoute
   '/_app/new-scan': typeof AppNewScanRoute
+  '/_app/reports': typeof AppReportsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/findings' | '/new-scan'
+  fullPaths: '/' | '/dashboard' | '/findings' | '/new-scan' | '/reports'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/findings' | '/new-scan'
+  to: '/' | '/dashboard' | '/findings' | '/new-scan' | '/reports'
   id:
     | '__root__'
     | '/'
@@ -72,6 +81,7 @@ export interface FileRouteTypes {
     | '/_app/dashboard'
     | '/_app/findings'
     | '/_app/new-scan'
+    | '/_app/reports'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,6 +104,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/reports': {
+      id: '/_app/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/new-scan': {
       id: '/_app/new-scan'
@@ -123,12 +140,14 @@ interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppFindingsRoute: typeof AppFindingsRoute
   AppNewScanRoute: typeof AppNewScanRoute
+  AppReportsRoute: typeof AppReportsRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppFindingsRoute: AppFindingsRoute,
   AppNewScanRoute: AppNewScanRoute,
+  AppReportsRoute: AppReportsRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
