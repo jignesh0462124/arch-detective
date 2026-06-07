@@ -11,10 +11,10 @@ import {
   XCircle,
   Sparkles,
 } from "lucide-react";
-import { AppShell } from "../components/brutal/AppShell";
-import { BrutalButton } from "../components/brutal/BrutalButton";
-import { BrutalBadge } from "../components/brutal/BrutalBadge";
-import { COVERAGE, FINDINGS, FRAMEWORKS, SCANS } from "../lib/mock-data";
+import { AppShell } from "@/components/brutal/AppShell";
+import { BrutalButton } from "@/components/brutal/BrutalButton";
+import { BrutalBadge } from "@/components/brutal/BrutalBadge";
+import { COVERAGE, FINDINGS, FRAMEWORKS, SCANS } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({
