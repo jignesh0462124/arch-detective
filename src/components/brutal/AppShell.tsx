@@ -118,6 +118,7 @@ export function AppShell({
                     ⌘K
                   </kbd>
                 </div>
+                <ThemeToggle />
                 {actions}
               </div>
             </div>
