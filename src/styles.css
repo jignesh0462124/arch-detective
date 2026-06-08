@@ -140,23 +140,23 @@
 @utility border-brutal {
   border-width: 1.5px;
   border-style: solid;
-  border-color: var(--color-ink);
+  border-color: var(--color-stroke);
 }
 
 @utility border-brutal-2 {
   border-width: 2px;
   border-style: solid;
-  border-color: var(--color-ink);
+  border-color: var(--color-stroke);
 }
 
 @utility shadow-brutal {
-  box-shadow: 4px 4px 0 0 var(--color-ink);
+  box-shadow: 4px 4px 0 0 var(--color-stroke);
 }
 @utility shadow-brutal-sm {
-  box-shadow: 2px 2px 0 0 var(--color-ink);
+  box-shadow: 2px 2px 0 0 var(--color-stroke);
 }
 @utility shadow-brutal-lg {
-  box-shadow: 6px 6px 0 0 var(--color-ink);
+  box-shadow: 6px 6px 0 0 var(--color-stroke);
 }
 @utility shadow-brutal-gold {
   box-shadow: 4px 4px 0 0 var(--color-gold);
