@@ -67,9 +67,9 @@ function DashboardPage() {
         ))}
       </section>
 
-      <section className="mt-6 grid gap-5 xl:grid-cols-3">
+      <section className="mt-6 grid gap-5 xl:grid-cols-12">
         {/* Recent scans */}
-        <div className="xl:col-span-2 rounded-xl border-brutal-2 bg-card shadow-brutal">
+        <div className="xl:col-span-8 overflow-hidden rounded-xl border-brutal-2 bg-card shadow-brutal">
           <div className="flex items-center justify-between border-b-[1.5px] border-ink px-5 py-4">
             <div>
               <p className="section-title text-primary">Live feed</p>
@@ -79,70 +79,93 @@ function DashboardPage() {
               View all <ArrowUpRight size={14} />
             </BrutalButton>
           </div>
-          <div className="divide-y-[1.5px] divide-ink">
-            {SCANS.map((s) => (
-              <div key={s.id} className="grid grid-cols-12 gap-3 px-5 py-4 text-sm">
-                <div className="col-span-3 sm:col-span-2 font-mono text-xs font-semibold">
-                  {s.id}
-                </div>
-                <div className="col-span-9 sm:col-span-4">
-                  <div className="font-semibold">{s.target}</div>
-                  <div className="mt-0.5 text-xs text-muted-foreground">
-                    {s.frameworks.join(" · ")}
-                  </div>
-                </div>
-                <div className="col-span-6 sm:col-span-2">
-                  {s.status === "complete" && (
-                    <BrutalBadge tone="success" dot>
-                      <CheckCircle2 size={11} strokeWidth={2.5} /> Complete
-                    </BrutalBadge>
-                  )}
-                  {s.status === "running" && (
-                    <BrutalBadge tone="gold" dot>
-                      <span className="animate-pulse-dot">●</span> Running
-                    </BrutalBadge>
-                  )}
-                  {s.status === "failed" && (
-                    <BrutalBadge tone="primary">
-                      <XCircle size={11} strokeWidth={2.5} /> Failed
-                    </BrutalBadge>
-                  )}
-                </div>
-                <div className="col-span-3 sm:col-span-2 text-right font-mono text-xs">
-                  {s.findings || "—"} <span className="text-muted-foreground">findings</span>
-                </div>
-                <div className="col-span-3 sm:col-span-2 text-right text-xs text-muted-foreground">
-                  <Clock size={11} className="mr-1 inline" />
-                  {s.duration}
-                </div>
-              </div>
-            ))}
-          </div>
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b-[1.5px] border-ink bg-cream/60 text-left">
+                <th className="px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Scan</th>
+                <th className="px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Target</th>
+                <th className="px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Status</th>
+                <th className="px-5 py-2.5 text-right text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Findings</th>
+                <th className="px-5 py-2.5 text-right text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Duration</th>
+              </tr>
+            </thead>
+            <tbody>
+              {SCANS.map((s) => (
+                <tr
+                  key={s.id}
+                  className="group border-b-[1px] border-ink/10 last:border-b-0 transition-colors hover:bg-cream/50"
+                >
+                  <td className="whitespace-nowrap px-5 py-4 align-middle font-mono text-xs font-semibold text-muted-foreground">
+                    {s.id}
+                  </td>
+                  <td className="px-5 py-4 align-middle">
+                    <div className="font-semibold group-hover:text-primary transition-colors">{s.target}</div>
+                    <div className="mt-0.5 text-[11px] uppercase tracking-wide text-muted-foreground">
+                      {s.frameworks.join(" · ")}
+                    </div>
+                  </td>
+                  <td className="px-5 py-4 align-middle">
+                    {s.status === "complete" && (
+                      <BrutalBadge tone="success" dot>
+                        <CheckCircle2 size={11} strokeWidth={2.5} /> Complete
+                      </BrutalBadge>
+                    )}
+                    {s.status === "running" && (
+                      <BrutalBadge tone="gold" dot>
+                        Running
+                      </BrutalBadge>
+                    )}
+                    {s.status === "failed" && (
+                      <BrutalBadge tone="primary">
+                        <XCircle size={11} strokeWidth={2.5} /> Failed
+                      </BrutalBadge>
+                    )}
+                  </td>
+                  <td className="px-5 py-4 align-middle text-right font-mono text-xs">
+                    {s.findings ? (
+                      <>
+                        <span className="font-semibold">{s.findings}</span>{" "}
+                        <span className="text-muted-foreground">findings</span>
+                      </>
+                    ) : (
+                      <span className="text-muted-foreground/50">—</span>
+                    )}
+                  </td>
+                  <td className="px-5 py-4 align-middle text-right font-mono text-xs text-muted-foreground">
+                    <Clock size={11} className="mr-1 inline" />
+                    {s.duration}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
         {/* Coverage panel */}
-        <div className="rounded-xl border-brutal-2 bg-card p-5 shadow-brutal">
+        <div className="xl:col-span-4 rounded-xl border-brutal-2 bg-card p-5 shadow-brutal">
           <p className="section-title text-primary">Posture</p>
           <h2 className="text-lg font-bold">Framework coverage</h2>
           <div className="mt-5 space-y-4">
             {COVERAGE.map((c) => (
               <div key={c.framework}>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-semibold">{c.framework}</span>
-                  <span className="font-mono text-xs">{c.pct}%</span>
+                <div className="flex items-baseline justify-between text-sm">
+                  <span className="font-semibold tracking-tight">{c.framework}</span>
+                  <span className="font-mono text-xs text-muted-foreground">{c.pct}%</span>
                 </div>
-                <div className="mt-1.5 h-3 rounded-full border-brutal bg-cream">
+                <div className="mt-1.5 h-3 overflow-hidden rounded-full border-brutal bg-cream">
                   <div
-                    className="h-full rounded-full border-r-[1.5px] border-ink bg-primary"
+                    className="h-full border-r-[1.5px] border-ink bg-primary"
                     style={{ width: `${c.pct}%` }}
                   />
                 </div>
               </div>
             ))}
           </div>
-          <div className="mt-5 rounded-lg border-brutal bg-secondary p-3 text-xs font-semibold">
-            <Sparkles size={12} className="mr-1 inline" strokeWidth={2.5} />
-            Agent suggests focusing on NIST 800-53 SC-7 next.
+          <div className="mt-5 flex items-start gap-2 rounded-lg border-brutal bg-cream/60 p-3 text-xs">
+            <Sparkles size={14} className="mt-0.5 shrink-0 text-primary" strokeWidth={2.5} />
+            <span>
+              Agent suggests focusing on <span className="font-semibold">NIST 800-53 SC-7</span> next.
+            </span>
           </div>
         </div>
       </section>

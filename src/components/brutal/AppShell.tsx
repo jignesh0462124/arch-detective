@@ -101,20 +101,29 @@ export function AppShell({
           {/* Header card */}
           <header className="rounded-2xl border-brutal-2 bg-card p-5 shadow-brutal sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <p className="section-title text-primary">{subtitle ?? "Sentinel"}</p>
-                <h1 className="mt-1 text-[26px] font-bold tracking-tight sm:text-3xl">
+              <div className="min-w-0">
+                <p className="section-title text-primary flex items-center gap-1.5">
+                  {(subtitle ?? "Sentinel").split(" · ").map((part, i, arr) => (
+                    <span key={i} className="inline-flex items-center gap-1.5">
+                      <span className={i === 0 ? "" : "text-foreground"}>{part}</span>
+                      {i < arr.length - 1 && (
+                        <span className="text-foreground/30">•</span>
+                      )}
+                    </span>
+                  ))}
+                </p>
+                <h1 className="mt-1.5 text-[28px] font-bold tracking-tight sm:text-[34px] leading-tight">
                   {title}
                 </h1>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="hidden items-center gap-2 rounded-lg border-brutal bg-cream px-3 py-2 text-sm sm:flex">
-                  <Search size={14} strokeWidth={2.25} />
+              <div className="flex items-center gap-2.5">
+                <div className="hidden items-center gap-2 rounded-lg border-brutal bg-cream px-3 py-2.5 text-sm md:flex">
+                  <Search size={14} strokeWidth={2.25} className="text-muted-foreground" />
                   <input
                     placeholder="Search findings, scans, controls…"
                     className="w-64 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
                   />
-                  <kbd className="rounded border-brutal px-1.5 py-0.5 text-[10px] font-semibold">
+                  <kbd className="rounded border-brutal px-1.5 py-0.5 font-mono text-[10px] font-semibold text-muted-foreground">
                     ⌘K
                   </kbd>
                 </div>
