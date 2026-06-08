@@ -177,11 +177,11 @@
 
 .shadow-brutal-hover:hover {
   transform: translate(-1px, -1px);
-  box-shadow: 5px 5px 0 0 var(--color-ink);
+  box-shadow: 5px 5px 0 0 var(--color-stroke);
 }
 .shadow-brutal-hover:active {
   transform: translate(1px, 1px);
-  box-shadow: 2px 2px 0 0 var(--color-ink);
+  box-shadow: 2px 2px 0 0 var(--color-stroke);
 }
 
 @keyframes scroll-x {
