@@ -95,7 +95,7 @@ function DashboardPage() {
                   key={s.id}
                   className="group border-b-[1px] border-ink/10 last:border-b-0 transition-colors hover:bg-cream/50"
                 >
-                  <td className="px-5 py-4 align-middle font-mono text-xs font-semibold text-muted-foreground">
+                  <td className="whitespace-nowrap px-5 py-4 align-middle font-mono text-xs font-semibold text-muted-foreground">
                     {s.id}
                   </td>
                   <td className="px-5 py-4 align-middle">
