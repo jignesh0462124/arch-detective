@@ -9,6 +9,7 @@ import {
   ChevronRight,
   Search,
 } from "lucide-react";
+import { ThemeToggle } from "@/components/brutal/ThemeToggle";
 import type { ReactNode } from "react";
 
 const NAV = [
@@ -117,6 +118,7 @@ export function AppShell({
                     ⌘K
                   </kbd>
                 </div>
+                <ThemeToggle />
                 {actions}
               </div>
             </div>

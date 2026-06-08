@@ -40,6 +40,7 @@
   --color-cream: var(--cream);
   --color-cream-deep: var(--cream-deep);
   --color-gold: var(--gold);
+  --color-stroke: var(--stroke);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -76,9 +77,47 @@
   --cream: oklch(0.962 0.012 80);
   --cream-deep: oklch(0.92 0.015 75);
   --gold: oklch(0.78 0.16 75);
+  --stroke: oklch(0.18 0 0);
 
   --border: oklch(0.18 0 0);
   --input: oklch(0.18 0 0);
+  --ring: oklch(0.78 0.16 75);
+
+  --radius: 0.625rem;
+}
+
+.dark {
+  /* Neo-brutalist dark — deep ink canvas, cream strokes, accents preserved */
+  --background: oklch(0.16 0 0);
+  --foreground: oklch(0.962 0.012 80);
+  --card: oklch(0.22 0.005 60);
+  --card-foreground: oklch(0.962 0.012 80);
+  --popover: oklch(0.22 0.005 60);
+  --popover-foreground: oklch(0.962 0.012 80);
+
+  --primary: oklch(0.7 0.215 38);
+  --primary-foreground: oklch(0.12 0 0);
+  --secondary: oklch(0.82 0.16 75);
+  --secondary-foreground: oklch(0.12 0 0);
+
+  --muted: oklch(0.28 0.005 60);
+  --muted-foreground: oklch(0.72 0.015 75);
+  --accent: oklch(0.82 0.16 75);
+  --accent-foreground: oklch(0.12 0 0);
+
+  --destructive: oklch(0.65 0.22 27);
+  --destructive-foreground: oklch(0.12 0 0);
+  --success: oklch(0.7 0.16 155);
+  --success-foreground: oklch(0.12 0 0);
+
+  /* Invert ink/cream so brutal borders (border-ink) and inverted islands (bg-ink/text-cream) stay legible */
+  --ink: oklch(0.962 0.012 80);
+  --cream: oklch(0.16 0 0);
+  --cream-deep: oklch(0.26 0.005 60);
+  --stroke: oklch(0.962 0.012 80);
+  --border: oklch(0.962 0.012 80);
+  --input: oklch(0.962 0.012 80);
+}
   --ring: oklch(0.78 0.16 75);
 
   --radius: 0.625rem;
@@ -101,23 +140,23 @@
 @utility border-brutal {
   border-width: 1.5px;
   border-style: solid;
-  border-color: var(--color-ink);
+  border-color: var(--color-stroke);
 }
 
 @utility border-brutal-2 {
   border-width: 2px;
   border-style: solid;
-  border-color: var(--color-ink);
+  border-color: var(--color-stroke);
 }
 
 @utility shadow-brutal {
-  box-shadow: 4px 4px 0 0 var(--color-ink);
+  box-shadow: 4px 4px 0 0 var(--color-stroke);
 }
 @utility shadow-brutal-sm {
-  box-shadow: 2px 2px 0 0 var(--color-ink);
+  box-shadow: 2px 2px 0 0 var(--color-stroke);
 }
 @utility shadow-brutal-lg {
-  box-shadow: 6px 6px 0 0 var(--color-ink);
+  box-shadow: 6px 6px 0 0 var(--color-stroke);
 }
 @utility shadow-brutal-gold {
   box-shadow: 4px 4px 0 0 var(--color-gold);
@@ -138,11 +177,11 @@
 
 .shadow-brutal-hover:hover {
   transform: translate(-1px, -1px);
-  box-shadow: 5px 5px 0 0 var(--color-ink);
+  box-shadow: 5px 5px 0 0 var(--color-stroke);
 }
 .shadow-brutal-hover:active {
   transform: translate(1px, 1px);
-  box-shadow: 2px 2px 0 0 var(--color-ink);
+  box-shadow: 2px 2px 0 0 var(--color-stroke);
 }
 
 @keyframes scroll-x {

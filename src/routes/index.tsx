@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { BrutalButton } from "@/components/brutal/BrutalButton";
 import { BrutalBadge } from "@/components/brutal/BrutalBadge";
+import { ThemeToggle } from "@/components/brutal/ThemeToggle";
 import { FRAMEWORKS } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/")({
@@ -53,6 +54,7 @@ function Landing() {
             <a href="#pricing" className="hover:text-primary">Pricing</a>
           </nav>
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Link to="/dashboard" className="hidden sm:inline">
               <BrutalButton variant="ghost" size="sm">Sign in</BrutalButton>
             </Link>
