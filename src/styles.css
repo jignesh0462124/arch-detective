@@ -110,10 +110,10 @@
   --success: oklch(0.7 0.16 155);
   --success-foreground: oklch(0.12 0 0);
 
-  /* Keep semantic ink/cream fills, flip stroke + border to cream for visibility */
-  --ink: oklch(0.12 0 0);
-  --cream: oklch(0.962 0.012 80);
-  --cream-deep: oklch(0.3 0.005 60);
+  /* Invert ink/cream so brutal borders (border-ink) and inverted islands (bg-ink/text-cream) stay legible */
+  --ink: oklch(0.962 0.012 80);
+  --cream: oklch(0.16 0 0);
+  --cream-deep: oklch(0.26 0.005 60);
   --stroke: oklch(0.962 0.012 80);
   --border: oklch(0.962 0.012 80);
   --input: oklch(0.962 0.012 80);
