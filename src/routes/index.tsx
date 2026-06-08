@@ -54,6 +54,7 @@ function Landing() {
             <a href="#pricing" className="hover:text-primary">Pricing</a>
           </nav>
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Link to="/dashboard" className="hidden sm:inline">
               <BrutalButton variant="ghost" size="sm">Sign in</BrutalButton>
             </Link>
