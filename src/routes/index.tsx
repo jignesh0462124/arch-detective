@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { BrutalButton } from "@/components/brutal/BrutalButton";
 import { BrutalBadge } from "@/components/brutal/BrutalBadge";
+import { ThemeToggle } from "@/components/brutal/ThemeToggle";
 import { FRAMEWORKS } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/")({
