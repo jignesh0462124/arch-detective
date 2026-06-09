@@ -71,7 +71,7 @@ function DashboardPage() {
         ))}
       </section>
 
-      <section className="mt-4 grid gap-4 xl:grid-cols-12">
+      <section className="mt-3 grid gap-3 lg:grid-cols-12 sm:mt-4 sm:gap-4">
         {/* Recent scans */}
         <div className="xl:col-span-8 overflow-hidden rounded-lg border-brutal bg-card shadow-soft">
           <div className="flex items-center justify-between border-b-[1.5px] border-ink px-4 py-2.5">
