@@ -97,10 +97,10 @@ export function AppShell({
         </aside>
 
         {/* Main */}
-        <main className="min-w-0 flex-1 px-4 py-6 sm:px-8">
+        <main className="min-w-0 flex-1 px-4 py-4 sm:px-6">
           {/* Header card */}
-          <header className="rounded-2xl border-brutal-2 bg-card p-5 shadow-brutal sm:p-6">
-            <div className="flex flex-wrap items-center justify-between gap-4">
+          <header className="rounded-xl border-brutal bg-card p-4 shadow-brutal-sm sm:p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="min-w-0">
                 <p className="section-title text-primary flex items-center gap-1.5">
                   {(subtitle ?? "Sentinel").split(" · ").map((part, i, arr) => (
@@ -112,18 +112,18 @@ export function AppShell({
                     </span>
                   ))}
                 </p>
-                <h1 className="mt-1.5 text-[28px] font-bold tracking-tight sm:text-[34px] leading-tight">
+                <h1 className="mt-1 text-xl font-bold tracking-tight sm:text-2xl leading-tight">
                   {title}
                 </h1>
               </div>
-              <div className="flex items-center gap-2.5">
-                <div className="hidden items-center gap-2 rounded-lg border-brutal bg-cream px-3 py-2.5 text-sm md:flex">
-                  <Search size={14} strokeWidth={2.25} className="text-muted-foreground" />
+              <div className="flex items-center gap-2">
+                <div className="hidden items-center gap-2 rounded-md border-brutal bg-cream px-2.5 py-1.5 text-xs md:flex">
+                  <Search size={12} strokeWidth={2.25} className="text-muted-foreground" />
                   <input
                     placeholder="Search findings, scans, controls…"
-                    className="w-64 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                    className="w-56 bg-transparent text-xs outline-none placeholder:text-muted-foreground"
                   />
-                  <kbd className="rounded border-brutal px-1.5 py-0.5 font-mono text-[10px] font-semibold text-muted-foreground">
+                  <kbd className="rounded border-brutal px-1 py-0.5 font-mono text-[9px] font-semibold text-muted-foreground">
                     ⌘K
                   </kbd>
                 </div>
@@ -133,7 +133,7 @@ export function AppShell({
             </div>
           </header>
 
-          <div className="mt-6">{children}</div>
+          <div className="mt-4">{children}</div>
         </main>
       </div>
 
