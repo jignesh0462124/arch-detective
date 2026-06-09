@@ -220,7 +220,7 @@ function DashboardPage() {
       </section>
 
       {/* Frameworks marquee */}
-      <section className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
+      <section className="mt-3 grid grid-cols-2 gap-2 sm:mt-4 sm:grid-cols-3 lg:grid-cols-6">
         {FRAMEWORKS.map((f) => (
           <div
             key={f.id}
