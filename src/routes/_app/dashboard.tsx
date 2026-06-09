@@ -83,7 +83,7 @@ function DashboardPage() {
               View all <ArrowUpRight size={12} />
             </BrutalButton>
           </div>
-          <table className="w-full border-collapse text-xs">
+          <div className="overflow-x-auto"><table className="w-full min-w-[560px] border-collapse text-xs">
             <thead>
               <tr className="border-b-[1.5px] border-ink bg-cream/60 text-left">
                 <th className="px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Scan</th>
