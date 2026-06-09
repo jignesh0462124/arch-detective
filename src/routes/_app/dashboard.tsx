@@ -49,20 +49,20 @@ function DashboardPage() {
       }
     >
       {/* Stat grid */}
-      <section className="grid grid-cols-2 gap-4 sm:gap-5 xl:grid-cols-4">
+      <section className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         {stats.map((s) => (
           <div
             key={s.label}
-            className="rounded-xl border-brutal-2 bg-card p-5 shadow-brutal"
+            className="rounded-lg border-brutal bg-card p-3.5 shadow-brutal-sm"
           >
             <div className="flex items-start justify-between">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border-brutal bg-cream">
-                <s.icon size={18} strokeWidth={2.25} />
+              <div className="flex h-8 w-8 items-center justify-center rounded-md border-brutal bg-cream">
+                <s.icon size={14} strokeWidth={2.25} />
               </div>
               <BrutalBadge tone={s.tone}>{s.trend}</BrutalBadge>
             </div>
-            <div className="mt-5 text-4xl font-bold tracking-tight">{s.value}</div>
-            <p className="section-title mt-1 text-muted-foreground">{s.label}</p>
+            <div className="mt-3 text-2xl font-bold tracking-tight">{s.value}</div>
+            <p className="section-title mt-0.5 text-muted-foreground">{s.label}</p>
           </div>
         ))}
       </section>
