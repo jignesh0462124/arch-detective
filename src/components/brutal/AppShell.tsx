@@ -112,7 +112,7 @@ export function AppShell({
                     </span>
                   ))}
                 </p>
-                <h1 className="mt-1 text-xl font-bold tracking-tight sm:text-2xl leading-tight">
+                <h1 className="mt-1 text-lg font-bold tracking-tight sm:text-xl lg:text-2xl leading-tight">
                   {title}
                 </h1>
               </div>
