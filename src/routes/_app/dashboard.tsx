@@ -49,44 +49,44 @@ function DashboardPage() {
       }
     >
       {/* Stat grid */}
-      <section className="grid grid-cols-2 gap-4 sm:gap-5 xl:grid-cols-4">
+      <section className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         {stats.map((s) => (
           <div
             key={s.label}
-            className="rounded-xl border-brutal-2 bg-card p-5 shadow-brutal"
+            className="rounded-lg border-brutal bg-card p-3.5 shadow-brutal-sm"
           >
             <div className="flex items-start justify-between">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border-brutal bg-cream">
-                <s.icon size={18} strokeWidth={2.25} />
+              <div className="flex h-8 w-8 items-center justify-center rounded-md border-brutal bg-cream">
+                <s.icon size={14} strokeWidth={2.25} />
               </div>
               <BrutalBadge tone={s.tone}>{s.trend}</BrutalBadge>
             </div>
-            <div className="mt-5 text-4xl font-bold tracking-tight">{s.value}</div>
-            <p className="section-title mt-1 text-muted-foreground">{s.label}</p>
+            <div className="mt-3 text-2xl font-bold tracking-tight">{s.value}</div>
+            <p className="section-title mt-0.5 text-muted-foreground">{s.label}</p>
           </div>
         ))}
       </section>
 
-      <section className="mt-6 grid gap-5 xl:grid-cols-12">
+      <section className="mt-4 grid gap-4 xl:grid-cols-12">
         {/* Recent scans */}
-        <div className="xl:col-span-8 overflow-hidden rounded-xl border-brutal-2 bg-card shadow-brutal">
-          <div className="flex items-center justify-between border-b-[1.5px] border-ink px-5 py-4">
+        <div className="xl:col-span-8 overflow-hidden rounded-lg border-brutal bg-card shadow-brutal-sm">
+          <div className="flex items-center justify-between border-b-[1.5px] border-ink px-4 py-2.5">
             <div>
               <p className="section-title text-primary">Live feed</p>
-              <h2 className="text-lg font-bold">Recent scans</h2>
+              <h2 className="text-sm font-bold">Recent scans</h2>
             </div>
             <BrutalButton variant="ghost" size="sm">
-              View all <ArrowUpRight size={14} />
+              View all <ArrowUpRight size={12} />
             </BrutalButton>
           </div>
-          <table className="w-full border-collapse text-sm">
+          <table className="w-full border-collapse text-xs">
             <thead>
               <tr className="border-b-[1.5px] border-ink bg-cream/60 text-left">
-                <th className="px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Scan</th>
-                <th className="px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Target</th>
-                <th className="px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Status</th>
-                <th className="px-5 py-2.5 text-right text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Findings</th>
-                <th className="px-5 py-2.5 text-right text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Duration</th>
+                <th className="px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Scan</th>
+                <th className="px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Target</th>
+                <th className="px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Status</th>
+                <th className="px-4 py-2 text-right text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Findings</th>
+                <th className="px-4 py-2 text-right text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Duration</th>
               </tr>
             </thead>
             <tbody>
@@ -95,19 +95,19 @@ function DashboardPage() {
                   key={s.id}
                   className="group border-b-[1px] border-ink/10 last:border-b-0 transition-colors hover:bg-cream/50"
                 >
-                  <td className="whitespace-nowrap px-5 py-4 align-middle font-mono text-xs font-semibold text-muted-foreground">
+                  <td className="whitespace-nowrap px-4 py-2.5 align-middle font-mono text-[11px] font-semibold text-muted-foreground">
                     {s.id}
                   </td>
-                  <td className="px-5 py-4 align-middle">
-                    <div className="font-semibold group-hover:text-primary transition-colors">{s.target}</div>
-                    <div className="mt-0.5 text-[11px] uppercase tracking-wide text-muted-foreground">
+                  <td className="px-4 py-2.5 align-middle">
+                    <div className="text-xs font-semibold group-hover:text-primary transition-colors">{s.target}</div>
+                    <div className="mt-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
                       {s.frameworks.join(" · ")}
                     </div>
                   </td>
-                  <td className="px-5 py-4 align-middle">
+                  <td className="px-4 py-2.5 align-middle">
                     {s.status === "complete" && (
                       <BrutalBadge tone="success" dot>
-                        <CheckCircle2 size={11} strokeWidth={2.5} /> Complete
+                        <CheckCircle2 size={10} strokeWidth={2.5} /> Complete
                       </BrutalBadge>
                     )}
                     {s.status === "running" && (
@@ -117,11 +117,11 @@ function DashboardPage() {
                     )}
                     {s.status === "failed" && (
                       <BrutalBadge tone="primary">
-                        <XCircle size={11} strokeWidth={2.5} /> Failed
+                        <XCircle size={10} strokeWidth={2.5} /> Failed
                       </BrutalBadge>
                     )}
                   </td>
-                  <td className="px-5 py-4 align-middle text-right font-mono text-xs">
+                  <td className="px-4 py-2.5 align-middle text-right font-mono text-[11px]">
                     {s.findings ? (
                       <>
                         <span className="font-semibold">{s.findings}</span>{" "}
@@ -131,8 +131,8 @@ function DashboardPage() {
                       <span className="text-muted-foreground/50">—</span>
                     )}
                   </td>
-                  <td className="px-5 py-4 align-middle text-right font-mono text-xs text-muted-foreground">
-                    <Clock size={11} className="mr-1 inline" />
+                  <td className="px-4 py-2.5 align-middle text-right font-mono text-[11px] text-muted-foreground">
+                    <Clock size={10} className="mr-1 inline" />
                     {s.duration}
                   </td>
                 </tr>
@@ -142,17 +142,17 @@ function DashboardPage() {
         </div>
 
         {/* Coverage panel */}
-        <div className="xl:col-span-4 rounded-xl border-brutal-2 bg-card p-5 shadow-brutal">
+        <div className="xl:col-span-4 rounded-lg border-brutal bg-card p-4 shadow-brutal-sm">
           <p className="section-title text-primary">Posture</p>
-          <h2 className="text-lg font-bold">Framework coverage</h2>
-          <div className="mt-5 space-y-4">
+          <h2 className="text-sm font-bold">Framework coverage</h2>
+          <div className="mt-3 space-y-2.5">
             {COVERAGE.map((c) => (
               <div key={c.framework}>
-                <div className="flex items-baseline justify-between text-sm">
+                <div className="flex items-baseline justify-between text-xs">
                   <span className="font-semibold tracking-tight">{c.framework}</span>
-                  <span className="font-mono text-xs text-muted-foreground">{c.pct}%</span>
+                  <span className="font-mono text-[11px] text-muted-foreground">{c.pct}%</span>
                 </div>
-                <div className="mt-1.5 h-3 overflow-hidden rounded-full border-brutal bg-cream">
+                <div className="mt-1 h-2 overflow-hidden rounded-full border-brutal bg-cream">
                   <div
                     className="h-full border-r-[1.5px] border-ink bg-primary"
                     style={{ width: `${c.pct}%` }}
@@ -161,8 +161,8 @@ function DashboardPage() {
               </div>
             ))}
           </div>
-          <div className="mt-5 flex items-start gap-2 rounded-lg border-brutal bg-cream/60 p-3 text-xs">
-            <Sparkles size={14} className="mt-0.5 shrink-0 text-primary" strokeWidth={2.5} />
+          <div className="mt-3 flex items-start gap-2 rounded-md border-brutal bg-cream/60 p-2.5 text-[11px]">
+            <Sparkles size={12} className="mt-0.5 shrink-0 text-primary" strokeWidth={2.5} />
             <span>
               Agent suggests focusing on <span className="font-semibold">NIST 800-53 SC-7</span> next.
             </span>
@@ -171,40 +171,40 @@ function DashboardPage() {
       </section>
 
       {/* Top findings */}
-      <section className="mt-6 rounded-xl border-brutal-2 bg-card shadow-brutal">
-        <div className="flex items-center justify-between border-b-[1.5px] border-ink px-5 py-4">
+      <section className="mt-4 rounded-lg border-brutal bg-card shadow-brutal-sm">
+        <div className="flex items-center justify-between border-b-[1.5px] border-ink px-4 py-2.5">
           <div>
             <p className="section-title text-primary">Triage</p>
-            <h2 className="text-lg font-bold">Top severity findings</h2>
+            <h2 className="text-sm font-bold">Top severity findings</h2>
           </div>
           <Link to="/findings">
             <BrutalButton variant="ghost" size="sm">
-              Open queue <ArrowUpRight size={14} />
+              Open queue <ArrowUpRight size={12} />
             </BrutalButton>
           </Link>
         </div>
-        <div className="divide-y-[1.5px] divide-ink">
+        <div className="divide-y-[1px] divide-ink/10">
           {FINDINGS.slice(0, 4).map((f) => (
             <Link
               to="/findings"
               key={f.id}
-              className="block px-5 py-4 transition-colors hover:bg-cream"
+              className="block px-4 py-2.5 transition-colors hover:bg-cream"
             >
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2">
                 <BrutalBadge tone={f.severity}>{f.severity}</BrutalBadge>
                 <BrutalBadge tone="ghost">{f.stride}</BrutalBadge>
-                <span className="font-mono text-xs text-muted-foreground">{f.id}</span>
-                <span className="ml-auto text-xs text-muted-foreground">{f.detected}</span>
+                <span className="font-mono text-[11px] text-muted-foreground">{f.id}</span>
+                <span className="ml-auto text-[11px] text-muted-foreground">{f.detected}</span>
               </div>
-              <h3 className="mt-2 text-sm font-semibold">{f.title}</h3>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <h3 className="mt-1.5 text-xs font-semibold">{f.title}</h3>
+              <p className="mt-0.5 text-[11px] text-muted-foreground">
                 <span className="font-mono">{f.component}</span>
               </p>
-              <div className="mt-2 flex flex-wrap gap-1.5">
+              <div className="mt-1.5 flex flex-wrap gap-1">
                 {f.controls.map((c) => (
                   <span
                     key={c.framework + c.control}
-                    className="rounded-full border-brutal bg-cream px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
+                    className="rounded-full border-brutal bg-cream px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider"
                   >
                     {c.framework} · {c.control}
                   </span>
@@ -216,14 +216,14 @@ function DashboardPage() {
       </section>
 
       {/* Frameworks marquee */}
-      <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <section className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
         {FRAMEWORKS.map((f) => (
           <div
             key={f.id}
-            className="rounded-lg border-brutal bg-card px-3 py-3 text-center shadow-brutal-sm"
+            className="rounded-md border-brutal bg-card px-2 py-2 text-center shadow-brutal-sm"
           >
-            <div className="text-sm font-bold">{f.label}</div>
-            <div className="mt-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
+            <div className="text-xs font-bold">{f.label}</div>
+            <div className="mt-0.5 text-[9px] uppercase tracking-wider text-muted-foreground">
               {f.controls} controls
             </div>
           </div>
