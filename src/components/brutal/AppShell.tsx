@@ -117,7 +117,7 @@ export function AppShell({
                 </h1>
               </div>
               <div className="flex items-center gap-2">
-                <div className="hidden items-center gap-2 rounded-md border-brutal bg-cream px-2.5 py-1.5 text-xs md:flex">
+                <div className="hidden items-center gap-2 rounded-md border-brutal bg-cream px-2.5 py-1.5 text-xs lg:flex">
                   <Search size={12} strokeWidth={2.25} className="text-muted-foreground" />
                   <input
                     placeholder="Search findings, scans, controls…"
