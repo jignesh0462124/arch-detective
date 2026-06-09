@@ -164,6 +164,14 @@
 @utility shadow-brutal-hover {
   transition: transform 120ms ease, box-shadow 120ms ease;
 }
+@utility shadow-soft {
+  box-shadow: 0 1px 0 0 color-mix(in oklab, var(--color-stroke) 8%, transparent),
+              0 6px 16px -8px color-mix(in oklab, var(--color-stroke) 18%, transparent);
+}
+@utility shadow-soft-lg {
+  box-shadow: 0 1px 0 0 color-mix(in oklab, var(--color-stroke) 10%, transparent),
+              0 12px 28px -12px color-mix(in oklab, var(--color-stroke) 22%, transparent);
+}
 @utility section-title {
   font-size: 12px;
   font-weight: 600;
