@@ -30,10 +30,10 @@ export const Route = createFileRoute("/_app/dashboard")({
 
 function DashboardPage() {
   const stats = [
-    { label: "Open Findings", value: "47", trend: "+6 today", icon: ShieldAlert, tone: "primary" as const },
-    { label: "Critical", value: "8", trend: "+2 last 24h", icon: AlertTriangle, tone: "gold" as const },
-    { label: "Compliance Score", value: "78%", trend: "+4 pts", icon: Activity, tone: "ink" as const },
-    { label: "Reports Shipped", value: "12", trend: "Q2 cycle", icon: FileCheck, tone: "ghost" as const },
+    { label: "Open Findings", value: "47", trend: "+6 today", icon: ShieldAlert, tone: "primary" as const, chip: "bg-primary text-primary-foreground", accent: true },
+    { label: "Critical", value: "8", trend: "+2 last 24h", icon: AlertTriangle, tone: "gold" as const, chip: "bg-secondary text-secondary-foreground" },
+    { label: "Compliance Score", value: "78%", trend: "+4 pts", icon: Activity, tone: "ink" as const, chip: "bg-success/15 text-success" },
+    { label: "Reports Shipped", value: "12", trend: "Q2 cycle", icon: FileCheck, tone: "ghost" as const, chip: "bg-cream text-foreground" },
   ];
 
   return (
@@ -43,7 +43,7 @@ function DashboardPage() {
       actions={
         <Link to="/new-scan">
           <BrutalButton variant="primary">
-            <ScanLine size={16} strokeWidth={2.25} /> New scan
+            <ScanLine size={16} strokeWidth={2} /> New scan
           </BrutalButton>
         </Link>
       }
@@ -53,15 +53,19 @@ function DashboardPage() {
         {stats.map((s) => (
           <div
             key={s.label}
-            className="rounded-lg border-brutal bg-card p-3.5 shadow-brutal-sm"
+            className={[
+              "relative overflow-hidden rounded-lg border-brutal bg-card p-3.5 shadow-soft transition-shadow hover:shadow-soft-lg",
+              s.accent ? "ring-1 ring-primary/20" : "",
+            ].join(" ")}
           >
+            {s.accent && <span className="absolute left-0 top-0 h-full w-[3px] bg-primary" />}
             <div className="flex items-start justify-between">
-              <div className="flex h-8 w-8 items-center justify-center rounded-md border-brutal bg-cream">
-                <s.icon size={14} strokeWidth={2.25} />
+              <div className={`flex h-8 w-8 items-center justify-center rounded-md border-brutal ${s.chip}`}>
+                <s.icon size={14} strokeWidth={2} />
               </div>
               <BrutalBadge tone={s.tone}>{s.trend}</BrutalBadge>
             </div>
-            <div className="mt-3 text-2xl font-bold tracking-tight">{s.value}</div>
+            <div className="mt-3 text-2xl font-bold tracking-tight tabular-nums">{s.value}</div>
             <p className="section-title mt-0.5 text-muted-foreground">{s.label}</p>
           </div>
         ))}
