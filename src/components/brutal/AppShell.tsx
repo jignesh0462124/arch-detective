@@ -97,9 +97,9 @@ export function AppShell({
         </aside>
 
         {/* Main */}
-        <main className="min-w-0 flex-1 px-4 py-4 sm:px-6">
+        <main className="min-w-0 flex-1 px-3 py-3 pb-20 sm:px-5 sm:py-4 lg:pb-4">
           {/* Header card */}
-          <header className="rounded-xl border-brutal bg-card p-4 shadow-brutal-sm sm:p-5">
+          <header className="rounded-xl border-brutal bg-card p-3 shadow-brutal-sm sm:p-4 lg:p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="min-w-0">
                 <p className="section-title text-primary flex items-center gap-1.5">
