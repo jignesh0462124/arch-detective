@@ -142,7 +142,7 @@ function DashboardPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
 
         {/* Coverage panel */}
