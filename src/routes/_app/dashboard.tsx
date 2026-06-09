@@ -146,7 +146,7 @@ function DashboardPage() {
         </div>
 
         {/* Coverage panel */}
-        <div className="xl:col-span-4 rounded-lg border-brutal bg-card p-4 shadow-soft">
+        <div className="lg:col-span-4 rounded-lg border-brutal bg-card p-3 shadow-soft sm:p-4">
           <p className="section-title text-primary">Posture</p>
           <h2 className="text-sm font-bold">Framework coverage</h2>
           <div className="mt-3 space-y-2.5">
