@@ -73,7 +73,7 @@ function DashboardPage() {
 
       <section className="mt-4 grid gap-4 xl:grid-cols-12">
         {/* Recent scans */}
-        <div className="xl:col-span-8 overflow-hidden rounded-lg border-brutal bg-card shadow-brutal-sm">
+        <div className="xl:col-span-8 overflow-hidden rounded-lg border-brutal bg-card shadow-soft">
           <div className="flex items-center justify-between border-b-[1.5px] border-ink px-4 py-2.5">
             <div>
               <p className="section-title text-primary">Live feed</p>
@@ -146,7 +146,7 @@ function DashboardPage() {
         </div>
 
         {/* Coverage panel */}
-        <div className="xl:col-span-4 rounded-lg border-brutal bg-card p-4 shadow-brutal-sm">
+        <div className="xl:col-span-4 rounded-lg border-brutal bg-card p-4 shadow-soft">
           <p className="section-title text-primary">Posture</p>
           <h2 className="text-sm font-bold">Framework coverage</h2>
           <div className="mt-3 space-y-2.5">
@@ -175,7 +175,7 @@ function DashboardPage() {
       </section>
 
       {/* Top findings */}
-      <section className="mt-4 rounded-lg border-brutal bg-card shadow-brutal-sm">
+      <section className="mt-4 rounded-lg border-brutal bg-card shadow-soft">
         <div className="flex items-center justify-between border-b-[1.5px] border-ink px-4 py-2.5">
           <div>
             <p className="section-title text-primary">Triage</p>
