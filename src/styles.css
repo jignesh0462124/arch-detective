@@ -117,10 +117,7 @@
   --stroke: oklch(0.962 0.012 80);
   --border: oklch(0.962 0.012 80);
   --input: oklch(0.962 0.012 80);
-}
-  --ring: oklch(0.78 0.16 75);
-
-  --radius: 0.625rem;
+  --ring: oklch(0.82 0.16 75);
 }
 
 @layer base {
