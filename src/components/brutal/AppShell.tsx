@@ -97,9 +97,9 @@ export function AppShell({
         </aside>
 
         {/* Main */}
-        <main className="min-w-0 flex-1 px-4 py-4 sm:px-6">
+        <main className="min-w-0 flex-1 px-3 py-3 pb-20 sm:px-5 sm:py-4 lg:pb-4">
           {/* Header card */}
-          <header className="rounded-xl border-brutal bg-card p-4 shadow-brutal-sm sm:p-5">
+          <header className="rounded-xl border-brutal bg-card p-3 shadow-brutal-sm sm:p-4 lg:p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="min-w-0">
                 <p className="section-title text-primary flex items-center gap-1.5">
@@ -112,12 +112,12 @@ export function AppShell({
                     </span>
                   ))}
                 </p>
-                <h1 className="mt-1 text-xl font-bold tracking-tight sm:text-2xl leading-tight">
+                <h1 className="mt-1 text-lg font-bold tracking-tight sm:text-xl lg:text-2xl leading-tight">
                   {title}
                 </h1>
               </div>
               <div className="flex items-center gap-2">
-                <div className="hidden items-center gap-2 rounded-md border-brutal bg-cream px-2.5 py-1.5 text-xs md:flex">
+                <div className="hidden items-center gap-2 rounded-md border-brutal bg-cream px-2.5 py-1.5 text-xs lg:flex">
                   <Search size={12} strokeWidth={2.25} className="text-muted-foreground" />
                   <input
                     placeholder="Search findings, scans, controls…"

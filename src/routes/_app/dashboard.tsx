@@ -49,7 +49,7 @@ function DashboardPage() {
       }
     >
       {/* Stat grid */}
-      <section className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+      <section className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-4 sm:gap-3">
         {stats.map((s) => (
           <div
             key={s.label}
@@ -71,9 +71,9 @@ function DashboardPage() {
         ))}
       </section>
 
-      <section className="mt-4 grid gap-4 xl:grid-cols-12">
+      <section className="mt-3 grid gap-3 lg:grid-cols-12 sm:mt-4 sm:gap-4">
         {/* Recent scans */}
-        <div className="xl:col-span-8 overflow-hidden rounded-lg border-brutal bg-card shadow-soft">
+        <div className="lg:col-span-8 overflow-hidden rounded-lg border-brutal bg-card shadow-soft">
           <div className="flex items-center justify-between border-b-[1.5px] border-ink px-4 py-2.5">
             <div>
               <p className="section-title text-primary">Live feed</p>
@@ -83,7 +83,7 @@ function DashboardPage() {
               View all <ArrowUpRight size={12} />
             </BrutalButton>
           </div>
-          <table className="w-full border-collapse text-xs">
+          <div className="overflow-x-auto"><table className="w-full min-w-[560px] border-collapse text-xs">
             <thead>
               <tr className="border-b-[1.5px] border-ink bg-cream/60 text-left">
                 <th className="px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Scan</th>
@@ -142,11 +142,11 @@ function DashboardPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
 
         {/* Coverage panel */}
-        <div className="xl:col-span-4 rounded-lg border-brutal bg-card p-4 shadow-soft">
+        <div className="lg:col-span-4 rounded-lg border-brutal bg-card p-3 shadow-soft sm:p-4">
           <p className="section-title text-primary">Posture</p>
           <h2 className="text-sm font-bold">Framework coverage</h2>
           <div className="mt-3 space-y-2.5">
@@ -220,7 +220,7 @@ function DashboardPage() {
       </section>
 
       {/* Frameworks marquee */}
-      <section className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
+      <section className="mt-3 grid grid-cols-2 gap-2 sm:mt-4 sm:grid-cols-3 lg:grid-cols-6">
         {FRAMEWORKS.map((f) => (
           <div
             key={f.id}
