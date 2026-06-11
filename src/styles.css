@@ -134,6 +134,16 @@
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
   }
+  /* Subtle HUD grid + radial glow in dark mode for cyber-product feel */
+  .dark body {
+    background-image:
+      radial-gradient(1200px 600px at 85% -10%, color-mix(in oklab, var(--color-secondary) 14%, transparent), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, color-mix(in oklab, var(--color-primary) 10%, transparent), transparent 60%),
+      linear-gradient(to right, color-mix(in oklab, var(--color-stroke) 10%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--color-stroke) 10%, transparent) 1px, transparent 1px);
+    background-size: auto, auto, 36px 36px, 36px 36px;
+    background-attachment: fixed;
+  }
 }
 
 /* --- Brutalist utilities --- */
