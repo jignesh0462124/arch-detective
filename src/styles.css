@@ -87,41 +87,42 @@
 }
 
 .dark {
-  /* Cybersecurity SOC palette — deep navy canvas, cyan accents, alert orange */
-  --background: oklch(0.18 0.02 250);            /* #0B1220 deep navy */
-  --foreground: oklch(0.94 0.012 220);           /* near-white w/ cool tint */
-  --card: oklch(0.235 0.022 250);                /* #131C2E panel */
-  --card-foreground: oklch(0.94 0.012 220);
-  --popover: oklch(0.235 0.022 250);
-  --popover-foreground: oklch(0.94 0.012 220);
+  /* SOC dark — deep ink canvas, brand orange + gold preserved per DESIGN.md.
+     Borders invert to warm cream so 1.5dp brutal frames keep high contrast. */
+  --background: oklch(0.16 0.012 65);            /* deep warm ink #14110E */
+  --foreground: oklch(0.962 0.012 80);           /* canvas cream text */
+  --card: oklch(0.215 0.014 65);                 /* elevated panel */
+  --card-foreground: oklch(0.962 0.012 80);
+  --popover: oklch(0.215 0.014 65);
+  --popover-foreground: oklch(0.962 0.012 80);
 
-  /* Critical / brand alert stays orange but hotter for dark bg */
-  --primary: oklch(0.72 0.21 42);
-  --primary-foreground: oklch(0.12 0.01 250);
-  /* Secondary becomes cyber-cyan (replaces gold) for "secure / scanning" */
-  --secondary: oklch(0.82 0.14 200);             /* #5BD6F2 cyan */
-  --secondary-foreground: oklch(0.14 0.02 250);
+  /* Brand orange — slightly brighter for AA on dark */
+  --primary: oklch(0.70 0.215 38);
+  --primary-foreground: oklch(0.12 0 0);
+  /* Gold accent stays — matches DESIGN.md GoldAccent */
+  --secondary: oklch(0.82 0.16 75);
+  --secondary-foreground: oklch(0.14 0.01 60);
 
-  --muted: oklch(0.30 0.018 250);
-  --muted-foreground: oklch(0.72 0.025 220);
-  --accent: oklch(0.82 0.14 200);
-  --accent-foreground: oklch(0.14 0.02 250);
+  --muted: oklch(0.27 0.012 65);
+  --muted-foreground: oklch(0.78 0.018 75);      /* ≥ AA on card */
+  --accent: oklch(0.82 0.16 75);
+  --accent-foreground: oklch(0.14 0.01 60);
 
-  --destructive: oklch(0.68 0.23 27);
+  --destructive: oklch(0.68 0.22 27);
   --destructive-foreground: oklch(0.12 0 0);
-  /* Terminal-green success */
-  --success: oklch(0.78 0.18 150);
-  --success-foreground: oklch(0.14 0.02 250);
+  --success: oklch(0.74 0.17 152);               /* terminal green */
+  --success-foreground: oklch(0.14 0.02 150);
 
-  /* Borders use cyan-tinted slate so the brutal frames read as HUD lines, not white */
-  --ink: oklch(0.55 0.04 220);
-  --cream: oklch(0.21 0.02 250);                 /* used as subtle surface */
-  --cream-deep: oklch(0.28 0.025 250);
-  --gold: oklch(0.82 0.14 200);                  /* alias cyan in dark */
-  --stroke: oklch(0.48 0.05 220);
-  --border: oklch(0.48 0.05 220);
-  --input: oklch(0.48 0.05 220);
-  --ring: oklch(0.82 0.14 200);
+  /* Borders / strokes use cream at ~70% opacity feel via slight desaturation,
+     keeping brutal frames legible without harsh pure white. */
+  --ink: oklch(0.90 0.015 80);
+  --cream: oklch(0.20 0.012 65);                 /* subtle surface tint */
+  --cream-deep: oklch(0.255 0.014 65);
+  --gold: oklch(0.82 0.16 75);
+  --stroke: oklch(0.86 0.018 80);
+  --border: oklch(0.86 0.018 80);
+  --input: oklch(0.86 0.018 80);
+  --ring: oklch(0.82 0.16 75);
 }
 
 @layer base {
@@ -134,14 +135,14 @@
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
   }
-  /* Subtle HUD grid + radial glow in dark mode for cyber-product feel */
+  /* Subtle SOC ambience in dark — warm orange/gold glows + faint grid, no blue */
   .dark body {
     background-image:
-      radial-gradient(1200px 600px at 85% -10%, color-mix(in oklab, var(--color-secondary) 14%, transparent), transparent 60%),
-      radial-gradient(900px 500px at -10% 110%, color-mix(in oklab, var(--color-primary) 10%, transparent), transparent 60%),
-      linear-gradient(to right, color-mix(in oklab, var(--color-stroke) 10%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in oklab, var(--color-stroke) 10%, transparent) 1px, transparent 1px);
-    background-size: auto, auto, 36px 36px, 36px 36px;
+      radial-gradient(900px 500px at 90% -10%, color-mix(in oklab, var(--color-primary) 10%, transparent), transparent 60%),
+      radial-gradient(800px 480px at -10% 110%, color-mix(in oklab, var(--color-gold) 8%, transparent), transparent 60%),
+      linear-gradient(to right, color-mix(in oklab, var(--color-stroke) 5%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--color-stroke) 5%, transparent) 1px, transparent 1px);
+    background-size: auto, auto, 40px 40px, 40px 40px;
     background-attachment: fixed;
   }
 }
