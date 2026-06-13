@@ -1,14 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  ArrowUpRight,
-  ScanLine,
-  ShieldAlert,
-  AlertTriangle,
-  CheckCircle2,
-  XCircle,
-  Zap,
-  Activity,
-} from "lucide-react";
+import { ArrowUpRight, ScanLine, CheckCircle2, XCircle, Zap, Activity } from "lucide-react";
 import { AppShell } from "@/components/brutal/AppShell";
 import { BrutalButton } from "@/components/brutal/BrutalButton";
 import { COVERAGE, FINDINGS, FRAMEWORKS, SCANS } from "@/lib/mock-data";
