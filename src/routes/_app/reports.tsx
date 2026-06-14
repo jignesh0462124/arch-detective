@@ -1,9 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { FilePlus2, Download, ArrowUpRight } from "lucide-react";
+import { FilePlus2, Download, ArrowUpRight, Zap, FileText } from "lucide-react";
 import { AppShell } from "@/components/brutal/AppShell";
 import { BrutalButton } from "@/components/brutal/BrutalButton";
-import { BrutalBadge } from "@/components/brutal/BrutalBadge";
-import { REPORTS } from "@/lib/mock-data";
+import { REPORTS, FRAMEWORKS } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_app/reports")({
   head: () => ({
@@ -17,72 +16,238 @@ export const Route = createFileRoute("/_app/reports")({
   component: ReportsPage,
 });
 
+const statusTone: Record<string, string> = {
+  Signed: "bg-success text-success-foreground border-ink",
+  Draft: "bg-cream text-ink border-ink",
+  "In Review": "bg-secondary text-secondary-foreground border-ink",
+};
+
 function ReportsPage() {
+  const signed = REPORTS.filter((r) => r.status === "Signed").length;
+  const draft = REPORTS.filter((r) => r.status === "Draft").length;
+  const review = REPORTS.filter((r) => r.status === "In Review").length;
+  const totalPages = REPORTS.reduce((acc, r) => acc + r.pages, 0);
+
+  const STATS = [
+    { code: "01 // TOTAL", label: "Reports", value: String(REPORTS.length), accent: true },
+    { code: "02 // SIGNED", label: "Signed", value: String(signed) },
+    { code: "03 // REVIEW", label: "In review", value: String(review + draft) },
+    { code: "04 // PAGES", label: "Pages shipped", value: String(totalPages) },
+  ];
+
+  const featured = REPORTS.find((r) => r.featured) ?? REPORTS[0];
+  const rest = REPORTS.filter((r) => r.id !== featured.id);
+
   return (
     <AppShell
       subtitle="Library"
       title="Audit reports"
       actions={
-        <BrutalButton variant="tertiary">
+        <BrutalButton variant="primary">
           <FilePlus2 size={15} /> Generate report
         </BrutalButton>
       }
     >
-      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-        {REPORTS.map((r) => (
-          <Link
-            to="/reports/$reportId"
-            params={{ reportId: r.id }}
-            key={r.id}
-            className={[
-              "group block rounded-xl border-brutal-2 bg-card p-5 shadow-brutal shadow-brutal-hover",
-              r.featured ? "shadow-brutal-gold" : "",
-            ].join(" ")}
-          >
-            <div className="flex items-start justify-between">
-              <div className="rounded-lg border-brutal bg-cream px-2.5 py-1 font-mono text-[11px] font-semibold">
-                {r.id}
+      <div className="border-[3px] border-ink bg-card shadow-brutal overflow-hidden">
+        {/* HERO STRIP — 7/5 split */}
+        <section className="grid grid-cols-1 lg:grid-cols-12 border-b-[3px] border-ink">
+          <div className="lg:col-span-7 p-5 md:p-7 lg:border-r-[3px] border-b-[3px] lg:border-b-0 border-ink bg-card flex flex-col justify-between gap-5">
+            <div>
+              <div className="inline-flex items-center gap-2 mb-4">
+                <span className="inline-flex items-center gap-1 border border-ink bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary-foreground">
+                  <Zap size={10} strokeWidth={3} /> LIBRARY
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground italic">
+                  Audit-ready · PDF + DOCX
+                </span>
               </div>
-              {r.featured && <BrutalBadge tone="gold">Featured</BrutalBadge>}
+              <h2 className="text-3xl md:text-5xl font-bold leading-[0.9] tracking-tighter">
+                <span className="text-primary">{REPORTS.length}</span> AUDIT
+                <br />
+                REPORTS.
+              </h2>
+              <p className="mt-4 max-w-md text-sm font-medium text-muted-foreground">
+                Every report is generated from live evidence, mapped to controls,
+                and countersigned by the agent + reviewers before shipping.
+              </p>
             </div>
 
-            <div className="mt-6 flex items-baseline gap-2">
-              <span className="text-3xl font-bold tracking-tight">{r.framework.split(" ")[0]}</span>
-              <span className="text-sm font-semibold text-muted-foreground">
-                {r.framework.split(" ").slice(1).join(" ")}
-              </span>
-            </div>
-            <h3 className="mt-3 text-base font-bold leading-snug">{r.title}</h3>
-
-            <div className="mt-5 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2">
-                <BrutalBadge
-                  tone={
-                    r.status === "Signed"
-                      ? "success"
-                      : r.status === "Draft"
-                      ? "ghost"
-                      : "gold"
-                  }
+            <div className="grid grid-cols-2 sm:grid-cols-4 border-t-[2px] border-ink">
+              {STATS.map((s, i) => (
+                <div
+                  key={s.code}
+                  className={[
+                    "p-3 sm:p-4",
+                    i < 3 ? "border-r-[2px] border-ink" : "",
+                    i < 2 ? "border-b-[2px] sm:border-b-0 border-ink" : "",
+                    s.accent ? "bg-cream" : "",
+                  ].join(" ")}
                 >
-                  {r.status}
-                </BrutalBadge>
-                <span className="text-muted-foreground">{r.pages} pp</span>
+                  <div className={["font-mono text-[10px] mb-2 tracking-wider", s.accent ? "text-primary" : "text-muted-foreground"].join(" ")}>
+                    {s.code}
+                  </div>
+                  <div className="text-2xl font-bold tracking-tight tabular-nums">{s.value}</div>
+                  <div className="mt-0.5 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">{s.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: featured report terminal card */}
+          <div className="lg:col-span-5 bg-ink p-5 md:p-6 flex flex-col text-cream">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-primary" />
+                <span className="h-2.5 w-2.5 rounded-full bg-secondary" />
+                <span className="h-2.5 w-2.5 rounded-full bg-success" />
               </div>
-              <span className="text-muted-foreground">{r.date}</span>
+              <span className="font-mono text-[10px] uppercase tracking-wider text-cream/40">featured.report</span>
+            </div>
+            <div className="font-mono text-[11px] leading-relaxed mb-4">
+              <div className="text-success mb-1">$ sentinel reports --featured</div>
+              <div className="text-cream/40">Latest signed deliverable…</div>
             </div>
 
-            <div className="mt-5 flex items-center justify-between border-t-[1.5px] border-ink pt-4 text-sm font-semibold">
-              <span className="inline-flex items-center gap-1">
-                <Download size={14} strokeWidth={2.5} /> PDF · DOCX
-              </span>
-              <span className="inline-flex items-center gap-1 text-primary">
-                Open <ArrowUpRight size={14} strokeWidth={2.5} />
-              </span>
+            <Link
+              to="/reports/$reportId"
+              params={{ reportId: featured.id }}
+              className="block border-2 border-cream/30 bg-cream/5 p-4 hover:border-primary transition-colors group"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span className="font-mono text-[10px] text-cream/50 tracking-wider">// {featured.id}</span>
+                <span className={["border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider", statusTone[featured.status] ?? "bg-cream text-ink border-ink"].join(" ")}>
+                  {featured.status}
+                </span>
+              </div>
+              <div className="text-2xl font-bold tracking-tight leading-tight mb-2 group-hover:text-primary transition-colors">
+                {featured.framework}
+              </div>
+              <p className="text-sm text-cream/70 leading-snug mb-4">{featured.title}</p>
+              <div className="flex items-center justify-between border-t border-cream/20 pt-3 text-[11px] font-mono">
+                <span className="text-cream/50">{featured.pages} pp · {featured.date}</span>
+                <span className="inline-flex items-center gap-1 text-primary">
+                  Open <ArrowUpRight size={12} />
+                </span>
+              </div>
+            </Link>
+
+            <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+              <Stat k="Cadence" v="Q-ly" />
+              <Stat k="Avg pages" v={String(Math.round(totalPages / REPORTS.length))} />
+              <Stat k="Frameworks" v={String(FRAMEWORKS.length)} />
             </div>
-          </Link>
-        ))}
+          </div>
+        </section>
+
+        {/* REPORTS LIBRARY — table */}
+        <section className="bg-card border-b-[3px] border-ink">
+          <div className="flex items-center justify-between border-b-[2px] border-ink px-5 py-3 bg-cream">
+            <div className="flex items-center gap-3 min-w-0">
+              <span className="font-mono text-[10px] text-primary tracking-wider shrink-0">// LIBRARY</span>
+              <h2 className="text-sm font-bold uppercase tracking-tight truncate">All reports</h2>
+            </div>
+            <span className="font-mono text-[10px] text-muted-foreground">{rest.length + 1} total</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[680px] border-collapse text-xs">
+              <thead>
+                <tr className="border-b-[2px] border-ink bg-cream/40 text-left">
+                  <th className="px-5 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">ID</th>
+                  <th className="px-5 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Report</th>
+                  <th className="px-5 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Framework</th>
+                  <th className="px-5 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Status</th>
+                  <th className="px-5 py-2 text-right font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Pages</th>
+                  <th className="px-5 py-2 text-right font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Date</th>
+                  <th className="px-5 py-2 text-right font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {REPORTS.map((r) => (
+                  <tr key={r.id} className="group border-b-[1px] border-ink/15 last:border-b-0 hover:bg-cream/60 transition-colors">
+                    <td className="whitespace-nowrap px-5 py-3 font-mono text-[11px] font-semibold text-muted-foreground">{r.id}</td>
+                    <td className="px-5 py-3">
+                      <Link
+                        to="/reports/$reportId"
+                        params={{ reportId: r.id }}
+                        className="text-xs font-bold group-hover:text-primary transition-colors"
+                      >
+                        {r.title}
+                      </Link>
+                      {r.featured && (
+                        <div className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-primary">// featured</div>
+                      )}
+                    </td>
+                    <td className="px-5 py-3 font-mono text-[11px] uppercase tracking-wide">{r.framework}</td>
+                    <td className="px-5 py-3">
+                      <span className={["inline-flex border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider", statusTone[r.status] ?? "bg-cream text-ink border-ink"].join(" ")}>
+                        {r.status}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3 text-right font-mono text-[11px] tabular-nums">{r.pages}</td>
+                    <td className="px-5 py-3 text-right font-mono text-[11px] text-muted-foreground">{r.date}</td>
+                    <td className="px-5 py-3 text-right">
+                      <Link
+                        to="/reports/$reportId"
+                        params={{ reportId: r.id }}
+                        className="inline-flex items-center gap-1 font-mono text-[11px] font-bold text-primary"
+                      >
+                        Open <ArrowUpRight size={12} />
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* FRAMEWORK COVERAGE STRIP */}
+        <section className="p-6 md:p-8 bg-cream">
+          <div className="flex flex-wrap justify-between items-end gap-3 mb-6">
+            <div>
+              <p className="font-mono text-[10px] text-primary tracking-wider mb-1">// FRAMEWORKS</p>
+              <h2 className="text-xl md:text-2xl font-bold uppercase tracking-tighter">Reportable surfaces</h2>
+            </div>
+            <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+              {FRAMEWORKS.length} Active
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            {FRAMEWORKS.map((f) => (
+              <div key={f.id} className="p-3 border-[2px] border-ink bg-card">
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-xs font-bold uppercase tracking-tight truncate">{f.label}</span>
+                  <FileText size={12} strokeWidth={2.5} className="text-muted-foreground shrink-0" />
+                </div>
+                <div className="text-xl font-black tracking-tight tabular-nums">{f.controls}</div>
+                <div className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground mt-0.5">
+                  Controls
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="bg-primary text-primary-foreground p-6 md:p-8 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="font-mono text-[10px] tracking-wider mb-1 opacity-80">// NEXT</p>
+            <h2 className="text-xl md:text-2xl font-bold uppercase tracking-tighter">Ship the next attestation.</h2>
+          </div>
+          <BrutalButton variant="secondary">
+            <Download size={15} /> Export all (PDF)
+          </BrutalButton>
+        </section>
       </div>
     </AppShell>
+  );
+}
+
+function Stat({ k, v }: { k: string; v: string }) {
+  return (
+    <div className="border border-cream/20 bg-cream/5 p-2">
+      <div className="text-sm font-bold tabular-nums text-cream">{v}</div>
+      <div className="font-mono text-[9px] uppercase tracking-wider text-cream/50 mt-0.5">{k}</div>
+    </div>
   );
 }
