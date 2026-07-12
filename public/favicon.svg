@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+  <style>
+    :root { --fg: #111111; }
+    @media (prefers-color-scheme: dark) { :root { --fg: #ffffff; } }
+  </style>
+
+  <!-- Shield body -->
+  <path
+    d="M32 4L8 16v16c0 14.4 10.24 27.84 24 32 13.76-4.16 24-17.6 24-32V16L32 4Z"
+    fill="var(--fg)" fill-opacity="0.08"
+    stroke="var(--fg)" stroke-width="2.5" stroke-linejoin="round"
+  />
+
+  <!-- Inner shield -->
+  <path
+    d="M32 12l-18 9v12c0 11.04 7.84 21.36 18 24.56 10.16-3.2 18-13.52 18-24.56V21L32 12Z"
+    fill="var(--fg)" fill-opacity="0.04"
+    stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round" stroke-opacity="0.25"
+  />
+
+  <!-- Reticle — horizontal -->
+  <line x1="20" y1="34" x2="28" y2="34" stroke="#ff5600" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="36" y1="34" x2="44" y2="34" stroke="#ff5600" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Reticle — vertical -->
+  <line x1="32" y1="22" x2="32" y2="30" stroke="#ff5600" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="32" y1="38" x2="32" y2="46" stroke="#ff5600" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Center dot -->
+  <circle cx="32" cy="34" r="2.5" fill="#ff5600"/>
+
+  <!-- Corner brackets -->
+  <path d="M24 26h-2v2" stroke="#ff5600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M40 26h2v2" stroke="#ff5600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M24 42h-2v-2" stroke="#ff5600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M40 42h2v-2" stroke="#ff5600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

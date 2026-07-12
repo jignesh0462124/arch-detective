@@ -1,44 +1,47 @@
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
-const STORAGE_KEY = "sentinel-theme";
+const STORAGE_KEY = "archon-theme";
+type Theme = "light" | "dark";
+
+function applyTheme(theme: Theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  document.documentElement.classList.toggle("dark", theme === "dark");
+}
 
 export function ThemeToggle({ className = "" }: { className?: string }) {
   const [mounted, setMounted] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<Theme>("light");
 
-  // Read stored preference only after mount to avoid SSR/client mismatch.
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    const initial: "light" | "dark" =
-      stored === "dark" || stored === "light"
-        ? stored
-        : window.matchMedia?.("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light";
+    const initial: Theme = stored === "dark" || stored === "light" ? stored : "light";
+    applyTheme(initial);
     setTheme(initial);
     setMounted(true);
   }, []);
 
   useEffect(() => {
     if (!mounted) return;
-    document.documentElement.classList.toggle("dark", theme === "dark");
+    applyTheme(theme);
     try {
       window.localStorage.setItem(STORAGE_KEY, theme);
     } catch {}
   }, [theme, mounted]);
 
   const isDark = theme === "dark";
-  const baseClass = [
-    "inline-flex h-10 w-10 items-center justify-center rounded-lg border-brutal bg-card text-foreground shadow-brutal-sm shadow-brutal-hover",
+  const baseClass = cn(
+    "inline-flex size-9 shrink-0 items-center justify-center rounded-lg hairline bg-card text-foreground shadow-soft",
+    "transition-colors hover:bg-secondary dark:hover:bg-secondary",
+    "focus-visible:outline-none focus-visible:shadow-ring",
     className,
-  ].join(" ");
+  );
 
   if (!mounted) {
-    // Stable SSR markup — same tag, attrs, and children on server and first client render.
     return (
       <button type="button" aria-label="Toggle theme" className={baseClass} suppressHydrationWarning>
-        <Moon size={16} strokeWidth={2.5} />
+        <Moon size={15} strokeWidth={2} />
       </button>
     );
   }
@@ -48,10 +51,11 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-pressed={isDark}
       title={isDark ? "Light mode" : "Dark mode"}
       className={baseClass}
     >
-      {isDark ? <Sun size={16} strokeWidth={2.5} /> : <Moon size={16} strokeWidth={2.5} />}
+      {isDark ? <Sun size={15} strokeWidth={2} /> : <Moon size={15} strokeWidth={2} />}
     </button>
   );
 }

@@ -1,17 +1,19 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 type Variant = "primary" | "secondary" | "tertiary" | "ghost" | "utility";
 
 const styles: Record<Variant, string> = {
   primary:
-    "bg-primary text-primary-foreground border-brutal shadow-brutal shadow-brutal-hover",
+    "bg-primary text-primary-foreground hover:opacity-90",
   secondary:
-    "bg-card text-foreground border-brutal shadow-brutal shadow-brutal-hover",
+    "bg-card text-foreground hairline hover:bg-secondary",
   tertiary:
-    "bg-secondary text-foreground border-brutal shadow-brutal shadow-brutal-hover",
-  ghost: "bg-transparent text-foreground border-brutal hover:bg-cream-deep",
+    "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+  ghost:
+    "bg-transparent text-foreground hover:bg-secondary",
   utility:
-    "bg-ink text-cream border-brutal hover:bg-foreground/90",
+    "bg-accent text-accent-foreground hover:bg-accent/90",
 };
 
 export function BrutalButton({
@@ -26,19 +28,20 @@ export function BrutalButton({
   children: ReactNode;
 }) {
   const sizes = {
-    sm: "px-3 py-1.5 text-xs",
-    md: "px-4 py-2.5 text-sm",
-    lg: "px-5 py-3 text-base",
+    sm: "min-h-9 px-3 py-1.5 text-[13px]",
+    md: "min-h-10 px-[18px] py-2.5 text-[15px]",
+    lg: "min-h-11 px-5 py-3 text-base",
   } as const;
 
   return (
     <button
-      className={[
-        "inline-flex items-center justify-center gap-2 rounded-lg font-semibold leading-none",
+      className={cn(
+        "inline-flex items-center justify-center gap-2 rounded-md font-medium leading-none transition-colors duration-150",
+        "disabled:pointer-events-none disabled:opacity-50",
         styles[variant],
         sizes[size],
         className,
-      ].join(" ")}
+      )}
       {...rest}
     >
       {children}

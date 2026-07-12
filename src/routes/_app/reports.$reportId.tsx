@@ -8,7 +8,7 @@ import { FINDINGS, FRAMEWORKS, REPORTS } from "@/lib/mock-data";
 export const Route = createFileRoute("/_app/reports/$reportId")({
   head: ({ params }) => {
     const r = REPORTS.find((x) => x.id === params.reportId);
-    const title = r ? `${r.title} · Sentinel` : "Report · Sentinel";
+    const title = r ? `${r.title} · Archon` : "Report · Archon";
     return {
       meta: [
         { title },
@@ -43,7 +43,7 @@ function ReportDetail() {
       }
     >
       {/* Cover */}
-      <section className="relative overflow-hidden rounded-2xl border-brutal-2 bg-card p-8 shadow-brutal">
+      <section className="relative overflow-hidden rounded-2xl hairline bg-card p-8 shadow-soft">
         <div className="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-bl from-secondary/40 to-transparent" />
         <div className="relative">
           <div className="flex items-center gap-2">
@@ -71,11 +71,11 @@ function ReportDetail() {
 
       {/* Executive summary */}
       <section className="mt-6 grid gap-5 lg:grid-cols-3">
-        <div className="rounded-xl border-brutal-2 bg-card p-6 shadow-brutal lg:col-span-2">
+        <div className="rounded-2xl hairline bg-card p-6 shadow-soft lg:col-span-2">
           <p className="section-title text-primary">01 · Summary</p>
           <h3 className="mt-1 text-xl font-bold">Executive summary</h3>
           <p className="mt-3 text-sm leading-relaxed">
-            Sentinel evaluated the Acme Cloud control environment against the {r.framework}{" "}
+            Archon evaluated the Acme Cloud control environment against the {r.framework}{" "}
             criteria for the period ending {r.date}. The organization demonstrates a maturing
             security program with strong identity governance and incident response, while logical
             access enforcement and vendor risk monitoring remain the largest residual exposures.
@@ -86,7 +86,7 @@ function ReportDetail() {
             architecture review board.
           </p>
 
-          <div className="mt-5 rounded-lg border-brutal bg-secondary/40 p-4 text-sm">
+          <div className="mt-5 rounded-xl hairline bg-secondary/40 p-4 text-sm">
             <p className="section-title text-foreground">
               <Sparkles size={11} className="mr-1 inline" strokeWidth={2.5} /> Agent verdict
             </p>
@@ -96,18 +96,18 @@ function ReportDetail() {
           </div>
         </div>
 
-        <div className="rounded-xl border-brutal-2 bg-card p-6 shadow-brutal">
+        <div className="rounded-2xl hairline bg-card p-6 shadow-soft">
           <p className="section-title text-primary">02 · Signatures</p>
           <h3 className="mt-1 text-xl font-bold">Sign-off</h3>
           <div className="mt-4 space-y-4">
             {[
-              { name: "M. Aoki", role: "Sentinel Agent v4.2", signed: true },
+              { name: "M. Aoki", role: "Archon Agent v4.2", signed: true },
               { name: "Priya R.", role: "Lead Auditor", signed: true },
               { name: "J. Okonkwo", role: "CISO", signed: false },
             ].map((s) => (
               <div
                 key={s.name}
-                className="flex items-center justify-between border-b-[1.5px] border-dashed border-ink pb-3 last:border-b-0 last:pb-0"
+                className="flex items-center justify-between border-b border-dashed border-border pb-3 last:border-b-0 last:pb-0"
               >
                 <div>
                   <div className="text-sm font-bold">{s.name}</div>
@@ -116,7 +116,7 @@ function ReportDetail() {
                   </div>
                 </div>
                 {s.signed ? (
-                  <div className="flex items-center gap-1 rounded-full border-brutal bg-success px-2 py-0.5 text-[10px] font-bold uppercase text-success-foreground">
+                  <div className="flex items-center gap-1 rounded-full border border-success/30 bg-success px-2 py-0.5 text-[10px] font-semibold uppercase text-success-foreground">
                     <Stamp size={11} strokeWidth={2.5} /> Signed
                   </div>
                 ) : (
@@ -129,8 +129,8 @@ function ReportDetail() {
       </section>
 
       {/* Control matrix */}
-      <section className="mt-6 rounded-xl border-brutal-2 bg-card shadow-brutal">
-        <div className="flex items-center justify-between border-b-[1.5px] border-ink px-6 py-4">
+      <section className="mt-6 overflow-hidden rounded-2xl hairline bg-card shadow-soft">
+        <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div>
             <p className="section-title text-primary">03 · Matrix</p>
             <h3 className="text-xl font-bold">Control coverage matrix</h3>
@@ -141,8 +141,8 @@ function ReportDetail() {
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[600px] text-sm">
-            <thead className="bg-cream-deep">
-              <tr className="border-b-[1.5px] border-ink">
+            <thead className="bg-muted">
+              <tr className="border-b border-border">
                 <th className="px-5 py-3 text-left font-semibold">Framework</th>
                 <th className="px-5 py-3 text-left font-semibold">Controls</th>
                 <th className="px-5 py-3 text-left font-semibold">Met</th>
@@ -158,7 +158,7 @@ function ReportDetail() {
                 const partial = Math.round(total * 0.15);
                 const violated = Math.max(0, total - met - partial);
                 return (
-                  <tr key={f.id} className="border-t-[1.5px] border-ink">
+                  <tr key={f.id} className="border-t border-border transition-colors hover:bg-muted/70">
                     <td className="px-5 py-3 font-semibold">{f.label}</td>
                     <td className="px-5 py-3 font-mono">{total}</td>
                     <td className="px-5 py-3 font-mono">{met}</td>
@@ -178,12 +178,12 @@ function ReportDetail() {
       </section>
 
       {/* Findings */}
-      <section className="mt-6 rounded-xl border-brutal-2 bg-card shadow-brutal">
-        <div className="border-b-[1.5px] border-ink px-6 py-4">
+      <section className="mt-6 overflow-hidden rounded-2xl hairline bg-card shadow-soft">
+        <div className="border-b border-border px-6 py-4">
           <p className="section-title text-primary">04 · Findings</p>
           <h3 className="text-xl font-bold">Detailed findings</h3>
         </div>
-        <ol className="divide-y-[1.5px] divide-ink">
+        <ol className="divide-y divide-border">
           {FINDINGS.slice(0, 5).map((f, i) => (
             <li key={f.id} className="px-6 py-5">
               <div className="flex flex-wrap items-baseline gap-2">
@@ -208,7 +208,7 @@ function ReportDetail() {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border-brutal bg-cream px-3 py-3">
+    <div className="rounded-xl hairline bg-muted px-3 py-3">
       <div className="text-2xl font-bold">{value}</div>
       <div className="section-title text-muted-foreground">{label}</div>
     </div>

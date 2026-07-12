@@ -20,9 +20,9 @@ import { FRAMEWORKS } from "@/lib/mock-data";
 export const Route = createFileRoute("/_app/new-scan")({
   head: () => ({
     meta: [
-      { title: "New scan · Sentinel" },
+      { title: "New scan · Archon" },
       { name: "description", content: "Run an agentic threat model across architecture diagrams, descriptions, or operational logs." },
-      { property: "og:title", content: "New scan · Sentinel" },
+      { property: "og:title", content: "New scan · Archon" },
       { property: "og:description", content: "Run an agentic threat model across architecture diagrams, descriptions, or operational logs." },
     ],
   }),
@@ -89,13 +89,13 @@ function NewScanPage() {
       }
     >
       {/* HERO: 7/5 split */}
-      <section className="border-[3px] border-ink bg-card shadow-brutal">
+      <section className="overflow-hidden rounded-2xl hairline bg-card shadow-soft">
         <div className="grid grid-cols-1 lg:grid-cols-12">
           {/* Left: configuration */}
-          <div className="lg:col-span-7 border-b-[3px] lg:border-b-0 lg:border-r-[3px] border-ink">
-            <div className="border-b-[3px] border-ink bg-cream px-5 py-3 flex items-center justify-between">
-              <p className="section-title text-ink">// scan.config</p>
-              <span className="font-mono text-[10px] text-ink/60">step 01 / 03</span>
+          <div className="border-b border-border lg:col-span-7 lg:border-b-0 lg:border-r">
+            <div className="flex items-center justify-between border-b border-border bg-muted px-5 py-3">
+              <p className="section-title text-primary">// scan.config</p>
+              <span className="font-mono text-[10px] text-muted-foreground">step 01 / 03</span>
             </div>
 
             <div className="p-5 sm:p-7">
@@ -107,7 +107,7 @@ function NewScanPage() {
               </h2>
 
               {/* Tab strip */}
-              <div className="mt-6 flex border-[1.5px] border-ink">
+              <div className="mt-6 flex overflow-hidden rounded-xl hairline bg-muted p-1">
                 {TABS.map((t) => {
                   const active = tab === t.id;
                   return (
@@ -115,8 +115,8 @@ function NewScanPage() {
                       key={t.id}
                       onClick={() => setTab(t.id)}
                       className={[
-                        "flex flex-1 items-center justify-center gap-2 px-3 py-2.5 text-xs font-bold uppercase tracking-wider border-r-[1.5px] last:border-r-0 border-ink",
-                        active ? "bg-ink text-cream" : "bg-card hover:bg-cream",
+                        "flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-xs font-semibold uppercase tracking-wider transition-colors",
+                        active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-card hover:text-foreground",
                       ].join(" ")}
                     >
                       <t.icon size={14} strokeWidth={2.5} />
@@ -128,7 +128,7 @@ function NewScanPage() {
 
               <div className="mt-4">
                 {tab === "diagram" && (
-                  <div className="border-[1.5px] border-dashed border-ink bg-cream p-8 text-center">
+                  <div className="rounded-xl border border-dashed border-border bg-muted p-8 text-center">
                     <Upload size={22} strokeWidth={2.5} className="mx-auto" />
                     <p className="mt-3 text-sm font-bold">
                       Drop a Terraform plan, C4 diagram, or k8s manifest
@@ -152,12 +152,12 @@ function NewScanPage() {
 - Cognito federated to Okta
 - Stripe tokenization (PCI reduced)
 - Audit logs → S3 + Splunk`}
-                    className="w-full border-[1.5px] border-ink bg-cream p-3 font-mono text-[12px] leading-relaxed outline-none focus:shadow-brutal-gold"
+                    className="w-full rounded-xl hairline bg-muted p-3 font-mono text-[12px] leading-relaxed outline-none transition-shadow focus:shadow-ring"
                   />
                 )}
 
                 {tab === "logs" && (
-                  <div className="border-[1.5px] border-dashed border-ink bg-cream p-8 text-center">
+                  <div className="rounded-xl border border-dashed border-border bg-muted p-8 text-center">
                     <ScrollText size={22} strokeWidth={2.5} className="mx-auto" />
                     <p className="mt-3 text-sm font-bold">
                       Upload CloudTrail / VPC flow / app logs
@@ -176,9 +176,9 @@ function NewScanPage() {
 
           {/* Right: terminal trace */}
           <div className="lg:col-span-5 bg-ink text-cream">
-            <div className="border-b-[3px] border-cream/20 px-5 py-3 flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-cream/20 px-5 py-3">
               <div className="flex items-center gap-2">
-                <Terminal size={14} className="text-secondary" />
+                <Terminal size={14} className="text-accent" />
                 <span className="font-mono text-[11px] uppercase tracking-wider text-cream/70">
                   agent.trace
                 </span>
@@ -189,21 +189,21 @@ function NewScanPage() {
             </div>
 
             <div className="p-5 font-mono text-[12px] leading-relaxed">
-              <div className="text-cream/50">$ agent.run(</div>
+              <div className="text-cream/70">$ agent.run(</div>
               <div className="pl-4">
-                <span className="text-cream/50">model=</span>
+                <span className="text-cream/70">model=</span>
                 <span className="text-secondary">"{model.toLowerCase().replace(/[· ]+/g, "-")}"</span>
                 ,
               </div>
               <div className="pl-4">
-                <span className="text-cream/50">frameworks=</span>
+                <span className="text-cream/70">frameworks=</span>
                 <span className="text-secondary">{JSON.stringify(selected)}</span>,
               </div>
               <div className="pl-4">
-                <span className="text-cream/50">stream=</span>
+                <span className="text-cream/70">stream=</span>
                 <span className="text-primary">true</span>
               </div>
-              <div className="text-cream/50">)</div>
+              <div className="text-cream/70">)</div>
 
               <div className="mt-5 border-t border-cream/20 pt-4 space-y-2">
                 <div>
@@ -213,7 +213,7 @@ function NewScanPage() {
                   <span className="text-success">[ok]</span> context.tokens = 14,221
                 </div>
                 <div>
-                  <span className={running ? "text-secondary" : "text-cream/40"}>
+                  <span className={running ? "text-secondary" : "text-cream/70"}>
                     [{running ? "..." : "--"}]
                   </span>{" "}
                   pipeline ready · awaiting trigger
@@ -222,7 +222,7 @@ function NewScanPage() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 border-t-[3px] border-cream/20">
+            <div className="grid grid-cols-3 border-t border-cream/20">
               {[
                 ["Queue", "0"],
                 ["Cost/scan", "$0.04"],
@@ -235,7 +235,7 @@ function NewScanPage() {
                     i < 2 ? "border-r border-cream/20" : "",
                   ].join(" ")}
                 >
-                  <div className="font-mono text-[10px] uppercase tracking-wider text-cream/50">
+                  <div className="font-mono text-[10px] uppercase tracking-wider text-cream/70">
                     {k}
                   </div>
                   <div className="mt-1 text-xl font-bold">{v}</div>
@@ -248,10 +248,10 @@ function NewScanPage() {
 
       {/* FRAMEWORKS + MODEL: split 5/7 */}
       <section className="mt-5 grid grid-cols-1 lg:grid-cols-12 gap-5">
-        <div className="lg:col-span-5 border-[3px] border-ink bg-cream shadow-brutal">
-          <div className="border-b-[3px] border-ink px-5 py-3 flex items-center justify-between">
-            <p className="section-title text-ink">// frameworks</p>
-            <span className="font-mono text-[10px] text-ink/60">
+        <div className="overflow-hidden rounded-2xl hairline bg-muted shadow-soft lg:col-span-5">
+          <div className="flex items-center justify-between border-b border-border px-5 py-3">
+            <p className="section-title text-primary">// frameworks</p>
+            <span className="font-mono text-[10px] text-muted-foreground">
               {selected.length} selected
             </span>
           </div>
@@ -269,10 +269,10 @@ function NewScanPage() {
                     key={f.id}
                     onClick={() => toggle(f.id)}
                     className={[
-                      "flex items-center justify-between border-[1.5px] border-ink px-3 py-2.5 text-left transition-shadow",
+                      "flex items-center justify-between rounded-xl hairline px-3 py-2.5 text-left transition-all",
                       active
-                        ? "bg-primary text-primary-foreground shadow-brutal-sm"
-                        : "bg-card hover:bg-cream",
+                        ? "bg-primary text-primary-foreground shadow-soft"
+                        : "bg-card hover:bg-background",
                     ].join(" ")}
                   >
                     <div>
@@ -283,7 +283,7 @@ function NewScanPage() {
                     </div>
                     <div
                       className={[
-                        "h-4 w-4 border-[1.5px] border-current flex items-center justify-center",
+                        "flex h-4 w-4 items-center justify-center rounded border border-current",
                         active ? "bg-cream text-ink" : "",
                       ].join(" ")}
                     >
@@ -296,16 +296,16 @@ function NewScanPage() {
           </div>
         </div>
 
-        <div className="lg:col-span-7 border-[3px] border-ink bg-card shadow-brutal">
-          <div className="border-b-[3px] border-ink bg-cream px-5 py-3 flex items-center justify-between">
-            <p className="section-title text-ink">// inference.model</p>
+        <div className="overflow-hidden rounded-2xl hairline bg-card shadow-soft lg:col-span-7">
+          <div className="flex items-center justify-between border-b border-border bg-muted px-5 py-3">
+            <p className="section-title text-primary">// inference.model</p>
             <BrutalBadge tone="gold">
               <Zap size={11} strokeWidth={2.5} /> Groq
             </BrutalBadge>
           </div>
           <div className="p-5">
             <h3 className="text-lg font-bold tracking-tight">CHOOSE A MODEL</h3>
-            <div className="mt-4 divide-y-[1.5px] divide-ink border-[1.5px] border-ink">
+            <div className="mt-4 overflow-hidden rounded-xl hairline divide-y divide-border">
               {MODELS.map((m) => {
                 const active = model === m.name;
                 return (
@@ -314,7 +314,7 @@ function NewScanPage() {
                     onClick={() => setModel(m.name)}
                     className={[
                       "w-full flex items-center justify-between p-3 text-left",
-                      active ? "bg-secondary" : "bg-card hover:bg-cream",
+                      active ? "bg-secondary" : "bg-card hover:bg-muted",
                     ].join(" ")}
                   >
                     <div className="flex items-center gap-3">
@@ -327,7 +327,7 @@ function NewScanPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="font-mono text-[11px] text-ink/70">{m.speed}</span>
+                      <span className="font-mono text-[11px] text-muted-foreground">{m.speed}</span>
                       <ChevronRight size={14} strokeWidth={2.5} className={active ? "" : "opacity-30"} />
                     </div>
                   </button>
@@ -339,12 +339,12 @@ function NewScanPage() {
       </section>
 
       {/* PIPELINE: vertical trace on ink */}
-      <section className="mt-5 border-[3px] border-ink bg-ink text-cream shadow-brutal">
-        <div className="border-b-[3px] border-cream/20 px-5 py-3 flex items-center justify-between">
+      <section className="mt-5 overflow-hidden rounded-2xl hairline bg-ink text-cream shadow-soft">
+        <div className="flex items-center justify-between border-b border-cream/20 px-5 py-3">
           <p className="font-mono text-[11px] uppercase tracking-wider text-secondary">
             // reasoning.pipeline
           </p>
-          <span className="font-mono text-[10px] text-cream/50">
+              <span className="font-mono text-[10px] text-cream/70">
             {step < 0 ? "0" : Math.min(step, PIPELINE.length)} / {PIPELINE.length}
           </span>
         </div>
@@ -358,12 +358,12 @@ function NewScanPage() {
               <li key={p.label} className="relative">
                 <div
                   className={[
-                    "absolute -left-[34px] sm:-left-[42px] flex h-7 w-7 items-center justify-center border-[1.5px] font-mono text-[11px] font-bold",
+                    "absolute -left-[34px] flex h-7 w-7 items-center justify-center rounded-full border font-mono text-[11px] font-bold sm:-left-[42px]",
                     done
                       ? "bg-success border-cream text-success-foreground"
                       : active
                       ? "bg-secondary border-cream text-ink"
-                      : "bg-ink border-cream/40 text-cream/40",
+                      : "bg-ink border-cream/40 text-cream/70",
                   ].join(" ")}
                 >
                   {done ? <CheckCircle2 size={14} strokeWidth={2.5} /> : String(i + 1).padStart(2, "0")}
@@ -371,12 +371,12 @@ function NewScanPage() {
                 <div
                   className={[
                     "text-sm font-bold tracking-tight",
-                    idle ? "text-cream/40" : "text-cream",
+                    idle ? "text-cream/70" : "text-cream",
                   ].join(" ")}
                 >
                   {p.label}
                 </div>
-                <div className="font-mono text-[11px] text-cream/50 mt-0.5">
+                <div className="font-mono text-[11px] text-cream/70 mt-0.5">
                   {active ? (
                     <span className="text-secondary flex items-center gap-1.5">
                       <span className="animate-pulse-dot h-1.5 w-1.5 rounded-full bg-secondary" />
@@ -393,7 +393,7 @@ function NewScanPage() {
       </section>
 
       {/* CTA strip */}
-      <section className="mt-5 border-[3px] border-ink bg-primary text-primary-foreground shadow-brutal">
+      <section className="mt-5 overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-soft dark:bg-card dark:text-card-foreground hairline">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 sm:p-7">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-wider opacity-80">

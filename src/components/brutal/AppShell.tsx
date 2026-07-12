@@ -4,17 +4,18 @@ import {
   ScanLine,
   ShieldAlert,
   FileText,
-  Settings,
-  Cpu,
   ChevronRight,
   Search,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/brutal/ThemeToggle";
+import { ArchonLogo } from "@/components/ui/ArchonLogo";
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
+
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/new-scan", label: "New Scan", icon: ScanLine },
+  { to: "/new-scan", label: "New scan", icon: ScanLine },
   { to: "/findings", label: "Findings", icon: ShieldAlert },
   { to: "/reports", label: "Reports", icon: FileText },
 ] as const;
@@ -34,23 +35,37 @@ export function AppShell({
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto flex max-w-[1400px]">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1760px]">
         {/* Sidebar */}
-        <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r-[1.5px] border-ink bg-cream px-5 py-6 lg:flex">
-          <Link to="/" className="group flex items-center gap-2.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg border-brutal bg-primary text-primary-foreground shadow-brutal-sm">
-              <Cpu size={18} strokeWidth={2.5} />
+        <aside
+          data-testid="desktop-sidebar"
+          className="sticky top-0 hidden h-dvh w-[232px] shrink-0 self-start flex-col overflow-y-auto border-r border-border bg-sidebar px-4 py-5 lg:flex"
+        >
+          <Link
+            to="/"
+            className="group flex min-h-11 items-center gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-sidebar-active"
+          >
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <ArchonLogo size={20} variant="mono" className="text-primary-foreground" />
             </div>
-            <div>
-              <div className="text-base font-bold leading-none tracking-tight">SENTINEL</div>
-              <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+            <div className="min-w-0">
+              <div className="text-[15px] font-semibold leading-none">
+                Archon
+              </div>
+              <div className="mt-1 text-[11px] leading-none text-muted-foreground">
                 Audit engine
               </div>
             </div>
           </Link>
 
-          <nav className="mt-8 flex flex-col gap-1.5">
-            <p className="section-title px-2 pb-2 text-muted-foreground">Workspace</p>
+          <nav className="mt-7 flex flex-col gap-1" aria-label="Workspace navigation">
+            <div className="mb-2 flex items-center justify-between px-2">
+              <p className="text-xs font-medium text-muted-foreground">Workspace</p>
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-success">
+                <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse-dot" />
+                Live
+              </span>
+            </div>
             {NAV.map((item) => {
               const active = pathname.startsWith(item.to);
               const Icon = item.icon;
@@ -58,73 +73,69 @@ export function AppShell({
                 <Link
                   key={item.to}
                   to={item.to}
-                  className={[
-                    "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors",
+                  className={cn(
+                    "group flex h-10 items-center gap-3 rounded-lg border px-3 text-[13px] font-medium transition-colors",
                     active
-                      ? "border-brutal bg-secondary text-foreground shadow-brutal-sm"
-                      : "border-[1.5px] border-transparent hover:border-ink hover:bg-card",
-                  ].join(" ")}
+                      ? "border-border bg-sidebar-active text-foreground"
+                      : "border-transparent text-muted-foreground hover:bg-sidebar-active hover:text-foreground",
+                  )}
                 >
-                  <Icon size={16} strokeWidth={2.25} />
+                  <Icon size={16} strokeWidth={1.9} className="shrink-0" />
                   <span>{item.label}</span>
                   {active ? (
-                    <ChevronRight size={14} strokeWidth={2.5} className="ml-auto" />
+                    <ChevronRight size={14} strokeWidth={2} className="ml-auto" />
                   ) : null}
                 </Link>
               );
             })}
           </nav>
 
-          <div className="mt-auto rounded-xl border-brutal bg-card p-4 shadow-brutal-sm">
+          <div className="mt-auto rounded-lg border border-border bg-sidebar-active p-3.5">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 animate-pulse-dot rounded-full bg-success" />
-              <span className="text-xs font-semibold uppercase tracking-wider">
-                Groq · Llama 3 70B
-              </span>
+              <span className="truncate text-xs font-semibold">Groq / Llama 3 70B</span>
             </div>
-            <p className="mt-2 text-xs text-muted-foreground">
-              Avg inference: <span className="font-semibold text-foreground">312 ms</span> ·
-              tokens/s 740
-            </p>
+            <div className="mt-3 grid grid-cols-2 gap-2 border-t border-border pt-3">
+              <div>
+                <p className="text-[10px] text-muted-foreground">Latency</p>
+                <p className="mt-0.5 font-mono text-[11px] font-medium">312 ms</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-muted-foreground">Throughput</p>
+                <p className="mt-0.5 font-mono text-[11px] font-medium">740 tok/s</p>
+              </div>
+            </div>
           </div>
-
-          <Link
-            to="/"
-            className="mt-3 flex items-center gap-2 rounded-lg px-2 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground"
-          >
-            <Settings size={14} /> Settings
-          </Link>
         </aside>
 
         {/* Main */}
-        <main className="min-w-0 flex-1 px-3 py-3 pb-20 sm:px-5 sm:py-4 lg:pb-4">
-          {/* Header card */}
-          <header className="rounded-xl border-brutal bg-card p-3 shadow-brutal-sm sm:p-4 lg:p-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
+        <main className="min-w-0 flex-1 px-4 py-4 pb-24 sm:px-6 sm:py-5 lg:px-7 lg:pb-7 xl:px-8">
+          {/* Header */}
+          <header className="rounded-xl hairline bg-card shadow-soft">
+            <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3.5 sm:px-5">
               <div className="min-w-0">
-                <p className="section-title text-primary flex items-center gap-1.5">
-                  {(subtitle ?? "Sentinel").split(" · ").map((part, i, arr) => (
-                    <span key={i} className="inline-flex items-center gap-1.5">
-                      <span className={i === 0 ? "" : "text-foreground"}>{part}</span>
-                      {i < arr.length - 1 && (
-                        <span className="text-foreground/30">•</span>
-                      )}
-                    </span>
-                  ))}
-                </p>
-                <h1 className="mt-1 text-lg font-bold tracking-tight sm:text-xl lg:text-2xl leading-tight">
+                {subtitle ? (
+                  <p className="section-title">
+                    {subtitle}
+                  </p>
+                ) : null}
+                <h1 className="mt-0.5 text-lg font-medium leading-tight sm:text-xl">
                   {title}
                 </h1>
               </div>
               <div className="flex items-center gap-2">
-                <div className="hidden items-center gap-2 rounded-md border-brutal bg-cream px-2.5 py-1.5 text-xs lg:flex">
-                  <Search size={12} strokeWidth={2.25} className="text-muted-foreground" />
-                  <input
-                    placeholder="Search findings, scans, controls…"
-                    className="w-56 bg-transparent text-xs outline-none placeholder:text-muted-foreground"
+                <div className="hidden items-center gap-2 rounded-lg bg-background px-3 py-2 text-sm hairline lg:flex">
+                  <Search
+                    size={13}
+                    strokeWidth={2}
+                    className="text-muted-foreground"
                   />
-                  <kbd className="rounded border-brutal px-1 py-0.5 font-mono text-[9px] font-semibold text-muted-foreground">
-                    ⌘K
+                  <input
+                    placeholder="Search findings, scans, controls..."
+                    className="w-56 bg-transparent text-[13px] outline-none placeholder:text-muted-foreground"
+                  />
+                  <kbd className="rounded border hairline px-1 py-0.5 font-mono text-[9px] text-muted-foreground">
+                    Ctrl K
                   </kbd>
                 </div>
                 <ThemeToggle />
@@ -133,12 +144,12 @@ export function AppShell({
             </div>
           </header>
 
-          <div className="mt-4">{children}</div>
+          <div className="mt-5">{children}</div>
         </main>
       </div>
 
-      {/* Mobile bottom nav with gold top border */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t-[4px] border-gold bg-card lg:hidden">
+      {/* Mobile bottom nav */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-card lg:hidden">
         <ul className="grid grid-cols-4">
           {NAV.map((item) => {
             const active = pathname.startsWith(item.to);
@@ -147,12 +158,14 @@ export function AppShell({
               <li key={item.to} className="flex justify-center py-2">
                 <Link
                   to={item.to}
-                  className={[
-                    "flex flex-col items-center gap-1 rounded-full px-4 py-1.5 text-[10px] font-semibold uppercase tracking-wider",
-                    active ? "bg-secondary text-foreground" : "text-muted-foreground",
-                  ].join(" ")}
+                  className={cn(
+                    "flex flex-col items-center gap-0.5 rounded-lg px-3 py-1.5 text-[10px] font-medium",
+                    active
+                      ? "bg-background text-foreground hairline"
+                      : "text-muted-foreground",
+                  )}
                 >
-                  <Icon size={18} strokeWidth={2.25} />
+                  <Icon size={16} strokeWidth={2} />
                   {item.label}
                 </Link>
               </li>

@@ -1,16 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Cpu, Zap } from "lucide-react";
+import { ArrowRight, Zap, CheckCircle2 } from "lucide-react";
 import { ThemeToggle } from "@/components/brutal/ThemeToggle";
+import { ArchonLogo } from "@/components/ui/ArchonLogo";
 import { FRAMEWORKS } from "@/lib/mock-data";
+import { CodePanel } from "@/components/ui/code-panel";
+import { SectionCard } from "@/components/ui/section-card";
+import { CoverageBar } from "@/components/ui/coverage-bar";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Sentinel — Agentic Compliance & Threat Modeling Engine" },
+      { title: "Archon — Agentic Compliance & Threat Modeling" },
       {
         name: "description",
         content:
-          "Sentinel parses architectures and logs, finds vulnerabilities, and ships audit-ready reports against SOC 2, ISO 27001, HIPAA, GDPR, PCI-DSS, and NIST in minutes.",
+          "Archon parses architectures and logs, finds vulnerabilities, and ships audit-ready reports against SOC 2, ISO 27001, HIPAA, GDPR, PCI-DSS, and NIST in minutes.",
       },
     ],
   }),
@@ -18,235 +22,329 @@ export const Route = createFileRoute("/")({
 });
 
 const PIPELINE = [
-  { code: "01 // INGEST", label: "Repository Analysis" },
-  { code: "02 // TOPOLOGIZE", label: "Graph Extraction" },
-  { code: "03 // THREAT-MODEL", label: "Risk Assessment" },
-  { code: "04 // MAP-CONTROLS", label: "Framework Alignment" },
-  { code: "05 // SIGN & SHIP", label: "Signed Audit Report" },
+  { code: "01", label: "Repository analysis", note: "parse · crawl · index" },
+  { code: "02", label: "Graph extraction", note: "topology · trust boundaries" },
+  { code: "03", label: "Threat assessment", note: "STRIDE · attack paths" },
+  { code: "04", label: "Framework alignment", note: "SOC 2 · ISO · NIST · …" },
+  { code: "05", label: "Signed audit report", note: "PDF · countersign" },
+];
+
+const COVERAGE = [
+  { label: "SOC 2", pct: 92 },
+  { label: "ISO 27001", pct: 78 },
+  { label: "PCI-DSS", pct: 64 },
+  { label: "HIPAA", pct: 81 },
+  { label: "GDPR", pct: 71 },
+  { label: "NIST 800-53", pct: 58 },
 ];
 
 function Landing() {
   return (
-    <div className="min-h-screen bg-background text-foreground flex items-start justify-center p-4 md:p-8">
-      <div className="w-full max-w-6xl border-[3px] border-ink bg-card shadow-brutal overflow-hidden">
-        {/* NAV */}
-        <header className="flex items-center justify-between border-b-[3px] border-ink px-6 py-4 bg-cream">
-          <Link to="/" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center border-[2px] border-ink bg-primary text-primary-foreground">
-              <Cpu size={16} strokeWidth={2.5} />
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1280px] flex-col">
+        {/* Header */}
+        <header className="sticky top-0 z-30 flex min-h-16 items-center justify-between gap-4 border-b border-border bg-background/90 px-4 py-3 backdrop-blur sm:px-6">
+          <Link to="/" className="flex min-w-0 items-center gap-2.5">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <ArchonLogo size={18} variant="mono" className="text-primary-foreground" />
             </div>
-            <span className="text-base font-bold tracking-tight">SENTINEL</span>
+            <div className="min-w-0">
+              <div className="text-sm font-semibold leading-none tracking-tight">Archon</div>
+              <div className="mt-1 font-mono text-[10px] tracking-wider text-muted-foreground">
+                Audit engine
+              </div>
+            </div>
           </Link>
-          <nav className="hidden items-center gap-7 text-xs font-bold uppercase tracking-[0.15em] md:flex">
-            <a href="#product" className="hover:text-primary">Product</a>
-            <a href="#pipeline" className="hover:text-primary">Pipeline</a>
-            <a href="#frameworks" className="hover:text-primary">Frameworks</a>
+
+          <nav className="hidden items-center gap-7 text-[13px] font-medium lg:flex">
+            <a
+              href="#product"
+              className="text-foreground/70 transition-colors hover:text-foreground"
+            >
+              Product
+            </a>
+            <a
+              href="#pipeline"
+              className="text-foreground/70 transition-colors hover:text-foreground"
+            >
+              Pipeline
+            </a>
+            <a
+              href="#frameworks"
+              className="text-foreground/70 transition-colors hover:text-foreground"
+            >
+              Frameworks
+            </a>
           </nav>
-          <div className="flex items-center gap-2">
+
+          <div className="flex shrink-0 items-center gap-2">
             <ThemeToggle />
             <Link
               to="/dashboard"
-              className="hidden sm:inline-flex items-center gap-1.5 border-[2px] border-ink bg-primary px-3 py-2 text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-[3px_3px_0_0_hsl(var(--ink)/1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+              className="inline-flex min-h-9 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-[13px] font-medium text-primary-foreground shadow-soft transition-all hover:-translate-y-px hover:shadow-soft-lg"
             >
-              Launch <ArrowRight size={12} />
+              Launch <ArrowRight size={13} strokeWidth={2.5} />
             </Link>
           </div>
         </header>
 
-        {/* HERO — split 7/5 */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 border-b-[3px] border-ink">
-          <div className="lg:col-span-7 p-8 md:p-12 border-b-[3px] lg:border-b-0 lg:border-r-[3px] border-ink flex flex-col justify-center bg-card">
-            <div className="inline-flex items-center gap-2 mb-6">
-              <span className="inline-flex items-center gap-1 border border-ink bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary-foreground">
-                <Zap size={10} strokeWidth={3} /> Llama 3.1
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground italic">
-                Powered by Groq
-              </span>
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold leading-[0.85] tracking-tighter">
-              AUDIT AT
-              <br />
-              <span className="text-primary">MACHINE</span> SPEED.
-            </h1>
-            <p className="mt-8 max-w-lg text-base md:text-lg font-medium text-muted-foreground">
-              Sentinel is an agentic engine that parses architecture, finds
-              vulnerabilities, and ships signed audit reports in minutes — not weeks.
-            </p>
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Link
-                to="/dashboard"
-                className="inline-flex items-center gap-2 border-[2px] border-ink bg-primary px-6 py-4 text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground shadow-[4px_4px_0_0_hsl(var(--ink)/1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
-              >
-                Launch Console <ArrowRight size={14} strokeWidth={2.5} />
-              </Link>
-              <Link
-                to="/reports/$reportId"
-                params={{ reportId: "RPT-0098" }}
-                className="inline-flex items-center border-[2px] border-ink bg-cream px-6 py-4 text-xs font-bold uppercase tracking-[0.18em] text-foreground shadow-[4px_4px_0_0_hsl(var(--ink)/1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
-              >
-                View Sample
-              </Link>
-            </div>
-          </div>
-
-          {/* Terminal panel */}
-          <div className="lg:col-span-5 bg-ink p-6 flex flex-col text-cream">
-            <div className="flex gap-1.5 mb-4">
-              <span className="h-2.5 w-2.5 rounded-full bg-primary" />
-              <span className="h-2.5 w-2.5 rounded-full bg-secondary" />
-              <span className="h-2.5 w-2.5 rounded-full bg-success" />
-            </div>
-            <div className="flex-1 font-mono text-[11px] leading-relaxed">
-              <div className="text-success mb-1">$ sentinel --scan infra-prod</div>
-              <div className="text-cream/40 mb-3">Initializing agentic swarm…</div>
-              <div className="mb-1"><span className="text-primary">PARSE:</span> 47 assets identified</div>
-              <div className="mb-1"><span className="text-primary">THREAT:</span> 19 attack vectors found</div>
-              <div className="mb-1"><span className="text-primary">MAP:</span> 38 SOC2 controls validated</div>
-              <div className="mb-4"><span className="text-primary">REPORT:</span> Generating signed PDF…</div>
-
-              <div className="mt-4 border border-cream/20 bg-cream/5 p-3">
-                <div className="flex justify-between items-center text-cream/60 mb-1.5">
-                  <span>COMPLETION TIME</span>
-                  <span className="text-success">1m 48s</span>
-                </div>
-                <div className="flex justify-between items-center text-cream/60 mb-1.5">
-                  <span>THROUGHPUT</span>
-                  <span className="text-cream">740 TOK/S</span>
-                </div>
-                <div className="flex justify-between items-center text-cream/60">
-                  <span>COST / SCAN</span>
-                  <span className="text-cream">$0.03</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* FEATURES — three numbered cells */}
-        <section id="product" className="grid grid-cols-1 md:grid-cols-3 border-b-[3px] border-ink bg-cream">
-          {[
-            { n: "01", t: "Parse", b: "Extract assets, dataflows, and trust boundaries from code and logs automatically." },
-            { n: "02", t: "Map", b: "Trace every threat to specific regulatory controls with citation-grade evidence." },
-            { n: "03", t: "Report", b: "Generate human-readable, auditor-ready documentation co-signed by your team." },
-          ].map((f, i) => (
+        <main className="flex-1">
+          {/* Hero */}
+          <section className="px-4 py-6 sm:px-6 lg:h-[min(700px,calc(100svh-132px))] lg:min-h-[620px] lg:py-8">
             <div
-              key={f.n}
-              className={[
-                "p-8",
-                i < 2 ? "border-b-[3px] md:border-b-0 md:border-r-[3px] border-ink" : "",
-              ].join(" ")}
+              data-testid="landing-hero"
+              className="grid h-full grid-cols-1 overflow-hidden rounded-2xl border border-border bg-card lg:grid-cols-12"
             >
-              <div className="text-4xl font-bold mb-4 text-primary tracking-tighter">{f.n}</div>
-              <h3 className="text-2xl font-bold mb-2 uppercase tracking-tight">{f.t}</h3>
-              <p className="text-sm text-muted-foreground">{f.b}</p>
-            </div>
-          ))}
-        </section>
-
-        {/* PIPELINE — vertical trace on ink */}
-        <section id="pipeline" className="bg-ink text-cream p-8 md:p-16 flex flex-col md:flex-row gap-10 md:gap-16 border-b-[3px] border-ink">
-          <div className="md:w-1/3">
-            <p className="font-mono text-xs text-secondary uppercase tracking-widest mb-3">// Pipeline</p>
-            <h2 className="text-3xl md:text-4xl font-bold leading-tight tracking-tight mb-6">
-              Autonomous, five-step verification sequence.
-            </h2>
-            <p className="text-cream/60 text-sm">
-              Every scan follows a deterministic flow optimized for speed and
-              traceability — from repository to signed report.
-            </p>
-          </div>
-          <div className="flex-1 border-l-2 border-cream/20 pl-8 space-y-10">
-            {PIPELINE.map((s, i) => (
-              <div key={s.code} className="relative">
-                <div
-                  className={[
-                    "absolute -left-[41px] top-1 h-4 w-4 border-2 border-ink",
-                    i === 0 ? "bg-primary" : "bg-cream/20",
-                  ].join(" ")}
-                />
-                <div
-                  className={[
-                    "font-mono text-xs mb-1 tracking-wider",
-                    i === 0 ? "text-primary" : "text-cream/40",
-                  ].join(" ")}
-                >
-                  {s.code}
-                </div>
-                <div className="text-lg font-bold">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* FRAMEWORKS — status dashboard */}
-        <section id="frameworks" className="p-8 md:p-12 bg-card border-b-[3px] border-ink">
-          <div className="flex flex-wrap justify-between items-end gap-3 mb-8">
-            <h2 className="text-3xl font-bold uppercase tracking-tighter">Status Dashboard</h2>
-            <div className="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">
-              {FRAMEWORKS.length} Frameworks Active
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {FRAMEWORKS.map((f) => (
-              <div key={f.id} className="p-5 border-[2px] border-ink bg-cream">
-                <div className="flex justify-between items-center mb-4">
-                  <span className="font-bold">{f.label}</span>
-                  <span className="text-[9px] px-1.5 py-0.5 bg-success text-success-foreground font-bold uppercase tracking-wider border border-ink">
-                    Active
+              <div className="flex flex-col justify-center border-b border-border px-5 py-10 sm:px-8 sm:py-12 lg:col-span-7 lg:border-b-0 lg:border-r lg:px-12 lg:py-10">
+                <div className="mb-5 flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-md bg-accent/10 px-2.5 py-1 text-[12px] font-medium text-accent">
+                    <Zap size={11} strokeWidth={2.5} /> Llama 3.1 70B
                   </span>
+                  <span className="text-[12px] text-muted-foreground">Powered by Groq</span>
                 </div>
-                <div className="text-2xl font-black tracking-tight">
-                  {f.controls}{" "}
-                  <span className="text-xs font-normal text-muted-foreground uppercase tracking-wider">
-                    Controls
-                  </span>
+
+                <h1 className="max-w-[14ch] text-[40px] font-medium leading-[1.05] sm:text-5xl lg:text-[56px]">
+                  Audit at <span className="text-accent">machine</span> speed.
+                </h1>
+
+                <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-muted-foreground">
+                  Archon parses your architecture, finds vulnerabilities, maps them to controls,
+                  and ships signed audit reports in minutes — not weeks.
+                </p>
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Link
+                    to="/dashboard"
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-soft transition-all hover:-translate-y-px hover:shadow-soft-lg"
+                  >
+                    Launch console <ArrowRight size={14} strokeWidth={2.5} />
+                  </Link>
+                  <Link
+                    to="/reports/$reportId"
+                    params={{ reportId: "RPT-0098" }}
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-card px-5 py-2.5 text-sm font-medium text-foreground hairline shadow-soft transition-all hover:-translate-y-px hover:shadow-soft-lg"
+                  >
+                    View sample report
+                  </Link>
                 </div>
               </div>
-            ))}
-          </div>
-        </section>
 
-        {/* CTA */}
-        <section className="p-8 md:p-12 bg-primary">
-          <div className="flex flex-col md:flex-row items-center gap-10">
-            <div className="flex-1">
-              <h2 className="text-4xl md:text-5xl font-bold text-primary-foreground leading-none tracking-tighter mb-4">
-                DITCH THE
-                <br />
-                MANUAL LABOR.
+              <div className="flex min-h-[360px] flex-col bg-[#111111] p-5 sm:p-6 lg:col-span-5 lg:min-h-0">
+                <CodePanel filename="scan.terminal" variant="terminal" className="flex-1">
+                  <div className="text-success">$ archon --scan infra-prod</div>
+                  <div className="mt-0.5 text-cream/60">Initializing agentic engine...</div>
+
+                  <div className="mt-4 space-y-1">
+                    <div>
+                      <span className="text-accent">[parse]</span>{" "}
+                      <span className="text-cream">47 assets identified</span>
+                    </div>
+                    <div>
+                      <span className="text-accent">[threat]</span>{" "}
+                      <span className="text-cream">19 attack vectors found</span>
+                    </div>
+                    <div>
+                      <span className="text-accent">[map]</span>{" "}
+                      <span className="text-cream">38 SOC 2 controls validated</span>
+                    </div>
+                    <div>
+                      <span className="text-accent">[report]</span>{" "}
+                      <span className="text-cream">generating signed PDF...</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 space-y-1.5 border-t border-cream/15 pt-4 font-mono text-[11px]">
+                    <div className="flex items-center justify-between text-cream/60">
+                      <span>Completion</span>
+                      <span className="text-cream">1m 48s</span>
+                    </div>
+                    <div className="flex items-center justify-between text-cream/60">
+                      <span>Throughput</span>
+                      <span className="text-cream">740 tok/s</span>
+                    </div>
+                    <div className="flex items-center justify-between text-cream/60">
+                      <span>Cost / scan</span>
+                      <span className="text-cream">$0.03</span>
+                    </div>
+                  </div>
+                </CodePanel>
+
+                <div className="mt-4 grid grid-cols-3 border-t border-cream/15 pt-4 text-center">
+                  <TerminalStat value="47" label="Assets" />
+                  <TerminalStat value="19" label="Threats" />
+                  <TerminalStat value="38" label="Controls" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Product — 3-up features */}
+          <section
+            id="product"
+            className="grid grid-cols-1 gap-3 px-4 pb-12 sm:px-6 md:grid-cols-3 lg:pb-16"
+          >
+            {[
+              {
+                n: "01",
+                t: "Parse",
+                b: "Extract assets, dataflows, and trust boundaries from code and logs automatically.",
+              },
+              {
+                n: "02",
+                t: "Map",
+                b: "Trace every threat to specific regulatory controls with citation-grade evidence.",
+              },
+              {
+                n: "03",
+                t: "Report",
+                b: "Generate human-readable, auditor-ready documentation co-signed by your team.",
+              },
+            ].map((f) => (
+              <div key={f.n} className="rounded-xl bg-card px-6 py-8 hairline sm:px-7">
+                <div className="section-title">{`// ${f.n}`}</div>
+                <h3 className="mt-2 text-xl font-medium">{f.t}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.b}</p>
+              </div>
+            ))}
+          </section>
+
+          {/* Pipeline */}
+          <section
+            id="pipeline"
+            className="flex flex-col gap-10 border-t border-border px-4 py-14 text-foreground sm:px-6 sm:py-16 md:flex-row md:gap-14 lg:py-20"
+          >
+            <div className="md:w-1/3">
+              <p className="section-title text-accent">// Pipeline</p>
+              <h2 className="mt-2 text-3xl font-medium leading-tight md:text-4xl">
+                Autonomous five-step verification.
               </h2>
-              <p className="text-primary-foreground/80 font-medium">
-                Connect your first repo and get a draft audit in 5 minutes.
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                Every scan follows a deterministic flow optimized for speed and traceability, from
+                repository to signed report.
               </p>
             </div>
-            <div className="w-full md:w-auto">
-              <Link
-                to="/new-scan"
-                className="block w-full md:w-64 text-center py-5 bg-ink text-cream font-bold text-base uppercase tracking-[0.18em] border-[2px] border-ink shadow-[8px_8px_0_0_rgba(255,255,255,0.3)] hover:translate-x-2 hover:translate-y-2 hover:shadow-none transition-all"
-              >
-                Start Free Scan
-              </Link>
-            </div>
-          </div>
-        </section>
+            <ol className="relative flex-1 space-y-6 pl-7">
+              <div aria-hidden className="absolute left-3 top-3 bottom-3 w-px bg-border" />
+              {PIPELINE.map((s, i) => (
+                <li key={s.code} className="relative">
+                  <div
+                    className={[
+                      "absolute -left-7 top-0.5 flex size-6 items-center justify-center rounded-full text-[10px] font-semibold",
+                      i === 0
+                        ? "bg-primary text-primary-foreground"
+                        : "border hairline-soft text-muted-foreground",
+                    ].join(" ")}
+                  >
+                    {s.code}
+                  </div>
+                  <div
+                    className={[
+                      "font-mono text-[11px]",
+                      i === 0 ? "text-accent" : "text-muted-foreground",
+                    ].join(" ")}
+                  >
+                    step
+                  </div>
+                  <div
+                    className={[
+                      "mt-0.5 text-base font-medium",
+                      i === 0 ? "" : "text-foreground",
+                    ].join(" ")}
+                  >
+                    {s.label}
+                  </div>
+                  <div className="font-mono text-[11px] text-muted-foreground">{s.note}</div>
+                </li>
+              ))}
+            </ol>
+          </section>
 
-        {/* FOOTER */}
-        <footer className="flex flex-wrap items-center justify-between gap-3 px-6 py-5 text-xs bg-cream border-t-[3px] border-ink">
-          <div className="flex items-center gap-2 font-semibold">
-            <div className="flex h-6 w-6 items-center justify-center border-[2px] border-ink bg-primary text-primary-foreground">
-              <Cpu size={11} strokeWidth={2.5} />
+          {/* Frameworks coverage */}
+          <section
+            id="frameworks"
+            className="border-t border-border px-4 py-14 sm:px-6 sm:py-16 lg:py-20"
+          >
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="section-title text-primary">// Frameworks</p>
+                <h2 className="mt-1 text-2xl font-medium sm:text-3xl">Status dashboard</h2>
+              </div>
+              <div className="text-xs font-medium text-muted-foreground">
+                {FRAMEWORKS.length} frameworks active
+              </div>
             </div>
-            SENTINEL · © 2026
+
+            <div className="grid gap-5 lg:grid-cols-3">
+              <SectionCard
+                variant="default"
+                eyebrow="Coverage"
+                title="Per-framework compliance posture"
+                description="Control pass-rate across last 90 days of scans."
+                className="lg:col-span-2"
+              >
+                <div className="grid gap-5 sm:grid-cols-2">
+                  {COVERAGE.map((c) => (
+                    <CoverageBar key={c.label} label={c.label} pct={c.pct} />
+                  ))}
+                </div>
+              </SectionCard>
+
+              <SectionCard
+                variant="muted"
+                eyebrow="Frameworks"
+                title="Active catalog"
+                description="Pick what to map against on every scan."
+              >
+                <ul className="space-y-2.5">
+                  {FRAMEWORKS.map((f) => (
+                    <li key={f.id} className="flex items-center justify-between text-sm">
+                      <span className="inline-flex items-center gap-2 font-medium">
+                        <CheckCircle2 size={14} className="text-success" strokeWidth={2} />
+                        {f.label}
+                      </span>
+                      <span className="font-mono text-[11px] text-muted-foreground">
+                        {f.controls}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </SectionCard>
+            </div>
+          </section>
+        </main>
+
+        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-6 text-xs sm:px-6">
+          <div className="flex items-center gap-2 font-medium">
+            <div className="flex size-6 items-center justify-center rounded bg-primary text-primary-foreground">
+              <ArchonLogo size={13} variant="mono" className="text-primary-foreground" />
+            </div>
+            Archon · 2026
           </div>
-          <div className="flex gap-5 text-muted-foreground">
-            <a href="#">Security</a>
-            <a href="#">Docs</a>
-            <a href="#">Changelog</a>
-            <a href="#">Contact</a>
+          <div className="flex flex-wrap gap-5 text-muted-foreground">
+            <a href="#" className="transition-colors hover:text-foreground">
+              Security
+            </a>
+            <a href="#" className="transition-colors hover:text-foreground">
+              Docs
+            </a>
+            <a href="#" className="transition-colors hover:text-foreground">
+              Changelog
+            </a>
+            <a href="#" className="transition-colors hover:text-foreground">
+              Contact
+            </a>
           </div>
         </footer>
       </div>
+    </div>
+  );
+}
+
+function TerminalStat({ value, label }: { value: string; label: string }) {
+  return (
+    <div>
+      <div className="text-lg font-semibold tabular-nums text-cream">{value}</div>
+      <div className="font-mono text-[10px] text-cream/60">{label}</div>
     </div>
   );
 }

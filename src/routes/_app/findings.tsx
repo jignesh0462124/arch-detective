@@ -3,34 +3,34 @@ import { useState } from "react";
 import { Filter, X, FileWarning, Wrench, ShieldCheck, Zap, AlertOctagon } from "lucide-react";
 import { AppShell } from "@/components/brutal/AppShell";
 import { BrutalButton } from "@/components/brutal/BrutalButton";
+import { SectionCard } from "@/components/ui/section-card";
+import { StatTile } from "@/components/ui/stat-tile";
+import { CodePanel } from "@/components/ui/code-panel";
+import { DataTable, type DataTableColumn } from "@/components/ui/data-table";
+import { PipelineList, PipelineStep } from "@/components/ui/pipeline-step";
+import { SeverityBadge } from "@/components/ui/severity-badge";
 import { FINDINGS, type Finding, type Severity } from "@/lib/mock-data";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/findings")({
   head: () => ({
     meta: [
-      { title: "Findings · Sentinel" },
+      { title: "Findings · Archon" },
       { name: "description", content: "Triage vulnerabilities discovered by the agent and view mapped compliance controls." },
-      { property: "og:title", content: "Findings · Sentinel" },
+      { property: "og:title", content: "Findings · Archon" },
       { property: "og:description", content: "Triage vulnerabilities discovered by the agent and view mapped compliance controls." },
     ],
   }),
   component: FindingsPage,
 });
 
-const SEVERITIES: { id: Severity | "all"; label: string; code: string }[] = [
-  { id: "all", label: "All", code: "00" },
-  { id: "critical", label: "Critical", code: "01" },
-  { id: "high", label: "High", code: "02" },
-  { id: "medium", label: "Medium", code: "03" },
-  { id: "low", label: "Low", code: "04" },
+const SEVERITIES: { id: Severity | "all"; label: string }[] = [
+  { id: "all", label: "All severities" },
+  { id: "critical", label: "Critical" },
+  { id: "high", label: "High" },
+  { id: "medium", label: "Medium" },
+  { id: "low", label: "Low" },
 ];
-
-const sevTone: Record<Severity, string> = {
-  critical: "bg-primary text-primary-foreground border-primary",
-  high: "bg-secondary text-secondary-foreground border-ink",
-  medium: "bg-cream text-ink border-ink",
-  low: "bg-card text-muted-foreground border-ink",
-};
 
 function FindingsPage() {
   const [severity, setSeverity] = useState<Severity | "all">("all");
@@ -49,7 +49,7 @@ function FindingsPage() {
     { code: "01 // OPEN", label: "Findings", value: String(FINDINGS.length), accent: true },
     { code: "02 // CRIT", label: "Critical", value: String(counts.critical) },
     { code: "03 // HIGH", label: "High", value: String(counts.high) },
-    { code: "04 // MED/LOW", label: "Med + Low", value: String(counts.medium + counts.low) },
+    { code: "04 // MED+LOW", label: "Med + Low", value: String(counts.medium + counts.low) },
   ];
 
   return (
@@ -58,259 +58,238 @@ function FindingsPage() {
       title="Findings"
       actions={
         <BrutalButton variant="secondary">
-          <Filter size={15} /> Filters
+          <Filter size={14} /> Filters
         </BrutalButton>
       }
     >
-      <div className="border-[3px] border-ink bg-card shadow-brutal overflow-hidden">
-        {/* HERO STRIP — 7/5 split */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 border-b-[3px] border-ink">
-          <div className="lg:col-span-7 p-5 md:p-7 lg:border-r-[3px] border-b-[3px] lg:border-b-0 border-ink bg-card flex flex-col justify-between gap-5">
-            <div>
-              <div className="inline-flex items-center gap-2 mb-4">
-                <span className="inline-flex items-center gap-1 border border-ink bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary-foreground">
-                  <Zap size={10} strokeWidth={3} /> TRIAGE
-                </span>
-                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground italic">
-                  Agent-ranked · blast radius
-                </span>
-              </div>
-              <h2 className="text-3xl md:text-5xl font-bold leading-[0.9] tracking-tighter">
-                <span className="text-primary">{list.length}</span> {severity === "all" ? "OPEN" : severity.toUpperCase()}
-                <br />
-                FINDINGS.
-              </h2>
-              <p className="mt-4 max-w-md text-sm font-medium text-muted-foreground">
-                Filter by severity, inspect evidence, map mitigations to controls,
-                and auto-draft remediation PRs from a single pane.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 border-t-[2px] border-ink">
-              {STATS.map((s, i) => (
-                <div
+      <div className="space-y-5">
+        {/* Hero */}
+        <section className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+          <SectionCard
+            className="lg:col-span-7"
+            eyebrow={
+              <span className="inline-flex items-center gap-1.5">
+                <Zap size={10} strokeWidth={2.5} className="text-primary" /> TRIAGE
+              </span>
+            }
+            title={
+              <span>
+                <span className="text-primary">{list.length}</span>{" "}
+                {severity === "all" ? "open" : severity} findings
+              </span>
+            }
+            description="Filter by severity, inspect evidence, map mitigations to controls, and auto-draft remediation PRs."
+            actions={
+              <span className="text-xs text-muted-foreground">
+                Agent-ranked · blast radius
+              </span>
+            }
+          >
+            <div className="grid grid-cols-2 hairline rounded-xl overflow-hidden sm:grid-cols-4">
+              {STATS.map((s) => (
+                <StatTile
                   key={s.code}
-                  className={[
-                    "p-3 sm:p-4",
-                    i < 3 ? "border-r-[2px] border-ink" : "",
-                    i < 2 ? "border-b-[2px] sm:border-b-0 border-ink" : "",
-                    s.accent ? "bg-cream" : "",
-                  ].join(" ")}
-                >
-                  <div className={["font-mono text-[10px] mb-2 tracking-wider", s.accent ? "text-primary" : "text-muted-foreground"].join(" ")}>
-                    {s.code}
-                  </div>
-                  <div className="text-2xl font-bold tracking-tight tabular-nums">{s.value}</div>
-                  <div className="mt-0.5 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">{s.label}</div>
-                </div>
+                  code={s.code}
+                  label={s.label}
+                  value={s.value}
+                  accent={s.accent}
+                />
               ))}
             </div>
-          </div>
+          </SectionCard>
 
-          {/* Right: severity filter rail */}
-          <div className="lg:col-span-5 bg-ink p-5 md:p-6 flex flex-col text-cream">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-primary" />
-                <span className="h-2.5 w-2.5 rounded-full bg-secondary" />
-                <span className="h-2.5 w-2.5 rounded-full bg-success" />
+          {/* Filter rail */}
+          <SectionCard
+            variant="dark"
+            className="lg:col-span-5"
+            padding="none"
+            eyebrow="// Filter"
+            title="Severity"
+          >
+            <div className="p-4">
+              <div className="font-mono text-[11px] text-cream/40">
+                $ archon findings --filter
               </div>
-              <span className="font-mono text-[10px] uppercase tracking-wider text-cream/40">filter.rs</span>
+              <div className="mt-3 space-y-1">
+                {SEVERITIES.map((s) => {
+                  const active = severity === s.id;
+                  const n =
+                    s.id === "all"
+                      ? FINDINGS.length
+                      : FINDINGS.filter((f) => f.severity === s.id).length;
+                  return (
+                    <button
+                      key={s.id}
+                      onClick={() => setSeverity(s.id)}
+                      className={cn(
+                        "flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-[13px] transition-colors",
+                        active
+                          ? "bg-primary text-primary-foreground"
+                          : "text-cream/80 hover:bg-cream/10",
+                      )}
+                    >
+                      <span className="inline-flex items-center gap-2 font-medium">
+                        {s.id !== "all" ? (
+                          <SeverityBadge severity={s.id as Severity} size="sm">
+                            {s.id}
+                          </SeverityBadge>
+                        ) : (
+                          <span className="h-1.5 w-1.5 rounded-full bg-cream/40" />
+                        )}
+                        {s.label}
+                      </span>
+                      <span className="font-mono text-[11px] tabular-nums">
+                        {n}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-            <div className="font-mono text-[11px] leading-relaxed">
-              <div className="text-success mb-1">$ sentinel findings --filter</div>
-              <div className="text-cream/40 mb-3">Pick a severity bucket…</div>
-            </div>
-            <div className="grid grid-cols-1 gap-2">
-              {SEVERITIES.map((s) => {
-                const active = severity === s.id;
-                const n = s.id === "all" ? FINDINGS.length : FINDINGS.filter((f) => f.severity === s.id).length;
-                return (
-                  <button
-                    key={s.id}
-                    onClick={() => setSeverity(s.id)}
-                    className={[
-                      "w-full flex items-center justify-between border-2 px-3 py-2 text-left transition-colors",
-                      active ? "border-primary bg-primary text-primary-foreground" : "border-cream/20 hover:bg-cream/5 text-cream",
-                    ].join(" ")}
-                  >
-                    <span className="flex items-center gap-3">
-                      <span className="font-mono text-[10px] opacity-60">{s.code}</span>
-                      <span className="text-xs font-bold uppercase tracking-wider">{s.label}</span>
-                    </span>
-                    <span className="font-mono text-[11px] tabular-nums">{n}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+          </SectionCard>
         </section>
 
-        {/* TRACE LIST + DETAIL */}
-        <section className="grid grid-cols-1 lg:grid-cols-12">
-          <div className={[open ? "lg:col-span-7" : "lg:col-span-12", "bg-ink text-cream p-6 md:p-8 lg:border-r-[3px] border-ink"].join(" ")}>
-            <div className="flex items-baseline justify-between mb-5">
-              <div>
-                <p className="font-mono text-[10px] text-secondary uppercase tracking-widest mb-1">// Queue</p>
-                <h2 className="text-xl md:text-2xl font-bold uppercase tracking-tight">
-                  {severity === "all" ? "All severities" : `${severity} only`}
-                </h2>
-              </div>
-              <span className="font-mono text-[10px] text-cream/40">{list.length} item(s)</span>
-            </div>
-
-            <ol className="border-l-2 border-cream/20 pl-6 md:pl-8 space-y-5">
-              {list.map((f, i) => {
-                const isCrit = f.severity === "critical";
-                const selected = open?.id === f.id;
-                return (
-                  <li key={f.id} className="relative">
-                    <span
-                      className={[
-                        "absolute -left-[33px] md:-left-[41px] top-1.5 h-4 w-4 border-2 border-cream",
-                        isCrit ? "bg-primary" : selected ? "bg-secondary" : "bg-cream/20",
-                      ].join(" ")}
-                    />
+        {/* Trace list + detail */}
+        <section className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+          <SectionCard
+            className={cn(open ? "lg:col-span-7" : "lg:col-span-12")}
+            variant="dark"
+            padding="none"
+            eyebrow="// Queue"
+            title={severity === "all" ? "All severities" : `${severity} only`}
+            actions={
+              <span className="font-mono text-[11px] text-cream/40">
+                {list.length} item(s)
+              </span>
+            }
+          >
+            <div className="p-5 sm:p-6">
+              {list.length === 0 ? (
+                <div className="py-8 text-center text-sm text-cream/40">
+                  // no findings at this severity
+                </div>
+              ) : (
+                <PipelineList dark>
+                  {list.map((f, i) => (
                     <button
+                      key={f.id}
                       onClick={() => setOpen(f)}
-                      className={[
-                        "block w-full text-left group transition-colors",
-                        selected ? "opacity-100" : "opacity-90 hover:opacity-100",
-                      ].join(" ")}
+                      className={cn(
+                        "block w-full text-left transition-colors",
+                        open?.id === f.id ? "opacity-100" : "hover:bg-cream/5",
+                      )}
                     >
-                      <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                        <span className={["font-mono text-[10px] uppercase tracking-wider px-1.5 py-0.5 border", sevTone[f.severity]].join(" ")}>
-                          {f.severity}
-                        </span>
-                        <span className="font-mono text-[10px] text-cream/50 uppercase tracking-wider">{f.stride}</span>
-                        <span className="font-mono text-[10px] text-cream/40 ml-auto">{f.detected}</span>
-                      </div>
-                      <div className="font-mono text-[10px] text-cream/40 mb-1 tracking-wider">
-                        {String(i + 1).padStart(2, "0")} // {f.id}
-                      </div>
-                      <h3 className="text-sm md:text-base font-bold leading-snug group-hover:text-primary transition-colors">
-                        {f.title}
-                      </h3>
-                      <p className="mt-1 text-[11px] text-cream/50 font-mono">{f.component}</p>
-                      <div className="mt-2 flex flex-wrap gap-1.5">
+                      <PipelineStep
+                        index={i + 1}
+                        state={open?.id === f.id ? "active" : f.severity === "critical" ? "active" : "idle"}
+                        title={f.title}
+                        dark
+                        note={
+                          <span className="flex flex-wrap items-center gap-2">
+                            <span className="font-mono">{f.id}</span>
+                            <span>·</span>
+                            <span>{f.stride}</span>
+                            <span>·</span>
+                            <span>{f.detected}</span>
+                          </span>
+                        }
+                        badge={
+                          <SeverityBadge severity={f.severity} size="sm">
+                            {f.severity}
+                          </SeverityBadge>
+                        }
+                      />
+                      <div className="ml-9 mt-2 flex flex-wrap gap-1.5">
                         {f.controls.map((c) => (
                           <span
                             key={c.framework + c.control}
-                            className={[
-                              "border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+                            className={cn(
+                              "rounded-full px-2 py-0.5 text-[10px] font-medium",
                               c.status === "violated"
-                                ? "bg-primary text-primary-foreground border-primary"
+                                ? "bg-primary/20 text-primary"
                                 : c.status === "partial"
-                                ? "bg-secondary text-ink border-cream/40"
-                                : "bg-transparent text-cream/70 border-cream/30",
-                            ].join(" ")}
+                                  ? "bg-secondary/20 text-secondary"
+                                  : "bg-cream/10 text-cream/70",
+                            )}
                           >
                             {c.framework} · {c.control}
                           </span>
                         ))}
                       </div>
                     </button>
-                  </li>
-                );
-              })}
-              {list.length === 0 && (
-                <li className="text-cream/50 font-mono text-sm">// no findings at this severity</li>
+                  ))}
+                </PipelineList>
               )}
-            </ol>
-          </div>
+            </div>
+          </SectionCard>
 
-          {open && (
-            <aside className="lg:col-span-5 bg-card p-5 md:p-6">
-              <div className="sticky top-6">
-                <div className="flex items-start justify-between border-b-[2px] border-ink pb-4 mb-4">
-                  <div>
-                    <p className="font-mono text-[10px] text-primary tracking-wider mb-1">// {open.id}</p>
-                    <h3 className="text-lg font-bold leading-snug tracking-tight">{open.title}</h3>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      <span className={["border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider", sevTone[open.severity]].join(" ")}>
-                        {open.severity}
-                      </span>
-                      <span className="border border-ink bg-cream px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider">
-                        {open.stride}
-                      </span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setOpen(null)}
-                    className="border-[2px] border-ink bg-cream p-1.5 hover:bg-primary hover:text-primary-foreground transition-colors"
-                  >
-                    <X size={14} strokeWidth={2.5} />
-                  </button>
+          {open ? (
+            <SectionCard
+              className="lg:col-span-5 self-start lg:sticky lg:top-6"
+              padding="md"
+              eyebrow={`// ${open.id}`}
+              title={open.title}
+              actions={
+                <button
+                  onClick={() => setOpen(null)}
+                  className="rounded-lg hairline bg-card p-1.5 text-foreground/70 transition-colors hover:bg-cream dark:bg-cream-deep"
+                  aria-label="Close detail"
+                >
+                  <X size={14} strokeWidth={2} />
+                </button>
+              }
+              headerExtra={
+                <div className="flex flex-wrap gap-1.5">
+                  <SeverityBadge severity={open.severity} dot>
+                    {open.severity}
+                  </SeverityBadge>
+                  <span className="rounded-full bg-cream px-2 py-0.5 text-[11px] font-medium dark:bg-cream-deep">
+                    {open.stride}
+                  </span>
                 </div>
+              }
+            >
+              <div className="space-y-5">
+                <DetailSection icon={FileWarning} label="Description">
+                  <p className="text-sm leading-relaxed">{open.description}</p>
+                </DetailSection>
 
-                <div className="space-y-5">
-                  <Section icon={FileWarning} label="Description">
-                    <p className="text-sm leading-relaxed">{open.description}</p>
-                  </Section>
-
-                  <Section icon={AlertOctagon} label="Evidence">
-                    <pre className="overflow-x-auto border-[2px] border-ink bg-ink p-3 font-mono text-[11px] text-cream">
+                <DetailSection icon={AlertOctagon} label="Evidence">
+                  <CodePanel filename={`${open.id}.evidence`} variant="default">
+                    <pre className="whitespace-pre-wrap text-[12px] leading-relaxed text-cream">
                       {open.evidence}
                     </pre>
-                  </Section>
+                  </CodePanel>
+                </DetailSection>
 
-                  <Section icon={Wrench} label="Remediation">
-                    <p className="text-sm leading-relaxed">{open.remediation}</p>
-                  </Section>
+                <DetailSection icon={Wrench} label="Remediation">
+                  <p className="text-sm leading-relaxed">{open.remediation}</p>
+                </DetailSection>
 
-                  <Section icon={ShieldCheck} label="Control mapping">
-                    <div className="border-[2px] border-ink overflow-hidden">
-                      <table className="w-full text-xs">
-                        <thead className="bg-cream">
-                          <tr className="border-b-[2px] border-ink text-left">
-                            <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-wider">Framework</th>
-                            <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-wider">Control</th>
-                            <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-wider">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {open.controls.map((c) => (
-                            <tr key={c.framework + c.control} className="border-t-[1.5px] border-ink/20">
-                              <td className="px-3 py-2 font-bold">{c.framework}</td>
-                              <td className="px-3 py-2 font-mono">{c.control}</td>
-                              <td className="px-3 py-2">
-                                <span
-                                  className={[
-                                    "border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider",
-                                    c.status === "violated"
-                                      ? "bg-primary text-primary-foreground border-primary"
-                                      : c.status === "partial"
-                                      ? "bg-secondary text-ink border-ink"
-                                      : "bg-success/20 text-success border-ink",
-                                  ].join(" ")}
-                                >
-                                  {c.status}
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </Section>
+                <DetailSection icon={ShieldCheck} label="Control mapping">
+                  <DataTable
+                    dense
+                    columns={controlColumns}
+                    rows={open.controls}
+                  />
+                </DetailSection>
 
-                  <div className="flex gap-2 pt-2 border-t-[2px] border-ink">
-                    <BrutalButton variant="primary" className="flex-1">
-                      Generate remediation PR
-                    </BrutalButton>
-                    <BrutalButton variant="secondary">Snooze</BrutalButton>
-                  </div>
+                <div className="flex gap-2 border-t hairline-soft pt-4">
+                  <BrutalButton variant="primary" className="flex-1">
+                    Generate remediation PR
+                  </BrutalButton>
+                  <BrutalButton variant="secondary">Snooze</BrutalButton>
                 </div>
               </div>
-            </aside>
-          )}
+            </SectionCard>
+          ) : null}
         </section>
       </div>
     </AppShell>
   );
 }
 
-function Section({
+function DetailSection({
   icon: Icon,
   label,
   children,
@@ -321,10 +300,44 @@ function Section({
 }) {
   return (
     <div>
-      <p className="font-mono text-[10px] text-primary tracking-wider mb-2 flex items-center gap-1.5 uppercase">
-        <Icon size={12} strokeWidth={2.5} /> // {label}
+      <p className="section-title flex items-center gap-1.5 mb-2">
+        <Icon size={11} strokeWidth={2.5} /> {label}
       </p>
       <div>{children}</div>
     </div>
   );
 }
+
+type Control = Finding["controls"][number];
+
+const controlColumns: DataTableColumn<Control>[] = [
+  {
+    key: "framework",
+    header: "Framework",
+    cell: (c) => <span className="font-medium">{c.framework}</span>,
+  },
+  {
+    key: "control",
+    header: "Control",
+    mono: true,
+    cell: (c) => <span>{c.control}</span>,
+  },
+  {
+    key: "status",
+    header: "Status",
+    cell: (c) => (
+      <span
+        className={cn(
+          "inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium capitalize",
+          c.status === "violated"
+            ? "bg-primary/10 text-primary"
+            : c.status === "partial"
+              ? "bg-secondary/15 text-secondary-foreground"
+              : "bg-success/10 text-success",
+        )}
+      >
+        {c.status}
+      </span>
+    ),
+  },
+];

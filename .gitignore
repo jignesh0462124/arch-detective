@@ -30,3 +30,18 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python / Backend
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+*.egg
+.env
+threatlens/.env
+threatlens/data/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
