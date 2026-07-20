@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
 from app.models.scan import ScanStatus, ScanType
 
@@ -10,6 +10,7 @@ class ScanCreate(BaseModel):
     scan_type: ScanType
     target_name: str = Field(min_length=1, max_length=255)
     frameworks: list[str] = Field(default_factory=list)
+    git_url: HttpUrl | None = None
 
 
 class ScanStatusResponse(BaseModel):

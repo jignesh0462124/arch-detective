@@ -11,19 +11,28 @@ import {
   Loader2,
   Terminal,
   ChevronRight,
+  AlertCircle,
 } from "lucide-react";
 import { AppShell } from "@/components/brutal/AppShell";
 import { BrutalButton } from "@/components/brutal/BrutalButton";
 import { BrutalBadge } from "@/components/brutal/BrutalBadge";
-import { FRAMEWORKS } from "@/lib/mock-data";
+import { useFrameworks } from "@/hooks/useFrameworks";
 
 export const Route = createFileRoute("/_app/new-scan")({
   head: () => ({
     meta: [
       { title: "New scan · Archon" },
-      { name: "description", content: "Run an agentic threat model across architecture diagrams, descriptions, or operational logs." },
+      {
+        name: "description",
+        content:
+          "Run an agentic threat model across architecture diagrams, descriptions, or operational logs.",
+      },
       { property: "og:title", content: "New scan · Archon" },
-      { property: "og:description", content: "Run an agentic threat model across architecture diagrams, descriptions, or operational logs." },
+      {
+        property: "og:description",
+        content:
+          "Run an agentic threat model across architecture diagrams, descriptions, or operational logs.",
+      },
     ],
   }),
   component: NewScanPage,
@@ -50,6 +59,12 @@ const MODELS = [
 ];
 
 function NewScanPage() {
+  const {
+    data: frameworks = [],
+    isLoading: frameworksLoading,
+    isError: frameworksError,
+    refetch: refetchFrameworks,
+  } = useFrameworks();
   const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("describe");
   const [selected, setSelected] = useState<string[]>(["soc2", "iso27001"]);
   const [model, setModel] = useState(MODELS[0].name);
@@ -89,7 +104,7 @@ function NewScanPage() {
       }
     >
       {/* HERO: 7/5 split */}
-      <section className="overflow-hidden rounded-2xl hairline bg-card shadow-soft">
+      <section className="overflow-hidden rounded-sm hairline bg-card">
         <div className="grid grid-cols-1 lg:grid-cols-12">
           {/* Left: configuration */}
           <div className="border-b border-border lg:col-span-7 lg:border-b-0 lg:border-r">
@@ -107,7 +122,7 @@ function NewScanPage() {
               </h2>
 
               {/* Tab strip */}
-              <div className="mt-6 flex overflow-hidden rounded-xl hairline bg-muted p-1">
+              <div className="mt-6 flex overflow-hidden rounded-lg hairline bg-muted p-1">
                 {TABS.map((t) => {
                   const active = tab === t.id;
                   return (
@@ -115,8 +130,10 @@ function NewScanPage() {
                       key={t.id}
                       onClick={() => setTab(t.id)}
                       className={[
-                        "flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-xs font-semibold uppercase tracking-wider transition-colors",
-                        active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-card hover:text-foreground",
+                        "flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2.5 text-xs font-semibold uppercase tracking-wider transition-colors",
+                        active
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:bg-card hover:text-foreground",
                       ].join(" ")}
                     >
                       <t.icon size={14} strokeWidth={2.5} />
@@ -128,7 +145,7 @@ function NewScanPage() {
 
               <div className="mt-4">
                 {tab === "diagram" && (
-                  <div className="rounded-xl border border-dashed border-border bg-muted p-8 text-center">
+                  <div className="rounded-sm border border-dashed border-border bg-muted p-8 text-center">
                     <Upload size={22} strokeWidth={2.5} className="mx-auto" />
                     <p className="mt-3 text-sm font-bold">
                       Drop a Terraform plan, C4 diagram, or k8s manifest
@@ -152,12 +169,12 @@ function NewScanPage() {
 - Cognito federated to Okta
 - Stripe tokenization (PCI reduced)
 - Audit logs → S3 + Splunk`}
-                    className="w-full rounded-xl hairline bg-muted p-3 font-mono text-[12px] leading-relaxed outline-none transition-shadow focus:shadow-ring"
+                    className="w-full rounded-lg hairline bg-muted p-3 font-mono text-[12px] leading-relaxed outline-none transition-shadow focus:shadow-ring"
                   />
                 )}
 
                 {tab === "logs" && (
-                  <div className="rounded-xl border border-dashed border-border bg-muted p-8 text-center">
+                  <div className="rounded-sm border border-dashed border-border bg-muted p-8 text-center">
                     <ScrollText size={22} strokeWidth={2.5} className="mx-auto" />
                     <p className="mt-3 text-sm font-bold">
                       Upload CloudTrail / VPC flow / app logs
@@ -192,7 +209,9 @@ function NewScanPage() {
               <div className="text-cream/70">$ agent.run(</div>
               <div className="pl-4">
                 <span className="text-cream/70">model=</span>
-                <span className="text-secondary">"{model.toLowerCase().replace(/[· ]+/g, "-")}"</span>
+                <span className="text-secondary">
+                  "{model.toLowerCase().replace(/[· ]+/g, "-")}"
+                </span>
                 ,
               </div>
               <div className="pl-4">
@@ -228,13 +247,7 @@ function NewScanPage() {
                 ["Cost/scan", "$0.04"],
                 ["ETA", "~38s"],
               ].map(([k, v], i) => (
-                <div
-                  key={k}
-                  className={[
-                    "p-4",
-                    i < 2 ? "border-r border-cream/20" : "",
-                  ].join(" ")}
-                >
+                <div key={k} className={["p-4", i < 2 ? "border-r border-cream/20" : ""].join(" ")}>
                   <div className="font-mono text-[10px] uppercase tracking-wider text-cream/70">
                     {k}
                   </div>
@@ -247,8 +260,8 @@ function NewScanPage() {
       </section>
 
       {/* FRAMEWORKS + MODEL: split 5/7 */}
-      <section className="mt-5 grid grid-cols-1 lg:grid-cols-12 gap-5">
-        <div className="overflow-hidden rounded-2xl hairline bg-muted shadow-soft lg:col-span-5">
+      <section className="mt-5 grid grid-cols-1 overflow-hidden rounded-sm hairline bg-card lg:grid-cols-12 lg:divide-x lg:divide-border">
+        <div className="overflow-hidden bg-muted lg:col-span-5">
           <div className="flex items-center justify-between border-b border-border px-5 py-3">
             <p className="section-title text-primary">// frameworks</p>
             <span className="font-mono text-[10px] text-muted-foreground">
@@ -261,25 +274,35 @@ function NewScanPage() {
               Select compliance frameworks for control mapping.
             </p>
 
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              {FRAMEWORKS.map((f) => {
+            <div className="mt-4 divide-y divide-border border-y border-border">
+              {frameworksLoading &&
+                Array.from({ length: 4 }, (_, index) => (
+                  <div key={index} className="h-[54px] animate-pulse bg-card" aria-hidden="true" />
+                ))}
+              {frameworksError && (
+                <button
+                  type="button"
+                  onClick={() => void refetchFrameworks()}
+                  className="flex min-h-[54px] w-full items-center justify-center gap-2 bg-card px-3 text-xs font-semibold text-destructive"
+                >
+                  <AlertCircle size={14} />
+                  Frameworks unavailable. Retry
+                </button>
+              )}
+              {frameworks.map((f) => {
                 const active = selected.includes(f.id);
                 return (
                   <button
                     key={f.id}
                     onClick={() => toggle(f.id)}
                     className={[
-                      "flex items-center justify-between rounded-xl hairline px-3 py-2.5 text-left transition-all",
-                      active
-                        ? "bg-primary text-primary-foreground shadow-soft"
-                        : "bg-card hover:bg-background",
+                      "flex w-full items-center justify-between px-3 py-3 text-left transition-colors",
+                      active ? "bg-primary text-primary-foreground" : "bg-card hover:bg-background",
                     ].join(" ")}
                   >
                     <div>
                       <div className="text-xs font-bold">{f.label}</div>
-                      <div className="font-mono text-[10px] opacity-70">
-                        {f.controls} ctrl
-                      </div>
+                      <div className="font-mono text-[10px] opacity-70">{f.controls} ctrl</div>
                     </div>
                     <div
                       className={[
@@ -296,7 +319,7 @@ function NewScanPage() {
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-2xl hairline bg-card shadow-soft lg:col-span-7">
+        <div className="overflow-hidden bg-card lg:col-span-7">
           <div className="flex items-center justify-between border-b border-border bg-muted px-5 py-3">
             <p className="section-title text-primary">// inference.model</p>
             <BrutalBadge tone="gold">
@@ -305,7 +328,7 @@ function NewScanPage() {
           </div>
           <div className="p-5">
             <h3 className="text-lg font-bold tracking-tight">CHOOSE A MODEL</h3>
-            <div className="mt-4 overflow-hidden rounded-xl hairline divide-y divide-border">
+            <div className="mt-4 overflow-hidden border-y border-border divide-y divide-border">
               {MODELS.map((m) => {
                 const active = model === m.name;
                 return (
@@ -328,7 +351,11 @@ function NewScanPage() {
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="font-mono text-[11px] text-muted-foreground">{m.speed}</span>
-                      <ChevronRight size={14} strokeWidth={2.5} className={active ? "" : "opacity-30"} />
+                      <ChevronRight
+                        size={14}
+                        strokeWidth={2.5}
+                        className={active ? "" : "opacity-30"}
+                      />
                     </div>
                   </button>
                 );
@@ -339,12 +366,12 @@ function NewScanPage() {
       </section>
 
       {/* PIPELINE: vertical trace on ink */}
-      <section className="mt-5 overflow-hidden rounded-2xl hairline bg-ink text-cream shadow-soft">
+      <section className="mt-5 overflow-hidden border-y border-border bg-ink text-cream">
         <div className="flex items-center justify-between border-b border-cream/20 px-5 py-3">
           <p className="font-mono text-[11px] uppercase tracking-wider text-secondary">
             // reasoning.pipeline
           </p>
-              <span className="font-mono text-[10px] text-cream/70">
+          <span className="font-mono text-[10px] text-cream/70">
             {step < 0 ? "0" : Math.min(step, PIPELINE.length)} / {PIPELINE.length}
           </span>
         </div>
@@ -362,11 +389,15 @@ function NewScanPage() {
                     done
                       ? "bg-success border-cream text-success-foreground"
                       : active
-                      ? "bg-secondary border-cream text-ink"
-                      : "bg-ink border-cream/40 text-cream/70",
+                        ? "bg-secondary border-cream text-ink"
+                        : "bg-ink border-cream/40 text-cream/70",
                   ].join(" ")}
                 >
-                  {done ? <CheckCircle2 size={14} strokeWidth={2.5} /> : String(i + 1).padStart(2, "0")}
+                  {done ? (
+                    <CheckCircle2 size={14} strokeWidth={2.5} />
+                  ) : (
+                    String(i + 1).padStart(2, "0")
+                  )}
                 </div>
                 <div
                   className={[
@@ -393,15 +424,13 @@ function NewScanPage() {
       </section>
 
       {/* CTA strip */}
-      <section className="mt-5 overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-soft dark:bg-card dark:text-card-foreground hairline">
+      <section className="mt-5 overflow-hidden border-y border-border bg-primary text-primary-foreground dark:bg-card dark:text-card-foreground">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 sm:p-7">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-wider opacity-80">
               // ready_to_execute
             </p>
-            <h3 className="mt-1 text-2xl font-bold tracking-tight">
-              SHIP THE SCAN.
-            </h3>
+            <h3 className="mt-1 text-2xl font-bold tracking-tight">SHIP THE SCAN.</h3>
             <p className="mt-1 text-sm opacity-90">
               {selected.length} frameworks · {model} · streaming
             </p>

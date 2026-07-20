@@ -2,11 +2,12 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export interface SectionCardProps {
-  eyebrow?: string;
-  title?: string;
-  description?: string;
+  eyebrow?: ReactNode;
+  title?: ReactNode;
+  description?: ReactNode;
   actions?: ReactNode;
   variant?: "default" | "muted" | "dark" | "primary";
+  frame?: "outlined" | "flat";
   padding?: "none" | "sm" | "md" | "lg";
   className?: string;
   children?: ReactNode;
@@ -33,6 +34,7 @@ export function SectionCard({
   description,
   actions,
   variant = "default",
+  frame = "outlined",
   padding = "md",
   className,
   children,
@@ -45,7 +47,8 @@ export function SectionCard({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-xl hairline shadow-soft",
+        "overflow-hidden",
+        frame === "outlined" ? "rounded-sm hairline" : "rounded-none border-y border-border",
         VARIANT[variant],
         className,
       )}
@@ -74,11 +77,7 @@ export function SectionCard({
                 {eyebrow}
               </div>
             ) : null}
-            {title ? (
-              <h3 className="mt-1 text-[22px] font-medium leading-tight">
-                {title}
-              </h3>
-            ) : null}
+            {title ? <h3 className="mt-1 text-[22px] font-medium leading-tight">{title}</h3> : null}
             {description ? (
               <p
                 className={cn(

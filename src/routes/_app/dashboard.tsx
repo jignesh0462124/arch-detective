@@ -22,9 +22,17 @@ export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({
     meta: [
       { title: "Dashboard · Archon" },
-      { name: "description", content: "Overview of active scans, open findings, and compliance posture across frameworks." },
+      {
+        name: "description",
+        content:
+          "Overview of active scans, open findings, and compliance posture across frameworks.",
+      },
       { property: "og:title", content: "Dashboard · Archon" },
-      { property: "og:description", content: "Overview of active scans, open findings, and compliance posture across frameworks." },
+      {
+        property: "og:description",
+        content:
+          "Overview of active scans, open findings, and compliance posture across frameworks.",
+      },
     ],
   }),
   component: DashboardPage,
@@ -64,7 +72,7 @@ function DashboardPage() {
           {/* Live posture */}
           <SectionCard
             variant="default"
-            className="lg:col-span-7"
+            className="h-full lg:col-span-7"
             padding="md"
             eyebrow={
               <span className="inline-flex items-center gap-1.5">
@@ -80,7 +88,7 @@ function DashboardPage() {
               </span>
             }
           >
-            <div className="grid grid-cols-2 sm:grid-cols-4 hairline rounded-xl overflow-hidden">
+            <div className="grid grid-cols-2 border-y border-border sm:grid-cols-4 sm:divide-x sm:divide-border">
               {STATS.map((s) => (
                 <StatTile
                   key={s.code}
@@ -95,12 +103,10 @@ function DashboardPage() {
           </SectionCard>
 
           {/* Agent feed */}
-          <div className="lg:col-span-5">
-            <CodePanel filename="agent.log" variant="terminal">
+          <div className="h-full lg:col-span-5">
+            <CodePanel filename="agent.log" variant="terminal" className="h-full">
               <div className="text-success">$ archon --watch findings</div>
-              <div className="mt-0.5 text-cream/40">
-                Streaming agent decisions...
-              </div>
+              <div className="mt-0.5 text-cream/40">Streaming agent decisions...</div>
 
               <div className="mt-4 space-y-1.5">
                 {FEED.map((entry) => {
@@ -140,9 +146,10 @@ function DashboardPage() {
         </section>
 
         {/* Scans + Coverage */}
-        <section className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+        <section className="grid grid-cols-1 overflow-hidden rounded-sm hairline bg-card lg:grid-cols-12 lg:divide-x lg:divide-border">
           <SectionCard
-            className="lg:col-span-8"
+            className="border-0 lg:col-span-8"
+            frame="flat"
             padding="none"
             eyebrow="// Live feed"
             title="Recent scans"
@@ -152,36 +159,25 @@ function DashboardPage() {
               </BrutalButton>
             }
           >
-            <DataTable
-              columns={scanColumns}
-              rows={SCANS}
-              rowKey={(s) => s.id}
-            />
+            <DataTable columns={scanColumns} rows={SCANS} rowKey={(s) => s.id} />
           </SectionCard>
 
           <SectionCard
-            className="lg:col-span-4"
+            className="border-x-0 border-b-0 lg:col-span-4 lg:border-t-0"
+            frame="flat"
             variant="default"
             eyebrow="// Posture"
             title="Framework coverage"
           >
             <div className="space-y-4">
               {COVERAGE.map((c) => (
-                <CoverageBar
-                  key={c.framework}
-                  label={c.framework}
-                  pct={c.pct}
-                />
+                <CoverageBar key={c.framework} label={c.framework} pct={c.pct} />
               ))}
-              <div className="mt-3 flex items-start gap-2 rounded-lg bg-cream px-3 py-2.5 text-[12px] dark:bg-cream-deep">
-                <Activity
-                  size={13}
-                  strokeWidth={2}
-                  className="mt-0.5 shrink-0 text-primary"
-                />
+              <div className="mt-3 flex items-start gap-2 border-t border-border bg-cream px-3 py-2.5 text-[12px] dark:bg-cream-deep">
+                <Activity size={13} strokeWidth={2} className="mt-0.5 shrink-0 text-primary" />
                 <span>
-                  Agent suggests focusing on{" "}
-                  <span className="font-semibold">NIST 800-53 SC-7</span> next.
+                  Agent suggests focusing on <span className="font-semibold">NIST 800-53 SC-7</span>{" "}
+                  next.
                 </span>
               </div>
             </div>
@@ -207,9 +203,8 @@ function DashboardPage() {
             <div className="md:col-span-4">
               <p className="section-title text-secondary">// Why these matter</p>
               <p className="mt-2 text-sm leading-relaxed text-cream/70">
-                Critical findings combine CVSS scores with reachability
-                analysis. Remediating the top four closes 71% of attacker
-                surface area.
+                Critical findings combine CVSS scores with reachability analysis. Remediating the
+                top four closes 71% of attacker surface area.
               </p>
               <Link
                 to="/findings"
@@ -259,6 +254,7 @@ function DashboardPage() {
         {/* Frameworks grid */}
         <SectionCard
           variant="muted"
+          frame="flat"
           padding="md"
           eyebrow="// Frameworks"
           title="Status dashboard"
@@ -268,24 +264,18 @@ function DashboardPage() {
             </span>
           }
         >
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="grid grid-cols-2 overflow-hidden border-y border-border sm:grid-cols-3 lg:grid-cols-6 lg:divide-x lg:divide-border">
             {FRAMEWORKS.map((f) => (
               <div
                 key={f.id}
-                className="rounded-xl bg-card p-3 hairline shadow-soft"
+                className="border-b border-border bg-card p-4 last:border-b-0 sm:[&:nth-last-child(-n+3)]:border-b-0 lg:border-b-0"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium tracking-tight truncate">
-                    {f.label}
-                  </span>
+                  <span className="text-xs font-medium tracking-tight truncate">{f.label}</span>
                   <span className="h-1.5 w-1.5 rounded-full bg-success shrink-0" />
                 </div>
-                <div className="mt-3 text-xl font-semibold tabular-nums">
-                  {f.controls}
-                </div>
-                <div className="font-mono text-[10px] text-muted-foreground">
-                  controls
-                </div>
+                <div className="mt-3 text-xl font-semibold tabular-nums">{f.controls}</div>
+                <div className="font-mono text-[10px] text-muted-foreground">controls</div>
               </div>
             ))}
           </div>
@@ -301,11 +291,7 @@ const scanColumns: DataTableColumn<Scan>[] = [
   {
     key: "id",
     header: "Scan",
-    cell: (s) => (
-      <span className="font-mono text-[12px] text-muted-foreground">
-        {s.id}
-      </span>
-    ),
+    cell: (s) => <span className="font-mono text-[12px] text-muted-foreground">{s.id}</span>,
     width: "120px",
   },
   {
@@ -347,9 +333,7 @@ const scanColumns: DataTableColumn<Scan>[] = [
     header: "Duration",
     align: "right",
     mono: true,
-    cell: (s) => (
-      <span className="text-muted-foreground">{s.duration}</span>
-    ),
+    cell: (s) => <span className="text-muted-foreground">{s.duration}</span>,
     width: "100px",
   },
 ];

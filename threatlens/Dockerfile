@@ -6,7 +6,15 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends build-essential curl \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        curl \
+        libcairo2 \
+        libffi-dev \
+        libgdk-pixbuf-2.0-0 \
+        libpango-1.0-0 \
+        libpangoft2-1.0-0 \
+        shared-mime-info \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .

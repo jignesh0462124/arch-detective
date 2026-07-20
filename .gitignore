@@ -15,6 +15,7 @@ dist-ssr
 .tanstack/**
 .nitro
 *.local
+graphify-out/cache/
 
 # Wrangler / Cloudflare
 .wrangler/

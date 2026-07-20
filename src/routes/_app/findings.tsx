@@ -16,9 +16,17 @@ export const Route = createFileRoute("/_app/findings")({
   head: () => ({
     meta: [
       { title: "Findings · Archon" },
-      { name: "description", content: "Triage vulnerabilities discovered by the agent and view mapped compliance controls." },
+      {
+        name: "description",
+        content:
+          "Triage vulnerabilities discovered by the agent and view mapped compliance controls.",
+      },
       { property: "og:title", content: "Findings · Archon" },
-      { property: "og:description", content: "Triage vulnerabilities discovered by the agent and view mapped compliance controls." },
+      {
+        property: "og:description",
+        content:
+          "Triage vulnerabilities discovered by the agent and view mapped compliance controls.",
+      },
     ],
   }),
   component: FindingsPage,
@@ -64,9 +72,10 @@ function FindingsPage() {
     >
       <div className="space-y-5">
         {/* Hero */}
-        <section className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+        <section className="grid grid-cols-1 overflow-hidden rounded-sm hairline bg-card lg:grid-cols-12 lg:divide-x lg:divide-border">
           <SectionCard
-            className="lg:col-span-7"
+            className="border-0 lg:col-span-7"
+            frame="flat"
             eyebrow={
               <span className="inline-flex items-center gap-1.5">
                 <Zap size={10} strokeWidth={2.5} className="text-primary" /> TRIAGE
@@ -80,12 +89,10 @@ function FindingsPage() {
             }
             description="Filter by severity, inspect evidence, map mitigations to controls, and auto-draft remediation PRs."
             actions={
-              <span className="text-xs text-muted-foreground">
-                Agent-ranked · blast radius
-              </span>
+              <span className="text-xs text-muted-foreground">Agent-ranked · blast radius</span>
             }
           >
-            <div className="grid grid-cols-2 hairline rounded-xl overflow-hidden sm:grid-cols-4">
+            <div className="grid grid-cols-2 border-y border-border sm:grid-cols-4 sm:divide-x sm:divide-border">
               {STATS.map((s) => (
                 <StatTile
                   key={s.code}
@@ -101,15 +108,14 @@ function FindingsPage() {
           {/* Filter rail */}
           <SectionCard
             variant="dark"
-            className="lg:col-span-5"
+            className="border-x-0 border-b-0 lg:col-span-5 lg:border-t-0"
+            frame="flat"
             padding="none"
             eyebrow="// Filter"
             title="Severity"
           >
             <div className="p-4">
-              <div className="font-mono text-[11px] text-cream/40">
-                $ archon findings --filter
-              </div>
+              <div className="font-mono text-[11px] text-cream/40">$ archon findings --filter</div>
               <div className="mt-3 space-y-1">
                 {SEVERITIES.map((s) => {
                   const active = severity === s.id;
@@ -122,10 +128,10 @@ function FindingsPage() {
                       key={s.id}
                       onClick={() => setSeverity(s.id)}
                       className={cn(
-                        "flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-[13px] transition-colors",
+                        "flex w-full items-center justify-between border-l-2 px-3 py-2 text-left text-[13px] transition-colors",
                         active
-                          ? "bg-primary text-primary-foreground"
-                          : "text-cream/80 hover:bg-cream/10",
+                          ? "border-l-accent bg-primary text-primary-foreground"
+                          : "border-l-transparent text-cream/80 hover:bg-cream/10",
                       )}
                     >
                       <span className="inline-flex items-center gap-2 font-medium">
@@ -138,9 +144,7 @@ function FindingsPage() {
                         )}
                         {s.label}
                       </span>
-                      <span className="font-mono text-[11px] tabular-nums">
-                        {n}
-                      </span>
+                      <span className="font-mono text-[11px] tabular-nums">{n}</span>
                     </button>
                   );
                 })}
@@ -158,12 +162,10 @@ function FindingsPage() {
             eyebrow="// Queue"
             title={severity === "all" ? "All severities" : `${severity} only`}
             actions={
-              <span className="font-mono text-[11px] text-cream/40">
-                {list.length} item(s)
-              </span>
+              <span className="font-mono text-[11px] text-cream/40">{list.length} item(s)</span>
             }
           >
-            <div className="p-5 sm:p-6">
+            <div className="divide-y divide-cream/15">
               {list.length === 0 ? (
                 <div className="py-8 text-center text-sm text-cream/40">
                   // no findings at this severity
@@ -175,13 +177,19 @@ function FindingsPage() {
                       key={f.id}
                       onClick={() => setOpen(f)}
                       className={cn(
-                        "block w-full text-left transition-colors",
+                        "block w-full px-5 py-4 text-left transition-colors sm:px-6",
                         open?.id === f.id ? "opacity-100" : "hover:bg-cream/5",
                       )}
                     >
                       <PipelineStep
                         index={i + 1}
-                        state={open?.id === f.id ? "active" : f.severity === "critical" ? "active" : "idle"}
+                        state={
+                          open?.id === f.id
+                            ? "active"
+                            : f.severity === "critical"
+                              ? "active"
+                              : "idle"
+                        }
                         title={f.title}
                         dark
                         note={
@@ -267,11 +275,7 @@ function FindingsPage() {
                 </DetailSection>
 
                 <DetailSection icon={ShieldCheck} label="Control mapping">
-                  <DataTable
-                    dense
-                    columns={controlColumns}
-                    rows={open.controls}
-                  />
+                  <DataTable dense columns={controlColumns} rows={open.controls} />
                 </DetailSection>
 
                 <div className="flex gap-2 border-t hairline-soft pt-4">

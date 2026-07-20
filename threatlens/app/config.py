@@ -20,6 +20,12 @@ class Settings(BaseSettings):
     QDRANT_HOST: str = "localhost"
     QDRANT_PORT: int = 6333
     QDRANT_COLLECTION: str = "compliance_knowledge"
+    QDRANT_API_KEY: str = ""
+    QDRANT_HTTPS: bool = False
+    QDRANT_TIMEOUT_SECONDS: int = 30
+
+    NVD_API_KEY: str = ""
+    NVD_TIMEOUT_SECONDS: int = 30
 
     GROQ_API_KEY: str = ""
 

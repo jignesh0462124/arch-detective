@@ -25,10 +25,8 @@ export function CodePanel({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-xl shadow-soft",
-        tone === "dark"
-          ? "bg-ink text-cream hairline"
-          : "bg-cream text-foreground hairline",
+        "overflow-hidden rounded-sm",
+        tone === "dark" ? "bg-ink text-cream hairline" : "bg-cream text-foreground hairline",
         className,
       )}
     >

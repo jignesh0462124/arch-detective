@@ -43,14 +43,11 @@ function ReportDetail() {
       }
     >
       {/* Cover */}
-      <section className="relative overflow-hidden rounded-2xl hairline bg-card p-8 shadow-soft">
-        <div className="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-bl from-secondary/40 to-transparent" />
-        <div className="relative">
+      <section className="overflow-hidden border-y border-border bg-card p-6 sm:p-8">
+        <div>
           <div className="flex items-center gap-2">
             <BrutalBadge tone="ink">{r.id}</BrutalBadge>
-            <BrutalBadge tone={r.status === "Signed" ? "success" : "gold"}>
-              {r.status}
-            </BrutalBadge>
+            <BrutalBadge tone={r.status === "Signed" ? "success" : "gold"}>{r.status}</BrutalBadge>
             <span className="text-xs text-muted-foreground">{r.date}</span>
           </div>
           <h2 className="mt-4 max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl">
@@ -61,7 +58,7 @@ function ReportDetail() {
             Reviewed by 2 humans. {r.pages} pages.
           </p>
 
-          <div className="mt-6 grid max-w-2xl grid-cols-3 gap-3">
+          <div className="mt-6 grid max-w-2xl grid-cols-3 divide-x divide-border border-y border-border">
             <Metric label="Controls in scope" value="64" />
             <Metric label="Findings" value={String(FINDINGS.length)} />
             <Metric label="Pass rate" value="78%" />
@@ -70,15 +67,15 @@ function ReportDetail() {
       </section>
 
       {/* Executive summary */}
-      <section className="mt-6 grid gap-5 lg:grid-cols-3">
-        <div className="rounded-2xl hairline bg-card p-6 shadow-soft lg:col-span-2">
+      <section className="mt-6 grid overflow-hidden rounded-sm hairline bg-card lg:grid-cols-3 lg:divide-x lg:divide-border">
+        <div className="border-b border-border p-6 lg:col-span-2 lg:border-b-0">
           <p className="section-title text-primary">01 · Summary</p>
           <h3 className="mt-1 text-xl font-bold">Executive summary</h3>
           <p className="mt-3 text-sm leading-relaxed">
-            Archon evaluated the Acme Cloud control environment against the {r.framework}{" "}
-            criteria for the period ending {r.date}. The organization demonstrates a maturing
-            security program with strong identity governance and incident response, while logical
-            access enforcement and vendor risk monitoring remain the largest residual exposures.
+            Archon evaluated the Acme Cloud control environment against the {r.framework} criteria
+            for the period ending {r.date}. The organization demonstrates a maturing security
+            program with strong identity governance and incident response, while logical access
+            enforcement and vendor risk monitoring remain the largest residual exposures.
           </p>
           <p className="mt-3 text-sm leading-relaxed">
             Eight critical findings require remediation prior to the next attestation window. The
@@ -86,7 +83,7 @@ function ReportDetail() {
             architecture review board.
           </p>
 
-          <div className="mt-5 rounded-xl hairline bg-secondary/40 p-4 text-sm">
+          <div className="mt-5 border-l-2 border-accent bg-secondary/40 p-4 text-sm">
             <p className="section-title text-foreground">
               <Sparkles size={11} className="mr-1 inline" strokeWidth={2.5} /> Agent verdict
             </p>
@@ -96,7 +93,7 @@ function ReportDetail() {
           </div>
         </div>
 
-        <div className="rounded-2xl hairline bg-card p-6 shadow-soft">
+        <div className="p-6">
           <p className="section-title text-primary">02 · Signatures</p>
           <h3 className="mt-1 text-xl font-bold">Sign-off</h3>
           <div className="mt-4 space-y-4">
@@ -129,7 +126,7 @@ function ReportDetail() {
       </section>
 
       {/* Control matrix */}
-      <section className="mt-6 overflow-hidden rounded-2xl hairline bg-card shadow-soft">
+      <section className="mt-6 overflow-hidden rounded-sm hairline bg-card">
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div>
             <p className="section-title text-primary">03 · Matrix</p>
@@ -158,14 +155,19 @@ function ReportDetail() {
                 const partial = Math.round(total * 0.15);
                 const violated = Math.max(0, total - met - partial);
                 return (
-                  <tr key={f.id} className="border-t border-border transition-colors hover:bg-muted/70">
+                  <tr
+                    key={f.id}
+                    className="border-t border-border transition-colors hover:bg-muted/70"
+                  >
                     <td className="px-5 py-3 font-semibold">{f.label}</td>
                     <td className="px-5 py-3 font-mono">{total}</td>
                     <td className="px-5 py-3 font-mono">{met}</td>
                     <td className="px-5 py-3 font-mono">{partial}</td>
                     <td className="px-5 py-3 font-mono">{violated}</td>
                     <td className="px-5 py-3">
-                      <BrutalBadge tone={violated === 0 ? "success" : violated < 5 ? "gold" : "primary"}>
+                      <BrutalBadge
+                        tone={violated === 0 ? "success" : violated < 5 ? "gold" : "primary"}
+                      >
                         {violated === 0 ? "Clean" : violated < 5 ? "Watch" : "Action"}
                       </BrutalBadge>
                     </td>
@@ -178,7 +180,7 @@ function ReportDetail() {
       </section>
 
       {/* Findings */}
-      <section className="mt-6 overflow-hidden rounded-2xl hairline bg-card shadow-soft">
+      <section className="mt-6 overflow-hidden rounded-sm hairline bg-card">
         <div className="border-b border-border px-6 py-4">
           <p className="section-title text-primary">04 · Findings</p>
           <h3 className="text-xl font-bold">Detailed findings</h3>
@@ -208,7 +210,7 @@ function ReportDetail() {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl hairline bg-muted px-3 py-3">
+    <div className="bg-muted px-3 py-3">
       <div className="text-2xl font-bold">{value}</div>
       <div className="section-title text-muted-foreground">{label}</div>
     </div>
