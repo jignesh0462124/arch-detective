@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timezone
 from enum import StrEnum
 
-from sqlalchemy import DateTime, Enum, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import DateTime, Enum, Float, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -27,8 +27,16 @@ class FindingSource(StrEnum):
     ARCHITECTURE = "architecture"
 
 
+class FindingState(StrEnum):
+    OPEN = "open"
+    ACCEPTED_RISK = "accepted_risk"
+    RESOLVED = "resolved"
+    FALSE_POSITIVE = "false_positive"
+
+
 class Finding(Base):
     __tablename__ = "findings"
+    __table_args__ = (UniqueConstraint("scan_id", "fingerprint", name="uq_findings_scan_fingerprint"),)
 
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -71,9 +79,32 @@ class Finding(Base):
         nullable=False,
     )
     remediation: Mapped[str | None] = mapped_column(Text)
+    fingerprint: Mapped[str | None] = mapped_column(String(64))
+    state: Mapped[FindingState] = mapped_column(
+        Enum(
+            FindingState,
+            name="finding_state",
+            native_enum=False,
+            values_callable=lambda enum: [item.value for item in enum],
+        ),
+        default=FindingState.OPEN,
+        index=True,
+        nullable=False,
+    )
+    assigned_to: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("auth.users.id", ondelete="SET NULL"),
+        index=True,
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
         nullable=False,
     )
 

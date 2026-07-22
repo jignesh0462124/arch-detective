@@ -3,7 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.models.finding import FindingSource, Severity
+from app.models.finding import FindingSource, FindingState, Severity
 
 
 class ComplianceViolationResponse(BaseModel):
@@ -33,6 +33,7 @@ class FindingCreate(BaseModel):
     line_number: int | None = Field(default=None, ge=1)
     code_snippet: str | None = None
     remediation: str | None = None
+    fingerprint: str | None = Field(default=None, max_length=64)
 
 
 class FindingResponse(BaseModel):
@@ -52,7 +53,11 @@ class FindingResponse(BaseModel):
     code_snippet: str | None
     source: FindingSource
     remediation: str | None
+    fingerprint: str | None
+    state: FindingState
+    assigned_to: UUID | None
     created_at: datetime
+    updated_at: datetime
 
 
 class FindingDetailResponse(FindingResponse):

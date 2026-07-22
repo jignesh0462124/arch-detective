@@ -1,3 +1,5 @@
+import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export class ApiError extends Error {
@@ -11,43 +13,44 @@ export class ApiError extends Error {
   }
 }
 
-export async function apiClient<T>(
-  path: string,
-  options: RequestInit = {},
-): Promise<T> {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
-  const headers: Record<string, string> = {};
+async function authHeaders(): Promise<Headers> {
+  const headers = new Headers();
+  if (!isSupabaseConfigured || typeof window === "undefined") return headers;
 
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
+  const { data, error } = await supabase.auth.getSession();
+  if (error) throw error;
+  if (data.session?.access_token) {
+    headers.set("Authorization", `Bearer ${data.session.access_token}`);
+  }
+  return headers;
+}
+
+export async function apiClient<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const headers = await authHeaders();
+  const optionHeaders = new Headers(options.headers);
+  optionHeaders.forEach((value, key) => headers.set(key, value));
+
+  if (options.body !== undefined && !(options.body instanceof FormData)) {
+    headers.set("Content-Type", "application/json");
   }
 
-  if (!(options.body instanceof FormData)) {
-    headers["Content-Type"] = "application/json";
-  }
-
-  const res = await fetch(`${API_BASE}${path}`, {
+  const response = await fetch(`${API_BASE}${path}`, {
     ...options,
-    headers: { ...headers, ...(options.headers as Record<string, string>) },
+    headers,
   });
 
-  if (res.status === 401 && typeof window !== "undefined") {
-    localStorage.removeItem("auth_token");
-    window.location.href = "/login";
-    throw new ApiError(401, "Unauthorized");
+  if (response.status === 401 && typeof window !== "undefined") {
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) window.location.assign("/login");
   }
 
-  if (!res.ok) {
-    const body = await res.json().catch(() => null);
-    throw new ApiError(res.status, res.statusText, body);
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new ApiError(response.status, response.statusText, body);
   }
 
-  if (res.status === 204) {
-    return undefined as T;
-  }
-
-  return res.json() as Promise<T>;
+  if (response.status === 204) return undefined as T;
+  return response.json() as Promise<T>;
 }
 
 export const api = {
@@ -56,6 +59,11 @@ export const api = {
     apiClient<T>(path, {
       method: "POST",
       body: body instanceof FormData ? body : JSON.stringify(body ?? {}),
+    }),
+  patch: <T>(path: string, body: unknown) =>
+    apiClient<T>(path, {
+      method: "PATCH",
+      body: JSON.stringify(body),
     }),
   delete: <T>(path: string) => apiClient<T>(path, { method: "DELETE" }),
 };

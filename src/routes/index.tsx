@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Zap, CheckCircle2 } from "lucide-react";
-import { ThemeToggle } from "@/components/brutal/ThemeToggle";
-import { ArchonLogo } from "@/components/ui/ArchonLogo";
+import {
+  MarketingBackdrop,
+  MarketingFooter,
+  MarketingHeader,
+} from "@/components/marketing/MarketingChrome";
 import { FRAMEWORKS } from "@/lib/mock-data";
-import { SectionCard } from "@/components/ui/section-card";
 import { CoverageBar } from "@/components/ui/coverage-bar";
 
 export const Route = createFileRoute("/")({
@@ -40,62 +42,10 @@ const COVERAGE = [
 function Landing() {
   return (
     <div className="relative min-h-screen bg-background text-foreground">
-      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-ink" aria-hidden>
-        <img
-          src="/assets/archon-infrastructure-backdrop.webp"
-          alt=""
-          className="h-full w-full object-cover object-[18%_center] opacity-45 sm:object-center dark:opacity-55"
-          width={1672}
-          height={941}
-        />
-      </div>
+      <MarketingBackdrop />
 
       <div className="relative z-10 min-h-screen">
-        {/* Header */}
-        <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur-md">
-          <div className="mx-auto flex min-h-16 w-full max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6">
-            <Link to="/" className="flex min-h-10 min-w-0 items-center gap-2.5">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <ArchonLogo size={18} variant="mono" className="text-primary-foreground" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-sm font-semibold leading-none tracking-tight">Archon</div>
-                <div className="mt-1 font-mono text-[10px] tracking-wider text-muted-foreground">
-                  Audit engine
-                </div>
-              </div>
-            </Link>
-
-            <nav
-              className="hidden h-16 items-center text-[13px] font-medium lg:flex"
-              aria-label="Landing page"
-            >
-              {[
-                ["#product", "Product"],
-                ["#pipeline", "Pipeline"],
-                ["#frameworks", "Frameworks"],
-              ].map(([href, label]) => (
-                <a
-                  key={href}
-                  href={href}
-                  className="flex h-16 items-center border-b-2 border-transparent px-4 text-foreground/70 transition-colors hover:border-accent hover:bg-secondary/50 hover:text-foreground focus-visible:border-accent focus-visible:text-foreground focus-visible:outline-none"
-                >
-                  {label}
-                </a>
-              ))}
-            </nav>
-
-            <div className="flex shrink-0 items-center gap-2">
-              <ThemeToggle />
-              <Link
-                to="/dashboard"
-                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary/85"
-              >
-                Launch <ArrowRight size={13} strokeWidth={2.5} />
-              </Link>
-            </div>
-          </div>
-        </header>
+        <MarketingHeader current="home" />
 
         <div className="mx-auto flex min-h-[calc(100vh-64px)] w-full max-w-[1280px] flex-col">
           <main className="flex-1 space-y-6 py-6 lg:space-y-8 lg:py-8">
@@ -124,7 +74,7 @@ function Landing() {
 
                   <div className="mt-6 flex flex-wrap gap-3">
                     <Link
-                      to="/dashboard"
+                      to="/login"
                       className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-soft transition-all hover:-translate-y-px hover:shadow-soft-lg"
                     >
                       Launch console <ArrowRight size={14} strokeWidth={2.5} />
@@ -193,149 +143,115 @@ function Landing() {
 
             {/* Pipeline */}
             <section id="pipeline" className="scroll-mt-20 px-4 text-foreground sm:px-6">
-              <div className="grid overflow-hidden rounded-sm hairline bg-card md:grid-cols-12">
-                <div className="p-6 sm:p-8 md:col-span-5 lg:p-10">
-                  <p className="section-title text-accent">// Pipeline</p>
-                  <h2 className="mt-2 text-3xl font-medium leading-tight md:text-4xl">
-                    Autonomous five-step verification.
-                  </h2>
-                  <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                    Every scan follows a deterministic flow optimized for speed and traceability,
-                    from repository to signed report.
+              <div className="overflow-hidden rounded-sm hairline bg-card">
+                <div className="grid gap-5 border-b border-border p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.62fr)] lg:items-end">
+                  <div>
+                    <p className="section-title text-accent">// Pipeline</p>
+                    <h2 className="mt-2 max-w-[20ch] text-3xl font-medium leading-tight md:text-4xl">
+                      From repository to signed report.
+                    </h2>
+                  </div>
+                  <p className="max-w-lg text-sm leading-relaxed text-muted-foreground lg:justify-self-end">
+                    Five deterministic stages keep every finding traceable to source evidence,
+                    mapped controls, and a reviewable output.
                   </p>
                 </div>
-                <div className="border-t border-border p-6 sm:p-8 md:col-span-7 md:border-l md:border-t-0 lg:p-10">
-                  <ol className="relative space-y-6 pl-7">
-                    <div aria-hidden className="absolute left-3 top-3 bottom-3 w-px bg-border" />
-                    {PIPELINE.map((s, i) => (
-                      <li key={s.code} className="relative">
-                        <div
-                          className={[
-                            "absolute -left-7 top-0.5 flex size-6 items-center justify-center rounded-full text-[10px] font-semibold",
-                            i === 0
-                              ? "bg-primary text-primary-foreground"
-                              : "border hairline-soft text-muted-foreground",
-                          ].join(" ")}
-                        >
-                          {s.code}
-                        </div>
-                        <div
-                          className={[
-                            "font-mono text-[11px]",
-                            i === 0 ? "text-accent" : "text-muted-foreground",
-                          ].join(" ")}
-                        >
-                          step
-                        </div>
-                        <div
-                          className={[
-                            "mt-0.5 text-base font-medium",
-                            i === 0 ? "" : "text-foreground",
-                          ].join(" ")}
-                        >
-                          {s.label}
-                        </div>
-                        <div className="font-mono text-[11px] text-muted-foreground">{s.note}</div>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
+
+                <ol className="grid md:grid-cols-5">
+                  {PIPELINE.map((stage, index) => (
+                    <li
+                      key={stage.code}
+                      className={[
+                        "relative min-h-[148px] px-6 py-6",
+                        index === PIPELINE.length - 1
+                          ? "border-b-0 md:border-r-0"
+                          : "border-b border-border md:border-b-0 md:border-r",
+                      ].join(" ")}
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="font-mono text-[11px] font-medium text-accent">
+                          {stage.code}
+                        </span>
+                        <span className="font-mono text-[10px] text-muted-foreground">step</span>
+                      </div>
+                      <h3 className="mt-7 text-base font-medium leading-snug">{stage.label}</h3>
+                      <p className="mt-1 font-mono text-[10px] leading-relaxed text-muted-foreground">
+                        {stage.note}
+                      </p>
+                    </li>
+                  ))}
+                </ol>
               </div>
             </section>
 
             {/* Frameworks coverage */}
             <section id="frameworks" className="scroll-mt-20 px-4 sm:px-6">
               <div className="overflow-hidden rounded-sm hairline bg-card">
-                <div className="flex flex-wrap items-end justify-between gap-3 border-b border-border p-6 sm:p-8">
+                <div className="grid gap-5 border-b border-border p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
                   <div>
-                    <p className="section-title text-primary">// Frameworks</p>
-                    <h2 className="mt-1 text-2xl font-medium sm:text-3xl">Status dashboard</h2>
+                    <p className="section-title text-accent">// Frameworks</p>
+                    <h2 className="mt-2 text-3xl font-medium leading-tight md:text-4xl">
+                      Coverage across every framework.
+                    </h2>
+                    <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                      See current pass rates and the active control catalogs applied to every scan.
+                    </p>
                   </div>
-                  <div className="text-xs font-medium text-muted-foreground">
+                  <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground lg:pb-1">
+                    <span className="size-2 rounded-full bg-success" />
                     {FRAMEWORKS.length} frameworks active
                   </div>
                 </div>
 
-                <div className="grid lg:grid-cols-3 lg:divide-x lg:divide-border">
-                  <SectionCard
-                    variant="default"
-                    frame="flat"
-                    eyebrow="Coverage"
-                    title="Per-framework compliance posture"
-                    description="Control pass-rate across last 90 days of scans."
-                    className="border-0 lg:col-span-2"
-                  >
-                    <div className="grid gap-5 sm:grid-cols-2">
+                <div className="grid lg:grid-cols-12">
+                  <div className="lg:col-span-7">
+                    <div className="border-b border-border px-6 py-5 sm:px-8">
+                      <p className="section-title">Coverage</p>
+                      <h3 className="mt-1 text-xl font-medium">Current compliance posture</h3>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Control pass rate across the last 90 days of scans.
+                      </p>
+                    </div>
+                    <div className="grid gap-x-8 gap-y-6 p-6 sm:grid-cols-2 sm:p-8">
                       {COVERAGE.map((c) => (
                         <CoverageBar key={c.label} label={c.label} pct={c.pct} />
                       ))}
                     </div>
-                  </SectionCard>
+                  </div>
 
-                  <SectionCard
-                    variant="muted"
-                    frame="flat"
-                    eyebrow="Frameworks"
-                    title="Active catalog"
-                    description="Pick what to map against on every scan."
-                    className="border-x-0 border-b-0 lg:border-t-0"
-                  >
-                    <ul className="space-y-2.5">
+                  <div className="border-t border-border bg-secondary lg:col-span-5 lg:border-l lg:border-t-0">
+                    <div className="border-b border-border px-6 py-5 sm:px-8">
+                      <p className="section-title">Catalog</p>
+                      <h3 className="mt-1 text-xl font-medium">Controls included</h3>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Each selected catalog is mapped during the same review.
+                      </p>
+                    </div>
+                    <ul className="grid sm:grid-cols-2 lg:grid-cols-2">
                       {FRAMEWORKS.map((f) => (
-                        <li key={f.id} className="flex items-center justify-between text-sm">
+                        <li
+                          key={f.id}
+                          className="flex min-h-16 items-center justify-between gap-3 border-b border-border px-6 py-3 sm:odd:border-r lg:px-4"
+                        >
                           <span className="inline-flex items-center gap-2 font-medium">
                             <CheckCircle2 size={14} className="text-success" strokeWidth={2} />
                             {f.label}
                           </span>
-                          <span className="font-mono text-[11px] text-muted-foreground">
+                          <span className="whitespace-nowrap font-mono text-[11px] text-muted-foreground">
                             {f.controls}
+                            <span className="sr-only"> controls</span>
                           </span>
                         </li>
                       ))}
                     </ul>
-                  </SectionCard>
+                  </div>
                 </div>
               </div>
             </section>
           </main>
         </div>
 
-        <footer className="border-t border-border bg-background/95 backdrop-blur-md">
-          <div className="mx-auto flex w-full max-w-[1280px] flex-col items-start justify-between gap-3 px-4 py-4 text-xs sm:min-h-16 sm:flex-row sm:items-center sm:gap-6 sm:px-6 sm:py-0">
-            <div className="flex min-h-10 items-center gap-2.5 font-medium">
-              <div className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <ArchonLogo size={18} variant="mono" className="text-primary-foreground" />
-              </div>
-              Archon · 2026
-            </div>
-            <div className="flex flex-wrap items-center text-muted-foreground">
-              <a
-                href="#"
-                className="flex min-h-10 items-center border-b-2 border-transparent px-2 transition-colors hover:border-accent hover:text-foreground focus-visible:border-accent focus-visible:text-foreground focus-visible:outline-none"
-              >
-                Security
-              </a>
-              <a
-                href="#"
-                className="flex min-h-10 items-center border-b-2 border-transparent px-2 transition-colors hover:border-accent hover:text-foreground focus-visible:border-accent focus-visible:text-foreground focus-visible:outline-none"
-              >
-                Docs
-              </a>
-              <a
-                href="#"
-                className="flex min-h-10 items-center border-b-2 border-transparent px-2 transition-colors hover:border-accent hover:text-foreground focus-visible:border-accent focus-visible:text-foreground focus-visible:outline-none"
-              >
-                Changelog
-              </a>
-              <a
-                href="#"
-                className="flex min-h-10 items-center border-b-2 border-transparent px-2 transition-colors hover:border-accent hover:text-foreground focus-visible:border-accent focus-visible:text-foreground focus-visible:outline-none"
-              >
-                Contact
-              </a>
-            </div>
-          </div>
-        </footer>
+        <MarketingFooter />
       </div>
     </div>
   );

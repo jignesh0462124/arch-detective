@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import ForeignKey, String, Text
+from sqlalchemy import ForeignKey, String, Text, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -9,6 +9,14 @@ from app.database import Base
 
 class ComplianceViolation(Base):
     __tablename__ = "compliance_violations"
+    __table_args__ = (
+        UniqueConstraint(
+            "finding_id",
+            "framework",
+            "control_id",
+            name="uq_compliance_violation_control",
+        ),
+    )
 
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),

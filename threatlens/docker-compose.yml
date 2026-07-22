@@ -1,22 +1,32 @@
-services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: threatlens-postgres
-    environment:
-      POSTGRES_DB: threatlens_db
-      POSTGRES_USER: threatlens
-      POSTGRES_PASSWORD: threatlens_dev_password_change_me
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U threatlens -d threatlens_db"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
+x-runtime-environment: &runtime-environment
+  ENVIRONMENT: ${ENVIRONMENT:-development}
+  DEBUG: ${DEBUG:-true}
+  DATABASE_URL: ${DATABASE_URL}
+  DATABASE_POOL_SIZE: ${DATABASE_POOL_SIZE:-5}
+  DATABASE_MAX_OVERFLOW: ${DATABASE_MAX_OVERFLOW:-5}
+  SUPABASE_URL: ${SUPABASE_URL}
+  SUPABASE_JWKS_URL: ${SUPABASE_JWKS_URL}
+  SUPABASE_JWT_ISSUER: ${SUPABASE_JWT_ISSUER}
+  SUPABASE_JWT_AUDIENCE: ${SUPABASE_JWT_AUDIENCE:-authenticated}
+  SUPABASE_JWT_ALGORITHMS: ${SUPABASE_JWT_ALGORITHMS:-RS256,ES256}
+  SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+  SUPABASE_SCAN_BUCKET: ${SUPABASE_SCAN_BUCKET:-scan-inputs}
+  SUPABASE_REPORT_BUCKET: ${SUPABASE_REPORT_BUCKET:-audit-reports}
+  SIGNED_URL_TTL_SECONDS: ${SIGNED_URL_TTL_SECONDS:-300}
+  SOURCE_RETENTION_HOURS: ${SOURCE_RETENTION_HOURS:-24}
+  REDIS_URL: redis://redis:6379/0
+  QDRANT_URL: http://qdrant:6333
+  QDRANT_HOST: qdrant
+  QDRANT_PORT: "6333"
+  QDRANT_COLLECTION: ${QDRANT_COLLECTION:-compliance_knowledge}
+  QDRANT_API_KEY: ${QDRANT_API_KEY:-}
+  QDRANT_HTTPS: "false"
+  NVD_API_KEY: ${NVD_API_KEY:-}
+  GROQ_API_KEY: ${GROQ_API_KEY:-}
+  MAX_FILE_SIZE_MB: ${MAX_FILE_SIZE_MB:-50}
+  CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173,http://localhost:8080,http://127.0.0.1:8080}
 
+services:
   redis:
     image: redis:7-alpine
     container_name: threatlens-redis
@@ -54,32 +64,11 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: threatlens-api
-    command:
-      - sh
-      - -c
-      - alembic -c alembic/alembic.ini upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000
-    environment: &app-environment
-      DEBUG: "true"
-      SECRET_KEY: dev-only-secret-key-change-me-before-production-0000000000000000
-      DATABASE_URL: postgresql+asyncpg://threatlens:threatlens_dev_password_change_me@postgres:5432/threatlens_db
-      REDIS_URL: redis://redis:6379/0
-      QDRANT_HOST: qdrant
-      QDRANT_PORT: "6333"
-      QDRANT_COLLECTION: compliance_knowledge
-      QDRANT_API_KEY: ${QDRANT_API_KEY:-}
-      QDRANT_HTTPS: "false"
-      NVD_API_KEY: ${NVD_API_KEY:-}
-      GROQ_API_KEY: ${GROQ_API_KEY:-}
-      S3_BUCKET_NAME: ${S3_BUCKET_NAME:-threatlens-reports}
-      S3_ACCESS_KEY: ${S3_ACCESS_KEY:-}
-      S3_SECRET_KEY: ${S3_SECRET_KEY:-}
-      S3_ENDPOINT_URL: ${S3_ENDPOINT_URL:-}
-      CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173,http://localhost:8080,http://127.0.0.1:8080
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment: *runtime-environment
     ports:
       - "8000:8000"
     depends_on:
-      postgres:
-        condition: service_healthy
       redis:
         condition: service_healthy
       qdrant:
@@ -98,15 +87,34 @@ services:
       dockerfile: Dockerfile
     container_name: threatlens-worker
     command: ["celery", "-A", "app.tasks.celery_app", "worker", "--loglevel=info"]
-    environment: *app-environment
+    environment: *runtime-environment
     depends_on:
-      postgres:
-        condition: service_healthy
       redis:
         condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "celery -A app.tasks.celery_app inspect ping --destination celery@$$HOSTNAME --timeout 5 | grep -q pong",
+        ]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
     restart: unless-stopped
 
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    profiles: ["tools"]
+    command: ["alembic", "-c", "alembic/alembic.ini", "upgrade", "head"]
+    environment:
+      <<: *runtime-environment
+      MIGRATION_DATABASE_URL: ${MIGRATION_DATABASE_URL}
+
 volumes:
-  postgres_data:
   redis_data:
   qdrant_data:

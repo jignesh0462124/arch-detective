@@ -8,6 +8,7 @@
 ## Table of Contents
 
 1. [Project Context](#1-project-context)
+   - [Supabase Architecture Authority](#supabase-architecture-authority)
 2. [Execution Rules](#2-execution-rules)
 3. [Part-Wise Execution Order](#3-part-wise-execution-order)
 4. [Part 1: Foundation Setup](#4-part-1-foundation-setup)
@@ -30,6 +31,7 @@
 ### What is ThreatLens?
 
 ThreatLens is an LLM-Agentic Compliance & Threat Modeling Engine that:
+
 - Accepts codebases (ZIP/Git), architecture YAML, and server logs
 - Runs static analysis (Semgrep, Bandit, Trufflehog) + LLM deep review (Groq/Llama 3 70B)
 - Maps every vulnerability to 5 compliance frameworks (GDPR, SOC 2, ISO 27001, PCI DSS v4, NIST CSF 2.0) using RAG
@@ -37,18 +39,39 @@ ThreatLens is an LLM-Agentic Compliance & Threat Modeling Engine that:
 
 ### Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| API | FastAPI + Uvicorn |
-| LLM | Groq API (Llama 3 70B) |
-| LLM Orchestration | LangChain |
-| Vector Store | Qdrant |
-| Embeddings | sentence-transformers all-MiniLM-L6-v2 |
-| Task Queue | Celery + Redis |
-| Database | PostgreSQL + SQLAlchemy + Alembic |
-| PDF | WeasyPrint + Jinja2 |
-| Storage | S3 / Cloudflare R2 |
-| Frontend | TanStack Start (React + TypeScript + Vite + TailwindCSS) |
+| Layer             | Technology                                               |
+| ----------------- | -------------------------------------------------------- |
+| API               | FastAPI + Uvicorn                                        |
+| LLM               | Groq API (Llama 3 70B)                                   |
+| LLM Orchestration | LangChain                                                |
+| Vector Store      | Qdrant                                                   |
+| Embeddings        | sentence-transformers all-MiniLM-L6-v2                   |
+| Task Queue        | Celery + Redis                                           |
+| Authentication    | Supabase Auth + FastAPI JWT/JWKS verification            |
+| Database          | Supabase PostgreSQL + SQLAlchemy + Alembic               |
+| PDF               | WeasyPrint + Jinja2                                      |
+| Storage           | Supabase Storage with private buckets                    |
+| Frontend          | TanStack Start (React + TypeScript + Vite + TailwindCSS) |
+
+### Supabase Architecture Authority
+
+The mandatory target architecture is defined in:
+
+- `plan/Supabase-Backend.md`
+
+Read that file before implementing or changing any backend part. It replaces the following older instructions wherever they appear in Part files, workflow files, prompts, or connection guides:
+
+- Self-managed/Docker PostgreSQL is replaced by Supabase PostgreSQL.
+- The custom `users` password table is replaced by Supabase `auth.users` plus public profiles, workspaces, and memberships.
+- FastAPI register, login, refresh, password hashing, and JWT issuing are replaced by Supabase Auth.
+- FastAPI verifies Supabase access tokens with JWKS and enforces workspace authorization.
+- AWS S3 and Cloudflare R2 are replaced by private Supabase Storage buckets.
+- Direct large multipart uploads through FastAPI are replaced by private resumable Storage uploads followed by an authenticated start request.
+- Signed report URLs are generated after authorization and are never stored in PostgreSQL.
+
+The following components are not replaced: FastAPI, SQLAlchemy, Alembic, Celery, Redis, Qdrant, scanners, Groq/LangChain, and WeasyPrint.
+
+**Conflict rule:** `plan/Supabase-Backend.md` and this section take precedence over all older backend documents. Preserve all non-conflicting scanner, RAG, agent, report-rendering, task, API response, testing, and frontend migration requirements.
 
 ### Project Structure
 
@@ -56,9 +79,11 @@ ThreatLens is an LLM-Agentic Compliance & Threat Modeling Engine that:
 threatlens/
 ├── app/
 │   ├── main.py, config.py, database.py
-│   ├── models/ (scan, finding, compliance_violation, report)
+│   ├── auth/ (jwt_verifier, dependencies, permissions)
+│   ├── models/ (profile, workspace, scan, scan_artifact, finding, compliance_violation, report, audit_event)
 │   ├── schemas/ (scan, finding, report)
 │   ├── api/ (scans, reports, frameworks, export, auth, ws)
+│   ├── storage/ (client, paths, lifecycle)
 │   ├── ingestion/ (code_extractor, arch_parser, log_parser)
 │   ├── scanners/ (semgrep, bandit, trufflehog, dependency_audit, log_anomaly, llm_code_reviewer)
 │   ├── rag/ (embedder, qdrant_client, retriever, chunkers/)
@@ -125,6 +150,8 @@ src/
    - `Backend-Frontend-Connect.md` — Complete guide for wiring each Part to the frontend, with exact TypeScript code, import swaps, hook creation, and verification steps.
 8. **Use the AI prompts file.** For AI-assisted implementation:
    - `AI-Implementation-Prompts.md` — 9 ready-to-use prompts (Prompt 0–8) that you paste into any AI coding assistant to implement each Part sequentially.
+9. **Apply the Supabase architecture override.** Before each BUILD step, read `plan/Supabase-Backend.md` and replace conflicting local PostgreSQL, custom JWT/password, S3/R2, upload, model-ownership, and deployment instructions with its Supabase equivalents.
+10. **Keep migration ownership consistent.** Alembic is the source of truth for application tables, indexes, grants, RLS policies, helper functions, and Storage policies. Do not mix manual Dashboard schema edits with Alembic-managed objects.
 
 ---
 
@@ -155,6 +182,8 @@ src/
 
 **Recommended order:** 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
+**Supabase prerequisite:** Part 1 must establish Supabase Auth configuration, JWT verification, profiles/workspaces, and database/Storage policy foundations. Before connecting the Part 3 browser upload flow, implement the minimum frontend Supabase session flow. Part 8 then completes auth UI polish, route protection, WebSocket authentication, rate limiting, and full cross-tenant verification. Do not delay all authentication work until Part 8 because private Storage RLS requires an authenticated user during Part 3.
+
 ---
 
 ## 4. Part 1: Foundation Setup
@@ -165,23 +194,26 @@ src/
 ### BUILD
 
 Create these files:
-- `docker-compose.yml` — PostgreSQL 15, Redis 7, Qdrant
+
+- `docker-compose.yml` — Redis, Qdrant, API, and worker; no PostgreSQL service
 - `Dockerfile` — Python 3.11 slim
 - `requirements.txt` — All dependencies
-- `.env.example` — Environment variable template
+- `.env.example` — Supabase, database, Redis, Qdrant, Groq, and CORS variable template
 - `app/main.py` — FastAPI app with CORS, `/health` endpoint
 - `app/config.py` — pydantic-settings from `.env`
-- `app/database.py` — SQLAlchemy engine + session
-- `app/models/` — User, Scan, Finding, ComplianceViolation, Report ORM models
+- `app/database.py` — SQLAlchemy async engine connected to Supabase PostgreSQL
+- `app/auth/` — Supabase JWT/JWKS verifier, current-user dependency, and workspace permissions
+- `app/storage/` — Server-only Supabase Storage client, canonical paths, and lifecycle helpers
+- `app/models/` — Profile, Workspace, WorkspaceMember, Scan, ScanArtifact, Finding, ComplianceViolation, Report, and AuditEvent ORM models
 - `app/schemas/` — Pydantic request/response schemas
 - `app/tasks/celery_app.py` — Celery with Redis broker
-- `alembic/` — Migration setup
+- `alembic/` — Supabase-compatible migrations, grants, RLS, and Storage policies
 
 ### TEST
 
 ```bash
-docker-compose up -d                              # All 3 services start
-alembic upgrade head                              # Tables created
+docker-compose up -d                              # Redis, Qdrant, API, and worker start
+alembic upgrade head                              # Supabase application tables and policies created
 uvicorn app.main:app --reload --port 8000         # Server starts
 curl http://localhost:8000/health                  # {"status": "healthy"}
 curl http://localhost:8000/docs                    # Swagger UI
@@ -191,19 +223,23 @@ celery -A app.tasks.celery_app worker --loglevel=info  # Worker connects
 ### SECURE
 
 - [ ] `.env` in `.gitignore`
-- [ ] SECRET_KEY is 64+ random chars
-- [ ] Database password is strong
+- [ ] Supabase service role key is server-only and never uses a `VITE_` prefix
+- [ ] Runtime database role is separate from the migration/owner role
+- [ ] TLS is required for Supabase PostgreSQL connections
+- [ ] RLS is enabled for all public tenant tables and private Storage objects
 - [ ] No secrets in code or version control
 
 ### OPTIMIZE
 
 - Use `async` SQLAlchemy sessions for non-blocking DB access
-- Set PostgreSQL connection pool size: `pool_size=10, max_overflow=20`
+- Start with a conservative pool: `pool_size=5, max_overflow=5` per API/worker process
+- Use a direct Supabase connection or Supavisor session mode for long-lived API and worker processes
 - Enable SQLAlchemy query logging only in DEBUG mode
 
 ### CONNECT TO FRONTEND
 
 - CORS must allow `http://localhost:5173`
+- Create `src/lib/supabase.ts` with the project URL and publishable key only
 - Create `src/lib/api/client.ts` with base API client
 - Create `src/lib/api/types.ts` with TypeScript interfaces matching Pydantic schemas
 - Test: frontend fetch to `/health` returns 200 without CORS errors
@@ -218,6 +254,7 @@ celery -A app.tasks.celery_app worker --loglevel=info  # Worker connects
 ### BUILD
 
 Create these files:
+
 - `app/rag/embedder.py` — SentenceTransformer singleton wrapper
 - `app/rag/qdrant_client.py` — Qdrant connection + collection setup
 - `app/rag/retriever.py` — `retrieve_relevant_controls()` function
@@ -268,9 +305,12 @@ curl http://localhost:8000/api/v1/frameworks       # Returns 5 frameworks
 ### BUILD
 
 Create these files:
+
 - `app/ingestion/code_extractor.py` — ZIP extract, Git clone, source file collector
 - `app/ingestion/arch_parser.py` — YAML/JSON architecture parser
 - `app/ingestion/log_parser.py` — Log file parser
+- `app/storage/paths.py` — Canonical workspace/scan/artifact object paths
+- `app/models/scan_artifact.py` — Private Storage object metadata and verification state
 
 ### TEST
 
@@ -298,17 +338,22 @@ print(r['services'])
 - [ ] Git URL validation: only `https://`, block `file://` and `ssh://`
 - [ ] Temp directory cleanup in `finally` block
 - [ ] Max file count cap: 1000 files
+- [ ] `scan-inputs` bucket is private and upload paths are protected by workspace-aware Storage RLS
+- [ ] Worker loads the object path from PostgreSQL instead of trusting a queue or browser path
 
 ### OPTIMIZE
 
 - Stream ZIP extraction (don't load entire ZIP to memory)
+- Use a Supabase resumable TUS upload for the existing 50 MB input limit
 - Git clone with `depth=1` to minimize download size
 - Skip binary files during source collection
 
 ### CONNECT TO FRONTEND
 
-- Wire New Scan page file upload dropzone to `POST /scan`
-- Wire Git URL text input to `POST /scan`
+- Wire New Scan to `POST /api/v1/scans` to create the scan and exact private object path
+- Upload files directly to private Supabase Storage with the authenticated user session
+- Call `POST /api/v1/scans/{scan_id}/start` only after upload completion and server verification
+- Wire Git URL input to `POST /api/v1/scans`; Git scans do not require a Storage upload
 - Add file size client-side validation (MAX_FILE_SIZE_MB)
 - Show scan type selector (codebase/architecture/logs/full)
 
@@ -322,6 +367,7 @@ print(r['services'])
 ### BUILD
 
 Create these files:
+
 - `app/scanners/semgrep_runner.py` — Semgrep subprocess + JSON parser
 - `app/scanners/bandit_runner.py` — Bandit Python analysis
 - `app/scanners/trufflehog_runner.py` — Secret/credential scanner
@@ -355,8 +401,8 @@ python -c "from app.scanners.trufflehog_runner import run_trufflehog; print(len(
 
 ### CONNECT TO FRONTEND
 
-- `GET /scan/{id}/status` → Progress bar on scan detail page
-- `GET /scan/{id}/findings` → Findings table with severity/source filters
+- `GET /api/v1/scans/{id}` → Progress bar on scan detail page
+- `GET /api/v1/scans/{id}/findings` → Findings table with severity/source filters
 - Create `src/lib/api/findings.ts` with `fetchFindings()` function
 - Create `src/hooks/useScanProgress.ts` with TanStack Query polling
 - Wire findings page severity badges (critical=red, high=orange, medium=blue, low=green)
@@ -371,6 +417,7 @@ python -c "from app.scanners.trufflehog_runner import run_trufflehog; print(len(
 ### BUILD
 
 Create these files:
+
 - `app/agent/prompts/classifier.py` — Vulnerability classification prompt
 - `app/agent/prompts/compliance.py` — Compliance mapping prompt
 - `app/agent/prompts/remediation.py` — Remediation planning prompt
@@ -432,12 +479,13 @@ print('Compliance mapping test PASSED ✓')
 ### BUILD
 
 Create these files:
+
 - `app/report/templates/base.html` — Master Jinja2 template
 - `app/report/templates/executive_summary.html` — Summary section
 - `app/report/templates/findings.html` — Findings by severity
 - `app/report/templates/compliance_section.html` — Compliance scores
 - `app/report/generator.py` — Chart generation + PDF rendering
-- `app/report/uploader.py` — S3/R2 upload + signed URLs
+- `app/storage/client.py` — Server-only Supabase Storage upload and signed URL operations
 - `app/api/reports.py` — Report endpoints
 - `app/api/export.py` — CSV/JSON export endpoints
 - `app/tasks/report_task.py` — Celery async PDF task
@@ -446,23 +494,28 @@ Create these files:
 
 ```bash
 # Generate PDF from completed scan:
-curl -X POST http://localhost:8000/api/v1/scan/{scan_id}/report
+curl -X POST -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  http://localhost:8000/api/v1/scans/{scan_id}/reports
 # Wait for completion, then download:
-curl http://localhost:8000/api/v1/report/{scan_id}/download
+curl -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  http://localhost:8000/api/v1/reports/{report_id}/download
 # Open PDF and verify: cover page, summary, findings, compliance section
 
 # CSV export:
-curl http://localhost:8000/api/v1/scan/{scan_id}/export/csv > findings.csv
+curl -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  http://localhost:8000/api/v1/scans/{scan_id}/export.csv > findings.csv
 # Open in Excel/LibreOffice, verify all columns present
 ```
 
 ### SECURE
 
-- [ ] Signed URLs expire in 1 hour (never permanent public URLs)
-- [ ] S3 bucket is private
+- [ ] `audit-reports` Supabase Storage bucket is private
+- [ ] Signed URLs have a short TTL, initially 300 seconds
+- [ ] Database stores only bucket/object path/checksum, never a signed URL
+- [ ] Workspace membership is checked before signed URL generation
 - [ ] PDF content sanitized (no executable JS)
 - [ ] CSV injection protection: prefix `=`, `+`, `-`, `@` with single quote
-- [ ] Rate limit report generation: max 1 concurrent per user
+- [ ] Rate limit report generation: max 1 concurrent per workspace/user
 
 ### OPTIMIZE
 
@@ -473,8 +526,8 @@ curl http://localhost:8000/api/v1/scan/{scan_id}/export/csv > findings.csv
 
 ### CONNECT TO FRONTEND
 
-- Reports page: "Generate Report" button → `POST /scan/{id}/report`
-- Reports page: "Download PDF" button → opens signed URL in new tab
+- Reports page: "Generate Report" button → `POST /api/v1/scans/{id}/reports`
+- Reports page: "Download PDF" button → requests an authorized short-lived URL, then opens it
 - Findings page: "Export CSV" button → triggers browser download
 - Dashboard: compliance score chart (Recharts bar chart from framework_scores)
 - Create `src/lib/api/reports.ts` with `generateReport()` and `downloadReport()`
@@ -489,6 +542,7 @@ curl http://localhost:8000/api/v1/scan/{scan_id}/export/csv > findings.csv
 ### BUILD
 
 Complete these files:
+
 - `app/tasks/celery_app.py` — Celery config (broker, backend, serializer, beat schedule)
 - `app/tasks/scan_task.py` — Full scan orchestration (ingestion → scanners → compliance)
 - `app/tasks/report_task.py` — PDF generation task
@@ -499,13 +553,17 @@ Complete these files:
 # Start worker:
 celery -A app.tasks.celery_app worker --loglevel=info
 
-# Trigger scan and monitor progress:
-SCAN_ID=$(curl -s -X POST http://localhost:8000/api/v1/scan \
-  -F "scan_type=codebase" -F "file=@test-app.zip" | python -c "import sys,json; print(json.load(sys.stdin)['scan_id'])")
+# Trigger a Git scan and monitor progress. File scans use the create/upload/start flow.
+SCAN_ID=$(curl -s -X POST http://localhost:8000/api/v1/scans \
+  -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"scan_type":"git","target_name":"test-app","git_url":"https://github.com/example/test-app"}' \
+  | python -c "import sys,json; print(json.load(sys.stdin)['scan_id'])")
 
 # Poll until complete:
 for i in $(seq 1 30); do
-  STATUS=$(curl -s http://localhost:8000/api/v1/scan/${SCAN_ID}/status)
+  STATUS=$(curl -s -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+    http://localhost:8000/api/v1/scans/${SCAN_ID})
   echo "$STATUS"
   sleep 3
 done
@@ -528,7 +586,7 @@ done
 
 ### CONNECT TO FRONTEND
 
-- `useScanProgress` hook polls `GET /scan/{id}/status` every 3 seconds
+- `useScanProgress` hook polls `GET /api/v1/scans/{id}` every 3 seconds
 - Stop polling when status is "completed" or "failed"
 - Show live finding count during scan
 - On completion → auto-fetch findings → enable report generation
@@ -543,54 +601,67 @@ done
 ### BUILD
 
 Create these files:
-- `app/api/auth.py` — JWT register, login, refresh, me
+
+- `app/auth/jwt_verifier.py` — Verify Supabase JWT signature, issuer, audience, expiry, and subject through JWKS
+- `app/auth/dependencies.py` — Typed FastAPI current-user dependency
+- `app/auth/permissions.py` — Workspace membership and role authorization
+- `app/api/auth.py` — Profile `me`, bootstrap, and update endpoints only
 - `app/api/ws.py` — WebSocket scan progress
-- `src/lib/api/client.ts` — Base API client with auth headers
+- `src/lib/supabase.ts` — Browser Supabase client with publishable key
+- `src/lib/api/client.ts` — Base API client using the current Supabase access token
 - `src/lib/api/types.ts` — Full TypeScript type definitions
 - `src/lib/api/scans.ts` — Scan API functions
 - `src/lib/api/findings.ts` — Findings API functions
 - `src/lib/api/reports.ts` — Report API functions
-- `src/lib/api/auth.ts` — Auth API functions
+- `src/lib/api/auth.ts` — Supabase sign-up, sign-in, sign-out, and session wrappers
+- `src/hooks/useAuth.ts` — Supabase session/profile state and cache cleanup
 - `src/hooks/useScanProgress.ts` — TanStack Query polling hook
 - `src/hooks/useFindings.ts` — TanStack Query findings hook
 
 ### TEST
 
 ```bash
-# Test auth flow:
-TOKEN=$(curl -s -X POST http://localhost:8000/api/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"test@test.com","password":"test123"}' | python -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
+# Obtain SUPABASE_ACCESS_TOKEN from a dedicated Supabase test user/session.
+# FastAPI never receives or verifies the user's password itself.
 
 # Test protected endpoint:
-curl -H "Authorization: Bearer $TOKEN" http://localhost:8000/api/v1/scans
+curl -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  http://localhost:8000/api/v1/scans
+
+# Missing, expired, wrong-issuer, and wrong-audience tokens must return 401.
+# A valid user requesting another workspace's scan must return 403 or 404.
 
 # Test rate limiting:
 for i in $(seq 1 15); do
-  curl -s -o /dev/null -w "%{http_code}\n" -X POST http://localhost:8000/api/v1/scan \
-    -F "scan_type=codebase" -F "file=@test.zip"
+  curl -s -o /dev/null -w "%{http_code}\n" \
+    -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+    -X POST http://localhost:8000/api/v1/scans \
+    -H "Content-Type: application/json" \
+    -d '{"scan_type":"git","target_name":"test","git_url":"https://github.com/example/test"}'
 done
 # Should see 429 after 10 requests
 
 # Full E2E from frontend:
 # 1. Open http://localhost:5173
-# 2. Register/Login
-# 3. Start New Scan → Upload ZIP
+# 2. Sign up/sign in through Supabase Auth and bootstrap a workspace
+# 3. Start New Scan → resumable private Storage upload → start scan
 # 4. Watch progress bar
 # 5. View findings
 # 6. Generate PDF report
-# 7. Download PDF
+# 7. Download PDF through an authorized short-lived URL
 ```
 
 ### SECURE
 
-- [ ] JWT SECRET_KEY is 64+ random chars
-- [ ] Access tokens expire in 24 hours
-- [ ] Password hashing with bcrypt
+- [ ] Supabase Auth is the only credential/password system
+- [ ] FastAPI verifies Supabase JWT through cached JWKS and checks issuer/audience/expiry/subject
+- [ ] Workspace role is loaded from `workspace_members`, not user-editable metadata
+- [ ] Supabase service role key is never exposed to the browser
+- [ ] Cross-workspace access tests cover scans, findings, reports, exports, objects, and WebSockets
 - [ ] Rate limiting on all endpoints
 - [ ] CORS: specific frontend origin only (not `*`)
 - [ ] Input validation via Pydantic on all endpoints
-- [ ] File type/size validation on uploads
+- [ ] File type/size/checksum/object-path validation before enqueueing a scan
 
 ### OPTIMIZE
 
@@ -601,7 +672,7 @@ done
 
 ### CONNECT TO FRONTEND
 
-See full route-to-endpoint mapping in Part 8 detail file.
+Use the route mapping in this file and `plan/Supabase-Backend.md`. The Part 8 detail file remains valid for response shapes, rate limiting, progress, mock replacement, and general API behavior, but its custom password/JWT flow is superseded.
 
 ---
 
@@ -610,38 +681,52 @@ See full route-to-endpoint mapping in Part 8 detail file.
 Apply **after each part is complete** and again at the end:
 
 ### Authentication & Authorization
-- [ ] JWT on all scan/report endpoints
-- [ ] User can only access their own scans
-- [ ] Admin-only endpoints for system management
-- [ ] Token refresh mechanism
+
+- [ ] Supabase access token required on all scan/report/framework/export endpoints
+- [ ] FastAPI validates signature, issuer, audience, expiry, and subject through JWKS
+- [ ] Every tenant query is scoped by `workspace_id`
+- [ ] Workspace membership and minimum role checked for every operation
+- [ ] WebSocket authenticates before subscribing to scan progress
+- [ ] Supabase SDK owns token refresh; FastAPI does not issue or refresh tokens
 
 ### Input Validation
+
 - [ ] All request bodies validated by Pydantic
-- [ ] File upload: type, size, content validation
+- [ ] Storage upload: exact path, type, size, checksum, and ownership validation before scan start
 - [ ] Git URL: only HTTPS, no file:// or ssh://
 - [ ] ZIP: bomb protection, path traversal prevention
 
 ### Secrets Management
+
 - [ ] No secrets in code or git history
 - [ ] .env in .gitignore
 - [ ] Environment variables for all credentials
-- [ ] Signed URLs for S3 objects (never public URLs)
+- [ ] Supabase service role and database owner credentials remain server-only
+- [ ] Private Storage buckets; signed report URLs generated only after authorization
+- [ ] Signed URLs are short-lived and never persisted
 
 ### API Security
+
 - [ ] Rate limiting (slowapi)
 - [ ] CORS restricted to frontend origin
 - [ ] Request size limits
 - [ ] Error messages don't leak internal details
 
 ### Data Security
-- [ ] PostgreSQL: encrypted connections in production
+
+- [ ] Supabase PostgreSQL: TLS connections and separate runtime/migration roles
+- [ ] RLS enabled and tested for all public tenant tables and private Storage objects
 - [ ] Redis: password-protected
 - [ ] Qdrant: API key in production
-- [ ] PDF reports: signed URLs with expiry
+- [ ] Source artifacts deleted after the configured recovery window
+- [ ] PDF reports: private objects with authorized signed URLs and expiry
 
 ### Infrastructure
+
 - [ ] Docker containers run as non-root
 - [ ] Base image: python:3.11-slim (minimal attack surface)
+- [ ] No local PostgreSQL service or AWS/S3 credentials in deployment
+- [ ] Scanner sandbox has no database, Redis, Supabase, Groq, or Qdrant credentials
 - [ ] No debug mode in production
 - [ ] Health check endpoints for monitoring
 
@@ -656,6 +741,9 @@ Apply **after each part is complete** and again at the end:
 tests/
 ├── test_config.py          # Part 1
 ├── test_models.py          # Part 1
+├── test_auth.py            # Supabase JWT verification + workspace permissions
+├── test_rls.py             # Cross-workspace database and Storage isolation
+├── test_storage.py         # Private upload, verification, signed URL, cleanup
 ├── test_rag.py             # Part 2
 ├── test_ingestion.py       # Part 3
 ├── test_scanners.py        # Part 4
@@ -685,11 +773,14 @@ pytest tests/test_e2e.py -v --timeout=300
 ### Integration Tests
 
 After each part's frontend connection:
+
 1. Start backend: `uvicorn app.main:app --port 8000`
 2. Start frontend: `npm run dev`
-3. Open browser → test the connected feature
-4. Check browser console for errors
-5. Check backend logs for errors
+3. Sign in with a dedicated Supabase test user
+4. Open browser → test the connected feature
+5. Check browser console for errors
+6. Check backend logs for errors
+7. Repeat protected-resource tests with a second workspace/user to verify isolation
 
 ---
 
@@ -698,30 +789,36 @@ After each part's frontend connection:
 ### Apply After Each Part:
 
 #### Database
-- Add indexes on frequently queried columns (scan_id, severity, framework)
+
+- Add indexes on tenant/filter columns (`workspace_id`, `scan_id`, `severity`, `framework`)
 - Use eager loading for relationships to avoid N+1 queries
-- Connection pool: `pool_size=10, max_overflow=20`
+- Start with `pool_size=5, max_overflow=5` per process and calculate the total API/worker connection budget
+- Prefer direct Supabase connections or Supavisor session mode for long-lived services
 - Query pagination for findings list
 
 #### API
+
 - Response compression (gzip middleware)
 - Async endpoints where possible
 - Use `orjson` serializer for faster JSON
 - Background tasks for non-critical operations
 
 #### RAG
+
 - Lazy-load SentenceTransformer model
 - LRU cache on retriever (5-min TTL)
 - Batch Qdrant upserts (groups of 100)
 - Metadata filtering to narrow search scope
 
 #### Scanners
+
 - Parallel execution (Celery group/chord)
 - Subprocess timeouts (300s)
 - LLM file cap (30 files, 8KB each)
 - Deduplicate before compliance mapping
 
 #### Frontend
+
 - TanStack Query caching for API responses
 - Debounce search/filter inputs
 - Lazy load route components
@@ -733,14 +830,14 @@ After each part's frontend connection:
 
 ### Complete Route → Endpoint Mapping
 
-| Frontend Page | Backend Endpoints | Data Flow |
-|--------------|-------------------|-----------|
-| Landing (`index.tsx`) | None | Static content |
-| Dashboard (`dashboard.tsx`) | `GET /scans`, `GET /frameworks` | Scan list + framework metadata → cards & charts |
-| New Scan (`new-scan.tsx`) | `POST /scan`, `GET /frameworks` | File upload/Git URL → scan_id → navigate to progress |
-| Findings (`findings.tsx`) | `GET /scan/{id}/findings`, `GET /scan/{id}/status` | Findings table with filters + progress bar |
-| Reports (`reports.tsx`) | `POST /scan/{id}/report`, `GET /report/{id}/download`, `GET /scans` | Generate → download PDF |
-| Report Detail (`reports.$reportId.tsx`) | `GET /report/{id}/download`, `GET /scan/{id}/findings` | Full report view with findings |
+| Frontend Page                           | Backend Endpoints                                                                             | Data Flow                                                 |
+| --------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Landing (`index.tsx`)                   | None                                                                                          | Static content                                            |
+| Dashboard (`dashboard.tsx`)             | `GET /api/v1/scans`, `GET /api/v1/frameworks`                                                 | Workspace scan list + framework metadata → cards & charts |
+| New Scan (`new-scan.tsx`)               | `POST /api/v1/scans`, Supabase Storage upload, `POST /api/v1/scans/{id}/start`                | Create → private upload/verify → enqueue → progress       |
+| Findings (`findings.tsx`)               | `GET /api/v1/scans/{id}/findings`, `GET /api/v1/scans/{id}`                                   | Findings table with filters + progress bar                |
+| Reports (`reports.tsx`)                 | `POST /api/v1/scans/{id}/reports`, `GET /api/v1/reports/{id}/download`, `GET /api/v1/reports` | Generate → authorize → short-lived download URL           |
+| Report Detail (`reports.$reportId.tsx`) | `GET /api/v1/reports/{id}`, `GET /api/v1/scans/{id}/findings`                                 | Full report view with findings                            |
 
 ### API Client Files to Create in Frontend
 
@@ -752,7 +849,10 @@ src/lib/api/
 ├── findings.ts    → fetchFindings(), fetchFindingDetail()
 ├── reports.ts     → generateReport(), downloadReport()
 ├── frameworks.ts  → fetchFrameworks()
-└── auth.ts        → login(), register(), refreshToken()
+└── auth.ts        → Supabase signUp(), signIn(), signOut(), getSession()
+
+src/lib/
+└── supabase.ts    → Browser client with URL + publishable key
 
 src/hooks/
 ├── useScanProgress.ts  → TanStack Query polling hook
@@ -765,7 +865,25 @@ src/hooks/
 ```env
 # Frontend .env
 VITE_API_URL=http://localhost:8000
+VITE_SUPABASE_URL=https://PROJECT_REF.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_REPLACE_ME
 ```
+
+```env
+# Backend .env (server-only)
+DATABASE_URL=postgresql+asyncpg://threatlens_backend:REPLACE_ME@HOST:5432/postgres?ssl=require
+MIGRATION_DATABASE_URL=postgresql://postgres.PROJECT_REF:REPLACE_ME@HOST:5432/postgres?sslmode=require
+SUPABASE_URL=https://PROJECT_REF.supabase.co
+SUPABASE_JWKS_URL=https://PROJECT_REF.supabase.co/auth/v1/.well-known/jwks.json
+SUPABASE_JWT_ISSUER=https://PROJECT_REF.supabase.co/auth/v1
+SUPABASE_JWT_AUDIENCE=authenticated
+SUPABASE_SERVICE_ROLE_KEY=sb_secret_REPLACE_ME
+SUPABASE_SCAN_BUCKET=scan-inputs
+SUPABASE_REPORT_BUCKET=audit-reports
+SIGNED_URL_TTL_SECONDS=300
+```
+
+The exact full environment contract and connection-mode guidance live in `plan/Supabase-Backend.md`. None of the server-only values may appear in frontend variables.
 
 ---
 
@@ -773,7 +891,7 @@ VITE_API_URL=http://localhost:8000
 
 **Begin with Part 1: Foundation Setup.**
 
-Read `Part-01-Foundation-Setup.md` for detailed file specifications, then follow `plan/Workflow-01-Environment-Setup.md` for step-by-step commands.
+First read `plan/Supabase-Backend.md`. Then read `Part-01-Foundation-Setup.md` for detailed file specifications and `plan/Workflow-01-Environment-Setup.md` for step-by-step commands, applying the mandatory Supabase overrides in this file.
 
 After Part 1 is complete (all tests pass, frontend connects to `/health`), proceed to Part 2.
 

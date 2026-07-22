@@ -1,37 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
   <style>
-    :root { --fg: #111111; }
-    @media (prefers-color-scheme: dark) { :root { --fg: #ffffff; } }
+    .tile { fill: #111111; }
+    .shield { fill: rgba(255,255,255,.08); stroke: #ffffff; }
+    @media (prefers-color-scheme: dark) {
+      .tile { fill: #ffffff; }
+      .shield { fill: rgba(17,17,17,.08); stroke: #111111; }
+    }
   </style>
-
-  <!-- Shield body -->
-  <path
-    d="M32 4L8 16v16c0 14.4 10.24 27.84 24 32 13.76-4.16 24-17.6 24-32V16L32 4Z"
-    fill="var(--fg)" fill-opacity="0.08"
-    stroke="var(--fg)" stroke-width="2.5" stroke-linejoin="round"
-  />
-
-  <!-- Inner shield -->
-  <path
-    d="M32 12l-18 9v12c0 11.04 7.84 21.36 18 24.56 10.16-3.2 18-13.52 18-24.56V21L32 12Z"
-    fill="var(--fg)" fill-opacity="0.04"
-    stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round" stroke-opacity="0.25"
-  />
-
-  <!-- Reticle — horizontal -->
-  <line x1="20" y1="34" x2="28" y2="34" stroke="#ff5600" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="36" y1="34" x2="44" y2="34" stroke="#ff5600" stroke-width="2.5" stroke-linecap="round"/>
-
-  <!-- Reticle — vertical -->
-  <line x1="32" y1="22" x2="32" y2="30" stroke="#ff5600" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="32" y1="38" x2="32" y2="46" stroke="#ff5600" stroke-width="2.5" stroke-linecap="round"/>
-
-  <!-- Center dot -->
-  <circle cx="32" cy="34" r="2.5" fill="#ff5600"/>
-
-  <!-- Corner brackets -->
-  <path d="M24 26h-2v2" stroke="#ff5600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M40 26h2v2" stroke="#ff5600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M24 42h-2v-2" stroke="#ff5600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M40 42h2v-2" stroke="#ff5600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="tile" x="2" y="2" width="60" height="60" rx="13"/>
+  <path class="shield" d="M32 10 15 18.5v12.4c0 10.2 7.1 19.2 17 21.7 9.9-2.5 17-11.5 17-21.7V18.5L32 10Z" stroke-width="2.8" stroke-linejoin="round"/>
+  <path d="M23 32h6m6 0h6M32 23v6m0 6v6" stroke="#ff5600" stroke-width="3.2" stroke-linecap="round"/>
+  <circle cx="32" cy="32" r="3" fill="#ff5600"/>
 </svg>

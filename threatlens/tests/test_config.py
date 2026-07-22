@@ -8,20 +8,32 @@ def test_default_settings_are_development_safe() -> None:
     settings = Settings()
 
     assert settings.DEBUG is True
-    assert "localhost" in settings.DATABASE_URL
+    assert settings.ENVIRONMENT == "development"
+    assert settings.DATABASE_POOL_SIZE == 5
+    assert settings.SUPABASE_SERVICE_ROLE_KEY == ""
     assert "http://localhost:5173" in settings.CORS_ORIGINS
-    assert len(settings.SECRET_KEY) >= 64
 
 
-def test_cors_origins_accept_comma_separated_env_value() -> None:
-    settings = Settings(CORS_ORIGINS="http://localhost:5173,http://127.0.0.1:5173")
+def test_supabase_urls_are_derived_from_project_url() -> None:
+    settings = Settings(SUPABASE_URL="https://project-ref.supabase.co")
+
+    assert settings.SUPABASE_JWKS_URL.endswith("/auth/v1/.well-known/jwks.json")
+    assert settings.SUPABASE_JWT_ISSUER.endswith("/auth/v1")
+
+
+def test_comma_separated_lists_are_supported() -> None:
+    settings = Settings(
+        CORS_ORIGINS="http://localhost:5173,http://127.0.0.1:5173",
+        SUPABASE_JWT_ALGORITHMS="RS256,ES256",
+    )
 
     assert settings.CORS_ORIGINS == [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
     ]
+    assert settings.SUPABASE_JWT_ALGORITHMS == ["RS256", "ES256"]
 
 
-def test_production_rejects_development_secrets() -> None:
+def test_production_rejects_missing_supabase_configuration() -> None:
     with pytest.raises(ValidationError):
-        Settings(DEBUG=False)
+        Settings(ENVIRONMENT="production", DEBUG=False)

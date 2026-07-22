@@ -1,6 +1,16 @@
-export type ScanStatus = "pending" | "running" | "completed" | "failed";
+export type ScanStatus =
+  | "pending"
+  | "uploading"
+  | "queued"
+  | "running"
+  | "completed"
+  | "failed"
+  | "cancelled";
 export type ScanType = "codebase" | "architecture" | "logs" | "full";
+export type SourceType = "upload" | "git" | "architecture" | "logs" | "full";
 export type Severity = "critical" | "high" | "medium" | "low";
+export type WorkspaceRole = "owner" | "admin" | "analyst" | "viewer";
+export type ReportStatus = "queued" | "generating" | "ready" | "failed";
 export type RemediationPriority = "immediate" | "short-term" | "long-term";
 export type FindingSource =
   | "semgrep"
@@ -17,16 +27,54 @@ export interface HealthResponse {
   service: "threatlens";
 }
 
+export interface Profile {
+  id: string;
+  display_name: string | null;
+  avatar_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface WorkspaceMembership {
+  workspace_id: string;
+  workspace_name: string;
+  workspace_slug: string;
+  role: WorkspaceRole;
+}
+
+export interface AuthenticatedUser {
+  id: string;
+  email: string | null;
+  session_id: string | null;
+}
+
+export interface CurrentUserResponse {
+  user: AuthenticatedUser;
+  profile: Profile | null;
+  memberships: WorkspaceMembership[];
+}
+
+export interface BootstrapResponse {
+  profile: Profile;
+  memberships: WorkspaceMembership[];
+}
+
 export interface Scan {
   id: string;
-  user_id: string;
+  workspace_id: string;
+  created_by: string;
   scan_type: ScanType;
+  source_type: SourceType;
   target_name: string;
+  selected_frameworks: string[];
   status: ScanStatus;
   progress: number;
   finding_count: number;
   framework_scores: Record<string, number>;
+  error_code: string | null;
+  error_message: string | null;
   created_at: string;
+  started_at: string | null;
   completed_at: string | null;
 }
 
@@ -36,6 +84,8 @@ export interface ScanStatusResponse {
   progress: number;
   finding_count: number;
   current_phase: string;
+  error_code: string | null;
+  error_message: string | null;
 }
 
 export interface Finding {
@@ -53,7 +103,11 @@ export interface Finding {
   code_snippet: string | null;
   source: FindingSource;
   remediation: string | null;
+  fingerprint: string | null;
+  state: "open" | "accepted_risk" | "resolved" | "false_positive";
+  assigned_to: string | null;
   created_at: string;
+  updated_at: string;
 }
 
 export interface FindingDetail extends Finding {
@@ -84,20 +138,12 @@ export interface Framework {
 export interface Report {
   id: string;
   scan_id: string;
-  pdf_url: string;
-  signed_url: string | null;
-  generated_at: string;
-  expires_at: string | null;
-}
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  created_at: string;
-}
-
-export interface AuthTokens {
-  access_token: string;
-  token_type: string;
+  status: ReportStatus;
+  bucket: string;
+  object_path: string;
+  sha256: string | null;
+  byte_size: number | null;
+  version: number;
+  generated_at: string | null;
+  error_message: string | null;
 }

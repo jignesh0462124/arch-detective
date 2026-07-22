@@ -34,10 +34,17 @@ def _batches(items: list[T], size: int) -> Iterator[list[T]]:
 
 @lru_cache(maxsize=1)
 def get_qdrant() -> QdrantClient:
+    connection = (
+        {"url": settings.QDRANT_URL}
+        if settings.QDRANT_URL
+        else {
+            "host": settings.QDRANT_HOST,
+            "port": settings.QDRANT_PORT,
+            "https": settings.QDRANT_HTTPS,
+        }
+    )
     return QdrantClient(
-        host=settings.QDRANT_HOST,
-        port=settings.QDRANT_PORT,
-        https=settings.QDRANT_HTTPS,
+        **connection,
         api_key=settings.QDRANT_API_KEY or None,
         timeout=settings.QDRANT_TIMEOUT_SECONDS,
     )

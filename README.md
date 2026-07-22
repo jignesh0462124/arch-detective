@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="docs/logo.png" alt="ThreatLens Logo" width="140" />
-  <h1>🔍 ThreatLens — Arch Detective</h1>
-  <p><strong>LLM-Agentic Compliance & Threat Modeling Engine</strong></p>
+  <img src="docs/logo.png" alt="Archon logo" width="140" />
+  <h1>Archon</h1>
+  <p><strong>Agentic Compliance & Threat Modeling Audit Engine</strong></p>
   <p>
     <em>Upload code → Find vulnerabilities → Map to compliance → Generate audit reports</em>
   </p>

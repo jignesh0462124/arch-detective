@@ -9,7 +9,7 @@ import {
   Search,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/brutal/ThemeToggle";
-import { ArchonLogo } from "@/components/ui/ArchonLogo";
+import { ArchonWordmark } from "@/components/ui/ArchonWordmark";
 import type { ReactNode } from "react";
 import { api } from "@/lib/api/client";
 import type { HealthResponse } from "@/lib/api/types";
@@ -58,17 +58,10 @@ export function AppShell({
         >
           <Link
             to="/"
-            className="group flex min-h-11 items-center gap-3 px-2 py-1.5 transition-colors hover:bg-sidebar-active"
+            aria-label="Archon home"
+            className="group flex min-h-11 items-center px-2 py-1.5 transition-colors hover:bg-sidebar-active"
           >
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <ArchonLogo size={20} variant="mono" className="text-primary-foreground" />
-            </div>
-            <div className="min-w-0">
-              <div className="text-[15px] font-semibold leading-none">Archon</div>
-              <div className="mt-1 text-[11px] leading-none text-muted-foreground">
-                Audit engine
-              </div>
-            </div>
+            <ArchonWordmark />
           </Link>
 
           <nav className="mt-7 flex flex-col gap-1" aria-label="Workspace navigation">
