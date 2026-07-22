@@ -116,9 +116,9 @@
       "file_type": "rationale",
       "source_file": "C:\\Users\\jigne\\OneDrive\\Desktop\\College Project\\arch-detective\\scripts\\generate_brand_assets.py",
       "source_location": "L1",
-      "id": "generate_brand_assets_rationale_1",
       "community": 8,
-      "norm_label": "generate archon raster brand assets from the canonical shield geometry."
+      "norm_label": "generate archon raster brand assets from the canonical shield geometry.",
+      "id": "generate_brand_assets_rationale_1"
     },
     {
       "label": "router.tsx",

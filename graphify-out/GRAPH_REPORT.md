@@ -1,7 +1,7 @@
 # Graph Report - C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective  (2026-07-23)
 
 ## Corpus Check
-- 155 files · ~115,589 words
+- 155 files · ~116,310 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
