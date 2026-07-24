@@ -1,12 +1,12 @@
 # Graph Report - C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective  (2026-07-23)
 
 ## Corpus Check
-- 155 files · ~116,310 words
+- 165 files · ~135,771 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 395 nodes · 487 edges · 111 communities detected
-- Extraction: 72% EXTRACTED · 28% INFERRED · 0% AMBIGUOUS · INFERRED: 136 edges (avg confidence: 0.63)
+- 542 nodes · 936 edges · 112 communities detected
+- Extraction: 62% EXTRACTED · 38% INFERRED · 0% AMBIGUOUS · INFERRED: 353 edges (avg confidence: 0.66)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -121,104 +121,105 @@
 - [[_COMMUNITY_Community 108|Community 108]]
 - [[_COMMUNITY_Community 109|Community 109]]
 - [[_COMMUNITY_Community 110|Community 110]]
+- [[_COMMUNITY_Community 111|Community 111]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `Base` - 21 edges
-2. `Settings` - 12 edges
-3. `StorageOperationError` - 12 edges
-4. `SupabaseStorage` - 11 edges
-5. `WorkspaceRole` - 9 edges
-6. `RAGStorageError` - 9 edges
-7. `upsert_chunks()` - 8 edges
-8. `ScanCreate` - 8 edges
-9. `Severity` - 7 edges
-10. `FindingSource` - 7 edges
+1. `_FakeSession` - 28 edges
+2. `SupabaseStorage` - 23 edges
+3. `Base` - 21 edges
+4. `StorageOperationError` - 20 edges
+5. `StorageObjectInfo` - 19 edges
+6. `_Result` - 19 edges
+7. `_VerifiedStorage` - 19 edges
+8. `AuthenticatedUser` - 17 edges
+9. `Settings` - 15 edges
+10. `create_scan()` - 15 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `chunk_nvd_payload()` --calls--> `test_nvd_payload_is_converted_to_chunk()`  [INFERRED]
-  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\rag\chunkers\cve_chunker.py → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\tests\test_rag.py
+- `ScanStartRequest` --calls--> `test_start_request_normalizes_sha256()`  [INFERRED]
+  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\schemas\scan.py → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\tests\test_scan_schemas.py
+- `run()` --calls--> `extract_from_git()`  [INFERRED]
+  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\src\routes\_app\new-scan.tsx → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\ingestion\code_extractor.py
+- `run()` --calls--> `_cleanup_scan()`  [INFERRED]
+  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\src\routes\_app\new-scan.tsx → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\tasks\scan_task.py
 - `Settings` --uses--> `StorageConfigurationError`  [INFERRED]
   C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\config.py → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\storage\client.py
 - `Settings` --uses--> `StorageOperationError`  [INFERRED]
   C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\config.py → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\storage\client.py
-- `Settings` --uses--> `SupabaseStorage`  [INFERRED]
-  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\config.py → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\storage\client.py
-- `Settings` --calls--> `test_default_settings_are_development_safe()`  [INFERRED]
-  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\config.py → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\tests\test_config.py
 
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.11
-Nodes (31): AuditEvent, update_profile(), Base, ComplianceViolation, Base, DeclarativeBase, ComplianceViolationResponse, Finding (+23 more)
+Cohesion: 0.1
+Nodes (47): AuditEvent, BootstrapResponse, CurrentUserResponse, ProfileResponse, ProfileUpdate, WorkspaceMembershipResponse, Base, BaseModel (+39 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.13
-Nodes (24): EmbeddingError, encode_batch(), encode_text(), get_encoder(), Raised when the embedding model cannot encode input., _batches(), create_collection(), framework_chunk_counts() (+16 more)
+Cohesion: 0.06
+Nodes (40): build_control_chunks(), Control, EmbeddingError, encode_batch(), encode_text(), get_encoder(), Raised when the embedding model cannot encode input., FrameworkListResponse (+32 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.12
-Nodes (15): BaseSettings, derive_and_validate_settings(), get_settings(), Settings, get_current_user(), get_jwt_verifier(), AuthTokenError, SupabaseJWTVerifier (+7 more)
+Cohesion: 0.09
+Nodes (38): AuthenticatedUser, update_profile(), get_db(), report_object_path(), sanitize_filename(), scan_input_object_path(), _cleanup_scan(), _authorize_scan() (+30 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.17
-Nodes (14): _create_supabase_client(), StorageConfigurationError, StorageOperationError, SupabaseStorage, Exception, delete_object_if_present(), RuntimeError, _failing_storage() (+6 more)
+Cohesion: 0.11
+Nodes (25): _create_supabase_client(), StorageConfigurationError, StorageObjectInfo, StorageOperationError, StorageSizeLimitError, SupabaseStorage, Exception, delete_object_if_present() (+17 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.16
-Nodes (19): AuthenticatedUser, bootstrap_user(), BootstrapResponse, CurrentUserResponse, get_me(), _load_memberships(), _membership_response(), ProfileResponse (+11 more)
+Cohesion: 0.12
+Nodes (31): _address_is_public(), ArchiveSecurityError, cleanup_temp_directory(), collect_source_files(), _directory_size(), extract_from_git(), extract_from_zip(), GitSecurityError (+23 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.11
-Nodes (9): getSession(), apiClient(), ApiError, authHeaders(), consumeLastCapturedError(), renderErrorPage(), fetch(), getServerEntry() (+1 more)
+Nodes (16): BaseSettings, Raised when a streamed object exceeds the caller's byte limit., derive_and_validate_settings(), get_settings(), Settings, get_current_user(), get_jwt_verifier(), AuthTokenError (+8 more)
 
 ### Community 6 - "Community 6"
-Cohesion: 0.13
-Nodes (8): build_control_chunks(), Control, chunk_gdpr(), chunk_iso27001(), chunk_nist(), chunk_owasp(), chunk_pci(), chunk_soc2()
+Cohesion: 0.12
+Nodes (17): _create_database_security(), _create_storage_security(), _create_tables(), downgrade(), initial schema  Revision ID: 0001_initial_schema Revises: Create Date: 2026-07-1, upgrade(), bootstrap_user(), get_me() (+9 more)
 
 ### Community 7 - "Community 7"
-Cohesion: 0.19
-Nodes (10): chunk_nvd_payload(), _cvss(), _description(), fetch_nvd_cves(), _iso_nvd(), NVDClientError, Raised when NVD data cannot be fetched or parsed., local_chunks() (+2 more)
+Cohesion: 0.11
+Nodes (9): getSession(), apiClient(), ApiError, authHeaders(), consumeLastCapturedError(), renderErrorPage(), fetch(), getServerEntry() (+1 more)
 
 ### Community 8 - "Community 8"
+Cohesion: 0.17
+Nodes (11): chunk_nvd_payload(), _cvss(), _description(), fetch_nvd_cves(), _iso_nvd(), NVDClientError, Raised when NVD data cannot be fetched or parsed., local_chunks() (+3 more)
+
+### Community 9 - "Community 9"
+Cohesion: 0.32
+Nodes (11): _entry(), LogParseError, _parse_apache(), _parse_json(), parse_log_file(), _parse_syslog(), _parse_timestamped(), Raised when a log payload violates parser limits. (+3 more)
+
+### Community 10 - "Community 10"
 Cohesion: 0.4
 Nodes (10): bezier(), downsample(), draw_mark(), load_font(), main(), make_icon(), make_logo_sheet(), make_social() (+2 more)
 
-### Community 9 - "Community 9"
+### Community 11 - "Community 11"
 Cohesion: 0.2
 Nodes (5): run_async_migrations(), run_migrations_online(), run(), toggle(), applyTheme()
 
-### Community 10 - "Community 10"
-Cohesion: 0.36
-Nodes (6): report_object_path(), sanitize_filename(), scan_input_object_path(), test_filename_requires_safe_characters(), test_report_path_is_stable(), test_scan_input_path_is_canonical_and_sanitized()
-
-### Community 11 - "Community 11"
-Cohesion: 0.43
-Nodes (5): _create_database_security(), _create_storage_security(), _create_tables(), initial schema  Revision ID: 0001_initial_schema Revises: Create Date: 2026-07-1, upgrade()
-
 ### Community 12 - "Community 12"
 Cohesion: 0.33
-Nodes (0): 
+Nodes (8): ArchitectureParseError, _external_apis(), parse_architecture(), _port_value(), Raised when architecture input cannot be parsed safely., _service_records(), test_architecture_rejects_malformed_and_non_object_documents(), test_architecture_yaml_and_json_are_parsed_without_object_construction()
 
 ### Community 13 - "Community 13"
-Cohesion: 0.33
-Nodes (0): 
+Cohesion: 0.48
+Nodes (6): _base_upload(), test_artifact_kind_mime_and_extension_must_match_scan_type(), test_frameworks_are_supported_unique_and_bounded(), test_git_contract_forbids_upload_metadata_and_non_https_urls(), test_start_request_normalizes_sha256(), test_upload_contract_requires_all_metadata_and_forbids_git_url()
 
 ### Community 14 - "Community 14"
 Cohesion: 0.33
-Nodes (1): Report generation package.
+Nodes (0): 
 
 ### Community 15 - "Community 15"
-Cohesion: 0.4
+Cohesion: 0.33
 Nodes (0): 
 
 ### Community 16 - "Community 16"
-Cohesion: 0.5
+Cohesion: 0.4
 Nodes (0): 
 
 ### Community 17 - "Community 17"
-Cohesion: 0.5
-Nodes (0): 
+Cohesion: 0.4
+Nodes (1): Report generation package.
 
 ### Community 18 - "Community 18"
 Cohesion: 0.5
@@ -229,15 +230,15 @@ Cohesion: 0.5
 Nodes (0): 
 
 ### Community 20 - "Community 20"
-Cohesion: 0.67
-Nodes (2): get_workspace_role(), require_workspace_role()
+Cohesion: 0.5
+Nodes (0): 
 
 ### Community 21 - "Community 21"
 Cohesion: 0.5
 Nodes (0): 
 
 ### Community 22 - "Community 22"
-Cohesion: 0.67
+Cohesion: 0.5
 Nodes (0): 
 
 ### Community 23 - "Community 23"
@@ -592,8 +593,12 @@ Nodes (0):
 Cohesion: 1.0
 Nodes (0): 
 
+### Community 111 - "Community 111"
+Cohesion: 1.0
+Nodes (0): 
+
 ## Knowledge Gaps
-- **6 isolated node(s):** `Generate Archon raster brand assets from the canonical shield geometry.`, `initial schema  Revision ID: 0001_initial_schema Revises: Create Date: 2026-07-1`, `Raised when the embedding model cannot encode input.`, `Raised when Qdrant cannot complete an operation.`, `Control` (+1 more)
+- **11 isolated node(s):** `Generate Archon raster brand assets from the canonical shield geometry.`, `initial schema  Revision ID: 0001_initial_schema Revises: Create Date: 2026-07-1`, `Raised when architecture input cannot be parsed safely.`, `Raised when source input cannot be ingested safely.`, `Raised when an archive violates extraction limits.` (+6 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **Thin community `Community 25`** (2 nodes): `BrutalBadge()`, `BrutalBadge.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
@@ -763,25 +768,27 @@ Nodes (0):
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 108`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 109`** (1 nodes): `celery_app.py`
+- **Thin community `Community 109`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 110`** (1 nodes): `__init__.py`
+- **Thin community `Community 110`** (1 nodes): `celery_app.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 111`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `AuthTokenError` connect `Community 2` to `Community 1`, `Community 4`?**
-  _High betweenness centrality (0.055) - this node is a cross-community bridge._
-- **Why does `AuthenticatedUser` connect `Community 4` to `Community 2`?**
-  _High betweenness centrality (0.054) - this node is a cross-community bridge._
-- **Why does `RAGStorageError` connect `Community 1` to `Community 3`, `Community 4`?**
-  _High betweenness centrality (0.044) - this node is a cross-community bridge._
+- **Why does `_FakeSession` connect `Community 2` to `Community 0`, `Community 3`, `Community 6`?**
+  _High betweenness centrality (0.062) - this node is a cross-community bridge._
+- **Why does `StorageObjectInfo` connect `Community 3` to `Community 0`, `Community 2`, `Community 5`?**
+  _High betweenness centrality (0.048) - this node is a cross-community bridge._
+- **Are the 12 inferred relationships involving `_FakeSession` (e.g. with `Scan` and `ScanStatus`) actually correct?**
+  _`_FakeSession` has 12 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 14 inferred relationships involving `SupabaseStorage` (e.g. with `Settings` and `_NotFoundError`) actually correct?**
+  _`SupabaseStorage` has 14 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 19 inferred relationships involving `Base` (e.g. with `AuditEvent` and `ComplianceViolation`) actually correct?**
   _`Base` has 19 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 9 inferred relationships involving `Settings` (e.g. with `AuthTokenError` and `SupabaseJWTVerifier`) actually correct?**
-  _`Settings` has 9 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 5 inferred relationships involving `StorageOperationError` (e.g. with `Settings` and `_NotFoundError`) actually correct?**
-  _`StorageOperationError` has 5 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 5 inferred relationships involving `SupabaseStorage` (e.g. with `Settings` and `_NotFoundError`) actually correct?**
-  _`SupabaseStorage` has 5 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 15 inferred relationships involving `ValueError` (e.g. with `derive_and_validate_settings()` and `validate_upload_contract()`) actually correct?**
+  _`ValueError` has 15 INFERRED edges - model-reasoned connections that need verification._
+- **What connects `Generate Archon raster brand assets from the canonical shield geometry.`, `initial schema  Revision ID: 0001_initial_schema Revises: Create Date: 2026-07-1`, `Raised when architecture input cannot be parsed safely.` to the rest of the system?**
+  _11 weakly-connected nodes found - possible documentation gaps or missing edges._

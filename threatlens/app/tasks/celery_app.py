@@ -10,6 +10,7 @@ celery_app = Celery(
 )
 
 celery_app.conf.update(
+    imports=("app.tasks.scan_task",),
     task_track_started=True,
     task_serializer="json",
     result_serializer="json",

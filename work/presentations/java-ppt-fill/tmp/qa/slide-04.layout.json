@@ -1,0 +1,1088 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/jyx0ra1s",
+    "id": "jyx0ra1s",
+    "slide": 4,
+    "layoutId": "/ppt/slideLayouts/slideLayout23.xml",
+    "layoutName": "1_Title Slide",
+    "masterLayoutId": "/ppt/slideMasters/slideMaster2.xml",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "theme": {
+    "colorSchemeName": "Retrospect",
+    "colors": {
+      "accent1": "#E48312",
+      "accent2": "#BD582C",
+      "accent3": "#865640",
+      "accent4": "#9B8357",
+      "accent5": "#C2BC80",
+      "accent6": "#94A088",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#637052",
+      "lt2": "#CCDDEA",
+      "hlink": "#2998E3",
+      "folHlink": "#8C8C8C"
+    },
+    "fontScheme": {
+      "name": "Retrospect",
+      "majorFont": {
+        "latinTypeface": "Calibri Light"
+      },
+      "minorFont": {
+        "latinTypeface": "Calibri"
+      }
+    },
+    "typefaces": [
+      "Calibri",
+      "Calibri Light",
+      "Times New Roman"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "/ppt/slideLayouts/slideLayout23.xml",
+      "name": "1_Title Slide",
+      "parentLayoutId": "/ppt/slideMasters/slideMaster2.xml",
+      "elements": [
+        {
+          "order": 1,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout23.xml/4",
+          "id": "4",
+          "name": "Date Placeholder 3",
+          "bbox": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "text": "04-07-2026",
+          "textPreview": "04-07-2026",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "04-07-2026",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "04-07-2026"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout23.xml/5",
+          "id": "5",
+          "name": "Footer Placeholder 4",
+          "bbox": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "order": 3,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout23.xml/6",
+          "id": "6",
+          "name": "Slide Number Placeholder 5",
+          "bbox": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "text": "‹#›",
+          "textPreview": "‹#›",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "‹#›",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "‹#›"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "kind": "image",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout23.xml/7",
+          "id": "7",
+          "name": "Picture 6",
+          "bbox": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "contentType": "image/jpeg",
+          "asset": {
+            "assetId": "/ppt/media/image2.jpeg",
+            "contentType": "image/jpeg",
+            "byteLength": 44733
+          },
+          "fillImage": {
+            "assetId": "/ppt/media/image2.jpeg",
+            "contentType": "image/jpeg",
+            "byteLength": 44733
+          }
+        }
+      ]
+    },
+    {
+      "scope": "master",
+      "id": "/ppt/slideMasters/slideMaster2.xml",
+      "type": "master",
+      "elements": [
+        {
+          "order": 1,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster2.xml/2",
+          "id": "2",
+          "name": "Title Placeholder 1",
+          "bbox": [
+            48,
+            28.83,
+            864,
+            120
+          ],
+          "geometry": "rect",
+          "text": "Click to edit Master title style",
+          "textPreview": "Click to edit Master title style",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "autoFit": "shrinkText",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Click to edit Master title style",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Click to edit Master title style"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster2.xml/3",
+          "id": "3",
+          "name": "Text Placeholder 2",
+          "bbox": [
+            48,
+            168,
+            864,
+            475.17
+          ],
+          "geometry": "rect",
+          "text": "Click to edit Master text styles\nSecond level\nThird level\nFourth level\nFifth level",
+          "textPreview": "Click to edit Master text styles | Second level | Third level | Fourth level | Fifth level",
+          "resolvedTextStyle": {
+            "vertical": 1,
+            "autoFit": "shrinkText",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Click to edit Master text styles",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Click to edit Master text styles"
+                }
+              ]
+            },
+            {
+              "index": 2,
+              "text": "Second level",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Second level"
+                }
+              ]
+            },
+            {
+              "index": 3,
+              "text": "Third level",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Third level"
+                }
+              ]
+            },
+            {
+              "index": 4,
+              "text": "Fourth level",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Fourth level"
+                }
+              ]
+            },
+            {
+              "index": 5,
+              "text": "Fifth level",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Fifth level"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster2.xml/4",
+          "id": "4",
+          "name": "Date Placeholder 3",
+          "bbox": [
+            48,
+            667.33,
+            224,
+            38.33
+          ],
+          "geometry": "rect",
+          "text": "7/4/2026",
+          "textPreview": "7/4/2026",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "7/4/2026",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "7/4/2026"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster2.xml/5",
+          "id": "5",
+          "name": "Footer Placeholder 4",
+          "bbox": [
+            328,
+            667.33,
+            304,
+            38.33
+          ],
+          "geometry": "rect",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          }
+        },
+        {
+          "order": 5,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster2.xml/6",
+          "id": "6",
+          "name": "Slide Number Placeholder 5",
+          "bbox": [
+            688,
+            667.33,
+            224,
+            38.33
+          ],
+          "geometry": "rect",
+          "text": "‹#›",
+          "textPreview": "‹#›",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "‹#›",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "‹#›"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/1cj2d8b6",
+      "id": "2",
+      "name": "Title 1",
+      "bbox": [
+        58.84,
+        16,
+        1806.97,
+        149.68
+      ],
+      "text": "How Java Works",
+      "textPreview": "How Java Works",
+      "resolvedFontSize": 67,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "vertical": 1,
+        "fontSize": 67,
+        "typeface": "Times New Roman",
+        "color": "#000000",
+        "bold": true,
+        "alignment": "center",
+        "verticalAlignment": "middle",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "How Java Works"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "How Java Works",
+          "resolvedTextStyle": {
+            "fontSize": 67,
+            "typeface": "Times New Roman",
+            "color": "#000000",
+            "bold": true,
+            "alignment": "center"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "How Java Works",
+              "fontSize": 67,
+              "typeface": "Times New Roman",
+              "color": "#000000",
+              "bold": true,
+              "alignment": "center"
+            }
+          ],
+          "bulletCharacter": ""
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "kind": "table",
+      "scope": "slide",
+      "aid": "tb/tsnut0v2",
+      "id": "3",
+      "name": "Table 5",
+      "bbox": [
+        0,
+        169.02,
+        1920,
+        844.88
+      ],
+      "text": "Stage | Tool / Component | Input | Output | Included In | Why It Matters\nCompile | JDK + javac | Main.java source code | Main.class bytecode | JDK | Checks code and creates portable bytecode.\nRun | JRE + JVM | Bytecode | Machine-level output | JRE / JDK | Same bytecode runs on any OS with a JVM.",
+      "textPreview": "Stage | Tool / Component | Input | Output | Included In | Why It Matters | Compile | JDK + javac | Main.java source code | Main.class byt...",
+      "rows": 3,
+      "cols": 6,
+      "cells": [
+        {
+          "index": 1,
+          "row": 1,
+          "column": 1,
+          "bbox": [
+            0,
+            169.02,
+            170,
+            96.27
+          ],
+          "text": "Stage",
+          "textPreview": "Stage",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Stage",
+              "lineSpacingPercent": 107000,
+              "resolvedTextStyle": {
+                "alignment": "center"
+              },
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Stage",
+                  "fontSize": 28,
+                  "typeface": "Times New Roman"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "row": 1,
+          "column": 2,
+          "bbox": [
+            170,
+            169.02,
+            270,
+            96.27
+          ],
+          "text": "Tool / Component",
+          "textPreview": "Tool / Component",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Tool / Component",
+              "lineSpacingPercent": 107000,
+              "resolvedTextStyle": {
+                "alignment": "center"
+              },
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Tool / Component",
+                  "fontSize": 28,
+                  "typeface": "Times New Roman"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "row": 1,
+          "column": 3,
+          "bbox": [
+            440,
+            169.02,
+            300,
+            96.27
+          ],
+          "text": "Input",
+          "textPreview": "Input",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Input",
+              "lineSpacingPercent": 107000,
+              "resolvedTextStyle": {
+                "alignment": "center"
+              },
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Input",
+                  "fontSize": 28,
+                  "typeface": "Times New Roman"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "row": 1,
+          "column": 4,
+          "bbox": [
+            740,
+            169.02,
+            320,
+            96.27
+          ],
+          "text": "Output",
+          "textPreview": "Output",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Output",
+              "lineSpacingPercent": 107000,
+              "resolvedTextStyle": {
+                "alignment": "center"
+              },
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Output",
+                  "fontSize": 28,
+                  "typeface": "Times New Roman"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "row": 1,
+          "column": 5,
+          "bbox": [
+            1060,
+            169.02,
+            240,
+            96.27
+          ],
+          "text": "Included In",
+          "textPreview": "Included In",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Included In",
+              "lineSpacingPercent": 107000,
+              "resolvedTextStyle": {
+                "alignment": "center"
+              },
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Included In",
+                  "fontSize": 28,
+                  "typeface": "Times New Roman"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "row": 1,
+          "column": 6,
+          "bbox": [
+            1300,
+            169.02,
+            620,
+            96.27
+          ],
+          "text": "Why It Matters",
+          "textPreview": "Why It Matters",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Why It Matters",
+              "lineSpacingPercent": 107000,
+              "resolvedTextStyle": {
+                "alignment": "center"
+              },
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Why It Matters",
+                  "fontSize": 28,
+                  "typeface": "Times New Roman"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "row": 2,
+          "column": 1,
+          "bbox": [
+            0,
+            265.29,
+            170,
+            298.19
+          ],
+          "text": "Compile",
+          "textPreview": "Compile",
+          "fillColor": "rgba(112, 48, 160, 0.2)",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Compile",
+              "lineSpacingPercent": 107000,
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Compile"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 8,
+          "row": 2,
+          "column": 2,
+          "bbox": [
+            170,
+            265.29,
+            270,
+            298.19
+          ],
+          "text": "JDK + javac",
+          "textPreview": "JDK + javac",
+          "fillColor": "rgba(112, 48, 160, 0.2)",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "JDK + javac",
+              "lineSpacingPercent": 107000,
+              "resolvedTextStyle": {
+                "alignment": "left"
+              },
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "JDK + javac",
+                  "alignment": "left"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 9,
+          "row": 2,
+          "column": 3,
+          "bbox": [
+            440,
+            265.29,
+            300,
+            298.19
+          ],
+          "text": "Main.java source code",
+          "textPreview": "Main.java source code",
+          "fillColor": "rgba(112, 48, 160, 0.2)",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Main.java source code",
+              "lineSpacingPercent": 107000,
+              "resolvedTextStyle": {
+                "alignment": "center"
+              },
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Main.java source code",
+                  "alignment": "center"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 10,
+          "row": 2,
+          "column": 4,
+          "bbox": [
+            740,
+            265.29,
+            320,
+            298.19
+          ],
+          "text": "Main.class bytecode",
+          "textPreview": "Main.class bytecode",
+          "fillColor": "rgba(158, 94, 206, 0.2)",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Main.class bytecode",
+              "lineSpacingPercent": 107000,
+              "resolvedTextStyle": {
+                "alignment": "left"
+              },
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Main.class bytecode",
+                  "alignment": "left"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 11,
+          "row": 2,
+          "column": 5,
+          "bbox": [
+            1060,
+            265.29,
+            240,
+            298.19
+          ],
+          "text": "JDK",
+          "textPreview": "JDK",
+          "fillColor": "rgba(112, 48, 160, 0.2)",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "JDK",
+              "lineSpacingPercent": 107000,
+              "resolvedTextStyle": {
+                "alignment": "left"
+              },
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "JDK",
+                  "alignment": "left"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 12,
+          "row": 2,
+          "column": 6,
+          "bbox": [
+            1300,
+            265.29,
+            620,
+            298.19
+          ],
+          "text": "Checks code and creates portable bytecode.",
+          "textPreview": "Checks code and creates portable bytecode.",
+          "fillColor": "rgba(112, 48, 160, 0.2)",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Checks code and creates portable bytecode.",
+              "lineSpacingPercent": 107000,
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Checks code and creates portable bytecode."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 13,
+          "row": 3,
+          "column": 1,
+          "bbox": [
+            0,
+            563.49,
+            170,
+            450.41
+          ],
+          "text": "Run",
+          "textPreview": "Run",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Run",
+              "lineSpacingPercent": 107000,
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Run"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 14,
+          "row": 3,
+          "column": 2,
+          "bbox": [
+            170,
+            563.49,
+            270,
+            450.41
+          ],
+          "text": "JRE + JVM",
+          "textPreview": "JRE + JVM",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "JRE + JVM",
+              "lineSpacingPercent": 107000,
+              "resolvedTextStyle": {
+                "alignment": "left"
+              },
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "JRE + JVM",
+                  "alignment": "left"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 15,
+          "row": 3,
+          "column": 3,
+          "bbox": [
+            440,
+            563.49,
+            300,
+            450.41
+          ],
+          "text": "Bytecode",
+          "textPreview": "Bytecode",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Bytecode",
+              "lineSpacingPercent": 107000,
+              "resolvedTextStyle": {
+                "alignment": "center"
+              },
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Bytecode",
+                  "alignment": "center"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 16,
+          "row": 3,
+          "column": 4,
+          "bbox": [
+            740,
+            563.49,
+            320,
+            450.41
+          ],
+          "text": "Machine-level output",
+          "textPreview": "Machine-level output",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Machine-level output",
+              "lineSpacingPercent": 107000,
+              "resolvedTextStyle": {
+                "alignment": "left"
+              },
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Machine-level output",
+                  "alignment": "left"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 17,
+          "row": 3,
+          "column": 5,
+          "bbox": [
+            1060,
+            563.49,
+            240,
+            450.41
+          ],
+          "text": "JRE / JDK",
+          "textPreview": "JRE / JDK",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "JRE / JDK",
+              "lineSpacingPercent": 100000,
+              "resolvedTextStyle": {
+                "alignment": "left"
+              },
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "JRE / JDK",
+                  "alignment": "left"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 18,
+          "row": 3,
+          "column": 6,
+          "bbox": [
+            1300,
+            563.49,
+            620,
+            450.41
+          ],
+          "text": "Same bytecode runs on any OS with a JVM.",
+          "textPreview": "Same bytecode runs on any OS with a JVM.",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "Same bytecode runs on any OS with a JVM.",
+              "lineSpacingPercent": 100000,
+              "resolvedTextStyle": {
+                "alignment": "left"
+              },
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "Same bytecode runs on any OS with a JVM.",
+                  "alignment": "left"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/rm1k7yt4",
+      "id": "4",
+      "name": "execution-flow-subtitle",
+      "bbox": [
+        360,
+        132,
+        1200,
+        42
+      ],
+      "geometry": "rect",
+      "text": "Source Code -> Compiler -> Bytecode -> JVM -> Machine Output",
+      "textPreview": "Source Code -> Compiler -> Bytecode -> JVM -> Machine Output",
+      "resolvedFontSize": 30,
+      "resolvedTextStyle": {
+        "fontSize": 30,
+        "typeface": "Calibri",
+        "color": "#660087",
+        "bold": true,
+        "alignment": "center",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Source Code -> Compiler -> Bytecode -> JVM -> Machine Output"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Source Code -> Compiler -> Bytecode -> JVM -> Machine Output",
+          "lineSpacingPercent": 105000,
+          "resolvedTextStyle": {
+            "fontSize": 30,
+            "typeface": "Calibri",
+            "color": "#660087",
+            "bold": true,
+            "alignment": "center",
+            "lineSpacing": 1.05
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Source Code -> Compiler -> Bytecode -> JVM -> Machine Output",
+              "fontSize": 30,
+              "typeface": "Calibri",
+              "color": "#660087",
+              "bold": true,
+              "alignment": "center",
+              "lineSpacing": 1.05
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

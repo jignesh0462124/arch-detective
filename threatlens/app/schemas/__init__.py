@@ -13,7 +13,17 @@ from app.schemas.finding import (
     FindingResponse,
 )
 from app.schemas.report import ReportDownloadResponse, ReportResponse
-from app.schemas.scan import ScanArtifactResponse, ScanCreate, ScanResponse, ScanStatusResponse
+from app.schemas.scan import (
+    ScanArtifactResponse,
+    ScanCreate,
+    ScanCreateResponse,
+    ScanDeleteResponse,
+    ScanListResponse,
+    ScanResponse,
+    ScanStartRequest,
+    ScanStatusResponse,
+    ScanUploadContract,
+)
 
 __all__ = [
     "AuthenticatedUser",
@@ -29,7 +39,12 @@ __all__ = [
     "ReportResponse",
     "ScanArtifactResponse",
     "ScanCreate",
+    "ScanCreateResponse",
+    "ScanDeleteResponse",
+    "ScanListResponse",
     "ScanResponse",
+    "ScanStartRequest",
     "ScanStatusResponse",
+    "ScanUploadContract",
     "WorkspaceMembershipResponse",
 ]

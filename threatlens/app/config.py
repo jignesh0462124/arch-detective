@@ -47,6 +47,11 @@ class Settings(BaseSettings):
     GROQ_API_KEY: str = ""
 
     MAX_FILE_SIZE_MB: int = Field(default=50, ge=1, le=100)
+    MAX_EXTRACTED_SIZE_MB: int = Field(default=500, ge=10, le=2_000)
+    MAX_SOURCE_FILES: int = Field(default=1_000, ge=1, le=10_000)
+    MAX_SOURCE_FILE_SIZE_MB: int = Field(default=2, ge=1, le=20)
+    MAX_LOG_ENTRIES: int = Field(default=100_000, ge=100, le=1_000_000)
+    GIT_CLONE_TIMEOUT_SECONDS: int = Field(default=120, ge=10, le=600)
     CORS_ORIGINS: list[str] = Field(
         default_factory=lambda: [
             "http://localhost:5173",
