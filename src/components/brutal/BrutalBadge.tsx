@@ -1,10 +1,20 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-type Tone = "ink" | "gold" | "primary" | "success" | "ghost" | "critical" | "high" | "medium" | "low" | "outline";
+type Tone =
+  | "ink"
+  | "gold"
+  | "primary"
+  | "success"
+  | "ghost"
+  | "critical"
+  | "high"
+  | "medium"
+  | "low"
+  | "outline";
 
 const tones: Record<Tone, string> = {
-  ink: "bg-ink text-cream hairline",
+  ink: "bg-ink text-white hairline",
   gold: "bg-accent text-accent-foreground",
   primary: "bg-primary text-primary-foreground hairline",
   success: "bg-success/15 text-success hairline",

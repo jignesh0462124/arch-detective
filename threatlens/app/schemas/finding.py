@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Self
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -20,7 +21,8 @@ class ComplianceViolationResponse(BaseModel):
 
 
 class FindingCreate(BaseModel):
-    scan_id: UUID
+    # Scanner output exists before Part 7 associates it with a persisted scan.
+    scan_id: UUID | None = None
     title: str = Field(min_length=1, max_length=255)
     description: str = Field(min_length=1)
     severity: Severity
@@ -34,6 +36,9 @@ class FindingCreate(BaseModel):
     code_snippet: str | None = None
     remediation: str | None = None
     fingerprint: str | None = Field(default=None, max_length=64)
+
+    def for_scan(self, scan_id: UUID) -> Self:
+        return self.model_copy(update={"scan_id": scan_id})
 
 
 class FindingResponse(BaseModel):
@@ -64,3 +69,15 @@ class FindingDetailResponse(FindingResponse):
     violations: list[ComplianceViolationResponse] = Field(default_factory=list)
     remediation_steps: list[str] = Field(default_factory=list)
     remediation_priority: str | None = None
+
+
+class FindingListResponse(BaseModel):
+    items: list[FindingResponse]
+    total: int = Field(ge=0)
+    limit: int = Field(ge=1, le=100)
+    offset: int = Field(ge=0)
+
+
+class FindingUpdateRequest(BaseModel):
+    state: FindingState
+    note: str | None = Field(default=None, max_length=1000)

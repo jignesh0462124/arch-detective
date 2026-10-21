@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Menu } from "lucide-react";
+import { ArrowRight, List } from "@phosphor-icons/react";
 
 import { ThemeToggle } from "@/components/brutal/ThemeToggle";
 import { ArchonWordmark } from "@/components/ui/ArchonWordmark";
@@ -64,7 +64,7 @@ export function MarketingHeader({ current }: { current: MarketingPage }) {
                 aria-label="Open navigation"
                 className="inline-flex size-10 cursor-pointer list-none items-center justify-center rounded-lg border border-border bg-card text-foreground transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden"
               >
-                <Menu size={17} />
+                <List size={18} weight="bold" />
               </summary>
               <nav
                 aria-label="Mobile marketing"
@@ -100,7 +100,7 @@ export function MarketingHeader({ current }: { current: MarketingPage }) {
             className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary/85 sm:px-4"
           >
             <span className="hidden sm:inline">Launch</span>
-            <ArrowRight size={13} strokeWidth={2.5} />
+            <ArrowRight size={13} weight="bold" />
           </Link>
         </div>
       </div>

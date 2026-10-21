@@ -1,8 +1,8 @@
-# CollegeProject
+# ThreatLens — Legacy Backend Architecture Guide (Archived)
 
-# ThreatLens — LLM-Agentic Compliance & Threat Modeling Engine
-
-### Complete Build Guide · Backend + RAG + Codebase Analysis + PDF Reports
+> **ARCHIVE NOTE**: This document represents the initial architecture draft (local PostgreSQL + local auth).
+> **The active and authoritative target architecture is [Supabase-Backend.md](Supabase-Backend.md)**.
+> All database, auth, storage, and security implementations must follow `Supabase-Backend.md`.
 
 ---
 

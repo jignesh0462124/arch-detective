@@ -3,7 +3,7 @@ from functools import lru_cache
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from app.auth.jwt_verifier import AuthTokenError, SupabaseJWTVerifier
+from app.auth.jwt_verifier import AuthTokenError, AuthVerificationUnavailable, SupabaseJWTVerifier
 from app.schemas.auth import AuthenticatedUser
 
 bearer_scheme = HTTPBearer(auto_error=False)
@@ -34,6 +34,11 @@ async def get_current_user(
 
     try:
         return await verifier.verify(credentials.credentials)
+    except AuthVerificationUnavailable as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Authentication verification is temporarily unavailable",
+        ) from exc
     except AuthTokenError as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

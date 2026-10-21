@@ -29,9 +29,7 @@ export function StatTile({
       )}
     >
       <div className="flex items-center gap-1.5">
-        {icon ? (
-          <span className="text-primary">{icon}</span>
-        ) : null}
+        {icon ? <span className="text-primary">{icon}</span> : null}
         {code ? (
           <span
             className={cn(
@@ -43,15 +41,9 @@ export function StatTile({
           </span>
         ) : null}
       </div>
-      <div className="text-2xl font-semibold leading-none tracking-tight tabular-nums">
-        {value}
-      </div>
+      <div className="text-2xl font-semibold leading-none tracking-tight tabular-nums">{value}</div>
       <div className="text-[12px] font-medium text-foreground/80">{label}</div>
-      {trend ? (
-        <div className="font-mono text-[10px] text-muted-foreground">
-          {trend}
-        </div>
-      ) : null}
+      {trend ? <div className="font-mono text-[10px] text-muted-foreground">{trend}</div> : null}
     </div>
   );
 }

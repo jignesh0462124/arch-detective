@@ -9,6 +9,10 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import { AuthProvider } from "@/components/auth/AuthProvider";
+import { AiChatProvider } from "@/components/ai-assistant/AiChatProvider";
+import { useAuth } from "@/hooks/useAuth";
+import { useActiveWorkspace } from "@/hooks/useWorkspace";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -31,7 +35,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: { error: unknown; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -155,7 +159,19 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <AuthProvider>
+        <ScopedAiChatProvider><Outlet /></ScopedAiChatProvider>
+      </AuthProvider>
     </QueryClientProvider>
+  );
+}
+
+function ScopedAiChatProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
+  const { active } = useActiveWorkspace();
+  return (
+    <AiChatProvider key={`${user?.id ?? "none"}:${active?.id ?? "none"}`}>
+      {children}
+    </AiChatProvider>
   );
 }

@@ -2,13 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
   Check,
-  FileCheck2,
+  FileText,
   GitBranch,
-  Network,
-  ScanSearch,
+  Graph,
+  Scan,
   ShieldCheck,
-  type LucideIcon,
-} from "lucide-react";
+  type Icon,
+} from "@phosphor-icons/react";
 
 import {
   MarketingBackdrop,
@@ -37,7 +37,7 @@ type WorkflowStage = {
   description: string;
   image: string;
   alt: string;
-  icon: LucideIcon;
+  icon: Icon;
   imageFirst: boolean;
   points: string[];
 };
@@ -46,65 +46,65 @@ const WORKFLOW: WorkflowStage[] = [
   {
     step: "01",
     label: "Connect",
-    title: "Start with the system, not a questionnaire.",
+    title: "Upload a codebase archive.",
     description:
-      "Give Archon the evidence your team already maintains. A repository, architecture YAML, or a focused log sample is enough to begin a traceable review.",
+      "Upload a ZIP archive to start reviewing source code and its security findings.",
     image: "/assets/archon-about-connect.webp",
-    alt: "Repository, architecture document, and log store connected to one analysis engine",
+    alt: "Repository and architecture document connected to analysis engine",
     icon: GitBranch,
     imageFirst: false,
     points: [
-      "Connect a Git repository or upload a ZIP archive",
-      "Add architecture YAML to describe trust boundaries",
-      "Attach server logs when runtime behavior matters",
+      "Upload a ZIP archive of your project",
+      "Choose the compliance frameworks to review",
+      "Git, standalone architecture and log uploads are planned",
     ],
   },
   {
     step: "02",
     label: "Model",
-    title: "See the architecture the scanners are reasoning about.",
+    title: "Extract system topology & assets.",
     description:
-      "Archon extracts services, data stores, entry points, identities, and dataflows into one system model. Every later finding stays attached to this evidence graph.",
+      "Identifies entry points, dataflows, and services into an interconnected threat model.",
     image: "/assets/archon-about-model.webp",
-    alt: "Layered system model with servers, database, cloud, trust boundaries, and orange dataflow",
-    icon: Network,
+    alt: "System model with servers, database, cloud, and trust boundaries",
+    icon: Graph,
     imageFirst: true,
     points: [
-      "Static analyzers inspect code, dependencies, and secrets",
-      "The agent identifies assets, actors, and trust transitions",
-      "Source references remain linked to each conclusion",
+      "Static code & dependency analysis",
+      "Asset enumeration and trust transitions",
+      "Direct code-line evidence tracing",
     ],
   },
   {
     step: "03",
     label: "Triage",
-    title: "Work the findings that change risk first.",
+    title: "Prioritize vulnerabilities & controls.",
     description:
-      "Raw scanner output is grouped, scored, and ranked by severity, exploitability, and reachability. The queue explains what matters and which controls are affected.",
+      "Ranks findings by severity and CVSS, mapping each issue to compliance requirements.",
     image: "/assets/archon-about-triage.webp",
-    alt: "Inspection instrument examining a server issue and mapping it to five control records",
-    icon: ScanSearch,
+    alt: "Inspection instrument examining a server issue and mapping it to controls",
+    icon: Scan,
     imageFirst: false,
     points: [
-      "Review evidence, attack path, and remediation together",
-      "Filter by severity, framework, or affected service",
-      "Map one issue across all selected compliance catalogs",
+      "Combined severity and exploitability scoring",
+      "Cross-framework compliance mapping",
+      "Actionable remediation code patches",
     ],
   },
   {
     step: "04",
     label: "Report",
-    title: "Turn verified evidence into an audit package.",
+    title: "Generate signed audit reports.",
     description:
-      "When the queue is ready, Archon composes an executive summary, technical findings, framework coverage, and remediation guidance into a report your team can review and export.",
+      "Assembles executive summaries, control matrices, and evidence into downloadable PDFs.",
     image: "/assets/archon-about-report.webp",
-    alt: "Infrastructure analysis machine delivering a sealed audit report into an output tray",
-    icon: FileCheck2,
+    alt: "Audit machine delivering an attestation report",
+    icon: FileText,
     imageFirst: true,
     points: [
-      "Generate a consistent report from the current scan state",
-      "Keep control citations beside the supporting evidence",
-      "Export a clear PDF for engineering and audit stakeholders",
+      "Attestation deliverable generated from scan state",
+      "Direct regulatory citations alongside code evidence",
+      "Downloadable PDF ready for security review",
     ],
   },
 ];
@@ -186,7 +186,7 @@ function AboutPage() {
                     {isFirst && (
                       <div className="mt-7 flex flex-wrap gap-3">
                         <Link
-                          to="/new-scan"
+                          to="/workspace"
                           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/85"
                         >
                           Start a scan <ArrowRight size={14} strokeWidth={2.5} />
@@ -260,8 +260,7 @@ function AboutPage() {
                 Bring one repository. Leave with a defensible next step.
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                The current preview uses sample data, so you can explore the workflow before the
-                live analysis services are connected.
+                Connect a repository to scan source code, map statutory compliance, and generate audit reports.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3 border-t border-border px-6 py-7 sm:px-9 lg:col-span-4 lg:justify-end lg:border-l lg:border-t-0 lg:px-10">
@@ -272,11 +271,10 @@ function AboutPage() {
                 Launch console <ArrowRight size={14} strokeWidth={2.5} />
               </Link>
               <Link
-                to="/reports/$reportId"
-                params={{ reportId: "RPT-0098" }}
+                to="/reports"
                 className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-card px-5 py-2.5 text-sm font-medium transition-colors hover:bg-secondary"
               >
-                Sample report
+                View reports
               </Link>
             </div>
           </section>

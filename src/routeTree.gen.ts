@@ -9,19 +9,34 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppReportsRouteImport } from './routes/_app/reports'
-import { Route as AppNewScanRouteImport } from './routes/_app/new-scan'
-import { Route as AppFindingsRouteImport } from './routes/_app/findings'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as AppAdvisorRouteImport } from './routes/_app/advisor'
+import { Route as AppAttackGraphRouteImport } from './routes/_app/attack-graph'
+import { Route as AppAuditLogRouteImport } from './routes/_app/audit-log'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AppFindingsRouteImport } from './routes/_app/findings'
+import { Route as AppProfileRouteImport } from './routes/_app/profile'
+import { Route as AppReportsRouteImport } from './routes/_app/reports'
+import { Route as AppWorkspaceRouteImport } from './routes/_app/workspace'
+import { Route as WorkspaceNewRouteImport } from './routes/workspace/new'
 import { Route as AppReportsReportIdRouteImport } from './routes/_app/reports.$reportId'
+import { Route as WorkspaceWorkspaceIdSettingsRouteImport } from './routes/workspace/$workspaceId/settings'
+import { Route as WorkspaceWorkspaceIdScansScanIdWorkbenchRouteImport } from './routes/workspace/$workspaceId/scans/$scanId/workbench'
 
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -29,28 +44,44 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppRoute = AppRouteImport.update({
-  id: '/_app',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppReportsRoute = AppReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppAdvisorRoute = AppAdvisorRouteImport.update({
+  id: '/advisor',
+  path: '/advisor',
   getParentRoute: () => AppRoute,
 } as any)
-const AppNewScanRoute = AppNewScanRouteImport.update({
-  id: '/new-scan',
-  path: '/new-scan',
+const AppAttackGraphRoute = AppAttackGraphRouteImport.update({
+  id: '/attack-graph',
+  path: '/attack-graph',
   getParentRoute: () => AppRoute,
 } as any)
-const AppFindingsRoute = AppFindingsRouteImport.update({
-  id: '/findings',
-  path: '/findings',
+const AppAuditLogRoute = AppAuditLogRouteImport.update({
+  id: '/audit-log',
+  path: '/audit-log',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
@@ -58,31 +89,90 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppFindingsRoute = AppFindingsRouteImport.update({
+  id: '/findings',
+  path: '/findings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWorkspaceRoute = AppWorkspaceRouteImport.update({
+  id: '/workspace',
+  path: '/workspace',
+  getParentRoute: () => AppRoute,
+} as any)
+const WorkspaceNewRoute = WorkspaceNewRouteImport.update({
+  id: '/workspace/new',
+  path: '/workspace/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppReportsReportIdRoute = AppReportsReportIdRouteImport.update({
   id: '/$reportId',
   path: '/$reportId',
   getParentRoute: () => AppReportsRoute,
 } as any)
+const WorkspaceWorkspaceIdSettingsRoute =
+  WorkspaceWorkspaceIdSettingsRouteImport.update({
+    id: '/workspace/$workspaceId/settings',
+    path: '/workspace/$workspaceId/settings',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const WorkspaceWorkspaceIdScansScanIdWorkbenchRoute =
+  WorkspaceWorkspaceIdScansScanIdWorkbenchRouteImport.update({
+    id: '/workspace/$workspaceId/scans/$scanId/workbench',
+    path: '/workspace/$workspaceId/scans/$scanId/workbench',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/terms': typeof TermsRoute
+  '/advisor': typeof AppAdvisorRoute
+  '/attack-graph': typeof AppAttackGraphRoute
+  '/audit-log': typeof AppAuditLogRoute
   '/dashboard': typeof AppDashboardRoute
   '/findings': typeof AppFindingsRoute
-  '/new-scan': typeof AppNewScanRoute
+  '/profile': typeof AppProfileRoute
   '/reports': typeof AppReportsRouteWithChildren
+  '/workspace': typeof AppWorkspaceRoute
+  '/workspace/new': typeof WorkspaceNewRoute
   '/reports/$reportId': typeof AppReportsReportIdRoute
+  '/workspace/$workspaceId/settings': typeof WorkspaceWorkspaceIdSettingsRoute
+  '/workspace/$workspaceId/scans/$scanId/workbench': typeof WorkspaceWorkspaceIdScansScanIdWorkbenchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/terms': typeof TermsRoute
+  '/advisor': typeof AppAdvisorRoute
+  '/attack-graph': typeof AppAttackGraphRoute
+  '/audit-log': typeof AppAuditLogRoute
   '/dashboard': typeof AppDashboardRoute
   '/findings': typeof AppFindingsRoute
-  '/new-scan': typeof AppNewScanRoute
+  '/profile': typeof AppProfileRoute
   '/reports': typeof AppReportsRouteWithChildren
+  '/workspace': typeof AppWorkspaceRoute
+  '/workspace/new': typeof WorkspaceNewRoute
   '/reports/$reportId': typeof AppReportsReportIdRoute
+  '/workspace/$workspaceId/settings': typeof WorkspaceWorkspaceIdSettingsRoute
+  '/workspace/$workspaceId/scans/$scanId/workbench': typeof WorkspaceWorkspaceIdScansScanIdWorkbenchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -90,11 +180,22 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/terms': typeof TermsRoute
+  '/_app/advisor': typeof AppAdvisorRoute
+  '/_app/attack-graph': typeof AppAttackGraphRoute
+  '/_app/audit-log': typeof AppAuditLogRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/findings': typeof AppFindingsRoute
-  '/_app/new-scan': typeof AppNewScanRoute
+  '/_app/profile': typeof AppProfileRoute
   '/_app/reports': typeof AppReportsRouteWithChildren
+  '/_app/workspace': typeof AppWorkspaceRoute
+  '/workspace/new': typeof WorkspaceNewRoute
   '/_app/reports/$reportId': typeof AppReportsReportIdRoute
+  '/workspace/$workspaceId/settings': typeof WorkspaceWorkspaceIdSettingsRoute
+  '/workspace/$workspaceId/scans/$scanId/workbench': typeof WorkspaceWorkspaceIdScansScanIdWorkbenchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -102,32 +203,65 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/login'
+    | '/privacy'
+    | '/register'
+    | '/reset-password'
+    | '/terms'
+    | '/advisor'
+    | '/attack-graph'
+    | '/audit-log'
     | '/dashboard'
     | '/findings'
-    | '/new-scan'
+    | '/profile'
     | '/reports'
+    | '/workspace'
+    | '/workspace/new'
     | '/reports/$reportId'
+    | '/workspace/$workspaceId/settings'
+    | '/workspace/$workspaceId/scans/$scanId/workbench'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/login'
+    | '/privacy'
+    | '/register'
+    | '/reset-password'
+    | '/terms'
+    | '/advisor'
+    | '/attack-graph'
+    | '/audit-log'
     | '/dashboard'
     | '/findings'
-    | '/new-scan'
+    | '/profile'
     | '/reports'
+    | '/workspace'
+    | '/workspace/new'
     | '/reports/$reportId'
+    | '/workspace/$workspaceId/settings'
+    | '/workspace/$workspaceId/scans/$scanId/workbench'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/about'
     | '/login'
+    | '/privacy'
+    | '/register'
+    | '/reset-password'
+    | '/terms'
+    | '/_app/advisor'
+    | '/_app/attack-graph'
+    | '/_app/audit-log'
     | '/_app/dashboard'
     | '/_app/findings'
-    | '/_app/new-scan'
+    | '/_app/profile'
     | '/_app/reports'
+    | '/_app/workspace'
+    | '/workspace/new'
     | '/_app/reports/$reportId'
+    | '/workspace/$workspaceId/settings'
+    | '/workspace/$workspaceId/scans/$scanId/workbench'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -135,22 +269,22 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   AboutRoute: typeof AboutRoute
   LoginRoute: typeof LoginRoute
+  PrivacyRoute: typeof PrivacyRoute
+  RegisterRoute: typeof RegisterRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  TermsRoute: typeof TermsRoute
+  WorkspaceNewRoute: typeof WorkspaceNewRoute
+  WorkspaceWorkspaceIdSettingsRoute: typeof WorkspaceWorkspaceIdSettingsRoute
+  WorkspaceWorkspaceIdScansScanIdWorkbenchRoute: typeof WorkspaceWorkspaceIdScansScanIdWorkbenchRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -160,32 +294,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/reports': {
-      id: '/_app/reports'
-      path: '/reports'
-      fullPath: '/reports'
-      preLoaderRoute: typeof AppReportsRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/advisor': {
+      id: '/_app/advisor'
+      path: '/advisor'
+      fullPath: '/advisor'
+      preLoaderRoute: typeof AppAdvisorRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/new-scan': {
-      id: '/_app/new-scan'
-      path: '/new-scan'
-      fullPath: '/new-scan'
-      preLoaderRoute: typeof AppNewScanRouteImport
+    '/_app/attack-graph': {
+      id: '/_app/attack-graph'
+      path: '/attack-graph'
+      fullPath: '/attack-graph'
+      preLoaderRoute: typeof AppAttackGraphRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/findings': {
-      id: '/_app/findings'
-      path: '/findings'
-      fullPath: '/findings'
-      preLoaderRoute: typeof AppFindingsRouteImport
+    '/_app/audit-log': {
+      id: '/_app/audit-log'
+      path: '/audit-log'
+      fullPath: '/audit-log'
+      preLoaderRoute: typeof AppAuditLogRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/dashboard': {
@@ -195,12 +364,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/findings': {
+      id: '/_app/findings'
+      path: '/findings'
+      fullPath: '/findings'
+      preLoaderRoute: typeof AppFindingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/profile': {
+      id: '/_app/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/reports': {
+      id: '/_app/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/workspace': {
+      id: '/_app/workspace'
+      path: '/workspace'
+      fullPath: '/workspace'
+      preLoaderRoute: typeof AppWorkspaceRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/workspace/new': {
+      id: '/workspace/new'
+      path: '/workspace/new'
+      fullPath: '/workspace/new'
+      preLoaderRoute: typeof WorkspaceNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/reports/$reportId': {
       id: '/_app/reports/$reportId'
       path: '/$reportId'
       fullPath: '/reports/$reportId'
       preLoaderRoute: typeof AppReportsReportIdRouteImport
       parentRoute: typeof AppReportsRoute
+    }
+    '/workspace/$workspaceId/settings': {
+      id: '/workspace/$workspaceId/settings'
+      path: '/workspace/$workspaceId/settings'
+      fullPath: '/workspace/$workspaceId/settings'
+      preLoaderRoute: typeof WorkspaceWorkspaceIdSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/workspace/$workspaceId/scans/$scanId/workbench': {
+      id: '/workspace/$workspaceId/scans/$scanId/workbench'
+      path: '/workspace/$workspaceId/scans/$scanId/workbench'
+      fullPath: '/workspace/$workspaceId/scans/$scanId/workbench'
+      preLoaderRoute: typeof WorkspaceWorkspaceIdScansScanIdWorkbenchRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -218,17 +436,25 @@ const AppReportsRouteWithChildren = AppReportsRoute._addFileChildren(
 )
 
 interface AppRouteChildren {
+  AppAdvisorRoute: typeof AppAdvisorRoute
+  AppAttackGraphRoute: typeof AppAttackGraphRoute
+  AppAuditLogRoute: typeof AppAuditLogRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppFindingsRoute: typeof AppFindingsRoute
-  AppNewScanRoute: typeof AppNewScanRoute
+  AppProfileRoute: typeof AppProfileRoute
   AppReportsRoute: typeof AppReportsRouteWithChildren
+  AppWorkspaceRoute: typeof AppWorkspaceRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAdvisorRoute: AppAdvisorRoute,
+  AppAttackGraphRoute: AppAttackGraphRoute,
+  AppAuditLogRoute: AppAuditLogRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppFindingsRoute: AppFindingsRoute,
-  AppNewScanRoute: AppNewScanRoute,
+  AppProfileRoute: AppProfileRoute,
   AppReportsRoute: AppReportsRouteWithChildren,
+  AppWorkspaceRoute: AppWorkspaceRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -238,6 +464,14 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   AboutRoute: AboutRoute,
   LoginRoute: LoginRoute,
+  PrivacyRoute: PrivacyRoute,
+  RegisterRoute: RegisterRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  TermsRoute: TermsRoute,
+  WorkspaceNewRoute: WorkspaceNewRoute,
+  WorkspaceWorkspaceIdSettingsRoute: WorkspaceWorkspaceIdSettingsRoute,
+  WorkspaceWorkspaceIdScansScanIdWorkbenchRoute:
+    WorkspaceWorkspaceIdScansScanIdWorkbenchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

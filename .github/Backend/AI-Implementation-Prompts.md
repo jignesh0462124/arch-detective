@@ -1121,3 +1121,115 @@ Ensure ALL routers are mounted:
 7. **Never paste server secrets into an AI prompt** — use placeholder values and local/deployment secret stores
 8. **Before Part 3**, verify the minimum Supabase signin/session flow because private Storage RLS requires an authenticated user
 ```
+
+---
+
+## Prompt 9 -- Workspace Management
+
+> Paste this prompt when Part 8 is verified and you need multi-workspace support with a member invite flow.
+
+```
+You are implementing Prompt 9 of the ThreatLens backend.
+
+## Deliverables
+
+### Backend (NEW app/api/workspaces.py)
+- POST /api/v1/workspaces -- create workspace + owner membership; slug must be URL-safe (a-z0-9-)
+- GET /api/v1/workspaces -- return all workspaces user is a member of (role, member_count, scan_count)
+- GET /api/v1/workspaces/{workspace_id} -- single workspace detail (owner+)
+- PATCH /api/v1/workspaces/{workspace_id} -- update name/description (owner role)
+- POST /api/v1/workspaces/{workspace_id}/invites -- body: { email, role }; owner/admin only; create WorkspaceInvite row (token=64-char hex, expires 7 days); send via Supabase admin invite API
+- GET /api/v1/workspaces/{workspace_id}/members -- list members with role/joined_at (admin+)
+- DELETE /api/v1/workspaces/{workspace_id}/members/{user_id} -- remove member (owner; cannot remove self)
+- PATCH /api/v1/workspaces/{workspace_id}/members/{user_id} -- update role (owner only)
+
+### Backend: Add WorkspaceInvite model
+Fields: id UUID, workspace_id FK, invited_email, token (64-char secure hex), role, invited_by FK, expires_at, accepted_at. New Alembic migration + RLS.
+
+### Frontend
+- NEW src/routes/workspace/new.tsx -- create workspace form
+- NEW src/routes/workspace/settings.tsx -- settings + member management
+- NEW src/components/workspace-switcher.tsx -- header dropdown; active workspace in localStorage
+- MODIFY src/routes/_app.tsx -- redirect to /workspace/new if user has no workspaces
+- NEW src/hooks/useWorkspace.ts -- useWorkspaces(), useActiveWorkspace(), useSetActiveWorkspace(id)
+
+## Verification Checklist
+- [ ] POST /workspaces creates workspace + owner membership atomically
+- [ ] GET /workspaces returns only workspaces the user is a member of
+- [ ] POST /invites triggers Supabase invite email
+- [ ] Workspace switcher in UI shows all workspaces and switches correctly
+- [ ] New user without a workspace is redirected to /workspace/new
+```
+
+---
+
+## Prompt 10 -- Finding State Management + Audit Log Viewer
+
+> Paste this prompt after Prompt 9 to add finding triage workflows and compliance audit trails.
+
+```
+You are implementing Prompt 10 of the ThreatLens backend.
+
+## Deliverables
+
+### Backend: Finding State API
+- MODIFY app/api/scans.py -- add PATCH /api/v1/scans/{scan_id}/findings/{finding_id}
+  body: { state: "open"|"accepted_risk"|"resolved"|"false_positive", note?: str (max 1000 chars) }
+  Analyst+ role required. Record AuditEvent on every state change (event_type="finding.state_changed", details={ from, to, finding_id, note }).
+- MODIFY app/schemas/finding.py -- add FindingUpdateRequest and FindingResponse (includes list[ComplianceViolationResponse])
+- NEW app/api/audit_events.py -- GET /api/v1/audit-events?workspace_id=&event_type=&scan_id=&limit=&offset=; viewer+ required; paginated response
+
+### Frontend: Finding Triage
+- MODIFY src/routes/findings.tsx -- triage action buttons (Mark Resolved / Accept Risk / False Positive); state filter bar; state badge on finding cards
+- NEW src/hooks/useFindings.ts -- useFindings(scanId, filters?), useUpdateFindingState(scanId, findingId)
+
+### Frontend: Audit Log
+- NEW src/routes/audit-log.tsx -- Table: timestamp, event type, user email, resource, details. Filters: date range, event type, scan ID. 100/page.
+- NEW src/hooks/useAuditEvents.ts -- useAuditEvents(workspaceId, filters?)
+
+## Verification Checklist
+- [ ] PATCH /findings/{id} changes state and creates AuditEvent row
+- [ ] GET /audit-events returns workspace-scoped paginated events
+- [ ] Triage buttons dispatch API calls and refetch UI state
+- [ ] Audit log page shows before/after state on change events
+- [ ] Analyst can change state; viewer gets 403
+```
+
+---
+
+## Prompt 11 -- Observability + Production Deployment
+
+> Paste this prompt last when core product works and you need production-hardening.
+
+```
+You are implementing Prompt 11 of the ThreatLens backend.
+
+## Deliverables
+
+### Structured Logging
+- NEW app/middleware/request_logging.py -- Starlette middleware: inject x-request-id (UUID), time duration, log JSON: { timestamp, level, request_id, method, path, status, duration_ms, user_id }
+- MODIFY app/main.py -- register RequestLoggingMiddleware before CORS
+- MODIFY app/config.py -- add SENTRY_DSN: str = "", LOG_LEVEL: str = "INFO", LOG_FORMAT: str = "json"
+
+### Sentry Integration
+- MODIFY app/main.py -- sentry-sdk[fastapi]: initialize from SENTRY_DSN; traces_sample_rate=0.1; scrub credentials
+- MODIFY app/tasks/celery_app.py -- add Sentry Celery integration
+- MODIFY requirements.txt -- add sentry-sdk[fastapi]
+
+### Production Docker Compose
+- NEW docker-compose.prod.yml -- built images (threatlens-api:), restart=always, health checks, separate queues (scans/reports/maintenance), beat + flower services, internal/public networks
+- NEW nginx/nginx.conf -- HTTPS termination, proxy /api/ (120s timeout), WebSocket upgrade for /ws/, gzip, security headers, rate limiting (60r/m, burst=20)
+- NEW .env.production.example -- complete checklist: Supabase, Redis TLS, Qdrant cloud, Groq, NVD, Sentry, CORS_ORIGINS, ENVIRONMENT=production, DEBUG=false, FLOWER_BASIC_AUTH
+
+### Health Check Expansion
+- MODIFY GET /health -- check Redis (celery ping timeout=2), Qdrant (get_collections), DB (SELECT 1); return 503 if any down; return { status, components: {redis, qdrant, db}, version, uptime_seconds }
+
+## Verification Checklist
+- [ ] Every HTTP request logs a unique request_id in JSON format
+- [ ] Sentry receives a test error via GET /debug/sentry-test
+- [ ] docker-compose.prod.yml brings up all services from built images
+- [ ] Nginx proxies /api/ and /ws/ correctly with SSL
+- [ ] GET /health returns 503 when Redis is stopped
+- [ ] Celery Flower (port 5555) shows live task queues
+- [ ] .env.production.example documents every required variable
+```

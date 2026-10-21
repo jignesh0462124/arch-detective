@@ -46,3 +46,8 @@ threatlens/data/
 # Celery
 celerybeat-schedule
 celerybeat.pid
+
+# Vercel
+.vercel
+
+backend-deploy/

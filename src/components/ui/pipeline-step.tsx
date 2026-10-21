@@ -1,4 +1,4 @@
-import { Check, Loader2 } from "lucide-react";
+import { Check, CircleNotch } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -27,12 +27,7 @@ export function PipelineStep({
   const accent = state === "active";
 
   return (
-    <div
-      className={cn(
-        "relative pl-9",
-        className,
-      )}
-    >
+    <div className={cn("relative pl-9 min-w-0", className)}>
       {/* Spine node */}
       <div className="absolute left-0 top-0.5">
         <div
@@ -43,14 +38,14 @@ export function PipelineStep({
               "bg-primary text-primary-foreground ring-2 ring-primary/20 animate-pulse-ring",
             state === "idle" &&
               (dark
-                ? "border hairline-soft border-cream/25 text-cream/60"
+                ? "border hairline-soft border-white/25 text-white/60"
                 : "border hairline-soft text-muted-foreground"),
           )}
         >
           {state === "done" ? (
-            <Check size={12} strokeWidth={3} />
+            <Check size={12} weight="bold" />
           ) : state === "active" ? (
-            <Loader2 size={12} strokeWidth={3} className="animate-spin" />
+            <CircleNotch size={12} weight="bold" className="animate-spin" />
           ) : (
             String(index).padStart(2, "0")
           )}
@@ -58,12 +53,12 @@ export function PipelineStep({
       </div>
 
       {/* Title + note */}
-      <div className="min-w-0">
-        <div className="flex items-center gap-2">
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2 min-w-0">
           <div
             className={cn(
-              "text-sm font-medium leading-tight tracking-tight",
-              muted && (dark ? "text-cream/70" : "text-muted-foreground"),
+              "text-sm font-medium leading-tight tracking-tight break-words overflow-wrap-anywhere",
+              muted && (dark ? "text-white/70" : "text-muted-foreground"),
               accent && "font-semibold",
             )}
           >
@@ -74,8 +69,8 @@ export function PipelineStep({
         {note ? (
           <div
             className={cn(
-              "mt-1 font-mono text-[11px]",
-              dark ? "text-cream/70" : "text-muted-foreground",
+              "mt-1 font-mono text-[11px] break-words overflow-wrap-anywhere",
+              dark ? "text-white/70" : "text-muted-foreground",
             )}
           >
             {note}
@@ -92,24 +87,12 @@ export interface PipelineListProps {
   dark?: boolean;
 }
 
-export function PipelineList({
-  children,
-  className,
-  dark = false,
-}: PipelineListProps) {
+export function PipelineList({ children, className, dark = false }: PipelineListProps) {
   return (
-    <ol
-      className={cn(
-        "relative space-y-5",
-        className,
-      )}
-    >
+    <ol className={cn("relative space-y-5 min-w-0", className)}>
       <div
         aria-hidden
-        className={cn(
-          "absolute left-3 top-3 bottom-3 w-px",
-          dark ? "bg-cream/20" : "bg-border",
-        )}
+        className={cn("absolute left-3 top-3 bottom-3 w-px", dark ? "bg-white/20" : "bg-border")}
       />
       {children}
     </ol>

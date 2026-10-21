@@ -7,19 +7,9 @@ export interface CoverageBarProps {
   className?: string;
 }
 
-export function CoverageBar({
-  label,
-  pct,
-  showMeta = true,
-  className,
-}: CoverageBarProps) {
+export function CoverageBar({ label, pct, showMeta = true, className }: CoverageBarProps) {
   const safePct = Math.max(0, Math.min(100, pct));
-  const tone =
-    safePct >= 85
-      ? "bg-success"
-      : safePct >= 65
-        ? "bg-secondary"
-        : "bg-primary";
+  const tone = safePct >= 85 ? "bg-success" : safePct >= 65 ? "bg-secondary" : "bg-primary";
 
   return (
     <div className={cn("space-y-1.5", className)}>

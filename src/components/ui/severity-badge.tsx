@@ -32,8 +32,7 @@ export function SeverityBadge({
   size = "md",
   className,
 }: SeverityBadgeProps) {
-  const sizeClass =
-    size === "sm" ? "px-1.5 py-0.5 text-[10px]" : "px-2 py-0.5 text-xs";
+  const sizeClass = size === "sm" ? "px-1.5 py-0.5 text-[10px]" : "px-2 py-0.5 text-xs";
 
   return (
     <span
@@ -45,12 +44,7 @@ export function SeverityBadge({
       )}
     >
       {dot ? (
-        <span
-          className={cn(
-            "h-1.5 w-1.5 shrink-0 rounded-full",
-            SEVERITY_DOT[severity],
-          )}
-        />
+        <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", SEVERITY_DOT[severity])} />
       ) : null}
       {children ?? severity}
     </span>

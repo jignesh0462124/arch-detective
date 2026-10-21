@@ -4,13 +4,13 @@ import { cn } from "@/lib/utils";
 
 type ArchonLogoProps = {
   size?: number;
-  variant?: "brand" | "mono";
+  variant?: "brand" | "mono" | "inverse";
   decorative?: boolean;
   label?: string;
   className?: string;
 } & Omit<SVGProps<SVGSVGElement>, "width" | "height" | "viewBox">;
 
-/** Archon's shield-and-reticle mark. */
+/** Architectural A with an open counter and a signal-orange inspection point. */
 export function ArchonLogo({
   size = 32,
   variant = "brand",
@@ -19,7 +19,7 @@ export function ArchonLogo({
   className,
   ...props
 }: ArchonLogoProps) {
-  const accentColor = variant === "brand" ? "#ff5600" : "currentColor";
+  const ink = variant === "inverse" ? "#F5F1EC" : "currentColor";
 
   return (
     <svg
@@ -37,20 +37,17 @@ export function ArchonLogo({
     >
       {!decorative ? <title>{label}</title> : null}
       <path
-        d="M32 5 10 16v16c0 13.2 9.2 24.8 22 28 12.8-3.2 22-14.8 22-28V16L32 5Z"
-        fill="currentColor"
-        fillOpacity={0.08}
-        stroke="currentColor"
-        strokeWidth={3}
-        strokeLinejoin="round"
+        d="M8 56V30C8 16.7452 18.7452 6 32 6S56 16.7452 56 30V56H44V44H20V56Z M20 34H44V30C44 23.3726 38.6274 18 32 18S20 23.3726 20 30Z"
+        fill={ink}
+        fillRule="evenodd"
       />
-      <path
-        d="M20 33h8m8 0h8M32 21v8m0 8v8"
-        stroke={accentColor}
-        strokeWidth={3.5}
-        strokeLinecap="round"
+      <rect
+        x="28"
+        y="48"
+        width="8"
+        height="8"
+        fill={variant === "mono" ? ink : "#FF5600"}
       />
-      <circle cx={32} cy={33} r={3.25} fill={accentColor} />
     </svg>
   );
 }

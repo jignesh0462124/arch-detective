@@ -1,0 +1,267 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "Archon home" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e7]:
+          - img "Archon" [ref=e8]
+          - generic [ref=e9]: Audit engine
+      - navigation "Marketing" [ref=e10]:
+        - link "Product" [ref=e11] [cursor=pointer]:
+          - /url: /#product
+        - link "Pipeline" [ref=e12] [cursor=pointer]:
+          - /url: /#pipeline
+        - link "Frameworks" [ref=e13] [cursor=pointer]:
+          - /url: /#frameworks
+        - link "About" [ref=e14] [cursor=pointer]:
+          - /url: /about
+      - generic [ref=e15]:
+        - button "Toggle theme" [ref=e16]
+        - link "Launch" [ref=e19] [cursor=pointer]:
+          - /url: /login
+  - main [ref=e24]:
+    - generic [ref=e26]:
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - generic [ref=e29]: Llama 3.1 70B
+          - generic [ref=e32]: Powered by Groq
+        - heading "Audit at machine speed." [level=1] [ref=e33]
+        - paragraph [ref=e34]: Archon parses your architecture, finds vulnerabilities, maps them to controls, and ships signed audit reports in minutes — not weeks.
+        - generic [ref=e35]:
+          - link "Launch console" [ref=e36] [cursor=pointer]:
+            - /url: /login
+          - link "View reports" [ref=e39] [cursor=pointer]:
+            - /url: /reports
+      - figure "Live system model" [ref=e41]:
+        - img "Architectural model of cloud infrastructure connected to an audit report" [ref=e42]
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - generic [ref=e48]: // 01
+        - heading "Parse" [level=3] [ref=e49]
+        - paragraph [ref=e50]: Extract assets, dataflows, and trust boundaries from code and configs.
+      - generic [ref=e51]:
+        - generic [ref=e52]: // 02
+        - heading "Map" [level=3] [ref=e53]
+        - paragraph [ref=e54]: Map code vulnerabilities directly to statutory compliance controls.
+      - generic [ref=e55]:
+        - generic [ref=e56]: // 03
+        - heading "Report" [level=3] [ref=e57]
+        - paragraph [ref=e58]: Generate auditor-ready compliance attestations and sealed PDFs.
+    - generic [ref=e61]:
+      - generic [ref=e62]:
+        - paragraph [ref=e63]: // Live audit path
+        - heading "Audit path in motion." [level=2] [ref=e64]
+        - paragraph [ref=e65]: Trace from repository ingestion to ranked findings, control mapping, and sealed reports.
+        - generic [ref=e66]:
+          - generic [ref=e67]:
+            - generic [ref=e68]: "5"
+            - generic [ref=e69]: stages
+          - generic [ref=e70]:
+            - generic [ref=e71]: 38s
+            - generic [ref=e72]: ETA
+          - generic [ref=e73]:
+            - generic [ref=e74]: 71%
+            - generic [ref=e75]: surface closed
+      - generic [ref=e77]:
+        - generic [ref=e78]:
+          - generic [ref=e79]:
+            - generic [ref=e80]:
+              - text: THREATLENS
+              - generic [ref=e82]: .PIPELINE
+            - generic [ref=e83]: "|"
+            - generic [ref=e84]: GROQ LLAMA 3.1 70B · QDRANT HYBRID
+          - generic [ref=e85]:
+            - generic [ref=e86]: "STREAMING RUN #4089"
+            - generic [ref=e89]: ONLINE
+        - generic [ref=e92]:
+          - generic [ref=e93]:
+            - generic [ref=e94]:
+              - generic [ref=e95]:
+                - generic [ref=e96]: 01. INGEST
+                - generic [ref=e99]: AST PARSE
+              - generic [ref=e100]:
+                - generic [ref=e101]: Repository Ingestion
+                - paragraph [ref=e102]: 84 source files · 1,482 AST nodes indexed
+              - generic [ref=e103]:
+                - generic [ref=e104]: GIT SHA 4c89a
+                - generic [ref=e105]: READY
+            - generic [ref=e106]:
+              - generic [ref=e107]:
+                - generic [ref=e108]: 02. TOPOLOGY
+                - generic [ref=e111]: VPC MESH
+              - generic [ref=e112]:
+                - generic [ref=e113]: Trust Boundaries
+                - paragraph [ref=e114]: 12 VPC Assets · Auth Gateway mapped
+              - generic [ref=e115]:
+                - generic [ref=e116]: DATAFLOW GRAPH
+                - generic [ref=e117]: ISOLATED
+            - generic [ref=e118]:
+              - generic [ref=e119]:
+                - generic [ref=e120]: 03. SCANNERS
+                - generic [ref=e123]: MULTI-ENGINE
+              - generic [ref=e124]:
+                - generic [ref=e125]: Semgrep + Trufflehog
+                - generic [ref=e126]: 2 CWEs (SQLi & SSRF) Detected
+              - generic [ref=e128]:
+                - generic [ref=e129]: 14 RULES CHECKED
+                - generic [ref=e130]: CVSS 9.8
+          - generic [ref=e131]:
+            - generic [ref=e132]:
+              - generic [ref=e133]:
+                - generic [ref=e134]: 05. SIGNED REPORT
+                - generic [ref=e137]: PDF AUDIT READY
+              - generic [ref=e138]:
+                - generic [ref=e139]:
+                  - generic [ref=e140]: Signed Audit Report
+                  - paragraph [ref=e141]: "SHA-256: 8f92a4e...71c0"
+                - generic [ref=e142]:
+                  - generic [ref=e143]: SEALED
+                  - generic [ref=e144]: CO-SIGNED
+            - generic [ref=e145]:
+              - generic [ref=e146]:
+                - generic [ref=e147]: 04. AGENTIC RAG
+                - generic [ref=e150]: LLAMA 3.1 70B
+              - generic [ref=e151]:
+                - generic [ref=e152]:
+                  - generic [ref=e153]: Control Citation Synthesis
+                  - generic [ref=e154]: SOC 2 (CC6.1) · ISO 27001 (A.12) · GDPR (Art.32)
+                - generic [ref=e155]:
+                  - generic [ref=e156]: 12 CONTROLS
+                  - generic [ref=e157]: MAPPED
+        - generic [ref=e159]:
+          - generic [ref=e160]:
+            - generic [ref=e163]: $ archon audit
+            - generic [ref=e164]: "--stream"
+            - generic [ref=e165]: Parsing AST graph & repository files...
+          - generic [ref=e166]:
+            - generic [ref=e167]:
+              - text: "SOC 2:"
+              - strong [ref=e168]: 92%
+            - generic [ref=e169]:
+              - text: "ISO 27001:"
+              - strong [ref=e170]: 88%
+            - generic [ref=e171]:
+              - text: "GDPR:"
+              - strong [ref=e172]: 91%
+    - generic [ref=e174]:
+      - generic [ref=e175]:
+        - generic [ref=e176]:
+          - paragraph [ref=e177]: // Pipeline
+          - heading "From repository to signed report." [level=2] [ref=e178]
+        - paragraph [ref=e179]: Five stages keeping every finding traceable to code evidence and statutory controls.
+      - list [ref=e180]:
+        - listitem [ref=e181]:
+          - generic [ref=e182]:
+            - generic [ref=e183]: "01"
+            - generic [ref=e184]: step
+          - heading "Repository analysis" [level=3] [ref=e185]
+          - paragraph [ref=e186]: parse · crawl · index
+        - listitem [ref=e187]:
+          - generic [ref=e188]:
+            - generic [ref=e189]: "02"
+            - generic [ref=e190]: step
+          - heading "Graph extraction" [level=3] [ref=e191]
+          - paragraph [ref=e192]: topology · trust boundaries
+        - listitem [ref=e193]:
+          - generic [ref=e194]:
+            - generic [ref=e195]: "03"
+            - generic [ref=e196]: step
+          - heading "Threat assessment" [level=3] [ref=e197]
+          - paragraph [ref=e198]: STRIDE · attack paths
+        - listitem [ref=e199]:
+          - generic [ref=e200]:
+            - generic [ref=e201]: "04"
+            - generic [ref=e202]: step
+          - heading "Framework alignment" [level=3] [ref=e203]
+          - paragraph [ref=e204]: SOC 2 · ISO · NIST · …
+        - listitem [ref=e205]:
+          - generic [ref=e206]:
+            - generic [ref=e207]: "05"
+            - generic [ref=e208]: step
+          - heading "Signed audit report" [level=3] [ref=e209]
+          - paragraph [ref=e210]: PDF · countersign
+    - generic [ref=e212]:
+      - generic [ref=e213]:
+        - generic [ref=e214]:
+          - paragraph [ref=e215]: // Frameworks
+          - heading "Coverage across every framework." [level=2] [ref=e216]
+          - paragraph [ref=e217]: See current pass rates and the active control catalogs applied to every scan.
+        - generic [ref=e218]: 6 frameworks active
+      - generic [ref=e220]:
+        - generic [ref=e221]:
+          - generic [ref=e222]:
+            - paragraph [ref=e223]: Coverage
+            - heading "Current compliance posture" [level=3] [ref=e224]
+            - paragraph [ref=e225]: Control pass rates mapped across audit scans.
+          - generic [ref=e226]:
+            - generic [ref=e228]:
+              - generic [ref=e229]: SOC 2
+              - generic [ref=e230]: 92%
+            - generic [ref=e234]:
+              - generic [ref=e235]: ISO 27001
+              - generic [ref=e236]: 78%
+            - generic [ref=e240]:
+              - generic [ref=e241]: PCI-DSS
+              - generic [ref=e242]: 64%
+            - generic [ref=e246]:
+              - generic [ref=e247]: HIPAA
+              - generic [ref=e248]: 81%
+            - generic [ref=e252]:
+              - generic [ref=e253]: GDPR
+              - generic [ref=e254]: 71%
+            - generic [ref=e258]:
+              - generic [ref=e259]: NIST 800-53
+              - generic [ref=e260]: 58%
+        - generic [ref=e263]:
+          - generic [ref=e264]:
+            - paragraph [ref=e265]: Catalog
+            - heading "Controls included" [level=3] [ref=e266]
+            - paragraph [ref=e267]: Each selected catalog is mapped during the same review.
+          - list [ref=e268]:
+            - listitem [ref=e269]:
+              - generic [ref=e270]: SOC 2
+              - generic [ref=e273]:
+                - text: "64"
+                - generic [ref=e274]: controls
+            - listitem [ref=e275]:
+              - generic [ref=e276]: ISO 27001
+              - generic [ref=e279]:
+                - text: "114"
+                - generic [ref=e280]: controls
+            - listitem [ref=e281]:
+              - generic [ref=e282]: HIPAA
+              - generic [ref=e285]:
+                - text: "54"
+                - generic [ref=e286]: controls
+            - listitem [ref=e287]:
+              - generic [ref=e288]: GDPR
+              - generic [ref=e291]:
+                - text: "99"
+                - generic [ref=e292]: controls
+            - listitem [ref=e293]:
+              - generic [ref=e294]: PCI-DSS
+              - generic [ref=e297]:
+                - text: "12"
+                - generic [ref=e298]: controls
+            - listitem [ref=e299]:
+              - generic [ref=e300]: NIST 800-53
+              - generic [ref=e303]:
+                - text: "110"
+                - generic [ref=e304]: controls
+  - contentinfo [ref=e305]:
+    - generic [ref=e306]:
+      - link "Archon home" [ref=e307] [cursor=pointer]:
+        - /url: /
+        - img "Archon" [ref=e309]
+        - generic [aria-hidden] [ref=e310]: / 2026
+      - generic [ref=e311]:
+        - link "About" [ref=e312] [cursor=pointer]:
+          - /url: /about
+        - link "Security" [ref=e313] [cursor=pointer]:
+          - /url: "#"
+        - link "Docs" [ref=e314] [cursor=pointer]:
+          - /url: "#"
+        - link "Changelog" [ref=e315] [cursor=pointer]:
+          - /url: "#"
+        - link "Contact" [ref=e316] [cursor=pointer]:
+          - /url: "#"

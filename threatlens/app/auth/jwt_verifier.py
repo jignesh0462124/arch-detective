@@ -3,7 +3,7 @@ from collections.abc import Mapping
 from uuid import UUID
 
 import jwt
-from jwt import InvalidTokenError, PyJWKClient, PyJWKClientError
+from jwt import InvalidTokenError, PyJWKClient, PyJWKClientConnectionError, PyJWKClientError
 from pydantic import ValidationError
 
 from app.config import Settings, settings
@@ -11,6 +11,10 @@ from app.schemas.auth import AuthenticatedUser
 
 
 class AuthTokenError(ValueError):
+    pass
+
+
+class AuthVerificationUnavailable(RuntimeError):
     pass
 
 
@@ -40,6 +44,8 @@ class SupabaseJWTVerifier:
                 issuer=self._settings.SUPABASE_JWT_ISSUER,
                 options={"require": ["exp", "iat", "sub"]},
             )
+        except PyJWKClientConnectionError as exc:
+            raise AuthVerificationUnavailable("Signing keys are temporarily unavailable") from exc
         except (InvalidTokenError, PyJWKClientError, ValueError) as exc:
             raise AuthTokenError("Invalid or expired access token") from exc
 

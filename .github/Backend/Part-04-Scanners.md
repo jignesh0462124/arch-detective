@@ -199,3 +199,40 @@ export function useScanProgress(scanId: string) {
 - **Rate limiting on Groq:** Implement exponential backoff for 429 responses
 - **File size cap:** Don't send files >8KB to LLM — truncate with `[truncated]` marker
 - **No execution:** Never execute uploaded code — only static analysis
+
+---
+
+## 4.8 Implementation Status
+
+**Backend implementation completed:** July 24, 2026
+
+Implemented:
+
+- Shared scanner runtime with 300-second timeouts, bounded output, sanitized
+  subprocess environments, isolated tool configuration, and credential removal.
+- Semgrep, Bandit, official TruffleHog v3, pip-audit, npm audit, log anomaly,
+  and Groq/Llama code-review adapters.
+- Deterministic finding normalization, CWE/severity mapping, fingerprints, and
+  highest-severity deduplication.
+- Workspace-protected, paginated
+  `GET /api/v1/scans/{scan_id}/findings` with severity, framework, and source
+  filters.
+- Vulnerable fixtures, offline parser/security tests, and opt-in real scanner
+  and Groq smoke tests.
+- Worker container hardening and the required Git, Node/npm, and official
+  TruffleHog tooling.
+
+Verification:
+
+- Default backend suite: `89 passed, 4 skipped`.
+- Real scanner smoke tests:
+  `THREATLENS_RUN_SCANNER_SMOKE=1 python -m pytest tests/test_part4_smoke.py`.
+- Real Groq smoke test:
+  `THREATLENS_RUN_GROQ_SMOKE=1 python -m pytest tests/test_part4_smoke.py`.
+
+Deferred by architecture:
+
+- Persisting scanner output and executing all scanners as one scan pipeline is
+  Part 7 Celery orchestration.
+- Frontend findings hooks, progress polling, and mock-data replacement remain
+  Part 8 integration work.

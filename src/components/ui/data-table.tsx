@@ -58,10 +58,7 @@ export function DataTable<T>({
         <tbody>
           {rows.length === 0 ? (
             <tr>
-              <td
-                colSpan={columns.length}
-                className={cn(cellPad, "text-muted-foreground text-sm")}
-              >
+              <td colSpan={columns.length} className={cn(cellPad, "text-muted-foreground text-sm")}>
                 {emptyState ?? "No data."}
               </td>
             </tr>

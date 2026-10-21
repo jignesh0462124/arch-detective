@@ -1,0 +1,9 @@
+<div class="report-section">
+  <div class="section-header"><div><div class="section-eyebrow">02 · Selected Frameworks</div><div class="section-heading">Framework Mapping</div><div class="section-heading-sub">Heuristic assessment scores are not certification results. Missing scores are not treated as zero.</div></div></div>
+  {% if framework_breakdown %}
+  <table class="editorial-table"><thead><tr><th>Framework</th><th>Recorded score</th><th>Mapped controls</th><th>Most frequent control</th></tr></thead><tbody>
+    {% for fw in framework_breakdown %}<tr><td>{{ fw.name }}</td><td>{% if fw.score is not none %}{{ fw.score }}%{% else %}Not available{% endif %}</td><td>{{ fw.violation_count }}</td><td>{{ fw.top_control or 'No mapping recorded' }}</td></tr>{% endfor %}
+  </tbody></table>
+  {% else %}<p>Security-only report. No framework mappings selected. All recorded security findings remain included.</p>{% endif %}
+  {% if top_violated_controls %}<h3>Mapped controls by frequency</h3><table class="editorial-table"><thead><tr><th>Framework</th><th>Control</th><th>Recorded title</th><th>Occurrences</th></tr></thead><tbody>{% for ctrl in top_violated_controls %}<tr><td>{{ ctrl.framework | upper }}</td><td>{{ ctrl.control_id }}</td><td>{{ ctrl.control_title }}</td><td>{{ ctrl.count }}</td></tr>{% endfor %}</tbody></table>{% endif %}
+</div>

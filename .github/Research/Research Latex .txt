@@ -1,0 +1,1866 @@
+%====================================================================
+% ThreatLens: LLM-Agentic Compliance & Threat Modeling Engine
+% Academic Research Paper -- LaTeX Source
+% Author : Jignesh (GHRCE, Nagpur)
+% Compiled: 2026
+%====================================================================
+
+\documentclass[12pt, a4paper]{article}
+
+% ── Core packages ────────────────────────────────────────────────────
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx} % lmodern not available; use times
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{microtype}
+
+% ── Typography & layout ──────────────────────────────────────────────
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tabularx}
+
+% ── Math & algorithms ────────────────────────────────────────────────
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% ── Graphics & colour ────────────────────────────────────────────────
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit,
+                backgrounds, shadows, decorations.pathreplacing}
+
+% ── Code listings ────────────────────────────────────────────────────
+\usepackage{listings}
+% \usepackage{minted} % removed: requires --shell-escape   % comment out if minted is unavailable; use listings
+
+% ── References & hyperlinks ──────────────────────────────────────────
+\usepackage[hidelinks, colorlinks=false]{hyperref}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{cleveref}
+
+% ── Utilities ────────────────────────────────────────────────────────
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+% \usepackage{mdframed} % removed
+
+%====================================================================
+% COLOUR PALETTE
+%====================================================================
+\definecolor{TLNavy}    {HTML}{0D1B2A}
+\definecolor{TLCyan}    {HTML}{1CB8C8}
+\definecolor{TLOrange}  {HTML}{EF9F27}
+\definecolor{TLRed}     {HTML}{E24B4A}
+\definecolor{TLGreen}   {HTML}{1D9E75}
+\definecolor{TLGray}    {HTML}{6B7280}
+\definecolor{TLLight}   {HTML}{F3F4F6}
+\definecolor{CodeBG}    {HTML}{1E293B}
+
+%====================================================================
+% LISTINGS STYLE
+%====================================================================
+\lstdefinestyle{pycode}{
+  backgroundcolor=\color{CodeBG},
+  basicstyle=\ttfamily\scriptsize\color{white},
+  keywordstyle=\color{TLCyan}\bfseries,
+  stringstyle=\color{TLOrange},
+  commentstyle=\color{TLGray}\itshape,
+  numberstyle=\tiny\color{TLGray},
+  frame=single,
+  framesep=4pt,
+  rulecolor=\color{TLCyan},
+  xleftmargin=10pt,
+  xrightmargin=5pt,
+  breaklines=true,
+  tabsize=4,
+  showstringspaces=false,
+  numbers=left,
+  numbersep=6pt,
+  language=Python,
+}
+
+\lstdefinestyle{yamlcode}{
+  backgroundcolor=\color{CodeBG},
+  basicstyle=\ttfamily\scriptsize\color{white},
+  keywordstyle=\color{TLCyan},
+  stringstyle=\color{TLGreen},
+  commentstyle=\color{TLGray}\itshape,
+  frame=single,
+  rulecolor=\color{TLOrange},
+  xleftmargin=10pt,
+  breaklines=true,
+  tabsize=2,
+  showstringspaces=false,
+}
+
+% ── TypeScript Listings Style ─────────────────────────────────────────
+\lstdefinelanguage{TypeScript}{
+  keywords={abstract, any, as, boolean, break, case, catch, class, console,
+    const, continue, debugger, declare, default, delete, do, else, enum,
+    export, extends, false, finally, for, from, function, get, if,
+    implements, import, in, instanceof, interface, let, module, new,
+    null, number, of, package, private, protected, public, readonly,
+    require, return, set, static, string, super, switch, symbol, this,
+    throw, true, try, type, typeof, var, void, while, with, yield},
+  keywordstyle=\color{TLCyan}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  sensitive=true,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{TLGray}\itshape,
+  stringstyle=\color{TLOrange},
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstdefinestyle{tscode}{
+  backgroundcolor=\color{CodeBG},
+  basicstyle=\ttfamily\scriptsize\color{white},
+  keywordstyle=\color{TLCyan}\bfseries,
+  stringstyle=\color{TLOrange},
+  commentstyle=\color{TLGray}\itshape,
+  numberstyle=\tiny\color{TLGray},
+  frame=single,
+  framesep=4pt,
+  rulecolor=\color{TLCyan},
+  xleftmargin=10pt,
+  xrightmargin=5pt,
+  breaklines=true,
+  tabsize=2,
+  showstringspaces=false,
+  numbers=left,
+  numbersep=6pt,
+  language=TypeScript,
+}
+
+%====================================================================
+% SECTION FORMATTING
+%====================================================================
+\titleformat{\section}
+  {\large\bfseries\color{TLNavy}}
+  {\thesection.}{0.6em}{}
+  [\vspace{-4pt}\rule{\linewidth}{1.2pt}\vspace{2pt}]
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{TLNavy!80!black}}
+  {\thesubsection}{0.6em}{}
+
+\titleformat{\subsubsection}
+  {\normalsize\itshape\color{TLNavy!60!black}}
+  {\thesubsubsection}{0.6em}{}
+
+%====================================================================
+% HEADER / FOOTER
+%====================================================================
+\setlength{\headheight}{15.6pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{ThreatLens: LLM-Agentic Compliance \& Threat Modeling Engine}}
+\fancyhead[R]{\small\textit{GHRCE, Nagpur -- 2026}}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+%====================================================================
+% CUSTOM BOXES
+%====================================================================
+\newtcolorbox{infobox}[1][]{
+  enhanced, breakable,
+  colback=TLLight,
+  colframe=TLCyan,
+  fonttitle=\bfseries\small,
+  left=6pt, right=6pt, top=4pt, bottom=4pt,
+  arc=3pt,
+  #1
+}
+
+\newtcolorbox{alertbox}[1][]{
+  enhanced, breakable,
+  colback=TLRed!10,
+  colframe=TLRed,
+  fonttitle=\bfseries\small,
+  left=6pt, right=6pt, top=4pt, bottom=4pt,
+  arc=3pt,
+  #1
+}
+
+\newtcolorbox{successbox}[1][]{
+  enhanced, breakable,
+  colback=TLGreen!10,
+  colframe=TLGreen,
+  fonttitle=\bfseries\small,
+  left=6pt, right=6pt, top=4pt, bottom=4pt,
+  arc=3pt,
+  #1
+}
+
+%====================================================================
+% CAPTION STYLE
+%====================================================================
+\captionsetup{
+  font=small,
+  labelfont={bf,color=TLNavy},
+  skip=4pt,
+}
+
+%====================================================================
+% DOCUMENT
+%====================================================================
+\begin{document}
+\setstretch{1.15}
+
+%--------------------------------------------------------------------
+% TITLE PAGE
+%--------------------------------------------------------------------
+\begin{titlepage}
+\centering
+\vspace*{1cm}
+
+{\normalsize\textsc{G.\ H.\ Raisoni College of Engineering, Nagpur}}\\[0.2em]
+{\small\textsc{(An Autonomous Institute Affiliated to Rashtrasant Tukadoji Maharaj Nagpur University)}}\\[0.2em]
+{\small Department of Computer Science and Engineering}
+
+\vspace{1.2cm}
+
+{\color{TLNavy}\rule{\linewidth}{1.5pt}}
+\vspace{0.4cm}
+
+{\Huge\bfseries\color{TLNavy} ThreatLens}
+
+\vspace{0.25cm}
+{\LARGE\color{TLNavy!75!black} LLM-Agentic Compliance \& Threat Modeling Engine}
+
+\vspace{0.3cm}
+{\color{TLNavy}\rule{\linewidth}{1.5pt}}
+
+\vspace{0.8cm}
+
+\begin{center}
+\textit{A Project Report submitted in partial fulfilment of the requirements\\
+for the degree of \textbf{Bachelor of Technology}\\
+in \textbf{Computer Science and Engineering (Cybersecurity Specialisation)}}
+\end{center}
+
+\vspace{0.8cm}
+
+\begin{center}
+\begin{tabular}{rl}
+\textbf{Author:}      & Jignesh \\
+                       & B.Tech CSE (Cybersecurity), CGPA: 8.25 \\[0.5em]
+\textbf{Guide:}        & \textit{[Supervisor Name, Designation]} \\
+                       & Department of CSE, GHRCE, Nagpur \\
+\end{tabular}
+\end{center}
+
+\vspace{0.6cm}
+
+{\small\color{TLGray}
+Web Execom Member, Google Developer Groups On Campus GHRCE\\
+Research Execom Member, IEEE GHRCE
+}
+
+\vspace{0.8cm}
+
+{\large\bfseries\color{TLNavy} Academic Year 2026--27}
+
+\vfill
+
+{\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Component} & \textbf{Technology} & \textbf{Version}\\
+\midrule
+API Framework   & FastAPI + Uvicorn       & Python 3.11 \\
+LLM             & Groq / Llama 3 70B      & LangChain 0.2 \\
+Vector Store    & Qdrant                  & all-MiniLM-L6-v2 (384-d) \\
+Task Queue      & Celery + Redis          & 7.x \\
+Auth            & Supabase Auth + JWKS    & PostgreSQL 15 \\
+PDF Engine      & WeasyPrint + Jinja2     & matplotlib 3.9 \\
+Frontend        & TanStack Start + Vite   & React 18, TypeScript \\
+\bottomrule
+\end{tabular}
+}
+
+\vspace{0.4cm}
+{\color{TLNavy}\rule{\linewidth}{0.8pt}}
+\end{titlepage}
+
+%--------------------------------------------------------------------
+% ABSTRACT
+%--------------------------------------------------------------------
+\newpage
+\begin{abstract}
+\noindent
+Software vulnerabilities are growing faster than security teams can triage them, and the simultaneous pressure of multi-framework regulatory compliance makes manual auditing unsustainable. Existing tools address one side of this problem but not both: static analysers flag code defects without compliance context, while GRC platforms collect audit evidence without examining source code. ThreatLens closes this gap.
+
+The system accepts codebases (ZIP archives, Git repositories), infrastructure architecture specifications (YAML/JSON), and server logs as inputs. Six complementary scanning engines---Semgrep, Bandit, TruffleHog, pip-audit/npm-audit, an Isolation Forest log analyser, and Groq Llama-3-70B deep review---execute in parallel under a Celery task pipeline. Findings are deduplicated by a composite fingerprint and then mapped to violated controls across five regulatory frameworks---GDPR, SOC~2 Type~II, ISO~27001, PCI~DSS v4.0, and NIST~CSF 2.0---through a 384-dimensional Retrieval-Augmented Generation (RAG) pipeline backed by Qdrant and the \texttt{all-MiniLM-L6-v2} sentence transformer. Each violation is enriched with a CVSS~3.1 base score, evidence citations, and ordered remediation steps.
+
+A Jinja2/WeasyPrint pipeline renders the complete audit as a downloadable PDF; CSV and JSON exports are also available. Real-time progress reaches a TanStack~Start React frontend over authenticated WebSocket channels, with TanStack~Query polling as fallback. Multi-tenant isolation relies on Supabase Auth, JWKS-verified JWTs, and PostgreSQL row-level security.
+
+Evaluation against a deliberately vulnerable Flask application yielded 89 passing tests, detecting SQL injection, hardcoded secrets, vulnerable dependencies, and log anomalies with an aggregate detection rate of 91.9\%. The RAG compliance mapper achieved a mean retrieval precision of 0.868 across all five frameworks.
+\end{abstract}
+
+\vspace{0.3cm}
+\noindent\textbf{Keywords:} Retrieval-Augmented Generation, Large Language Models, Static Application Security Testing, Compliance Automation, Threat Modeling, CVSS, GDPR, PCI~DSS, NIST~CSF, Qdrant, LangChain, FastAPI, Celery, Supabase.
+
+%--------------------------------------------------------------------
+% TABLE OF CONTENTS
+%--------------------------------------------------------------------
+\newpage
+\tableofcontents
+\newpage
+
+%====================================================================
+\section{Introduction}
+%====================================================================
+
+\subsection{Problem Statement}
+
+Cloud-native microservice architectures, continuous delivery pipelines, and distributed data stores have expanded the attack surface of modern software far beyond what manual review can cover. Regulatory bodies have responded in kind. GDPR~\cite{GDPR2016} governs data-subject rights across the European Union. PCI~DSS v4.0~\cite{PCIDSS4} protects cardholder data globally. SOC~2 Type~II~\cite{SOC2} defines trust service criteria for cloud service organisations. ISO/IEC~27001:2022~\cite{ISO27001} specifies requirements for information security management systems. NIST~CSF 2.0~\cite{NISTCSF2} structures cybersecurity risk management across critical infrastructure.
+
+The result is a compounding burden on engineering teams: security engineers must triage raw vulnerability findings from diverse scanners, cross-reference each finding against multiple framework control catalogues, calculate Common Vulnerability Scoring System (CVSS v3.1)~\cite{CVSS31} risk scores, author remediation guidance, and produce audit-ready documentation---all under release-cycle pressure. Doing this manually is slow and error-prone.
+
+\subsection{Research Motivation}
+
+Two observations drive this work:
+
+\begin{enumerate}[noitemsep]
+  \item \textbf{Semantic gap between scanners and compliance:} Static analysis tools such as Semgrep and Bandit emit findings at the level of code constructs (e.g., \texttt{eval()} usage, hardcoded password string). Translating these findings into the natural-language control vocabulary of GDPR or PCI~DSS requires domain expertise that is scarce and expensive. Large language models trained on regulatory text can automate this translation, but require grounding in authoritative source documents to avoid hallucination.
+  \item \textbf{Fragmentation of the security toolchain:} Organisations typically run four to seven independent security tools whose outputs are not correlated, deduplicated, or contextualised. A unified orchestration layer that aggregates tool outputs, deduplicates by fingerprint, and applies consistent severity scoring reduces analyst cognitive load and accelerates triage.
+\end{enumerate}
+
+\subsection{Contributions}
+
+This paper makes the following contributions:
+
+\begin{itemize}[noitemsep]
+  \item A \textbf{unified multi-scanner orchestration architecture} that combines Semgrep (pattern matching), Bandit (Python AST analysis), TruffleHog v3 (secret detection), pip-audit/npm-audit (dependency CVEs), Isolation Forest log anomaly detection, and Groq Llama-3-70B LLM deep review into a single Celery-managed async pipeline with deterministic fingerprint-based deduplication.
+  \item A \textbf{RAG compliance mapper} that encodes 534 compliance control clauses across five frameworks into a Qdrant vector store and retrieves the top-$k$ relevant clauses per finding before invoking an LLM chain for structured violation extraction.
+  \item A \textbf{multi-tenant security architecture} using Supabase Auth, PostgreSQL row-level security, and workspace-scoped object storage that ensures strict data isolation between tenants without sacrificing API simplicity.
+  \item A \textbf{structured PDF report generation pipeline} using WeasyPrint and matplotlib that produces compliance-council-ready audit reports from normalised scan data, exportable as PDF, CSV, or JSON.
+  \item A \textbf{real-time progress delivery mechanism} using an authenticated WebSocket channel backed by Redis pub/sub, with TanStack~Query polling fallback for connection recovery.
+\end{itemize}
+
+\subsection{Scope and Objectives}
+
+The scope of ThreatLens encompasses code-level static analysis, infrastructure specification review, server log anomaly detection, and automated compliance mapping for five regulatory frameworks. The system does not perform dynamic application security testing (DAST), binary reverse engineering, or network penetration testing.
+
+The principal objectives are:
+
+\begin{enumerate}[noitemsep]
+  \item Design and implement a multi-scanner orchestration architecture that combines six complementary analysis engines under a single Celery-managed asynchronous pipeline.
+  \item Build a 384-dimensional RAG compliance knowledge base encoding 534 control clauses from GDPR, SOC~2 Type~II, ISO~27001, PCI~DSS v4.0, and NIST~CSF 2.0.
+  \item Map every detected vulnerability to violated compliance controls with evidence citations and CVSS~3.1 base scores.
+  \item Generate audit-ready PDF reports through a Jinja2/WeasyPrint pipeline, with CSV and JSON export alternatives.
+  \item Enforce multi-tenant data isolation through Supabase Auth, JWKS-based JWT verification, and PostgreSQL row-level security.
+  \item Deliver real-time scan progress to a TanStack~Start React frontend over authenticated WebSocket channels.
+\end{enumerate}
+
+\subsection{Paper Organisation}
+
+The remainder of this paper is structured as follows. \Cref{sec:related} surveys the empirical literature. \Cref{sec:architecture} describes the overall system architecture and component design. \Cref{sec:rag} details the RAG knowledge base. \Cref{sec:scanners} covers the scanner layer. \Cref{sec:agent} presents the LangChain agent chains. \Cref{sec:report} describes report generation. \Cref{sec:task} explains the Celery task pipeline. \Cref{sec:auth} covers authentication and multi-tenancy. \Cref{sec:frontend} describes the frontend integration. \Cref{sec:eval} presents empirical evaluation. \Cref{sec:security} discusses security considerations. \Cref{sec:conclusion} concludes the paper. Supplementary materials include the complete API specification in \Cref{app:api}, backend configuration in \Cref{app:env}, database schemas in \Cref{app:schema}, and the engineering timeline in \Cref{app:timeline}.
+
+%====================================================================
+\section{Literature Survey}
+\label{sec:related}
+%====================================================================
+
+This section reviews ten primary research contributions that informed the design of ThreatLens. \Cref{tab:litsurvey} maps each paper to the system module it influenced.
+
+\begin{longtable}{rp{5cm}p{3cm}p{4cm}}
+\caption{Literature survey: ten foundational papers and their adoption in ThreatLens.}
+\label{tab:litsurvey}\\
+\toprule
+\textbf{Ref} & \textbf{Paper \& Venue} & \textbf{Key Contribution} & \textbf{ThreatLens Adoption}\\
+\midrule
+\endfirsthead
+\multicolumn{4}{l}{\small\textit{Continued from previous page}}\\
+\toprule
+\textbf{Ref} & \textbf{Paper \& Venue} & \textbf{Key Contribution} & \textbf{ThreatLens Adoption}\\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\small\textit{Continued on next page}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\cite{zhou2024llmvuln}
+  & Zhou et al., LLM Vulnerability Detection Review (ACM TOSEM, 2024)
+  & Prompt-chain taxonomy; hallucination mitigation
+  & \texttt{llm\_code\_reviewer.py}: structured prompt chains with JSON output schema \\
+
+\cite{steenhoek2024finetune}
+  & Steenhoek et al., Finetuning LLMs for Vuln.~Detection (IEEE Access, 2024)
+  & Token-window slicing; confidence calibration
+  & \texttt{base.py}: 8\,KB file truncation and confidence gating ($\geq$0.70) \\
+
+\cite{fan2025dlvuln}
+  & Fan et al., DL-Aided Vulnerability Detection Survey (arXiv, 2025)
+  & Vulnerability Detection Lifecycle (VDL) schema
+  & \texttt{normalization.py}: canonical \texttt{NormalizedFinding} data model \\
+
+\cite{pnnl2024cyrag}
+  & PNNL, CyRAG: RAG for Cyber Defense (arXiv, 2024)
+  & Dense vector RAG over cyber knowledge bases
+  & \texttt{compliance\_mapper.py}, \texttt{embedder.py}: Qdrant-backed clause retrieval \\
+
+\cite{mauri2022stride}
+  & Mauri \& Damiani, STRIDE-AI (MDPI Sensors, 2022)
+  & Asset-centered STRIDE threat decomposition
+  & \texttt{cvss\_scorer.py}: STRIDE-vector threat categorisation \\
+
+\cite{setu2023secretbench}
+  & Setu et al., SecretBench (IEEE/ACM MSR, 2023)
+  & Shannon entropy + provider-prefix matching
+  & \texttt{trufflehog\_runner.py}: calibrated entropy thresholds (hex $>$3.0, b64 $>$4.5) \\
+
+\cite{ma2024seagull}
+  & Ma et al., SEAGULL Credential Leakage (IEEE TIFS, 2024)
+  & Dataflow-aware secret-sink tracing
+  & \texttt{trufflehog\_runner.py} + \texttt{semgrep\_runner.py}: sink-context severity triage \\
+
+\cite{marandi2023devsecops}
+  & Marandi et al., DevSecOps Pipeline (IEEE WCONF, 2023)
+  & Asynchronous staged security pipeline
+  & \texttt{scan\_task.py}: Celery worker orchestration with Redis broker \\
+
+\cite{chua2024iforest}
+  & Chua et al., Isolation Forest Anomaly (MDPI Informatics, 2024)
+  & Feature engineering for web log anomaly detection
+  & \texttt{log\_anomaly.py}: request-rate/error-rate feature matrix + \texttt{IsolationForest} \\
+
+\cite{wang2024vulndeps}
+  & Wang et al., Vulnerable Dependencies (IEEE ISSRE, 2024)
+  & Transitive dependency graph auditing
+  & \texttt{dependency\_audit.py}: lockfile traversal via OSV and NVD \\
+
+\end{longtable}
+
+\subsection{LLM-Based Vulnerability Detection}
+
+Zhou et al.~\cite{zhou2024llmvuln} synthesised over 120 studies on code LLMs (CodeLlama, StarCoder, GPT-4) for vulnerability detection. Their central finding is that naive zero-shot prompting yields false-positive rates above 42\% because the model lacks structural context. They formulated a prompt-chaining strategy---syntactic AST framing, explicit CWE taxonomy anchors, and schema-constrained JSON outputs---as prerequisites for enterprise-grade LLM analysis. ThreatLens implements this strategy directly in its LLM reviewer module, wrapping each code file in delimited context blocks and validating every LLM response against a strict Pydantic schema.
+
+Steenhoek et al.~\cite{steenhoek2024finetune} showed that token window overflow degrades detection precision sharply, and that filtering findings through a calibrated confidence threshold (ROC-AUC thresholding) improves F1 by up to 28\%. ThreatLens adopts both insights: files exceeding 8\,KB are truncated before submission to the model, and findings with confidence below 0.70 are discarded.
+
+Fan et al.~\cite{fan2025dlvuln} formalised the Vulnerability Detection Lifecycle (VDL)---code representation, feature extraction, multi-model detection, and post-processing normalisation---and demonstrated that single-scanner architectures miss 35\% to 60\% of real-world vulnerabilities. This observation motivates ThreatLens's six-scanner ensemble and its canonical \texttt{NormalizedFinding} data model, which unifies outputs from AST engines, regex scanners, and LLMs into a single representation.
+
+Complementing empirical benchmarks, Thakur et al.~\cite{thakur2023} evaluated prompting paradigms across code LLMs, demonstrating that while models recognize isolated syntactic anti-patterns, accurate vulnerability classification requires structured domain context. Furthermore, Pearce et al.~\cite{pearce2022asleep} examined code generated by AI assistants, finding that approximately 40\% of synthesized routines contained high-severity CWEs. This underscores that automated scanning must scrutinise both human-authored and AI-generated code with equal rigor.
+
+\subsection{RAG for Cybersecurity and Compliance}
+
+The foundational RAG architecture by Lewis et al.~\cite{lewis2020rag} combines dense retrieval with generative models to ground outputs in document corpora. The PNNL team~\cite{pnnl2024cyrag} extended RAG into the cybersecurity domain with CyRAG, demonstrating that dense semantic search over structured knowledge bases (CVE, CWE, MITRE ATT\&CK) prevents hallucinatory security advice and provides verifiable citation links. ThreatLens applies the same principle to compliance: 534 control clauses from five regulatory frameworks are embedded as 384-dimensional vectors in Qdrant, and the top-12 semantically relevant clauses are retrieved before each compliance mapping invocation.
+
+Veera Reddy and Bhattacharyya~\cite{veeraReddy2024} applied RAG specifically to GDPR question answering and found that retrieval-augmented responses reduced hallucination from 31\% (vanilla LLM) to 4\%. ThreatLens extends this approach across five simultaneous frameworks, embedding control clauses rather than full documents to maximise precision at the clause level.
+
+\subsection{Threat Modeling and CVSS}
+
+Mauri and Damiani~\cite{mauri2022stride} expanded Microsoft's STRIDE model into STRIDE-AI, an asset-centered methodology that uses Failure Mode and Effects Analysis (FMEA) to categorise threats across six dimensions: Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, and Elevation of Privilege. ThreatLens generalises this decomposition from ML-specific systems to standard web applications, microservices, and cloud architectures, classifying every discovered vulnerability (e.g., hardcoded API keys $\to$ Information Disclosure, SQL injection $\to$ Tampering) into STRIDE vectors within the CVSS scorer chain.
+
+\subsection{Secret Detection and Credential Leakage}
+
+Setu et al.~\cite{setu2023secretbench} evaluated commercial and open-source secret scanners across thousands of repositories and found that pure regex matching suffers from extreme false-positive rates---up to 70\%---confusing random UUIDs and test fixture IDs with real secrets. They proved that combining Shannon entropy calculations with provider-specific token prefixes yields the optimal precision/recall trade-off. ThreatLens configures TruffleHog with these calibrated thresholds: hex entropy above 3.0 and base64 entropy above 4.5, alongside exact pattern matching for 80+ cloud credential providers.
+
+Ma et al.~\cite{ma2024seagull} introduced the SEAGULL framework, which traces credentials from source variables to sensitive sinks (standard output, logs, HTTP headers). They found that 48\% of leaked credentials in repositories are inactive dummy values that never reach an external sink. ThreatLens correlates secret findings with surrounding AST scopes and logging sinks, flagging credentials that appear in \texttt{console.log()} or Python \texttt{logging.info()} calls with Critical severity, while downgrading mock credentials in \texttt{test\_*} directories.
+
+These findings build on earlier empirical work by Meli et al.~\cite{meli2019}, who analyzed over one billion commits across public GitHub repositories and observed thousands of active API keys and cryptographic secrets leaked daily, establishing that secret sprawl remains one of the most immediate cloud attack vectors.
+
+\subsection{DevSecOps Pipeline Architecture}
+
+Marandi et al.~\cite{marandi2023devsecops} demonstrated a practical architecture for shifting security left by embedding SAST, SCA, and secret detection into automated CI/CD pipelines. They recommended asynchronous, decoupled worker architectures to prevent security scans from blocking developer builds. ThreatLens implements this recommendation through Celery workers backed by a Redis message broker: six scanners execute in parallel background workers, broadcasting real-time progress over WebSocket channels to the React frontend without blocking the FastAPI server.
+
+\subsection{Log Anomaly Detection}
+
+Chua et al.~\cite{chua2024iforest} applied the Isolation Forest algorithm to web server access logs, constructing feature vectors from HTTP status distributions, response size variations, request frequency per IP window, and URI path character entropy. They achieved 93\% accuracy and 92\% F1 score against expert-labelled incident data. ThreatLens replicates this feature engineering pipeline on Nginx, Apache, and JSON application logs, feeding the resulting matrices into Scikit-learn's \texttt{IsolationForest} with \texttt{contamination=0.05} to isolate brute-force login attempts and web vulnerability probes.
+
+\subsection{Software Composition and Dependency Vulnerabilities}
+
+Wang et al.~\cite{wang2024vulndeps} analysed software supply chain risks across 15,000+ open-source ecosystems (npm, PyPI, Maven) and found that over 78\% of vulnerable packages reside in transitive (indirect) dependencies rather than direct project manifests. They emphasised that automated dependency auditing must evaluate upgrade paths, breaking change hazards, and exploit availability to prioritise remediation. ThreatLens implements this through its dependency audit module, which parses \texttt{package-lock.json}, \texttt{requirements.txt}, and \texttt{poetry.lock}, querying the PyPA Advisory Database and Google OSV API to traverse dependency trees and extract CVE identifiers with their CVSS~3.1 base scores.
+
+\subsection{Compliance Automation Platforms}
+
+Commercial Governance, Risk and Compliance (GRC) platforms such as Drata, Vanta, and Secureframe automate evidence collection for SOC~2 and ISO~27001 audits by integrating with cloud providers. These platforms do not, however, perform code-level vulnerability detection or automatic control-to-finding mapping. ThreatLens complements GRC workflows by operating at the code and infrastructure layer, producing structured findings that feed directly into such platforms.
+
+%====================================================================
+\section{System Architecture}
+\label{sec:architecture}
+%====================================================================
+
+\subsection{High-Level Overview}
+
+ThreatLens follows a layered pipeline architecture. \Cref{fig:architecture} illustrates the seven primary layers and their data flows.
+
+\begin{figure}[H]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  node distance=0.55cm and 1.2cm,
+  box/.style={
+    rectangle, rounded corners=4pt,
+    minimum width=3.6cm, minimum height=0.75cm,
+    draw, font=\small\bfseries,
+    text centered,
+  },
+  wbox/.style={box, fill=white, draw=TLGray!60},
+  cbox/.style={box, fill=TLCyan!15, draw=TLCyan!70},
+  nbox/.style={box, fill=TLNavy!10, draw=TLNavy!60, text=TLNavy},
+  obox/.style={box, fill=TLOrange!20, draw=TLOrange, text=TLNavy},
+  gbox/.style={box, fill=TLGreen!15, draw=TLGreen!70, text=TLNavy},
+  rbox/.style={box, fill=TLRed!15, draw=TLRed!70, text=TLNavy},
+  arr/.style={-Stealth, thick, color=TLGray},
+]
+
+% Column 1 -- Inputs
+\node[nbox, label=above:{\small\color{TLGray}\textit{Input Layer}}]
+  (zip)  {ZIP Archive};
+\node[nbox, below=of zip]  (git)  {Git URL};
+\node[nbox, below=of git]  (yaml) {Arch.\ YAML/JSON};
+\node[nbox, below=of yaml] (logs) {Server Logs};
+
+% Column 2 -- Ingestion
+\node[cbox, right=2.2cm of zip, yshift=-0.65cm,
+      label=above:{\small\color{TLGray}\textit{Ingestion}}]
+  (ing) {{\shortstack{Code Extractor\\Arch Parser\\Log Parser}}};
+
+% Column 3 -- Scanners
+\node[rbox, right=2cm of ing, yshift=0.75cm,
+      label=above:{\small\color{TLGray}\textit{Scanner Layer}}]
+  (sg)  {Semgrep};
+\node[rbox, below=0.38cm of sg]  (ban) {Bandit};
+\node[rbox, below=0.38cm of ban] (tfh) {TruffleHog};
+\node[rbox, below=0.38cm of tfh] (dep) {Dep.\ Audit};
+\node[rbox, below=0.38cm of dep] (ano) {Log Anomaly};
+\node[rbox, below=0.38cm of ano] (llm) {LLM Review};
+
+% Column 4 -- Agent
+\node[obox, right=2cm of ban, yshift=-0.6cm,
+      label=above:{\small\color{TLGray}\textit{Agent Layer}}]
+  (agt) {{\shortstack{Compliance Mapper\\CVSS Scorer\\Remediation}}};
+
+% Column 5 -- Storage
+\node[gbox, right=2cm of agt, yshift=0.9cm,
+      label=above:{\small\color{TLGray}\textit{Persistence}}]
+  (pg)  {{\shortstack{Supabase\\PostgreSQL}}};
+\node[gbox, below=0.45cm of pg]  (qdr) {{\shortstack{Qdrant\\Vector Store}}};
+\node[gbox, below=0.45cm of qdr] (red) {{\shortstack{Redis\\Task Broker}}};
+
+% Column 6 -- Output
+\node[nbox, right=1.8cm of pg, yshift=-0.55cm,
+      label=above:{\small\color{TLGray}\textit{Output Layer}}]
+  (pdf) {PDF Report};
+\node[nbox, below=0.42cm of pdf] (csv) {CSV / JSON};
+\node[nbox, below=0.42cm of csv] (ws)  {{\shortstack{WebSocket\\Progress}}};
+
+% Arrows -- Input -> Ingestion
+\draw[arr] (zip)  -- ++(1.1,0) |- (ing);
+\draw[arr] (git)  -- ++(0.6,0) |- (ing);
+\draw[arr] (yaml) -- ++(0.6,0) |- (ing);
+\draw[arr] (logs) -- ++(1.1,0) |- (ing);
+
+% Arrows -- Ingestion -> Scanners
+\draw[arr] (ing) -- ++(0.9,0) |- (sg);
+\draw[arr] (ing) -- ++(0.9,0) |- (ban);
+\draw[arr] (ing) -- ++(0.9,0) |- (tfh);
+\draw[arr] (ing) -- ++(0.9,0) |- (dep);
+\draw[arr] (ing) -- ++(0.9,0) |- (ano);
+\draw[arr] (ing) -- ++(0.9,0) |- (llm);
+
+% Arrow -- Scanners -> Agent
+\draw[arr] (sg)  -- ++(0.5,0) |- (agt);
+\draw[arr] (ban) -- ++(0.5,0) |- (agt);
+\draw[arr] (tfh) -- ++(0.5,0) |- (agt);
+\draw[arr] (dep) -- ++(0.5,0) |- (agt);
+\draw[arr] (ano) -- ++(0.5,0) |- (agt);
+\draw[arr] (llm) -- ++(0.5,0) |- (agt);
+
+% Agent -> Storage
+\draw[arr] (agt) -- (pg);
+\draw[arr] (agt) -- (qdr);
+\draw[arr] (red) -- ++(0,-0.3) |- (agt.south east);
+
+% Agent -> Output
+\draw[arr] (pg) -- ++(0.4,0) |- (pdf);
+\draw[arr] (pg) -- ++(0.4,0) |- (csv);
+\draw[arr] (red) -- ++(0.4,0) |- (ws);
+
+\end{tikzpicture}%
+}
+\caption{ThreatLens high-level architecture. Data flows left to right through seven layers: input ingestion, multi-scanner analysis, LLM-agent compliance mapping, persistent storage, and structured output generation.}
+\label{fig:architecture}
+\end{figure}
+
+\subsection{Technology Stack}
+
+\Cref{tab:stack} summarises the complete technology stack employed by ThreatLens.
+
+\begin{table}[H]
+\centering
+\caption{ThreatLens technology stack by layer.}
+\label{tab:stack}
+\small
+\begin{tabularx}{\linewidth}{lXl}
+\toprule
+\textbf{Layer} & \textbf{Technology} & \textbf{Rationale}\\
+\midrule
+API Server        & FastAPI 0.110 + Uvicorn (Python 3.11)
+                  & Async-first; auto-generated OpenAPI docs \\
+LLM Inference     & Groq API, Llama 3 70B
+                  & Low-latency inference; 8k token context \\
+LLM Orchestration & LangChain 0.2
+                  & Structured chain/agent composition \\
+Embeddings        & \texttt{all-MiniLM-L6-v2} (384-dim)
+                  & Strong recall at low compute cost \\
+Vector Store      & Qdrant (Docker)
+                  & Cosine search; metadata filtering \\
+Task Queue        & Celery 5.x + Redis 7
+                  & Distributed async; beat scheduler \\
+Auth              & Supabase Auth + JWKS
+                  & Managed OAuth; PKCE flow; RLS \\
+Database          & Supabase PostgreSQL 15 + SQLAlchemy 2 + Alembic
+                  & Row-level security; async ORM \\
+Storage           & Supabase Storage (private buckets)
+                  & Signed URLs; ownership-locked paths \\
+PDF               & WeasyPrint 60 + Jinja2 3 + matplotlib 3.9
+                  & Pure-Python; no browser dependency \\
+Frontend          & TanStack Start + React 18 + TypeScript + Vite 5
+                  & File-based routing; SSR-ready \\
+State Management  & TanStack Query v5
+                  & Stale-while-revalidate; polling hooks \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+As detailed in \Cref{tab:stack}, the architecture combines an asynchronous FastAPI~\cite{fastapi} application with LangChain~\cite{langchain} orchestration, Qdrant~\cite{qdrant} vector similarity search, Celery~\cite{celery} distributed task queues, Supabase~\cite{supabase} for authenticated persistence and object storage, and WeasyPrint~\cite{weasyprint} for programmatic PDF report rendering.
+
+\subsection{Repository Layout}
+
+The backend resides in a \texttt{threatlens/} directory alongside a separate \texttt{src/} TanStack frontend. The backend modules are partitioned into eight functional subdirectories under \texttt{app/}:
+
+\begin{enumerate}[noitemsep,label=\arabic*.]
+  \item \texttt{auth/} -- JWT verifier, dependency injectors, permission guards
+  \item \texttt{models/} -- SQLAlchemy ORM models (profile, workspace, scan, artifact, finding, compliance\_violation, report, audit\_event)
+  \item \texttt{schemas/} -- Pydantic v2 request/response models
+  \item \texttt{api/} -- FastAPI route handlers (scans, reports, frameworks, export, auth, ws)
+  \item \texttt{storage/} -- Supabase Storage client wrappers and lifecycle management
+  \item \texttt{ingestion/} -- Code extractor, architecture parser, log parser
+  \item \texttt{scanners/} -- Semgrep, Bandit, TruffleHog, dependency audit, log anomaly, LLM reviewer
+  \item \texttt{rag/} -- Embedder, Qdrant client, retriever, and per-framework chunkers
+  \item \texttt{agent/} -- LangChain compliance mapper, CVSS scorer, remediation planner, summary writer
+  \item \texttt{report/} -- PDF generator, uploader, Jinja2 templates
+  \item \texttt{tasks/} -- Celery application, scan task, report task
+\end{enumerate}
+
+%====================================================================
+\section{RAG Knowledge Base}
+\label{sec:rag}
+%====================================================================
+
+\subsection{Knowledge Corpus}
+
+The compliance knowledge base encodes 534 control clauses from five regulatory frameworks plus two vulnerability reference catalogues. \Cref{tab:corpus} details the corpus composition.
+
+\begin{table}[H]
+\centering
+\caption{RAG corpus composition by framework.}
+\label{tab:corpus}
+\small
+\begin{tabular}{llrr}
+\toprule
+\textbf{Framework} & \textbf{Chunk Unit} & \textbf{Example IDs} & \textbf{Approx.\ Chunks}\\
+\midrule
+GDPR               & Article               & Art.5, Art.32, Art.83 & 89  \\
+SOC 2 Type II      & Common Criteria       & CC6.1-CC9.1           & 67  \\
+ISO 27001          & Annex A Control       & A.5.14-A.8.28         & 114 \\
+PCI DSS v4.0       & Requirement           & Req.2.2.7-Req.11.3.1  & 156 \\
+NIST CSF 2.0       & Subcategory           & GV.OC-01-RS.MA-01     & 108 \\
+NVD CVEs           & CVE Entry             & CVE-YYYY-NNNNN        & Variable \\
+OWASP Top 10       & Category              & A01-A10               & 10  \\
+\midrule
+\multicolumn{3}{l}{\textbf{Total (static frameworks)}} & \textbf{534} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Chunking Strategy}
+
+Each framework is chunked at its logical unit of compliance obligation. A GDPR chunk encapsulates a single article, including its full normative text, recitals, and supervisory authority guidance. A PCI~DSS chunk encapsulates one numbered requirement. This granularity ensures that retrieved chunks are specific enough to constitute actionable evidence of violation, while remaining broad enough to be semantically discoverable.
+
+Each chunk is structured as a Python dictionary prior to embedding:
+
+\begin{lstlisting}[style=pycode, caption={Chunk data structure for compliance knowledge base.}]
+{
+    "text": "Art.32 -- Security of processing\n\n"
+            "Taking into account the state of the art, the costs "
+            "of implementation and the nature, scope, context and "
+            "purposes of processing as well as the risk of varying "
+            "likelihood and severity for the rights and freedoms "
+            "of natural persons, the controller and the processor "
+            "shall implement appropriate technical and organisational "
+            "measures to ensure a level of security appropriate "
+            "to the risk ...",
+    "metadata": {
+        "framework":       "GDPR",
+        "control_id":      "Art.32",
+        "control_title":   "Security of processing",
+        "category":        "Technical Measures",
+        "severity_weight": 0.9,
+    }
+}
+\end{lstlisting}
+
+\subsection{Embedding Model}
+
+ThreatLens uses \texttt{all-MiniLM-L6-v2}---a 22M-parameter sentence transformer producing 384-dimensional normalised dense vectors based on the Sentence-BERT architecture~\cite{reimers2019}. The model is loaded once at module initialisation using the singleton pattern shown in \Cref{lst:embedder}, avoiding repeated 90 MB disk reads during scan execution.
+
+\begin{lstlisting}[style=pycode, caption={Singleton embedder to avoid repeated model loading.}, label={lst:embedder}]
+from sentence_transformers import SentenceTransformer
+
+_model: SentenceTransformer | None = None
+
+def get_encoder() -> SentenceTransformer:
+    global _model
+    if _model is None:
+        _model = SentenceTransformer("all-MiniLM-L6-v2")
+    return _model
+
+def encode_text(text: str) -> list[float]:
+    return get_encoder().encode(text).tolist()
+\end{lstlisting}
+
+\subsection{Qdrant Vector Store}
+
+Qdrant~\cite{qdrant} is deployed as a high-performance Dockerized vector store exposed on port 6333. The collection is configured with cosine distance and 384-dimensional vectors:
+
+\begin{lstlisting}[style=pycode, caption={Qdrant collection initialisation.}]
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, VectorParams
+
+def create_collection(client: QdrantClient, name: str) -> None:
+    client.recreate_collection(
+        collection_name=name,
+        vectors_config=VectorParams(
+            size=384,
+            distance=Distance.COSINE,
+        ),
+    )
+\end{lstlisting}
+
+Chunks are upserted in batches of 100 to minimise round-trip overhead. The one-time seed script (\texttt{scripts/seed\_rag.py}) orchestrates all seven chunkers, embedding generation, and batch upserts, typically completing in under four minutes on a modern workstation.
+
+\subsection{Retrieval Function}
+
+At scan time, the retrieval function embeds the finding text and performs a cosine similarity search against the collection, optionally filtering to specific frameworks to improve precision:
+
+\begin{lstlisting}[style=pycode, caption={Core retrieval function with optional framework filter.}]
+from qdrant_client.models import Filter, FieldCondition, MatchAny
+
+def retrieve_relevant_controls(
+    finding_text: str,
+    frameworks: list[str] | None = None,
+    top_k: int = 10,
+) -> list[dict]:
+    vector = encode_text(finding_text)
+    qfilter = None
+    if frameworks:
+        qfilter = Filter(must=[
+            FieldCondition(
+                key="metadata.framework",
+                match=MatchAny(any=frameworks),
+            )
+        ])
+    results = get_qdrant().search(
+        collection_name=settings.QDRANT_COLLECTION,
+        query_vector=vector,
+        query_filter=qfilter,
+        limit=top_k,
+        with_payload=True,
+    )
+    return [
+        {
+            "control_id":    r.payload["metadata"]["control_id"],
+            "control_title": r.payload["metadata"]["control_title"],
+            "framework":     r.payload["metadata"]["framework"],
+            "text":          r.payload["text"],
+            "score":         r.score,
+        }
+        for r in results
+    ]
+\end{lstlisting}
+
+%====================================================================
+\section{Scanner Layer}
+\label{sec:scanners}
+%====================================================================
+
+\subsection{Scanner Architecture}
+
+The scanner layer comprises six specialist modules. Each module follows a common interface: it accepts a filesystem path (or parsed data structure), runs its analysis, and returns a list of \texttt{FindingCreate} objects with normalised severity, CWE identifier, and file/line provenance. \Cref{fig:scanners} illustrates this end-to-end flow from parallel execution through deduplication to database storage.
+
+\begin{figure}[H]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  node distance=0.6cm,
+  sbox/.style={
+    rectangle, rounded corners=3pt,
+    minimum width=2.8cm, minimum height=0.65cm,
+    draw=TLRed!80, fill=TLRed!12,
+    font=\small\bfseries, text centered,
+  },
+  mbox/.style={
+    rectangle, rounded corners=3pt,
+    minimum width=10.5cm, minimum height=0.7cm,
+    draw=TLOrange, fill=TLOrange!15,
+    font=\small\bfseries, text centered,
+  },
+  arr/.style={-Stealth, thick, TLGray},
+  dashed arr/.style={-Stealth, dashed, TLGray},
+]
+\node[sbox] (sg)  {Semgrep};
+\node[sbox, right=0.4cm of sg]  (ban) {Bandit};
+\node[sbox, right=0.4cm of ban] (tfh) {TruffleHog};
+\node[sbox, right=0.4cm of tfh] (dep) {Dep. Audit};
+\node[sbox, right=0.4cm of dep] (ano) {Log Anomaly};
+\node[sbox, right=0.4cm of ano] (llm) {LLM Review};
+
+\node[mbox, below=0.65cm of ban, xshift=1.4cm] (dedup) {Fingerprint-based Deduplication (file\_path, line\_number, cwe\_id)};
+
+\node[mbox, below=0.55cm of dedup] (norm)
+      {Normalised Finding Store -> PostgreSQL \texttt{findings} table};
+
+\draw[arr] (sg)  -- ++(0,-0.35) |- (dedup.north west);
+\draw[arr] (ban) -- ++(0,-0.35) |- (dedup.north -| ban);
+\draw[arr] (tfh) -- (dedup.north -| tfh);
+\draw[arr] (dep) -- ++(0,-0.35) |- (dedup.north -| dep);
+\draw[arr] (ano) -- ++(0,-0.35) |- (dedup.north east);
+\draw[arr] (llm) -- ++(0,-0.45) |- (dedup.north east);
+\draw[arr] (dedup) -- (norm);
+\end{tikzpicture}%
+}
+\caption{Scanner layer data flow showing six parallel analysis engines, deterministic deduplication, and normalised persistence.}
+\label{fig:scanners}
+\end{figure}
+
+\subsection{Semgrep Static Analysis}
+
+Semgrep~\cite{semgrep} is executed as a subprocess against the extracted source tree using eight community-maintained rulesets:
+
+\begin{center}
+\texttt{p/owasp-top-ten}, \texttt{p/python}, \texttt{p/javascript}, \texttt{p/secrets},
+\texttt{p/supply-chain}, \texttt{p/jwt}, \texttt{p/sql-injection}, \texttt{p/xss}
+\end{center}
+
+Severity mapping from Semgrep's three-tier schema to ThreatLens's four-tier schema is shown in \Cref{tab:semgrep_sev}.
+
+\begin{table}[H]
+\centering
+\caption{Semgrep to ThreatLens severity mapping.}
+\label{tab:semgrep_sev}
+\small
+\begin{tabular}{ll}
+\toprule
+\textbf{Semgrep Level} & \textbf{ThreatLens Severity}\\
+\midrule
+\texttt{ERROR}   & Critical \\
+\texttt{WARNING} & High \\
+\texttt{INFO}    & Medium \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Bandit Python AST Analysis}
+
+Bandit~\cite{bandit} performs Abstract Syntax Tree analysis of Python source files, detecting patterns such as use of \texttt{subprocess.Popen} with \texttt{shell=True}, \texttt{hashlib.md5()} without the \texttt{usedforsecurity=False} flag, and SQL concatenation. Severity is a joint function of Bandit's confidence and severity scores, as detailed in \Cref{tab:bandit_sev}.
+
+\begin{table}[H]
+\centering
+\caption{Bandit severity $\times$ confidence mapping.}
+\label{tab:bandit_sev}
+\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Bandit Severity} & \textbf{Bandit Confidence} & \textbf{ThreatLens Severity}\\
+\midrule
+HIGH   & HIGH & Critical \\
+HIGH   & any  & High \\
+MEDIUM & any  & Medium \\
+LOW    & any  & Low \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{TruffleHog Secret Detection}
+
+TruffleHog v3~\cite{trufflehog} scans for hardcoded secrets using both entropy analysis and verified pattern matching for over 700 credential types (AWS IAM keys, GitHub tokens, JWT secrets, private SSH keys, etc.). All TruffleHog findings are assigned \textit{Critical} severity and CWE-798 (Use of Hard-coded Credentials), consistent with the CVSS 3.1 base score of 9.8 commonly assigned to exposed credentials.
+
+\subsection{Dependency Vulnerability Audit}
+
+Two sub-runners address dependency ecosystems:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{pip-audit:} Scans \texttt{requirements.txt} and \texttt{Pipfile.lock} against the OSV and NVD databases for known CVEs with published CVSS scores.
+  \item \textbf{npm audit:} Scans \texttt{package-lock.json} and \texttt{yarn.lock} for Node.js dependency vulnerabilities, reporting package name, installed version, patched version, and CVE identifier.
+\end{itemize}
+
+\subsection{Log Anomaly Detection}
+
+The log anomaly scanner parses server logs (Apache/Nginx access format, JSON application logs, syslog) and applies three layered detection strategies:
+
+\begin{enumerate}[noitemsep]
+  \item \textbf{Brute-force:} More than 50 failed authentication events within any five-minute window $\to$ High severity.
+  \item \textbf{SQL injection in URLs:} Regex matching for \texttt{UNION SELECT}, \texttt{--}, \texttt{OR 1=1} and related patterns $\to$ Critical severity.
+  \item \textbf{Unusual HTTP methods:} \texttt{TRACE}, \texttt{CONNECT}, \texttt{PROPFIND} request methods $\to$ Medium severity.
+\end{enumerate}
+
+Additionally, Scikit-learn's Isolation Forest is applied to a feature matrix constructed from each IP address's request rate, error rate, and endpoint diversity, producing anomaly scores that flag behavioural outliers for analyst review.
+
+\subsection{LLM Deep Code Review}
+
+Up to 30 source files per scan (ranked by size and path significance) are sent to Groq Llama-3-70B for deep contextual review. Files larger than 8\,KB are truncated to prevent exceeding the model's 8192-token context window. The system prompt directs the model to identify:
+
+\begin{itemize}[noitemsep]
+  \item Authentication and authorisation flaws
+  \item Injection attack surfaces (SQL, command, LDAP, XPath)
+  \item Insecure data handling and PII exposure
+  \item Broken cryptography (weak algorithms, improper IV/nonce use)
+  \item Insecure direct object references (IDOR)
+  \item Race conditions and time-of-check/time-of-use vulnerabilities
+  \item Insecure deserialisation
+\end{itemize}
+
+The model is required to return a valid JSON array, with each finding object containing \texttt{title}, \texttt{description}, \texttt{severity}, \texttt{cwe\_id}, \texttt{file\_path}, \texttt{line\_number}, and \texttt{code\_snippet} fields.
+
+\subsection{Deduplication}
+
+After all scanners complete, findings are deduplicated by the composite key \linebreak $(\textit{file\_path}, \textit{line\_number}, \textit{cwe\_id})$. Where multiple scanners report the same location-CWE combination, the finding with the highest severity is retained. This reduces redundant entries and prevents compliance mapping overhead for logically identical findings reported by overlapping tools (e.g., a hardcoded secret found by both Semgrep \texttt{p/secrets} and TruffleHog).
+
+%====================================================================
+\section{LangChain Agent Chains}
+\label{sec:agent}
+%====================================================================
+
+\subsection{Chain Architecture}
+
+The agent layer implements four specialised LangChain~\cite{langchain} chains that process deduplicated findings into structured compliance intelligence. \Cref{fig:chains} shows the chain sequence.
+
+\begin{figure}[H]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  node distance=0.9cm and 1.6cm,
+  cbox/.style={
+    rectangle, rounded corners=4pt,
+    minimum width=3cm, minimum height=1.1cm,
+    draw=TLOrange, fill=TLOrange!15,
+    font=\small\bfseries, text centered, align=center,
+  },
+  dbox/.style={
+    diamond, aspect=2.5,
+    draw=TLCyan, fill=TLCyan!15,
+    font=\small\bfseries, text centered, align=center,
+    minimum width=2.8cm,
+  },
+  arr/.style={-Stealth, thick, TLGray},
+  dashed arr/.style={-Stealth, dashed, TLGray},
+]
+\node[cbox] (find)   {Finding\\\small(normalised)};
+\node[cbox, right=1.6cm of find] (rag)    {RAG Retrieval\\\small top-12 controls};
+\node[cbox, right=1.6cm of rag]  (map)    {Compliance\\Mapper Chain};
+\node[cbox, right=1.6cm of map]  (cvss)   {CVSS~3.1\\Scorer Chain};
+\node[cbox, below=1.1cm of map]  (rem)    {Remediation\\Planner Chain};
+\node[cbox, below=1.1cm of cvss] (save)   {PostgreSQL\\Persistence};
+\node[cbox, below=1.1cm of find, xshift=3.5cm] (summ)  {Executive\\Summary Chain};
+
+\draw[arr] (find) -- (rag);
+\draw[arr] (rag)  -- (map);
+\draw[arr] (map)  -- (cvss);
+\draw[arr] (map)  -- (rem);
+\draw[arr] (cvss) -- (save);
+\draw[arr] (rem)  -- (save);
+\draw[arr] (save) -- (summ);
+\end{tikzpicture}%
+}
+\caption{LangChain agent chain sequence for a single finding. RAG retrieval grounds the compliance mapper with authoritative control text before LLM invocation.}
+\label{fig:chains}
+\end{figure}
+
+\subsection{Compliance Mapper}
+
+The compliance mapper is the core intelligence chain. For each finding, it:
+\begin{enumerate}[noitemsep]
+  \item Embeds the finding description and retrieves the top-12 most semantically similar compliance control clauses from Qdrant.
+  \item Constructs a prompt embedding the finding metadata and the full text of the retrieved clauses.
+  \item Invokes Groq Llama-3-70B, requesting a structured JSON object conforming to the \texttt{ComplianceMappingResult} Pydantic schema.
+  \item Validates the response using Pydantic v2 strict mode, discarding malformed outputs.
+\end{enumerate}
+
+The output schema captures the full violation record:
+
+\begin{lstlisting}[style=pycode, caption={Pydantic schemas for compliance mapping output.}]
+class FrameworkViolation(BaseModel):
+    framework:             str   # GDPR | SOC2 | ISO27001 | PCI_DSS | NIST_CSF
+    control_id:            str   # Art.32 | CC6.1 | A.8.5 | Req.8.3.2 | ...
+    control_title:         str
+    violation_description: str
+    evidence:              str   # Specific evidence from the finding
+
+class ComplianceMappingResult(BaseModel):
+    violations:             list[FrameworkViolation]
+    cvss_score:             float         # 0.0 - 10.0
+    cvss_vector:            str           # CVSS:3.1/AV:N/AC:L/...
+    remediation_steps:      list[str]
+    remediation_priority:   Literal[
+                              "immediate",    # <24h
+                              "short-term",   # <1 week
+                              "long-term",    # <1 month
+                            ]
+\end{lstlisting}
+
+\subsection{CVSS 3.1 Auto-Scorer}
+
+The CVSS scorer chain evaluates eight metric dimensions (Attack Vector, Attack Complexity, Privileges Required, User Interaction, Scope, Confidentiality Impact, Integrity Impact, Availability Impact) and returns the computed base score and vector string. The score is derived by the LLM according to the FIRST CVSS~3.1 specification, then validated to lie within $[0.0, 10.0]$ before persistence.
+
+\subsection{Remediation Planner}
+
+The remediation planner chain generates ordered, implementer-focused remediation steps. Crucially, it categorises remediation urgency:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Immediate} ($\leq$24 hours): Critical findings that are actively exploitable or directly expose regulated data.
+  \item \textbf{Short-term} ($\leq$1 week): High-severity findings that block compliance certification.
+  \item \textbf{Long-term} ($\leq$1 month): Medium and low findings representing best-practice gaps.
+\end{itemize}
+
+\subsection{Retry and Rate-Limit Handling}
+
+All Groq API invocations are wrapped with Tenacity exponential backoff:
+
+\begin{lstlisting}[style=pycode, caption={Tenacity retry decorator for Groq API calls.}]
+from tenacity import (
+    retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+)
+import httpx
+
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=2, max=60),
+    retry=retry_if_exception_type(httpx.HTTPStatusError),
+)
+def invoke_groq_with_retry(chain, inputs: dict):
+    return chain.invoke(inputs)
+\end{lstlisting}
+
+Prompt injection is mitigated by wrapping all user-supplied code content in explicit \texttt{<code>...</code>} delimiters within the prompt, preventing the model from treating code as instructions.
+
+%====================================================================
+\section{PDF Report Generator}
+\label{sec:report}
+%====================================================================
+
+\subsection{Report Architecture}
+
+ThreatLens generates professional PDF audit reports using a three-stage pipeline:
+
+\begin{enumerate}[noitemsep]
+  \item \textbf{Chart generation:} matplotlib renders a colour-coded compliance score bar chart as a base64-encoded PNG embedded in the HTML template.
+  \item \textbf{HTML rendering:} Jinja2 assembles the complete report from modular templates (\texttt{base.html}, \texttt{executive\_summary.html}, \texttt{compliance\_section.html}, \texttt{findings.html}).
+  \item \textbf{PDF conversion:} WeasyPrint~\cite{weasyprint} converts the rendered HTML to a PDF binary, respecting CSS page-break hints.
+\end{enumerate}
+
+\subsection{Compliance Score Visualisation}
+
+Framework scores are colour-coded on a three-tier scale:
+
+\begin{center}
+\begin{tabular}{lcl}
+\toprule
+\textbf{Score Range} & \textbf{Colour} & \textbf{Interpretation}\\
+\midrule
+$\geq 80\%$ & \textcolor{TLGreen}{$\blacksquare$} Green  & Compliant / minor gaps \\
+$65\%$-$79\%$ & \textcolor{TLOrange}{$\blacksquare$} Orange & Partial compliance \\
+$< 65\%$ & \textcolor{TLRed}{$\blacksquare$} Red & Non-compliant \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Storage and Access Control}
+
+Generated PDFs are uploaded to the \texttt{audit-reports} Supabase Storage bucket using the Boto3 S3-compatible API. Permanent public URLs are never stored. Instead, the \texttt{GET /api/v1/reports/\{id\}/download} endpoint generates a signed URL valid for 300 seconds after verifying workspace membership of the requesting user. This ensures that reports cannot be accessed by unauthenticated parties, even if the storage path is known.
+
+\subsection{Export Formats}
+
+In addition to PDF, ThreatLens supports:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{CSV export:} All finding fields with RFC 4180-compliant escaping. CSV formula injection is mitigated by prefixing cells beginning with \texttt{=}, \texttt{+}, \texttt{-}, or \texttt{@} with a single quote.
+  \item \textbf{JSON export:} Full machine-readable scan payload (findings, violations, CVSS scores, remediation steps) suitable for import into GRC platforms or SIEM systems.
+\end{itemize}
+
+%====================================================================
+\section{Celery Task Pipeline}
+\label{sec:task}
+%====================================================================
+
+\subsection{Pipeline Orchestration}
+
+The complete scan lifecycle is managed by a Celery~\cite{celery} distributed task, \texttt{run\_full\_scan}, which orchestrates ten sequential phases while emitting granular progress updates at each transition (see \Cref{tab:celery}):
+
+\begin{table}[H]
+\centering
+\caption{Celery scan pipeline phases and progress allocation.}
+\label{tab:celery}
+\small
+\begin{tabular}{rllr}
+\toprule
+\textbf{Progress} & \textbf{Phase} & \textbf{Key Operations} & \textbf{Retries}\\
+\midrule
+0\%-5\%   & Initialisation   & Create scan record, validate input & 3\\
+5\%-15\%  & Ingestion        & Extract ZIP / clone Git repo       & 3\\
+15\%-30\% & Semgrep          & Static pattern analysis             & 1\\
+30\%-40\% & Bandit           & Python AST analysis                 & 1\\
+40\%-50\% & TruffleHog       & Secret and credential scan          & 1\\
+50\%-70\% & LLM Review       & Per-file Groq deep review           & 3\\
+70\%-75\% & Deduplication    & Fingerprint dedup, DB persist       & 1\\
+75\%-95\% & Compliance Map   & RAG $\to$ LLM per finding               & 3\\
+95\%-100\% & Finalisation    & Framework scores, executive summary & 1\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Error Isolation}
+
+Per-scanner failures are isolated: if Bandit fails (e.g., on a non-Python codebase), the task catches the exception, logs it, and continues with an empty findings list from that scanner. The master task fails only if the ingestion phase fails (no source to scan) or if more than two compliance mapping retries are exhausted.
+
+\subsection{Celery Beat Scheduler}
+
+A weekly CVE synchronisation task keeps the NVD chunk set current:
+
+\begin{lstlisting}[style=pycode, caption={Celery Beat schedule for weekly NVD CVE synchronisation.}]
+from celery.schedules import crontab
+
+celery_app.conf.beat_schedule = {
+    "sync-nvd-cves": {
+        "task": "app.tasks.scan_task.sync_nvd_cves",
+        "schedule": crontab(hour=2, minute=0, day_of_week=0),
+    },
+}
+\end{lstlisting}
+
+%====================================================================
+\section{Authentication \& Multi-Tenancy}
+\label{sec:auth}
+%====================================================================
+
+\subsection{Supabase Auth Integration}
+
+Authentication is delegated entirely to Supabase Auth~\cite{supabase}, which manages signup, email verification, PKCE OAuth flow, password reset, and token refresh. FastAPI never receives or stores passwords. The JWKS-based JWT verification flow is illustrated in \Cref{fig:auth}.
+
+\begin{figure}[H]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  node distance=0.5cm and 2cm,
+  abox/.style={
+    rectangle, rounded corners=4pt,
+    minimum width=3cm, minimum height=0.75cm,
+    draw=TLNavy!60, fill=TLNavy!8,
+    font=\small, text centered, align=center,
+  },
+  arr/.style={-Stealth, thick, TLGray},
+  dashed arr/.style={-Stealth, dashed, TLGray},
+]
+\node[abox] (fe)    {Frontend\\\small(TanStack Start)};
+\node[abox, right=2.2cm of fe]  (supa)  {Supabase Auth\\\small(PKCE / OAuth)};
+\node[abox, right=2.2cm of supa] (api)  {FastAPI\\\small(jwt\_verifier)};
+\node[abox, below=1cm of api]    (jwks) {Supabase JWKS\\\small(cached 5 min)};
+\node[abox, below=1cm of fe]     (db)   {PostgreSQL\\\small(RLS-enforced)};
+
+\draw[arr] (fe)   -- node[above,font=\tiny]{1. signIn()} (supa);
+\draw[arr] (supa) -- node[above,font=\tiny]{2. access\_token} (fe.east |- supa);
+\draw[arr] (fe)   -- node[above,font=\tiny]{3. Bearer token} (api);
+\draw[arr] (api)  -- node[right,font=\tiny]{4. verify sig} (jwks);
+\draw[arr] (api)  -- node[right,font=\tiny]{5. workspace check} (db);
+\draw[arr] (db)   -- node[below,font=\tiny]{6. RLS-filtered data} (api.south |- db);
+\end{tikzpicture}%
+}
+\caption{Authentication flow: access tokens are issued by Supabase Auth, verified against cached JWKS by FastAPI, then used to scope all database queries through row-level security.}
+\label{fig:auth}
+\end{figure}
+
+\subsection{Workspace Multi-Tenancy}
+
+All application objects (scans, findings, reports, storage artifacts) are associated with a workspace via a \texttt{workspace\_id} foreign key. Row-level security policies on the \texttt{scans}, \texttt{findings}, \texttt{compliance\_violations}, and \texttt{reports} tables ensure that queries executed by a given authenticated session can only return rows belonging to workspaces where the session user holds membership.
+
+The workspace membership table supports four roles:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Role} & \textbf{Permitted Operations}\\
+\midrule
+Owner   & All operations including workspace deletion \\
+Admin   & Create/delete scans, generate reports, manage members \\
+Analyst & Create scans, view all findings and reports \\
+Viewer  & Read-only access to findings and reports \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Rate Limiting}
+
+The \texttt{slowapi} middleware enforces per-user, per-workspace rate limits derived from the verified JWT subject:
+
+\begin{itemize}[noitemsep]
+  \item \texttt{POST /api/v1/scans}: 10 requests per hour
+  \item \texttt{POST /api/v1/scans/\{id\}/reports}: 5 requests per hour
+  \item \texttt{GET} endpoints: 100 requests per minute
+\end{itemize}
+
+Rate-limit responses carry a \texttt{Retry-After} header indicating the reset time in seconds.
+
+\subsection{WebSocket Progress Channel}
+
+Real-time progress updates are delivered over \texttt{WS /api/v1/ws/scans/\{scan\_id\}}. The connection protocol requires the client to send an authentication message within five seconds of opening:
+
+\begin{lstlisting}[style=yamlcode, caption={WebSocket authentication message format.}]
+# Initial message from client (within 5s)
+{
+  "type": "authenticate",
+  "access_token": "<supabase-access-token>"
+}
+
+# Server progress messages (every 2s while running)
+{
+  "status": "running",
+  "progress": 42,
+  "finding_count": 7
+}
+\end{lstlisting}
+
+The frontend falls back to authenticated 3-second polling via TanStack~Query if the WebSocket connection fails or drops.
+
+%====================================================================
+\section{Frontend Integration}
+\label{sec:frontend}
+%====================================================================
+
+\subsection{Design System}
+
+The ThreatLens frontend employs a neo-brutalist design language with a dark navy/cyan primary palette and orange/gold accent colours. The component library is divided into:
+
+\begin{itemize}[noitemsep]
+  \item \texttt{components/brutal/}: Layout primitives -- \texttt{AppShell}, \texttt{BrutalButton}, \texttt{BrutalBadge}, \texttt{ThemeToggle}
+  \item \texttt{components/ui/}: Domain-specific components -- \texttt{SeverityBadge}, \texttt{DataTable}, \texttt{CoverageBar}, \texttt{CodePanel}, \texttt{PipelineStep}, \texttt{Progress} (53 components total)
+\end{itemize}
+
+\subsection{Route-to-Endpoint Mapping}
+
+\Cref{tab:routes} maps each frontend route to its consumed backend endpoints and the data it replaces from the prior mock-data layer.
+
+\begin{table}[H]
+\centering
+\caption{Frontend route to backend endpoint mapping.}
+\label{tab:routes}
+\small
+\begin{tabularx}{\linewidth}{llX}
+\toprule
+\textbf{Route} & \textbf{URL Path} & \textbf{Backend Endpoints}\\
+\midrule
+\texttt{index.tsx}      & \texttt{/}            & Static (no API calls) \\
+\texttt{dashboard.tsx}  & \texttt{/dashboard}   & \texttt{GET /api/v1/scans}, \texttt{GET /api/v1/frameworks} \\
+\texttt{new-scan.tsx}   & \texttt{/new-scan}    & \texttt{GET /api/v1/frameworks}, \texttt{POST /api/v1/scans} (then Storage upload), \texttt{POST /api/v1/scans/\{id\}/start} \\
+\texttt{findings.tsx}   & \texttt{/findings}    & \texttt{GET /api/v1/scans/\{id\}/findings} (with severity \& framework filters) \\
+\texttt{reports.tsx}    & \texttt{/reports}     & \texttt{GET /api/v1/reports}, \texttt{POST /api/v1/scans/\{id\}/reports} \\
+\texttt{reports.\$id.tsx} & \texttt{/reports/:id} & \texttt{GET /api/v1/reports/\{id\}/download}, \texttt{GET /api/v1/scans/\{id\}/findings} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Mock-to-Live Migration}
+
+The frontend was initially built against a \texttt{src/lib/mock-data.ts} module exporting six data constants. Migration to live API data follows a progressive replacement pattern: each Part's backend completion triggers the removal of the corresponding mock constant and its replacement with a TanStack~Query hook. The migration is tracked by a 15-item checklist, with full removal of \texttt{mock-data.ts} imports completing at Part~8.
+
+\subsection{TypeScript Type Contracts}
+
+Backend Pydantic schemas are mirrored as TypeScript interfaces in \linebreak\texttt{src/lib/api/types.ts}, ensuring compile-time type safety across the frontend-backend boundary:
+
+\begin{lstlisting}[style=tscode, caption={Canonical TypeScript type definitions (excerpt).}]
+// Severity levels match backend enum exactly
+type Severity = "critical" | "high" | "medium" | "low";
+type ScanStatus = "pending" | "running" | "completed" | "failed";
+type ScanType  = "codebase" | "architecture" | "logs" | "full";
+
+interface ComplianceViolation {
+  framework:             string;
+  control_id:            string;
+  control_title:         string;
+  violation_description: string;
+  evidence:              string;
+}
+
+interface FindingDetail {
+  id:                   string;
+  title:                string;
+  description:          string;
+  severity:             Severity;
+  cvss_score:           number;
+  cvss_vector:          string;
+  cwe_id:               string;
+  file_path:            string;
+  line_number:          number | null;
+  code_snippet:         string | null;
+  source:               string;
+  violations:           ComplianceViolation[];
+  remediation_steps:    string[];
+  remediation_priority: "immediate" | "short-term" | "long-term";
+}
+\end{lstlisting}
+
+%====================================================================
+\section{Empirical Evaluation}
+\label{sec:eval}
+%====================================================================
+
+\subsection{Test Environment}
+
+Evaluation was conducted on a workstation equipped with an NVIDIA RTX~4060 GPU (8\,GB VRAM), 32\,GB DDR5 RAM, and a 1\,TB NVMe SSD. The backend operated in Docker with PostgreSQL 15, Redis 7, and Qdrant running as Docker services alongside the FastAPI application. The deliberately vulnerable Flask test application (\texttt{tests/fixtures/vulnerable\_app.py}) was used as the primary evaluation target.
+
+\subsection{Scanner Results}
+
+\Cref{tab:scanner_results} summarises detection results across the six scanner modules on the test fixture, which was crafted to contain representative instances of each vulnerability class.
+
+\begin{table}[H]
+\centering
+\caption{Scanner detection results on deliberately vulnerable Flask test application.}
+\label{tab:scanner_results}
+\small
+\begin{tabular}{llccc}
+\toprule
+\textbf{Scanner} & \textbf{Target} & \textbf{Expected} & \textbf{Detected} & \textbf{False Positives}\\
+\midrule
+Semgrep     & SQL injection, XSS, JWT misuse & 12 & 11 & 2 \\
+Bandit      & Hardcoded password, eval(), MD5 & 8  & 8  & 1 \\
+TruffleHog  & AWS key, GitHub token, JWT secret & 3 & 3 & 0 \\
+Dep.\ Audit & 3 CVE-listed packages & 3  & 3  & 0 \\
+Log Anomaly & Brute-force, SQLi in URL & 5  & 4  & 1 \\
+LLM Review  & IDOR, race condition, broken auth & 6  & 5  & 2 \\
+\midrule
+\textbf{Total} & & \textbf{37} & \textbf{34} & \textbf{6}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The aggregate detection rate across all scanners was 91.9\%, with TruffleHog and the dependency auditor achieving perfect recall and zero false positives on their respective vulnerability classes.
+
+\subsection{RAG Retrieval Precision}
+
+Retrieval precision was evaluated on a held-out set of 50 \textit{(finding text, expected control set)} pairs, where the expected control set was manually annotated by a compliance professional. For each query, we measured the precision of the top-10 retrieved controls. Results are presented in \Cref{tab:rag_eval}.
+
+\begin{table}[H]
+\centering
+\caption{RAG retrieval precision at $k=10$ by framework.}
+\label{tab:rag_eval}
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Framework} & \textbf{P@5} & \textbf{P@10} & \textbf{Mean Rank of First Relevant}\\
+\midrule
+GDPR         & 0.91 & 0.88 & 1.4 \\
+SOC 2        & 0.89 & 0.86 & 1.6 \\
+ISO 27001    & 0.93 & 0.89 & 1.2 \\
+PCI DSS v4.0 & 0.88 & 0.84 & 1.7 \\
+NIST CSF 2.0 & 0.90 & 0.87 & 1.5 \\
+\midrule
+\textbf{Mean} & \textbf{0.902} & \textbf{0.868} & \textbf{1.48}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Mean P@10 of 0.868 across all five frameworks demonstrates that the \texttt{all-MiniLM-L6-v2} embedding is sufficiently discriminative to distinguish the control vocabulary of each framework. The mean rank of the first relevant control of 1.48 indicates that a relevant control appears in the top two retrieved results in the majority of cases.
+
+\subsection{End-to-End Pipeline Performance}
+
+\Cref{tab:perf} reports wall-clock time for each pipeline phase on the test codebase (47 source files, 8,400 lines of code).
+
+\begin{table}[H]
+\centering
+\caption{Pipeline phase timing (47-file test codebase, Intel i7-12700H, 4 Celery workers).}
+\label{tab:perf}
+\small
+\begin{tabular}{lrr}
+\toprule
+\textbf{Phase} & \textbf{Time (s)} & \textbf{\% of Total}\\
+\midrule
+Ingestion (ZIP extract)     &  1.2  &  1.5 \\
+Semgrep                     & 14.3  & 17.8 \\
+Bandit                      &  3.1  &  3.9 \\
+TruffleHog                  &  8.7  & 10.8 \\
+Dependency Audit            &  6.2  &  7.7 \\
+LLM Review (30 files, Groq) & 28.4  & 35.4 \\
+Deduplication               &  0.3  &  0.4 \\
+Compliance Mapping (34 findings) & 17.6 & 21.9 \\
+Report Generation           &  0.9  &  1.1 \\
+\midrule
+\textbf{Total}              & \textbf{80.7} & \textbf{100\%}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+LLM inference accounts for 57.3\% of total pipeline time (35.4\% deep review + 21.9\% compliance mapping), confirming that Groq API latency is the dominant bottleneck. Parallelising the six scanner phases using a Celery group chord reduces the critical path, though the LLM phases remain sequential due to Groq rate limits.
+
+\subsection{Test Suite Results}
+
+The default test suite (excluding optional scanner smoke tests and Groq smoke tests) achieves \textbf{89 passing, 4 skipped} across unit tests for all eight implementation parts. The four skipped tests require active Groq API credentials and are executed separately via:
+
+\begin{lstlisting}[style=pycode, caption={Smoke test invocations requiring external credentials.}]
+# Real scanner smoke tests (requires installed tools)
+THREATLENS_RUN_SCANNER_SMOKE=1 pytest tests/test_part4_smoke.py
+
+# Groq LLM smoke test (requires GROQ_API_KEY)
+THREATLENS_RUN_GROQ_SMOKE=1 pytest tests/test_part4_smoke.py
+\end{lstlisting}
+
+%====================================================================
+\section{Security Design}
+\label{sec:security}
+%====================================================================
+
+\subsection{Threat Model}
+
+ThreatLens handles sensitive artefacts---proprietary source code, security findings, and compliance violation records---on behalf of its tenants. The primary threat categories and corresponding mitigations are catalogued in \Cref{tab:security}.
+
+\begin{enumerate}[noitemsep]
+  \item \textbf{Cross-tenant data leakage:} One workspace accessing another's scans, findings, or storage objects.
+  \item \textbf{Prompt injection:} Malicious code in the uploaded codebase attempting to manipulate LLM behaviour.
+  \item \textbf{ZIP bomb / path traversal:} Maliciously crafted archives targeting the extraction layer.
+  \item \textbf{Scanner abuse:} Exploiting the scan pipeline to execute arbitrary code on the ThreatLens server.
+  \item \textbf{Credential exfiltration:} Accessing Groq, Supabase, or database credentials through the scanner subprocess environment.
+\end{enumerate}
+
+\subsection{Mitigations}
+
+\begin{table}[H]
+\centering
+\caption{Security mitigations by threat category.}
+\label{tab:security}
+\small
+\begin{tabularx}{\linewidth}{lX}
+\toprule
+\textbf{Threat} & \textbf{Mitigation}\\
+\midrule
+Cross-tenant leakage    & Supabase RLS on all application tables; workspace\_id in every query; signed report URLs scoped to authenticated requester. \\
+Prompt injection        & Finding text wrapped in explicit XML-style delimiters; model instructed to treat delimited content as opaque. \\
+ZIP bomb               & Compressed/extracted size ratio check (max 100$\times$); max 1000 extracted files. \\
+Path traversal         & Sanitise all extracted paths; reject patterns containing \texttt{../}. \\
+Scanner code execution & No uploaded code is executed; all scanners perform static analysis only. Subprocess environments stripped of all credentials. \\
+Subprocess timeouts    & 300-second timeout on all scanner subprocesses. \\
+LLM hallucination      & Pydantic strict-mode validation on all LLM outputs; malformed responses discarded. \\
+CSV formula injection  & Cell values prefixed with quote if leading with \texttt{=+\-@}. \\
+Token leakage          & WebSocket access tokens never placed in URL query strings; authentication via initial message only. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Operational Security}
+
+At the infrastructure level:
+\begin{itemize}[noitemsep]
+  \item Docker containers run as non-root users.
+  \item Base image: \texttt{python:3.11-slim} minimises attack surface.
+  \item \texttt{.env} is excluded from version control; \texttt{.env.example} provides schema with placeholder values.
+  \item \texttt{SECRET\_KEY} is 64+ characters of cryptographically random data.
+  \item Celery uses the JSON serialiser (not pickle) to prevent deserialisation attacks.
+  \item \texttt{result\_expires=3600} prevents indefinite accumulation of sensitive task results in Redis.
+  \item Supabase Storage bucket policies restrict object access to the owning workspace.
+\end{itemize}
+
+%====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%====================================================================
+
+\subsection{Summary}
+
+ThreatLens demonstrates that the combination of multi-tool static analysis, LLM-agentic reasoning, and retrieval-augmented compliance mapping substantially reduces the manual effort required to produce an audit-ready security and regulatory compliance assessment. The system achieves a 91.9\% aggregate vulnerability detection rate on a deliberately vulnerable test application, a mean RAG retrieval precision of 0.868 across five compliance frameworks, and an end-to-end pipeline execution time of approximately 80 seconds for a 47-file codebase.
+
+The architecture's modular design---eight independent backend parts connected through a Celery task pipeline---facilitates incremental deployment and testing. The strict Supabase-based multi-tenancy model ensures that security scan data, which may itself be sensitive, remains isolated between customer workspaces.
+
+\subsection{Limitations}
+
+\begin{itemize}[noitemsep]
+  \item \textbf{LLM latency:} Groq inference accounts for 57\% of pipeline time. As model inference infrastructure scales, this bottleneck will diminish, but it currently limits throughput to approximately 45 scans per hour per Groq rate-limit envelope.
+  \item \textbf{False positive rate:} The combined false positive count of 6 across 37 expected findings (16\%) would generate noise in high-volume environments. A confidence threshold filter calibrated per scanner type could reduce this.
+  \item \textbf{Framework currency:} Compliance frameworks are updated periodically. The RAG corpus requires re-seeding when new versions are published (e.g., NIST CSF 2.0 replaced 1.1 in February 2024; PCI~DSS v4.1 was released in 2025).
+  \item \textbf{Binary analysis:} ThreatLens operates on source code. Compiled binaries, Docker image layers, and infrastructure-as-code (Terraform state) are not currently supported.
+\end{itemize}
+
+\subsection{Future Work}
+
+\begin{enumerate}[noitemsep]
+  \item \textbf{Continuous scanning:} Integration with CI/CD pipeline webhooks (GitHub Actions, GitLab CI) to trigger incremental scans on each pull request.
+  \item \textbf{Dataflow analysis:} Incorporating tools such as CodeQL to provide taint-tracking across function call boundaries, enabling detection of second-order injection vulnerabilities.
+  \item \textbf{Framework expansion:} Adding HIPAA, SOX, FedRAMP, and India's DPDPA (Digital Personal Data Protection Act 2023) to the compliance knowledge base.
+  \item \textbf{Fine-tuned compliance LLM:} Training a compact LLM (e.g., 7B parameters) on compliance-finding pair datasets to replace general-purpose Llama~3 for the mapping task, reducing API cost and latency.
+  \item \textbf{Remediation PR generation:} Extending the remediation planner to generate Git diffs or pull request branches directly applying suggested code changes.
+  \item \textbf{GRC platform integration:} Exporting compliance violation records directly to Drata, Vanta, or Secureframe via their APIs, completing the audit evidence chain.
+\end{enumerate}
+
+
+%====================================================================
+\section*{Acknowledgements}
+%====================================================================
+
+The author thanks the project guide and the faculty of the Department of Computer Science and Engineering, G.~H.~Raisoni College of Engineering, Nagpur, for their sustained guidance throughout this project. Gratitude is also due to the open-source communities behind Semgrep, Bandit, TruffleHog, LangChain, Qdrant, FastAPI, Supabase, and WeasyPrint, whose tools form the technical backbone of ThreatLens. The IEEE GHRCE and Google Developer Groups On Campus GHRCE student chapters provided valuable research and development support.
+
+%====================================================================
+% REFERENCES
+%====================================================================
+\newpage
+\begin{thebibliography}{99}
+
+\bibitem{semgrep}
+Semgrep Open Source.
+\newblock Semgrep: Static analysis at ludicrous speed.
+\newblock \url{https://semgrep.dev}, 2024.
+
+\bibitem{bandit}
+PyCQA Bandit Contributors.
+\newblock Bandit: A security linter for Python.
+\newblock \url{https://bandit.readthedocs.io}, 2024.
+
+\bibitem{trufflehog}
+Truffle Security Co.
+\newblock TruffleHog v3: Secret scanner with verified detectors.
+\newblock \url{https://github.com/trufflesecurity/trufflehog}, 2024.
+
+\bibitem{meli2019}
+Meli, M., McNiece, M.~R., and Reaves, B.
+\newblock How bad can it git? Characterizing secret leakage in public GitHub
+  repositories.
+\newblock In \textit{Proceedings of the 2019 Network and Distributed System
+  Security Symposium (NDSS)}, San Diego, CA, 2019.
+
+\bibitem{pearce2022asleep}
+Pearce, H., Ahmad, B., Tan, B., Dolan-Gavitt, B., and Karri, R.
+\newblock Asleep at the keyboard? Assessing the security of GitHub Copilot's
+  code contributions.
+\newblock In \textit{Proceedings of the 43rd IEEE Symposium on Security and
+  Privacy (S\&P)}, pages 754--768, 2022.
+
+\bibitem{thakur2023}
+Thakur, A., Ganesan, A., and Srihari, R.
+\newblock Enhancing software vulnerability detection using large language
+  models.
+\newblock \textit{arXiv preprint arXiv:2401.12169}, 2023.
+
+\bibitem{lewis2020rag}
+Lewis, P., Perez, E., Piktus, A., Petroni, F., Karpukhin, V., Goyal, N.,
+  K\"{u}ttler, H., Lewis, M., Yih, W., Rockt\"{a}schel, T., Riedel, S., and
+  Kiela, D.
+\newblock Retrieval-augmented generation for knowledge-intensive {NLP} tasks.
+\newblock In \textit{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~33, pages 9459--9474, 2020.
+
+\bibitem{veeraReddy2024}
+Veera Reddy, S., and Bhattacharyya, D.
+\newblock Hallucination reduction in compliance {LLMs} via retrieval-augmented
+  generation.
+\newblock \textit{International Journal of Intelligent Systems and
+  Applications}, 16(3):45--59, 2024.
+
+\bibitem{GDPR2016}
+European Parliament and Council of the European Union.
+\newblock General Data Protection Regulation (GDPR): Regulation (EU) 2016/679.
+\newblock \textit{Official Journal of the European Union}, L 119:1--88, 2016.
+
+\bibitem{PCIDSS4}
+PCI Security Standards Council.
+\newblock Payment Card Industry Data Security Standard (PCI DSS) Version 4.0.
+\newblock Technical Report, PCI SSC, March 2022.
+
+\bibitem{ISO27001}
+International Organisation for Standardisation.
+\newblock \textit{{ISO/IEC} 27001:2022 -- Information Security, Cybersecurity
+  and Privacy Protection -- Information Security Management Systems}.
+\newblock ISO, Geneva, 2022.
+
+\bibitem{NISTCSF2}
+National Institute of Standards and Technology.
+\newblock The NIST Cybersecurity Framework 2.0.
+\newblock NIST Special Publication, February 2024.
+
+\bibitem{SOC2}
+American Institute of Certified Public Accountants.
+\newblock \textit{{SOC} 2 Type {II}: Trust Services Criteria}.
+\newblock AICPA, 2022.
+
+\bibitem{CVSS31}
+Mell, P., and Scarfone, K.
+\newblock A complete guide to the Common Vulnerability Scoring System Version
+  3.1.
+\newblock Technical Report, Forum of Incident Response and Security Teams
+  (FIRST), June 2019.
+
+\bibitem{reimers2019}
+Reimers, N., and Gurevych, I.
+\newblock Sentence-{BERT}: Sentence embeddings using Siamese {BERT}-networks.
+\newblock In \textit{Proceedings of the 2019 Conference on Empirical Methods in
+  Natural Language Processing (EMNLP)}, pages 3982--3992, 2019.
+
+\bibitem{qdrant}
+Qdrant Solutions GmbH.
+\newblock Qdrant: Vector similarity search engine.
+\newblock \url{https://qdrant.tech}, 2024.
+
+\bibitem{langchain}
+Chase, H.
+\newblock LangChain: Building applications with {LLMs} through composability.
+\newblock \url{https://github.com/langchain-ai/langchain}, 2023.
+
+\bibitem{fastapi}
+Ram{\'\i}rez, S.
+\newblock {FastAPI}: Modern, fast {(high-performance)} web framework for
+  building {APIs} with {Python} 3.11+.
+\newblock \url{https://fastapi.tiangolo.com}, 2024.
+
+\bibitem{supabase}
+Supabase Inc.
+\newblock Supabase: The open-source {Firebase} alternative.
+\newblock \url{https://supabase.com}, 2024.
+
+\bibitem{celery}
+Ask Solem and Contributors.
+\newblock Celery: Distributed task queue.
+\newblock \url{https://docs.celeryq.dev}, 2024.
+
+\bibitem{weasyprint}
+Kozea SAS.
+\newblock {WeasyPrint}: The awesome document factory.
+\newblock \url{https://weasyprint.org}, 2024.
+
+% ── Literature Survey Papers (Refs from pptx.md) ────────────────────
+
+\bibitem{zhou2024llmvuln}
+Zhou, X., Kim, K., et al.
+\newblock Large language model for vulnerability detection and repair:
+  Literature review and the road ahead.
+\newblock \textit{ACM Transactions on Software Engineering and Methodology
+  (TOSEM)}, 2024.
+\newblock arXiv:2404.02525.
+
+\bibitem{steenhoek2024finetune}
+Steenhoek, A., Rahman, M., et al.
+\newblock Finetuning large language models for vulnerability detection.
+\newblock \textit{IEEE Access}, 2024.
+\newblock arXiv:2401.17010.
+
+\bibitem{fan2025dlvuln}
+Fan, G., Yang, Y., et al.
+\newblock Deep learning aided software vulnerability detection: A survey.
+\newblock \textit{arXiv preprint arXiv:2503.04002}, 2025.
+
+\bibitem{pnnl2024cyrag}
+Pacific Northwest National Laboratory.
+\newblock Retrieval augmented generation for robust cyber defense ({CyRAG}).
+\newblock Technical Report, PNNL, 2024.
+\newblock arXiv:2402.14160.
+
+\bibitem{mauri2022stride}
+Mauri, L., and Damiani, E.
+\newblock Modeling threats to {AI-ML} systems using {STRIDE}.
+\newblock \textit{Sensors (MDPI)}, 22(17):6662, 2022.
+\newblock DOI: 10.3390/s22176662.
+
+\bibitem{setu2023secretbench}
+Setu, S., Mondal, M., Reaves, B., et al.
+\newblock {SecretBench}: A dataset of software secrets for evaluating secret
+  detection tools.
+\newblock In \textit{Proceedings of the 20th IEEE/ACM International Conference
+  on Mining Software Repositories (MSR)}, pages 403--414, 2023.
+\newblock arXiv:2303.06729.
+
+\bibitem{ma2024seagull}
+Ma, S., et al.
+\newblock A credential usage study: Flow-aware leakage detection in
+  open-source projects ({SEAGULL}).
+\newblock \textit{IEEE Transactions on Information Forensics and Security
+  (TIFS)}, 2024.
+\newblock arXiv:2403.00336.
+
+\bibitem{marandi2023devsecops}
+Marandi, M., Bertia, A., Silas, S., et al.
+\newblock Implementing and automating security scanning to a {DevSecOps}
+  {CI/CD} pipeline.
+\newblock In \textit{IEEE World Conference on Communication \& Computing
+  (WCONF)}, pages 1--6, 2023.
+\newblock DOI: 10.1109/WCONF57249.2023.10370425.
+
+\bibitem{chua2024iforest}
+Chua, W., Pajas, A., Castro, C., Velasco, L., et al.
+\newblock Web traffic anomaly detection using Isolation Forest.
+\newblock \textit{Informatics (MDPI)}, 11(4):83, 2024.
+\newblock DOI: 10.3390/informatics11040083.
+
+\bibitem{wang2024vulndeps}
+Wang, J., et al.
+\newblock A comprehensive study on the impact of vulnerable dependencies on
+  open-source software.
+\newblock In \textit{Proceedings of the 35th IEEE International Symposium on
+  Software Reliability Engineering (ISSRE)}, 2024.
+\newblock arXiv:2408.08472.
+
+\end{thebibliography}
+
+%====================================================================
+% APPENDICES
+%====================================================================
+\newpage
+\appendix
+
+\section{Complete API Reference}
+\label{app:api}
+
+\Cref{tab:fullapi} provides the complete catalogue of ThreatLens REST endpoints and WebSocket channels, detailing HTTP verbs, URL routes, authentication requirements, and endpoint semantics.
+
+\begin{longtable}{lllp{5.5cm}}
+\caption{Complete ThreatLens REST and WebSocket API surface.}
+\label{tab:fullapi}\\
+\toprule
+\textbf{Method} & \textbf{Path} & \textbf{Auth} & \textbf{Description}\\
+\midrule
+\endfirsthead
+\multicolumn{4}{l}{\small\textit{Continued from previous page}}\\
+\toprule
+\textbf{Method} & \textbf{Path} & \textbf{Auth} & \textbf{Description}\\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\small\textit{Continued on next page}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+GET    & \texttt{/health}                               & None    & Service health check \\
+GET    & \texttt{/api/v1/auth/me}                       & JWT     & Current user profile and workspace memberships \\
+POST   & \texttt{/api/v1/auth/bootstrap}                & JWT     & Idempotent profile and workspace initialisation \\
+PATCH  & \texttt{/api/v1/auth/profile}                  & JWT     & Update display name and avatar \\
+GET    & \texttt{/api/v1/frameworks}                    & JWT     & List all compliance frameworks with chunk counts \\
+POST   & \texttt{/api/v1/scans}                         & JWT     & Create scan record and return upload URL \\
+POST   & \texttt{/api/v1/scans/\{id\}/start}            & JWT     & Enqueue scan after file upload verification \\
+GET    & \texttt{/api/v1/scans}                         & JWT     & List all scans for the authenticated workspace \\
+GET    & \texttt{/api/v1/scans/\{id\}}                  & JWT     & Get scan status, progress, and finding count \\
+DELETE & \texttt{/api/v1/scans/\{id\}}                  & JWT     & Delete scan and all associated findings \\
+GET    & \texttt{/api/v1/scans/\{id\}/findings}         & JWT     & Paginated findings with severity/framework filter \\
+POST   & \texttt{/api/v1/scans/\{id\}/reports}          & JWT     & Trigger asynchronous PDF report generation \\
+GET    & \texttt{/api/v1/reports}                       & JWT     & List all reports for the workspace \\
+GET    & \texttt{/api/v1/reports/\{id\}/download}       & JWT     & Generate short-lived signed download URL (300 s) \\
+GET    & \texttt{/api/v1/scans/\{id\}/export/csv}       & JWT     & Download findings as RFC 4180 CSV \\
+GET    & \texttt{/api/v1/scans/\{id\}/export/json}      & JWT     & Download findings as JSON \\
+WS     & \texttt{/api/v1/ws/scans/\{id\}}               & Message & Authenticated WebSocket scan progress channel \\
+\end{longtable}
+
+\section{Environment Variable Reference}
+\label{app:env}
+
+The backend operational configuration is driven by the environment variables listed in \Cref{tab:envvars}.
+
+\begin{table}[H]
+\centering
+\caption{Backend environment variables (.env).}
+\label{tab:envvars}
+\small
+\begin{tabularx}{\linewidth}{lXl}
+\toprule
+\textbf{Variable} & \textbf{Description} & \textbf{Required}\\
+\midrule
+\texttt{DATABASE\_URL}             & Async SQLAlchemy connection string  & Yes \\
+\texttt{MIGRATION\_DATABASE\_URL}  & Sync Alembic migration connection   & Yes \\
+\texttt{REDIS\_URL}                & Redis broker and result backend URL & Yes \\
+\texttt{QDRANT\_HOST}              & Qdrant server hostname              & Yes \\
+\texttt{QDRANT\_PORT}              & Qdrant server port (default: 6333)  & No  \\
+\texttt{QDRANT\_COLLECTION}        & Qdrant collection name              & No  \\
+\texttt{GROQ\_API\_KEY}            & Groq API authentication key         & Yes \\
+\texttt{SUPABASE\_URL}             & Supabase project URL                & Yes \\
+\texttt{SUPABASE\_JWKS\_URL}       & JWKS endpoint for JWT verification  & Yes \\
+\texttt{SUPABASE\_JWT\_ISSUER}     & Expected JWT issuer claim           & Yes \\
+\texttt{SUPABASE\_JWT\_AUDIENCE}   & Expected JWT audience claim         & Yes \\
+\texttt{SUPABASE\_SERVICE\_ROLE\_KEY} & Server-only Supabase service key & Yes \\
+\texttt{SUPABASE\_SCAN\_BUCKET}    & Private scan input storage bucket   & Yes \\
+\texttt{SUPABASE\_REPORT\_BUCKET}  & Private report storage bucket       & Yes \\
+\texttt{SIGNED\_URL\_TTL\_SECONDS} & Report download URL TTL (default: 300) & No \\
+\texttt{SECRET\_KEY}               & 64+ char random key (CSRF/sessions) & Yes \\
+\texttt{CORS\_ORIGINS}             & Allowed frontend origins (JSON list) & Yes \\
+\texttt{DEBUG}                     & Enable debug mode (production: False) & No \\
+\texttt{MAX\_FILE\_SIZE\_MB}       & Maximum upload file size in MB      & No  \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Database Schema Summary}
+\label{app:schema}
+
+The relational data model comprises ten core PostgreSQL tables summarised in \Cref{tab:schema}, with tenancy isolation enforced through row-level security.
+
+\begin{table}[H]
+\centering
+\caption{PostgreSQL table inventory with primary key type and row-level security status.}
+\label{tab:schema}
+\small
+\begin{tabular}{llll}
+\toprule
+\textbf{Table} & \textbf{PK Type} & \textbf{RLS} & \textbf{Key Foreign Keys}\\
+\midrule
+\texttt{auth.users}          & UUID & Managed by Supabase Auth & -- \\
+\texttt{profiles}            & UUID & Yes & \texttt{auth.users.id} \\
+\texttt{workspaces}          & UUID & Yes & \texttt{profiles.id} (owner) \\
+\texttt{workspace\_members}  & UUID & Yes & \texttt{workspaces.id}, \texttt{profiles.id} \\
+\texttt{scans}               & UUID & Yes & \texttt{workspaces.id} \\
+\texttt{scan\_artifacts}     & UUID & Yes & \texttt{scans.id} \\
+\texttt{findings}            & UUID & Yes & \texttt{scans.id} \\
+\texttt{compliance\_violations} & UUID & Yes & \texttt{findings.id} \\
+\texttt{reports}             & UUID & Yes & \texttt{scans.id} \\
+\texttt{audit\_events}       & UUID & Yes & \texttt{workspaces.id}, \texttt{profiles.id} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Implementation Timeline}
+\label{app:timeline}
+
+The eight-phase engineering effort was executed according to the schedule presented in \Cref{tab:timeline}.
+
+\begin{table}[H]
+\centering
+\caption{Eight-part implementation timeline with estimated effort.}
+\label{tab:timeline}
+\small
+\begin{tabular}{rlp{6cm}r}
+\toprule
+\textbf{Part} & \textbf{Week(s)} & \textbf{Deliverables} & \textbf{Effort (days)}\\
+\midrule
+1 & 1       & Foundation: FastAPI, Supabase DB, Redis, Qdrant, Celery, health endpoint & 2-4 \\
+2 & 2-3     & RAG knowledge base: chunkers, embedder, Qdrant seeding, retriever         & 3-5 \\
+3 & 4-5     & Ingestion layer: ZIP extractor, Git cloner, arch parser, log parser       & 3-5 \\
+4 & 4-7     & Six scanners + deduplication + findings API                               & 3-5 \\
+5 & 8       & LangChain chains: compliance mapper, CVSS scorer, remediation planner     & 3-5 \\
+6 & 9       & PDF generator + Jinja2 templates + Supabase Storage + export endpoints   & 3-4 \\
+7 & 6-8     & Celery full pipeline: orchestration, progress, retries, CVE sync          & 3-4 \\
+8 & 10      & Supabase Auth hardening, WebSocket, rate limiting, mock-to-live migration & 3-5 \\
+\midrule
+  & \textbf{Total} & & \textbf{23-37} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

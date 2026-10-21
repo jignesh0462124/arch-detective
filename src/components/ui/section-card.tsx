@@ -17,7 +17,7 @@ export interface SectionCardProps {
 const VARIANT: Record<NonNullable<SectionCardProps["variant"]>, string> = {
   default: "bg-card text-card-foreground",
   muted: "bg-secondary text-foreground",
-  dark: "bg-ink text-cream dark:bg-card dark:text-card-foreground",
+  dark: "bg-ink text-white dark:bg-card dark:text-card-foreground",
   primary: "bg-primary text-primary-foreground",
 };
 
@@ -47,7 +47,7 @@ export function SectionCard({
   return (
     <div
       className={cn(
-        "overflow-hidden",
+        "overflow-hidden min-w-0 w-full",
         frame === "outlined" ? "rounded-sm hairline" : "rounded-none border-y border-border",
         VARIANT[variant],
         className,
@@ -56,19 +56,19 @@ export function SectionCard({
       {hasHeader ? (
         <div
           className={cn(
-            "flex items-start justify-between gap-3 px-5 py-4 sm:px-6",
-            isDark && "border-b hairline-soft border-cream/15 dark:border-border",
+            "flex flex-col gap-3 px-5 py-4 sm:px-6 md:flex-row md:items-start md:justify-between",
+            isDark && "border-b hairline-soft border-white/15 dark:border-border",
             isPrimary && "border-b border-primary-foreground/15",
             !isDark && !isPrimary && "border-b hairline-soft",
           )}
         >
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             {eyebrow ? (
               <div
                 className={cn(
                   "section-title",
                   isDark
-                    ? "text-cream/70 dark:text-muted-foreground"
+                    ? "text-white/70 dark:text-muted-foreground"
                     : isPrimary
                       ? "opacity-80"
                       : "text-muted-foreground",
@@ -77,12 +77,16 @@ export function SectionCard({
                 {eyebrow}
               </div>
             ) : null}
-            {title ? <h3 className="mt-1 text-[22px] font-medium leading-tight">{title}</h3> : null}
+            {title ? (
+              <h3 className="mt-1 text-lg sm:text-[22px] font-medium leading-snug break-words overflow-wrap-anywhere">
+                {title}
+              </h3>
+            ) : null}
             {description ? (
               <p
                 className={cn(
-                  "mt-1 text-sm",
-                  isDark ? "text-cream/70 dark:text-muted-foreground" : "text-muted-foreground",
+                  "mt-1 text-sm break-words overflow-wrap-anywhere",
+                  isDark ? "text-white/70 dark:text-muted-foreground" : "text-muted-foreground",
                 )}
               >
                 {description}
@@ -90,14 +94,14 @@ export function SectionCard({
             ) : null}
           </div>
           {actions || headerExtra ? (
-            <div className="flex shrink-0 items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 md:shrink-0 md:justify-end md:max-w-[45%]">
               {actions}
               {headerExtra}
             </div>
           ) : null}
         </div>
       ) : null}
-      {children ? <div className={PADDING[padding]}>{children}</div> : null}
+      {children ? <div className={cn(PADDING[padding], "min-w-0")}>{children}</div> : null}
     </div>
   );
 }

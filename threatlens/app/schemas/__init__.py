@@ -10,6 +10,7 @@ from app.schemas.finding import (
     ComplianceViolationResponse,
     FindingCreate,
     FindingDetailResponse,
+    FindingListResponse,
     FindingResponse,
 )
 from app.schemas.report import ReportDownloadResponse, ReportResponse
@@ -32,6 +33,7 @@ __all__ = [
     "CurrentUserResponse",
     "FindingCreate",
     "FindingDetailResponse",
+    "FindingListResponse",
     "FindingResponse",
     "ProfileResponse",
     "ProfileUpdate",

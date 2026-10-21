@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="docs/logo.png" alt="Archon logo" width="140" />
+  <img src=".github/brand/archon-3d-mark.svg" alt="Archon logo" width="140" />
   <h1>Archon</h1>
   <p><strong>Agentic Compliance & Threat Modeling Audit Engine</strong></p>
   <p>
@@ -8,12 +8,12 @@
 
   <br/>
 
-  <a href="#-quick-start"><img src="https://img.shields.io/badge/Quick_Start-▶-00d1b2?style=for-the-badge" alt="Quick Start" /></a>
-  <a href="#-tech-stack"><img src="https://img.shields.io/badge/Stack-React_+_FastAPI-61dafb?style=for-the-badge" alt="Tech Stack" /></a>
-  <a href="#-documentation"><img src="https://img.shields.io/badge/Docs-18_Files-blueviolet?style=for-the-badge" alt="Documentation" /></a>
-  <a href="#-project-graph"><img src="https://img.shields.io/badge/Graph-Graphify-ff6b6b?style=for-the-badge" alt="Graphify" /></a>
+<a href="#-quick-start"><img src="https://img.shields.io/badge/Quick_Start-▶-00d1b2?style=for-the-badge" alt="Quick Start" /></a>
+<a href="#-tech-stack"><img src="https://img.shields.io/badge/Stack-React_+_FastAPI-61dafb?style=for-the-badge" alt="Tech Stack" /></a>
+<a href="#-documentation"><img src="https://img.shields.io/badge/Docs-18_Files-blueviolet?style=for-the-badge" alt="Documentation" /></a>
+<a href="#-project-graph"><img src="https://img.shields.io/badge/Graph-Graphify-ff6b6b?style=for-the-badge" alt="Graphify" /></a>
 
-  <br/><br/>
+<br/><br/>
 
   <img src="https://img.shields.io/badge/python-3.11+-3776AB?logo=python&logoColor=white" alt="Python" />
   <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black" alt="React" />
@@ -50,7 +50,7 @@
 
 ## 🧠 What is ThreatLens?
 
-**ThreatLens** (codename: *Arch Detective*) is a full-stack, LLM-powered security compliance engine for a College Project.
+**ThreatLens** (codename: _Arch Detective_) is a full-stack, LLM-powered security compliance engine for a College Project.
 
 It accepts **codebases** (ZIP upload or Git clone), **architecture diagrams** (YAML/JSON), and **server logs**, then:
 
@@ -67,6 +67,7 @@ All in **minutes**, not months.
 ## ✨ Features
 
 ### Frontend (Built ✅)
+
 - 🖥️ **Brutalist-modern UI** — Dark theme with neobrutalist design system
 - 📊 **Audit Dashboard** — Real-time stats, severity feed, compliance coverage bars, scan history
 - 🔍 **Findings Explorer** — Filter by severity/framework, expandable finding detail with evidence + remediation
@@ -75,6 +76,7 @@ All in **minutes**, not months.
 - 📱 **Responsive** — Mobile-first design with collapsible sidebar
 
 ### Backend (Planned 🚧)
+
 - 🔒 **JWT Authentication** — Register, login, token refresh, route protection
 - 🤖 **6 Security Scanners** — Semgrep, Bandit, Trufflehog, pip-audit, npm-audit, LLM code reviewer
 - 🧬 **RAG Compliance Engine** — Qdrant vector DB + SentenceTransformers for control matching
@@ -129,44 +131,47 @@ All in **minutes**, not months.
 ## 🛠️ Tech Stack
 
 ### Frontend
-| Technology | Version | Purpose |
-|---|---|---|
-| [TanStack Start](https://tanstack.com/start) | 1.167+ | Full-stack React framework (SSR) |
-| [React](https://react.dev) | 19.2 | UI library |
-| [TypeScript](https://typescriptlang.org) | 5.8 | Type safety |
-| [TailwindCSS](https://tailwindcss.com) | 4.2 | Utility-first CSS |
-| [TanStack React Query](https://tanstack.com/query) | 5.83 | Server state management |
-| [TanStack Router](https://tanstack.com/router) | 1.168 | Type-safe routing |
-| [Radix UI](https://radix-ui.com) | Latest | Accessible primitives |
-| [Recharts](https://recharts.org) | 2.15 | Data visualization |
-| [Lucide React](https://lucide.dev) | 0.575 | Icon system |
-| [Zod](https://zod.dev) | 3.24 | Schema validation |
-| [React Hook Form](https://react-hook-form.com) | 7.71 | Form management |
+
+| Technology                                         | Version | Purpose                          |
+| -------------------------------------------------- | ------- | -------------------------------- |
+| [TanStack Start](https://tanstack.com/start)       | 1.167+  | Full-stack React framework (SSR) |
+| [React](https://react.dev)                         | 19.2    | UI library                       |
+| [TypeScript](https://typescriptlang.org)           | 5.8     | Type safety                      |
+| [TailwindCSS](https://tailwindcss.com)             | 4.2     | Utility-first CSS                |
+| [TanStack React Query](https://tanstack.com/query) | 5.83    | Server state management          |
+| [TanStack Router](https://tanstack.com/router)     | 1.168   | Type-safe routing                |
+| [Radix UI](https://radix-ui.com)                   | Latest  | Accessible primitives            |
+| [Recharts](https://recharts.org)                   | 2.15    | Data visualization               |
+| [Lucide React](https://lucide.dev)                 | 0.575   | Icon system                      |
+| [Zod](https://zod.dev)                             | 3.24    | Schema validation                |
+| [React Hook Form](https://react-hook-form.com)     | 7.71    | Form management                  |
 
 ### Backend (Planned)
-| Technology | Version | Purpose |
-|---|---|---|
-| [FastAPI](https://fastapi.tiangolo.com) | 0.115+ | REST API framework |
-| [Python](https://python.org) | 3.11 | Runtime |
-| [SQLAlchemy](https://sqlalchemy.org) | 2.x | Async ORM |
-| [PostgreSQL](https://postgresql.org) | 15 | Primary database |
-| [Redis](https://redis.io) | 7 | Cache + Celery broker |
-| [Qdrant](https://qdrant.tech) | Latest | Vector store (384-dim, cosine) |
-| [Celery](https://docs.celeryq.dev) | 5.x | Async task queue |
-| [LangChain](https://langchain.com) | Latest | LLM orchestration |
-| [Groq](https://groq.com) | API | LLM inference (Llama 3 70B) |
-| [SentenceTransformers](https://sbert.net) | Latest | Embeddings (all-MiniLM-L6-v2) |
-| [WeasyPrint](https://weasyprint.org) | Latest | PDF generation |
-| [Alembic](https://alembic.sqlalchemy.org) | Latest | DB migrations |
+
+| Technology                                | Version | Purpose                        |
+| ----------------------------------------- | ------- | ------------------------------ |
+| [FastAPI](https://fastapi.tiangolo.com)   | 0.115+  | REST API framework             |
+| [Python](https://python.org)              | 3.11    | Runtime                        |
+| [SQLAlchemy](https://sqlalchemy.org)      | 2.x     | Async ORM                      |
+| [PostgreSQL](https://postgresql.org)      | 15      | Primary database               |
+| [Redis](https://redis.io)                 | 7       | Cache + Celery broker          |
+| [Qdrant](https://qdrant.tech)             | Latest  | Vector store (384-dim, cosine) |
+| [Celery](https://docs.celeryq.dev)        | 5.x     | Async task queue               |
+| [LangChain](https://langchain.com)        | Latest  | LLM orchestration              |
+| [Groq](https://groq.com)                  | API     | LLM inference (Llama 3 70B)    |
+| [SentenceTransformers](https://sbert.net) | Latest  | Embeddings (all-MiniLM-L6-v2)  |
+| [WeasyPrint](https://weasyprint.org)      | Latest  | PDF generation                 |
+| [Alembic](https://alembic.sqlalchemy.org) | Latest  | DB migrations                  |
 
 ### Dev Tools
-| Tool | Purpose |
-|---|---|
-| [Vite](https://vite.dev) | Build tooling + dev server |
-| [ESLint](https://eslint.org) | Linting |
-| [Prettier](https://prettier.io) | Code formatting |
-| [Graphify](https://github.com/nicobailey/graphifyy) | Codebase graph analysis |
-| [Docker Compose](https://docs.docker.com/compose) | Infrastructure orchestration |
+
+| Tool                                                | Purpose                      |
+| --------------------------------------------------- | ---------------------------- |
+| [Vite](https://vite.dev)                            | Build tooling + dev server   |
+| [ESLint](https://eslint.org)                        | Linting                      |
+| [Prettier](https://prettier.io)                     | Code formatting              |
+| [Graphify](https://github.com/nicobailey/graphifyy) | Codebase graph analysis      |
+| [Docker Compose](https://docs.docker.com/compose)   | Infrastructure orchestration |
 
 ---
 
@@ -193,7 +198,7 @@ arch-detective/
 │   │   │   ├── BrutalButton.tsx      # Action buttons
 │   │   │   ├── BrutalBadge.tsx       # Status badges
 │   │   │   └── ThemeToggle.tsx       # Light/dark toggle
-│   │   └── 📂 ui/                   # 53 shadcn/ui components
+│   │   └── 📂 ui/                   # Focused Archon UI components
 │   │       ├── data-table.tsx        # Generic data table
 │   │       ├── severity-badge.tsx    # Severity display
 │   │       ├── coverage-bar.tsx      # Compliance bars
@@ -201,10 +206,10 @@ arch-detective/
 │   │       ├── pipeline-step.tsx     # Scan pipeline indicator
 │   │       ├── stat-tile.tsx         # Dashboard stat cards
 │   │       ├── section-card.tsx      # Section wrapper
-│   │       └── ...                   # 46 more components
 │   │
 │   ├── 📂 hooks/                     # Custom React hooks
-│   │   └── use-mobile.tsx            # Responsive detection
+│   │   ├── useAuth.ts                # Supabase session state
+│   │   └── useFrameworks.ts          # Framework API query
 │   │
 │   ├── 📂 lib/                       # Utilities & data
 │   │   ├── mock-data.ts              # Mock data (to be replaced by API)
@@ -281,7 +286,7 @@ arch-detective/
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org) 20+ (or [Bun](https://bun.sh))
+- [Node.js](https://nodejs.org) 20+
 - [Python](https://python.org) 3.11+
 - [Docker Desktop](https://docker.com/products/docker-desktop)
 - [Git](https://git-scm.com)
@@ -297,8 +302,6 @@ cd arch-detective
 
 ```bash
 npm install
-# or
-bun install
 ```
 
 ### 3. Start Frontend Dev Server
@@ -307,7 +310,7 @@ bun install
 npm run dev
 ```
 
-Open **http://localhost:5173** — the frontend is ready!
+Open **<http://localhost:5173>** — the frontend is ready!
 
 ### 4. Backend Setup (When Implementing)
 
@@ -344,14 +347,14 @@ curl http://localhost:8000/docs     # Swagger UI
 
 ## 🖥️ Frontend Pages
 
-| Page | Route | Description |
-|---|---|---|
-| **Landing** | `/` | Hero section, pipeline animation, framework showcase, CTA |
-| **Dashboard** | `/dashboard` | Stats tiles, severity feed, scan table, compliance bars |
-| **New Scan** | `/new-scan` | Input tabs (Architecture/Description/Logs), framework selector, model picker, live scan animation |
-| **Findings** | `/findings` | Severity filter, findings table, expandable detail panel with evidence + remediation + compliance controls |
-| **Reports** | `/reports` | Report list with status badges, featured report card, generate/download actions |
-| **Report Detail** | `/reports/:id` | Full report view with findings breakdown |
+| Page              | Route          | Description                                                                                                |
+| ----------------- | -------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Landing**       | `/`            | Hero section, pipeline animation, framework showcase, CTA                                                  |
+| **Dashboard**     | `/dashboard`   | Stats tiles, severity feed, scan table, compliance bars                                                    |
+| **New Scan**      | `/new-scan`    | Input tabs (Architecture/Description/Logs), framework selector, model picker, live scan animation          |
+| **Findings**      | `/findings`    | Severity filter, findings table, expandable detail panel with evidence + remediation + compliance controls |
+| **Reports**       | `/reports`     | Report list with status badges, featured report card, generate/download actions                            |
+| **Report Detail** | `/reports/:id` | Full report view with findings breakdown                                                                   |
 
 ---
 
@@ -413,14 +416,14 @@ User Input (ZIP / Git URL / YAML / Logs)
 
 ThreatLens maps vulnerabilities to controls across these frameworks:
 
-| Framework | Version | Controls | Focus |
-|---|---|---|---|
-| **GDPR** | Regulation (EU) 2016/679 | 99 Articles | Data privacy & protection |
-| **SOC 2** | Trust Services Criteria | 64 Controls | Service organization security |
-| **ISO 27001** | 2022 Edition | 93 Controls (Annex A) | Information security management |
-| **PCI DSS** | v4.0 | 78 Requirements | Payment card data security |
-| **NIST CSF** | 2.0 | 108 Subcategories | Cybersecurity framework |
-| **OWASP** | Top 10 (2021) | 10 Categories | Web application security |
+| Framework     | Version                  | Controls              | Focus                           |
+| ------------- | ------------------------ | --------------------- | ------------------------------- |
+| **GDPR**      | Regulation (EU) 2016/679 | 99 Articles           | Data privacy & protection       |
+| **SOC 2**     | Trust Services Criteria  | 64 Controls           | Service organization security   |
+| **ISO 27001** | 2022 Edition             | 93 Controls (Annex A) | Information security management |
+| **PCI DSS**   | v4.0                     | 78 Requirements       | Payment card data security      |
+| **NIST CSF**  | 2.0                      | 108 Subcategories     | Cybersecurity framework         |
+| **OWASP**     | Top 10 (2021)            | 10 Categories         | Web application security        |
 
 ---
 
@@ -453,10 +456,10 @@ xdg-open graphify-out/graph.html     # Linux
 
 ### Graph Output Files
 
-| File | Description |
-|---|---|
-| `graphify-out/graph.html` | Interactive force-directed graph visualization |
-| `graphify-out/graph.json` | Machine-readable graph (nodes + edges + communities) |
+| File                           | Description                                            |
+| ------------------------------ | ------------------------------------------------------ |
+| `graphify-out/graph.html`      | Interactive force-directed graph visualization         |
+| `graphify-out/graph.json`      | Machine-readable graph (nodes + edges + communities)   |
 | `graphify-out/GRAPH_REPORT.md` | Analysis report with hubs, communities, knowledge gaps |
 
 ### Query the Graph
@@ -484,12 +487,12 @@ graphify hook install
 
 ### Current Graph Stats
 
-| Metric | Value |
-|---|---|
-| Files scanned | 79 |
-| Nodes | 124 |
-| Edges | 53 |
-| Communities | 74 |
+| Metric              | Value                      |
+| ------------------- | -------------------------- |
+| Files scanned       | 79                         |
+| Nodes               | 124                        |
+| Edges               | 53                         |
+| Communities         | 74                         |
 | Extraction accuracy | 92% extracted, 8% inferred |
 
 > **Note:** The graph is currently frontend-only. Once the backend (Parts 1–8) is implemented, re-run `graphify update .` to see the full system graph with API routes, scanners, RAG pipeline, and Celery tasks.
@@ -502,36 +505,36 @@ graphify hook install
 
 All documentation lives in `.github'/Backend/`:
 
-| Document | Purpose | Size |
-|---|---|---|
-| **[Backend.md](.github'/Backend/plan/Backend.md)** | Original full specification — the master blueprint | 57 KB |
-| **[copilot-instructions.md](.github'/Backend/copilot-instructions.md)** | Master execution guide — BUILD→TEST→SECURE→OPTIMIZE→CONNECT lifecycle | 27 KB |
-| **[Backend-Frontend-Connect.md](.github'/Backend/Backend-Frontend-Connect.md)** | Complete frontend↔backend wiring guide with TypeScript code | 42 KB |
-| **[AI-Implementation-Prompts.md](.github'/Backend/AI-Implementation-Prompts.md)** | 9 ready-to-use AI prompts for step-by-step implementation | 40 KB |
+| Document                                                                          | Purpose                                                               | Size  |
+| --------------------------------------------------------------------------------- | --------------------------------------------------------------------- | ----- |
+| **[Backend.md](.github'/Backend/plan/Backend.md)**                                | Original full specification — the master blueprint                    | 57 KB |
+| **[copilot-instructions.md](.github'/Backend/copilot-instructions.md)**           | Master execution guide — BUILD→TEST→SECURE→OPTIMIZE→CONNECT lifecycle | 27 KB |
+| **[Backend-Frontend-Connect.md](.github'/Backend/Backend-Frontend-Connect.md)**   | Complete frontend↔backend wiring guide with TypeScript code           | 42 KB |
+| **[AI-Implementation-Prompts.md](.github'/Backend/AI-Implementation-Prompts.md)** | 9 ready-to-use AI prompts for step-by-step implementation             | 40 KB |
 
 ### Part Files (What to Build)
 
-| Part | File | Topic |
-|---|---|---|
-| 1 | [Part-01-Foundation-Setup.md](.github'/Backend/Part-01-Foundation-Setup.md) | Docker, FastAPI, DB models, Celery, API client |
-| 2 | [Part-02-RAG-Knowledge-Base.md](.github'/Backend/Part-02-RAG-Knowledge-Base.md) | Qdrant, embeddings, 7 chunkers, retriever |
-| 3 | [Part-03-Input-Ingestion-Layer.md](.github'/Backend/Part-03-Input-Ingestion-Layer.md) | ZIP/Git extraction, YAML/log parsing |
-| 4 | [Part-04-Scanners.md](.github'/Backend/Part-04-Scanners.md) | 6 security scanners + deduplication |
-| 5 | [Part-05-LangChain-Agent-Chains.md](.github'/Backend/Part-05-LangChain-Agent-Chains.md) | Compliance mapper, CVSS scorer, remediation |
-| 6 | [Part-06-Report-Generator.md](.github'/Backend/Part-06-Report-Generator.md) | PDF templates, charts, S3 upload, CSV/JSON export |
-| 7 | [Part-07-Celery-Task-Queue.md](.github'/Backend/Part-07-Celery-Task-Queue.md) | Full scan pipeline, progress tracking |
-| 8 | [Part-08-API-Endpoints-Frontend-Integration.md](.github'/Backend/Part-08-API-Endpoints-Frontend-Integration.md) | JWT auth, rate limiting, WebSocket, final integration |
+| Part | File                                                                                                            | Topic                                                 |
+| ---- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| 1    | [Part-01-Foundation-Setup.md](.github'/Backend/Part-01-Foundation-Setup.md)                                     | Docker, FastAPI, DB models, Celery, API client        |
+| 2    | [Part-02-RAG-Knowledge-Base.md](.github'/Backend/Part-02-RAG-Knowledge-Base.md)                                 | Qdrant, embeddings, 7 chunkers, retriever             |
+| 3    | [Part-03-Input-Ingestion-Layer.md](.github'/Backend/Part-03-Input-Ingestion-Layer.md)                           | ZIP/Git extraction, YAML/log parsing                  |
+| 4    | [Part-04-Scanners.md](.github'/Backend/Part-04-Scanners.md)                                                     | 6 security scanners + deduplication                   |
+| 5    | [Part-05-LangChain-Agent-Chains.md](.github'/Backend/Part-05-LangChain-Agent-Chains.md)                         | Compliance mapper, CVSS scorer, remediation           |
+| 6    | [Part-06-Report-Generator.md](.github'/Backend/Part-06-Report-Generator.md)                                     | PDF templates, charts, S3 upload, CSV/JSON export     |
+| 7    | [Part-07-Celery-Task-Queue.md](.github'/Backend/Part-07-Celery-Task-Queue.md)                                   | Full scan pipeline, progress tracking                 |
+| 8    | [Part-08-API-Endpoints-Frontend-Integration.md](.github'/Backend/Part-08-API-Endpoints-Frontend-Integration.md) | JWT auth, rate limiting, WebSocket, final integration |
 
 ### Workflow Files (How to Build)
 
-| Workflow | File | Steps Covered |
-|---|---|---|
-| 1 | [Workflow-01-Environment-Setup.md](.github'/Backend/plan/Workflow-01-Environment-Setup.md) | Docker, venv, deps, DB, migrations |
-| 2 | [Workflow-02-RAG-Pipeline.md](.github'/Backend/plan/Workflow-02-RAG-Pipeline.md) | Embedder, Qdrant, chunkers, seeding |
-| 3 | [Workflow-03-Ingestion-Scanners.md](.github'/Backend/plan/Workflow-03-Ingestion-Scanners.md) | Input parsing, all 6 scanners |
-| 4 | [Workflow-04-LangChain-Compliance.md](.github'/Backend/plan/Workflow-04-LangChain-Compliance.md) | Agent chains, CVSS, remediation |
-| 5 | [Workflow-05-PDF-Reports.md](.github'/Backend/plan/Workflow-05-PDF-Reports.md) | Templates, PDF rendering, exports |
-| 6 | [Workflow-06-Full-Integration-Deploy.md](.github'/Backend/plan/Workflow-06-Full-Integration-Deploy.md) | E2E pipeline, auth, deployment |
+| Workflow | File                                                                                                   | Steps Covered                       |
+| -------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------- |
+| 1        | [Workflow-01-Environment-Setup.md](.github'/Backend/plan/Workflow-01-Environment-Setup.md)             | Docker, venv, deps, DB, migrations  |
+| 2        | [Workflow-02-RAG-Pipeline.md](.github'/Backend/plan/Workflow-02-RAG-Pipeline.md)                       | Embedder, Qdrant, chunkers, seeding |
+| 3        | [Workflow-03-Ingestion-Scanners.md](.github'/Backend/plan/Workflow-03-Ingestion-Scanners.md)           | Input parsing, all 6 scanners       |
+| 4        | [Workflow-04-LangChain-Compliance.md](.github'/Backend/plan/Workflow-04-LangChain-Compliance.md)       | Agent chains, CVSS, remediation     |
+| 5        | [Workflow-05-PDF-Reports.md](.github'/Backend/plan/Workflow-05-PDF-Reports.md)                         | Templates, PDF rendering, exports   |
+| 6        | [Workflow-06-Full-Integration-Deploy.md](.github'/Backend/plan/Workflow-06-Full-Integration-Deploy.md) | E2E pipeline, auth, deployment      |
 
 ---
 
@@ -579,45 +582,45 @@ All documentation lives in `.github'/Backend/`:
 
 ### Public Endpoints
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/health` | Health check |
-| `GET` | `/docs` | Swagger UI |
+| Method | Path      | Description  |
+| ------ | --------- | ------------ |
+| `GET`  | `/health` | Health check |
+| `GET`  | `/docs`   | Swagger UI   |
 
 ### Auth Endpoints
 
-| Method | Path | Description |
-|---|---|---|
-| `POST` | `/api/v1/auth/register` | Create account |
-| `POST` | `/api/v1/auth/login` | Login → JWT |
-| `POST` | `/api/v1/auth/refresh` | Refresh token |
-| `GET` | `/api/v1/auth/me` | Current user profile |
+| Method | Path                    | Description          |
+| ------ | ----------------------- | -------------------- |
+| `POST` | `/api/v1/auth/register` | Create account       |
+| `POST` | `1/api/v1/auth/login`    | Login → JWT          |
+| `POST` | `/api/v1/auth/refresh`  | Refresh token        |
+| `GET`  | `/api/v1/auth/me`       | Current user profile |
 
 ### Scan Endpoints
 
-| Method | Path | Description |
-|---|---|---|
-| `POST` | `/api/v1/scan` | Start new scan (file upload or Git URL) |
-| `GET` | `/api/v1/scans` | List all scans |
-| `GET` | `/api/v1/scan/{id}/status` | Scan progress (polled every 3s) |
-| `GET` | `/api/v1/scan/{id}/findings` | Findings with severity/framework filters |
-| `DELETE` | `/api/v1/scan/{id}` | Delete scan |
+| Method   | Path                         | Description                              |
+| -------- | ---------------------------- | ---------------------------------------- |
+| `POST`   | `/api/v1/scan`               | Start new scan (file upload or Git URL)  |
+| `GET`    | `/api/v1/scans`              | List all scans                           |
+| `GET`    | `/api/v1/scan/{id}/status`   | Scan progress (polled every 3s)          |
+| `GET`    | `/api/v1/scan/{id}/findings` | Findings with severity/framework filters |
+| `DELETE` | `/api/v1/scan/{id}`          | Delete scan                              |
 
 ### Report Endpoints
 
-| Method | Path | Description |
-|---|---|---|
-| `POST` | `/api/v1/scan/{id}/report` | Generate PDF report |
-| `GET` | `/api/v1/report/{id}/download` | Download PDF (signed URL) |
-| `GET` | `/api/v1/scan/{id}/export/csv` | Export findings as CSV |
-| `GET` | `/api/v1/scan/{id}/export/json` | Export findings as JSON |
+| Method | Path                            | Description               |
+| ------ | ------------------------------- | ------------------------- |
+| `POST` | `/api/v1/scan/{id}/report`      | Generate PDF report       |
+| `GET`  | `/api/v1/report/{id}/download`  | Download PDF (signed URL) |
+| `GET`  | `/api/v1/scan/{id}/export/csv`  | Export findings as CSV    |
+| `GET`  | `/api/v1/scan/{id}/export/json` | Export findings as JSON   |
 
 ### Other Endpoints
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/api/v1/frameworks` | List compliance frameworks |
-| `WS` | `/ws/scan/{id}` | Real-time scan progress (WebSocket) |
+| Method | Path                 | Description                         |
+| ------ | -------------------- | ----------------------------------- |
+| `GET`  | `/api/v1/frameworks` | List compliance frameworks          |
+| `WS`   | `/ws/scan/{id}`      | Real-time scan progress (WebSocket) |
 
 ---
 
@@ -669,6 +672,7 @@ DEBUG=true
 npm run dev          # Start dev server (http://localhost:5173)
 npm run build        # Production build
 npm run preview      # Preview production build
+npm run typecheck    # TypeScript validation
 npm run lint         # ESLint check
 npm run format       # Prettier format
 ```

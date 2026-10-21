@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThreatLens Security Audit Report — {{ scan.target_name }}</title>
+<style>
+  /* ── Typography & Font Stacks (High-speed system fonts, zero external network delay) ── */
+
+  /* ── Archon Editorial Design Tokens (src/styles.css) ────────────── */
+  :root {
+    --cream:            #f5f1ec;
+    --cream-deep:       #ebe7e1;
+    --card:             #ffffff;
+    --card-surface:     #fcfbf9;
+    --card-muted:       #f7f5f2;
+
+    --ink:              #111111;
+    --foreground:       #111111;
+    --text-primary:     #111111;
+    --text-secondary:   #3d3d3a;
+    --text-muted:       #626260;
+    --text-faint:       #8a8a86;
+
+    --accent:           #ff5600; /* Restrained Fin-orange accent */
+    --accent-subtle:    rgba(255, 86, 0, 0.08);
+    --accent-border:    rgba(255, 86, 0, 0.28);
+
+    --border:           #d3cec6;
+    --border-subtle:    #e3dfd7;
+    --border-strong:    #b8b2a8;
+
+    --severity-critical:    #c41c1c;
+    --severity-critical-bg: rgba(196, 28, 28, 0.08);
+    --severity-critical-border: rgba(196, 28, 28, 0.28);
+
+    --severity-high:        #fe4c02;
+    --severity-high-bg:    rgba(254, 76, 2, 0.08);
+    --severity-high-border:rgba(254, 76, 2, 0.28);
+
+    --severity-medium:      #9a6a00;
+    --severity-medium-bg:  rgba(179, 126, 0, 0.10);
+    --severity-medium-border:rgba(179, 126, 0, 0.28);
+
+    --severity-low:         #0007cb;
+    --severity-low-bg:     rgba(0, 7, 203, 0.07);
+    --severity-low-border: rgba(0, 7, 203, 0.24);
+
+    --success:              #0b8f3c;
+    --success-bg:           rgba(11, 143, 60, 0.08);
+    --success-border:       rgba(11, 143, 60, 0.28);
+
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  /* ── Global Reset ───────────────────────────────────────────────── */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-size: 9.5pt;
+    background: var(--cream);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--cream);
+    color: var(--text-primary);
+    line-height: 1.55;
+    font-feature-settings: "ss01", "cv11", "tnum";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── A4 Page Layout & Running Headers ───────────────────────────── */
+  @page {
+    size: A4;
+    margin: 18mm 14mm 18mm 14mm;
+    background: #f5f1ec;
+
+    @top-left {
+      content: "ThreatLens · Automated Security Report · Human Review Required";
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 7.5pt;
+      font-weight: 600;
+      color: #626260;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    @top-right {
+      content: "{{ scan.target_name }} · Audit Report";
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 7.5pt;
+      font-weight: 500;
+      color: #8a8a86;
+    }
+
+    @bottom-left {
+      content: "Report ID: {{ report_id }} · Confidential";
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 7pt;
+      color: #8a8a86;
+    }
+
+    @bottom-right {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 7.5pt;
+      font-weight: 600;
+      color: #626260;
+    }
+  }
+
+  @page :first {
+    margin: 0;
+    @top-left { content: normal; }
+    @top-right { content: normal; }
+    @bottom-left { content: normal; }
+    @bottom-right { content: normal; }
+  }
+
+  /* ── Cover Page Layout ──────────────────────────────────────────── */
+  .cover-sheet {
+    width: 210mm;
+    min-height: 297mm;
+    background: var(--cream);
+    display: flex;
+    flex-direction: column;
+    padding: 24mm 20mm 20mm 20mm;
+    page-break-after: always;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  /* Subtle editorial accent line at the very top */
+  .cover-top-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--accent);
+  }
+
+  /* Brand Lockup */
+  .cover-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    margin-bottom: 32px;
+  }
+
+  .brand-lockup {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--ink);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+  }
+
+  .brand-title-wrap {
+    line-height: 1.15;
+  }
+
+  .brand-title {
+    font-size: 15pt;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .brand-title span {
+    color: var(--accent);
+  }
+
+  .brand-tagline {
+    font-size: 7.5pt;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .confidential-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .confidential-badge .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* Cover Main Headline */
+  .cover-eyebrow {
+    font-size: 8.5pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .cover-title {
+    font-size: 30pt;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+
+  .cover-description {
+    font-size: 10pt;
+    color: var(--text-secondary);
+    max-width: 620px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+
+  /* 4-Metric Horizontal Strip */
+  .metric-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .metric-cell {
+    padding: 14px 14px;
+    border-right: 1px solid var(--border);
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .metric-cell:last-child {
+    border-right: none;
+  }
+
+  .metric-label {
+    font-size: 7pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .metric-value {
+    font-size: 16pt;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .metric-value.mono {
+    font-family: var(--font-mono);
+  }
+
+  .metric-sub {
+    font-size: 7.5pt;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  /* Agent Verdict Callout (Archon signature: border-l-2 border-accent bg-secondary/40) */
+  .verdict-callout {
+    border: 1px solid var(--border);
+    border-left: 3.5px solid var(--accent);
+    background: var(--card);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin-bottom: 26px;
+  }
+
+  .verdict-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .verdict-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 8.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+  }
+
+  .verdict-text {
+    font-size: 10pt;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  /* Document Metadata Table */
+  .cover-meta-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: auto;
+    font-size: 8.5pt;
+  }
+
+  .cover-meta-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    vertical-align: middle;
+  }
+
+  .cover-meta-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .meta-td-label {
+    width: 32%;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 7.5pt;
+    background: var(--card-surface);
+    border-right: 1px solid var(--border-subtle);
+  }
+
+  .meta-td-val {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .meta-td-val.mono {
+    font-family: var(--font-mono);
+    font-size: 8pt;
+    color: var(--text-primary);
+  }
+
+  /* Cover Footer */
+  .cover-bottom {
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 7.5pt;
+    color: var(--text-muted);
+  }
+
+  .cover-bottom-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cover-bottom-right {
+    font-family: var(--font-mono);
+    color: var(--text-faint);
+  }
+
+  /* ── Content Layout & Section Titles ────────────────────────────── */
+  .report-content {
+    padding: 0;
+  }
+
+  .report-section {
+    margin-bottom: 24px;
+    page-break-inside: auto;
+  }
+
+  .section-header {
+    border-bottom: 1.5px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .section-eyebrow {
+    font-size: 7.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 2px;
+  }
+
+  .section-heading {
+    font-size: 16pt;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1.15;
+  }
+
+  .section-heading-sub {
+    font-size: 8.5pt;
+    color: var(--text-muted);
+    margin-top: 3px;
+    font-weight: 400;
+  }
+
+  /* Lifted White Card (Archon style) */
+  .card-lifted {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  /* Brutal Badges */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4.5px;
+    padding: 2.5px 7px;
+    border-radius: 5px;
+    font-size: 7.5pt;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    white-space: nowrap;
+    border: 1px solid transparent;
+  }
+
+  .badge-ink {
+    background: var(--ink);
+    color: #ffffff;
+  }
+
+  .badge-accent {
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  .badge-ghost {
+    background: var(--card);
+    color: var(--text-muted);
+    border-color: var(--border);
+  }
+
+  .badge-critical {
+    background: var(--severity-critical-bg);
+    color: var(--severity-critical);
+    border-color: var(--severity-critical-border);
+  }
+
+  .badge-high {
+    background: var(--severity-high-bg);
+    color: var(--severity-high);
+    border-color: var(--severity-high-border);
+  }
+
+  .badge-medium {
+    background: var(--severity-medium-bg);
+    color: var(--severity-medium);
+    border-color: var(--severity-medium-border);
+  }
+
+  .badge-low {
+    background: var(--severity-low-bg);
+    color: var(--severity-low);
+    border-color: var(--severity-low-border);
+  }
+
+  .badge-success {
+    background: var(--success-bg);
+    color: var(--success);
+    border-color: var(--success-border);
+  }
+
+  /* Table styling */
+  .editorial-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5pt;
+  }
+
+  .editorial-table thead {
+    background: var(--card-surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .editorial-table th {
+    padding: 9px 14px;
+    text-align: left;
+    font-size: 7.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+  }
+
+  .editorial-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    vertical-align: middle;
+  }
+
+  .editorial-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .editorial-table tr:nth-child(even) {
+    background: rgba(0,0,0,0.015);
+  }
+
+  /* Utilities */
+  .pb-always { page-break-after: always; }
+  .no-break { page-break-inside: avoid; }
+  .mono { font-family: var(--font-mono); }
+  .bold { font-weight: 700; }
+  .text-ink { color: var(--ink); }
+  .text-muted { color: var(--text-muted); }
+  .text-accent { color: var(--accent); }
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     COVER PAGE: ATTESTATION CERTIFICATE (ARCHON)
+══════════════════════════════════════════════════ -->
+<div class="cover-sheet">
+  <div class="cover-top-line"></div>
+
+  <!-- Header & Brand Lockup -->
+  <div class="cover-header">
+    <div class="brand-lockup">
+      <div class="brand-icon">
+        <!-- Phosphor ShieldCheck icon -->
+        <svg width="22" height="22" viewBox="0 0 256 256" fill="currentColor">
+          <path d="M208,40H48A16,16,0,0,0,32,56v58.78c0,89.61,75.82,119.34,91,124.39a15.53,15.53,0,0,0,10,0c15.2-5.05,91-34.78,91-124.39V56A16,16,0,0,0,208,40Zm0,74.79c0,78.42-66.35,105.8-80,110.84-13.65-5-80-32.41-80-110.84V56H208ZM173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z"/>
+        </svg>
+      </div>
+      <div class="brand-title-wrap">
+        <div class="brand-title">Threat<span>Lens</span></div>
+        <div class="brand-tagline">LLM-Agentic Compliance &amp; Threat Engine</div>
+      </div>
+    </div>
+
+    <div class="confidential-badge">
+      <span class="dot"></span>
+      Confidential Automated Audit
+    </div>
+  </div>
+
+  <!-- Title & Scope -->
+  <div class="cover-eyebrow">
+    <!-- Phosphor Sparkle -->
+    <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor">
+      <path d="M213.66,122.34l-48-48a8,8,0,0,0-11.32,0l-48,48a8,8,0,0,0,11.32,11.32L144,107.31V208a8,8,0,0,0,16,0V107.31l26.34,26.35a8,8,0,0,0,11.32-11.32ZM85.66,133.66l26.34-26.35V208a8,8,0,0,1-16,0V107.31L69.66,133.66a8,8,0,0,1-11.32-11.32l48-48a8,8,0,0,1,11.32,0l48,48a8,8,0,0,1-11.32,11.32Z" opacity="0.2"/>
+      <path d="M128,16a8,8,0,0,0-8,8V48a8,8,0,0,0,16,0V24A8,8,0,0,0,128,16ZM58.34,58.34a8,8,0,0,0-11.31,0l-16,16a8,8,0,0,0,11.31,11.32l16-16A8,8,0,0,0,58.34,58.34ZM24,120H48a8,8,0,0,0,0-16H24a8,8,0,0,0,0,16ZM58.34,181.66a8,8,0,0,0,0,11.31l16,16a8,8,0,0,0,11.32-11.31l-16-16A8,8,0,0,0,58.34,181.66ZM128,208a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208ZM208,120h24a8,8,0,0,0,0-16H208a8,8,0,0,0,0,16ZM197.66,58.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM197.66,181.66l-16,16a8,8,0,0,0,11.32,11.31l16-16a8,8,0,0,0-11.32-11.31Z"/>
+    </svg>
+    Security &amp; Compliance Audit Report
+  </div>
+  <div class="cover-title">
+    Automated Threat Modeling &amp;<br>
+    Framework Mapping
+  </div>
+  <div class="cover-description">
+    Saved automated assessment of <strong>{{ scan.target_name }}</strong>.
+    This report does not rerun analysis. Findings and framework mappings require human review;
+    this is not a compliance certificate or proof that the project is secure.
+  </div>
+
+  <!-- 4-Metric Strip -->
+  <div class="metric-strip">
+    <div class="metric-cell">
+      <div class="metric-label">Target System</div>
+      <div class="metric-value" style="font-size: 13pt; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+        {{ scan.target_name }}
+      </div>
+      <div class="metric-sub">{{ scan.scan_type | title | replace('_', ' ') }}</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-label">Recorded Findings</div>
+      <div class="metric-value mono">{{ findings | length }}</div>
+      <div class="metric-sub">{{ severity_counts.critical }} Critical · {{ severity_counts.high }} High</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-label">Frameworks</div>
+      <div class="metric-value mono">{{ scan.selected_frameworks | length }}</div>
+      <div class="metric-sub">{{ scan.selected_frameworks | join(' · ') | upper }}</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-label">Overall Risk Posture</div>
+      {% set posture = summary.overall_posture | lower | default('medium') %}
+      <div class="metric-value" style="font-size: 15pt; color: {% if posture == 'critical' %}var(--severity-critical){% elif posture == 'high' %}var(--severity-high){% elif posture == 'medium' %}var(--severity-medium){% elif posture in ['low', 'minimal'] %}var(--success){% else %}var(--text-primary){% endif %};">
+        {{ summary.overall_posture | default('Not available', true) }}
+      </div>
+      <div class="metric-sub">Recorded automated assessment</div>
+    </div>
+  </div>
+
+  <!-- Agent Verdict Callout (Archon Signature) -->
+  <div class="verdict-callout">
+    <div class="verdict-header">
+      <div class="verdict-title">
+        <!-- Sparkle Icon -->
+        <svg width="14" height="14" viewBox="0 0 256 256" fill="var(--accent)">
+          <path d="M213.66,122.34l-48-48a8,8,0,0,0-11.32,0l-48,48a8,8,0,0,0,11.32,11.32L144,107.31V208a8,8,0,0,0,16,0V107.31l26.34,26.35a8,8,0,0,0,11.32-11.32Z"/>
+        </svg>
+        Autonomous Agent Verdict
+      </div>
+      {% set _crit = severity_counts.critical if (severity_counts and severity_counts.critical is defined) else 0 %}
+      {% set _high = severity_counts.high if (severity_counts and severity_counts.high is defined) else 0 %}
+      <span class="badge {% if _crit > 0 %}badge-critical{% elif _high > 0 %}badge-high{% else %}badge-success{% endif %}">
+        {% if _crit > 0 %}ACTION REQUIRED{% else %}READY FOR REVIEW{% endif %}
+      </span>
+    </div>
+    <div class="verdict-text">
+      {% if summary.risk_headline %}
+        <strong>{{ summary.risk_headline }}</strong>
+      {% else %}
+        {{ findings | length }} findings recorded for {{ scan.target_name }}. Review the evidence, current triage states and coverage limitations. Zero findings does not guarantee security.
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Metadata Table -->
+  <table class="cover-meta-table">
+    <tr>
+      <td class="meta-td-label">Report ID</td>
+      <td class="meta-td-val mono">{{ report_id }}</td>
+    </tr>
+    <tr>
+      <td class="meta-td-label">Scan ID</td>
+      <td class="meta-td-val mono">{{ scan.id }}</td>
+    </tr>
+    <tr>
+      <td class="meta-td-label">Generation Date</td>
+      <td class="meta-td-val">{{ generated_at }}</td>
+    </tr>
+    <tr>
+      <td class="meta-td-label">Evaluated Standards</td>
+      <td class="meta-td-val">{{ scan.selected_frameworks | join(', ') | upper }}</td>
+    </tr>
+    <tr>
+      <td class="meta-td-label">Audit Engine</td>
+      <td class="meta-td-val">ThreatLens automated assessment · human review required</td>
+    </tr>
+  </table>
+
+  <!-- Cover Bottom / Signatures bar -->
+  <div class="cover-bottom">
+    <div class="cover-bottom-left">
+      <!-- Shield checkmark -->
+      <svg width="14" height="14" viewBox="0 0 256 256" fill="var(--success)">
+        <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/>
+      </svg>
+      <span>Automatically prepared from saved evidence · not digitally signed</span>
+    </div>
+    <div class="cover-bottom-right">
+      Scan reference: {{ scan.id[:8] }}
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     BODY CONTENT PAGES
+══════════════════════════════════════════════════ -->
+<div class="report-content">
+
+  {% include "executive_summary.html" %}
+
+  <div class="pb-always"></div>
+  {% include "compliance_section.html" %}
+
+  <div class="pb-always"></div>
+  {% include "findings.html" %}
+
+</div>
+
+</body>
+</html>

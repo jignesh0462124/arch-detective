@@ -1,0 +1,13 @@
+# requirements.txt — packages with known CVEs (intentionally outdated)
+# WARNING: For ThreatLens scanner testing only — DO NOT use in production
+
+flask==1.0.2           # CVE-2018-1000656: denial of service via large JSON body
+requests==2.18.0       # CVE-2018-18074: credentials exposed in redirect
+pyyaml==3.13           # CVE-2017-18342: arbitrary code execution via yaml.load()
+pillow==5.4.1          # CVE-2019-19911: denial of service via crafted image
+cryptography==2.3.0    # CVE-2020-25659: RSA decryption vulnerable to Bleichenbacher
+jinja2==2.10.0         # CVE-2019-10906: sandbox escape
+werkzeug==0.14.1       # CVE-2019-14806: predictable temporary file names
+sqlalchemy==1.2.0      # CVE-2019-7548: SQL injection via group_by
+paramiko==2.4.0        # CVE-2018-7750: missing authentication check
+urllib3==1.22          # CVE-2019-11324: CRLF injection

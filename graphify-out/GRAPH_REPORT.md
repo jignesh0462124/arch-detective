@@ -1,12 +1,12 @@
-# Graph Report - C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective  (2026-07-23)
+# Graph Report - C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective  (2026-10-21)
 
 ## Corpus Check
-- 165 files · ~135,771 words
+- 373 files · ~919,775 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 542 nodes · 936 edges · 112 communities detected
-- Extraction: 62% EXTRACTED · 38% INFERRED · 0% AMBIGUOUS · INFERRED: 353 edges (avg confidence: 0.66)
+- 1681 nodes · 3870 edges · 183 communities detected
+- Extraction: 57% EXTRACTED · 43% INFERRED · 0% AMBIGUOUS · INFERRED: 1676 edges (avg confidence: 0.68)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -122,252 +122,323 @@
 - [[_COMMUNITY_Community 109|Community 109]]
 - [[_COMMUNITY_Community 110|Community 110]]
 - [[_COMMUNITY_Community 111|Community 111]]
+- [[_COMMUNITY_Community 112|Community 112]]
+- [[_COMMUNITY_Community 113|Community 113]]
+- [[_COMMUNITY_Community 114|Community 114]]
+- [[_COMMUNITY_Community 115|Community 115]]
+- [[_COMMUNITY_Community 116|Community 116]]
+- [[_COMMUNITY_Community 117|Community 117]]
+- [[_COMMUNITY_Community 118|Community 118]]
+- [[_COMMUNITY_Community 119|Community 119]]
+- [[_COMMUNITY_Community 120|Community 120]]
+- [[_COMMUNITY_Community 121|Community 121]]
+- [[_COMMUNITY_Community 122|Community 122]]
+- [[_COMMUNITY_Community 123|Community 123]]
+- [[_COMMUNITY_Community 124|Community 124]]
+- [[_COMMUNITY_Community 125|Community 125]]
+- [[_COMMUNITY_Community 126|Community 126]]
+- [[_COMMUNITY_Community 127|Community 127]]
+- [[_COMMUNITY_Community 128|Community 128]]
+- [[_COMMUNITY_Community 129|Community 129]]
+- [[_COMMUNITY_Community 130|Community 130]]
+- [[_COMMUNITY_Community 131|Community 131]]
+- [[_COMMUNITY_Community 132|Community 132]]
+- [[_COMMUNITY_Community 133|Community 133]]
+- [[_COMMUNITY_Community 134|Community 134]]
+- [[_COMMUNITY_Community 135|Community 135]]
+- [[_COMMUNITY_Community 136|Community 136]]
+- [[_COMMUNITY_Community 137|Community 137]]
+- [[_COMMUNITY_Community 138|Community 138]]
+- [[_COMMUNITY_Community 139|Community 139]]
+- [[_COMMUNITY_Community 140|Community 140]]
+- [[_COMMUNITY_Community 141|Community 141]]
+- [[_COMMUNITY_Community 142|Community 142]]
+- [[_COMMUNITY_Community 143|Community 143]]
+- [[_COMMUNITY_Community 144|Community 144]]
+- [[_COMMUNITY_Community 145|Community 145]]
+- [[_COMMUNITY_Community 146|Community 146]]
+- [[_COMMUNITY_Community 147|Community 147]]
+- [[_COMMUNITY_Community 148|Community 148]]
+- [[_COMMUNITY_Community 149|Community 149]]
+- [[_COMMUNITY_Community 150|Community 150]]
+- [[_COMMUNITY_Community 151|Community 151]]
+- [[_COMMUNITY_Community 152|Community 152]]
+- [[_COMMUNITY_Community 153|Community 153]]
+- [[_COMMUNITY_Community 154|Community 154]]
+- [[_COMMUNITY_Community 155|Community 155]]
+- [[_COMMUNITY_Community 156|Community 156]]
+- [[_COMMUNITY_Community 157|Community 157]]
+- [[_COMMUNITY_Community 158|Community 158]]
+- [[_COMMUNITY_Community 159|Community 159]]
+- [[_COMMUNITY_Community 160|Community 160]]
+- [[_COMMUNITY_Community 161|Community 161]]
+- [[_COMMUNITY_Community 162|Community 162]]
+- [[_COMMUNITY_Community 163|Community 163]]
+- [[_COMMUNITY_Community 164|Community 164]]
+- [[_COMMUNITY_Community 165|Community 165]]
+- [[_COMMUNITY_Community 166|Community 166]]
+- [[_COMMUNITY_Community 167|Community 167]]
+- [[_COMMUNITY_Community 168|Community 168]]
+- [[_COMMUNITY_Community 169|Community 169]]
+- [[_COMMUNITY_Community 170|Community 170]]
+- [[_COMMUNITY_Community 171|Community 171]]
+- [[_COMMUNITY_Community 172|Community 172]]
+- [[_COMMUNITY_Community 173|Community 173]]
+- [[_COMMUNITY_Community 174|Community 174]]
+- [[_COMMUNITY_Community 175|Community 175]]
+- [[_COMMUNITY_Community 176|Community 176]]
+- [[_COMMUNITY_Community 177|Community 177]]
+- [[_COMMUNITY_Community 178|Community 178]]
+- [[_COMMUNITY_Community 179|Community 179]]
+- [[_COMMUNITY_Community 180|Community 180]]
+- [[_COMMUNITY_Community 181|Community 181]]
+- [[_COMMUNITY_Community 182|Community 182]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `_FakeSession` - 28 edges
-2. `SupabaseStorage` - 23 edges
-3. `Base` - 21 edges
-4. `StorageOperationError` - 20 edges
-5. `StorageObjectInfo` - 19 edges
-6. `_Result` - 19 edges
-7. `_VerifiedStorage` - 19 edges
-8. `AuthenticatedUser` - 17 edges
-9. `Settings` - 15 edges
-10. `create_scan()` - 15 edges
+1. `get()` - 154 edges
+2. `AuthenticatedUser` - 60 edges
+3. `Scan` - 53 edges
+4. `SupabaseStorage` - 52 edges
+5. `ScanStatus` - 51 edges
+6. `StorageOperationError` - 46 edges
+7. `WorkspaceRole` - 42 edges
+8. `Finding` - 39 edges
+9. `run_full_scan()` - 36 edges
+10. `now()` - 35 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `ScanStartRequest` --calls--> `test_start_request_normalizes_sha256()`  [INFERRED]
-  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\schemas\scan.py → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\tests\test_scan_schemas.py
-- `run()` --calls--> `extract_from_git()`  [INFERRED]
-  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\src\routes\_app\new-scan.tsx → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\ingestion\code_extractor.py
-- `run()` --calls--> `_cleanup_scan()`  [INFERRED]
-  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\src\routes\_app\new-scan.tsx → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\tasks\scan_task.py
-- `Settings` --uses--> `StorageConfigurationError`  [INFERRED]
-  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\config.py → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\storage\client.py
-- `Settings` --uses--> `StorageOperationError`  [INFERRED]
-  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\config.py → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\storage\client.py
+- `test_empty_archive_and_unknown_framework_are_rejected()` --calls--> `start_scan()`  [INFERRED]
+  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\tests\test_local_audit.py → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\api\scans.py
+- `test_report_template_no_fabricated_attestation_and_complete_evidence()` --calls--> `_get_jinja_env()`  [INFERRED]
+  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\tests\test_report_library.py → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\report\generator.py
+- `test_pdf_cache_byte_limit_and_busy_admission()` --calls--> `generate_pdf_report()`  [INFERRED]
+  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\tests\test_report_library.py → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\report\generator.py
+- `detect_log_anomalies()` --calls--> `test_log_detector_finds_all_required_patterns()`  [INFERRED]
+  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\scanners\log_anomaly.py → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\tests\test_scanners.py
+- `client()` --calls--> `AuthenticatedUser`  [INFERRED]
+  C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\tests\test_ai_chat.py → C:\Users\jigne\OneDrive\Desktop\College Project\arch-detective\threatlens\app\schemas\auth.py
 
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.1
-Nodes (47): AuditEvent, BootstrapResponse, CurrentUserResponse, ProfileResponse, ProfileUpdate, WorkspaceMembershipResponse, Base, BaseModel (+39 more)
+Cohesion: 0.05
+Nodes (132): AuthenticatedUser, BootstrapResponse, CurrentUserResponse, ProfileResponse, ProfileUpdate, WorkspaceMembershipResponse, Base, BaseModel (+124 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.06
-Nodes (40): build_control_chunks(), Control, EmbeddingError, encode_batch(), encode_text(), get_encoder(), Raised when the embedding model cannot encode input., FrameworkListResponse (+32 more)
+Cohesion: 0.03
+Nodes (127): verified_finding_context(), bootstrap(), capabilities(), csv_cell(), export_finding_queue(), file_content(), file_page(), files() (+119 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.09
-Nodes (38): AuthenticatedUser, update_profile(), get_db(), report_object_path(), sanitize_filename(), scan_input_object_path(), _cleanup_scan(), _authorize_scan() (+30 more)
+Cohesion: 0.05
+Nodes (84): AuditEvent, AuditEventListResponse, AuditEventResponse, list_audit_events(), Audit event log API — paginated workspace-scoped security events., bootstrap_user(), get_me(), _load_memberships() (+76 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.11
-Nodes (25): _create_supabase_client(), StorageConfigurationError, StorageObjectInfo, StorageOperationError, StorageSizeLimitError, SupabaseStorage, Exception, delete_object_if_present() (+17 more)
+Cohesion: 0.03
+Nodes (79): accessToken(), advisorCapabilities(), authFailureMessage(), exportEvents(), calculateHealthScore(), clearAllScanHistory(), clearPersistedAudit(), getAuditHistoryKey() (+71 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.12
-Nodes (31): _address_is_public(), ArchiveSecurityError, cleanup_temp_directory(), collect_source_files(), _directory_size(), extract_from_git(), extract_from_zip(), GitSecurityError (+23 more)
+Cohesion: 0.04
+Nodes (73): search(), open(), _build_code_context(), cleanup_scan(), download_report(), _emit(), ground_ai_findings(), Validate model suggestions against uploaded source; never invent evidence. (+65 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.11
-Nodes (16): BaseSettings, Raised when a streamed object exceeds the caller's byte limit., derive_and_validate_settings(), get_settings(), Settings, get_current_user(), get_jwt_verifier(), AuthTokenError (+8 more)
+Cohesion: 0.05
+Nodes (69): ArchitectureParseError, _external_apis(), parse_architecture(), _port_value(), Raised when architecture input cannot be parsed safely., _service_records(), _address_is_public(), ArchiveSecurityError (+61 more)
 
 ### Community 6 - "Community 6"
-Cohesion: 0.12
-Nodes (17): _create_database_security(), _create_storage_security(), _create_tables(), downgrade(), initial schema  Revision ID: 0001_initial_schema Revises: Create Date: 2026-07-1, upgrade(), bootstrap_user(), get_me() (+9 more)
+Cohesion: 0.04
+Nodes (49): _create_database_security(), _create_storage_security(), _create_tables(), downgrade(), initial schema  Revision ID: 0001_initial_schema Revises: Create Date: 2026-07-1, upgrade(), buildAttackGraphFromScan(), classifyFindingToStride() (+41 more)
 
 ### Community 7 - "Community 7"
-Cohesion: 0.11
-Nodes (9): getSession(), apiClient(), ApiError, authHeaders(), consumeLastCapturedError(), renderErrorPage(), fetch(), getServerEntry() (+1 more)
+Cohesion: 0.07
+Nodes (51): map_bandit_severity(), parse_bandit_output(), run_bandit(), bounded_text(), first_mapping(), Raised when a scanner cannot produce a trustworthy result., Raised when a required scanner executable is not installed., relative_finding_path() (+43 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.17
-Nodes (11): chunk_nvd_payload(), _cvss(), _description(), fetch_nvd_cves(), _iso_nvd(), NVDClientError, Raised when NVD data cannot be fetched or parsed., local_chunks() (+3 more)
+Cohesion: 0.06
+Nodes (46): chunk_nvd_payload(), _cvss(), _description(), fetch_nvd_cves(), _iso_nvd(), NVDClientError, Raised when NVD data cannot be fetched or parsed., EmbeddingError (+38 more)
 
 ### Community 9 - "Community 9"
-Cohesion: 0.32
-Nodes (11): _entry(), LogParseError, _parse_apache(), _parse_json(), parse_log_file(), _parse_syslog(), _parse_timestamped(), Raised when a log payload violates parser limits. (+3 more)
+Cohesion: 0.05
+Nodes (27): isAiConfigured(), getModelConfig(), AiChatProvider(), DashboardPage(), useActiveWorkspace(), useAuth(), useCreateWorkspace(), useWorkspaces() (+19 more)
 
 ### Community 10 - "Community 10"
-Cohesion: 0.4
-Nodes (10): bezier(), downsample(), draw_mark(), load_font(), main(), make_icon(), make_logo_sheet(), make_social() (+2 more)
+Cohesion: 0.06
+Nodes (43): fetchAuditEvents(), dbCreateFindingsBatch(), dbCreateScan(), dbCreateWorkspace(), dbDeleteScan(), dbDeleteWorkspace(), dbFetchAuditEvents(), dbFetchFindings() (+35 more)
 
 ### Community 11 - "Community 11"
-Cohesion: 0.2
-Nodes (5): run_async_migrations(), run_migrations_online(), run(), toggle(), applyTheme()
+Cohesion: 0.09
+Nodes (29): BaseSettings, Raised when a streamed object exceeds the caller's byte limit., derive_and_validate_settings(), get_settings(), parse_comma_separated_list(), Settings, SUPABASE_CONFIGURED(), get_current_user() (+21 more)
 
 ### Community 12 - "Community 12"
-Cohesion: 0.33
-Nodes (8): ArchitectureParseError, _external_apis(), parse_architecture(), _port_value(), Raised when architecture input cannot be parsed safely., _service_records(), test_architecture_rejects_malformed_and_non_object_documents(), test_architecture_yaml_and_json_are_parsed_without_object_construction()
+Cohesion: 0.09
+Nodes (31): get_db(), _MissingSyncSession, _build_framework_breakdown(), _build_top_violated_controls(), _compute_scan_data_hash(), _find_browser_executable(), generate_compliance_chart(), generate_pdf_report() (+23 more)
 
 ### Community 13 - "Community 13"
-Cohesion: 0.48
-Nodes (6): _base_upload(), test_artifact_kind_mime_and_extension_must_match_scan_type(), test_frameworks_are_supported_unique_and_bounded(), test_git_contract_forbids_upload_metadata_and_non_https_urls(), test_start_request_normalizes_sha256(), test_upload_contract_requires_all_metadata_and_forbids_git_url()
+Cohesion: 0.08
+Nodes (18): chat(), ChatMessage, ChatRequest, check_total_size(), FindingContext, Server-only, authenticated AI transport. No provider secrets reach clients., lifespan(), client() (+10 more)
 
 ### Community 14 - "Community 14"
-Cohesion: 0.33
-Nodes (0): 
+Cohesion: 0.08
+Nodes (15): leave(), bootstrapProfile(), getMe(), resendConfirmation(), resetPassword(), signIn(), signOut(), signUp() (+7 more)
 
 ### Community 15 - "Community 15"
-Cohesion: 0.33
-Nodes (0): 
+Cohesion: 0.11
+Nodes (16): get_user(), hash_password(), login(), ping(), Sample vulnerable Flask application. WARNING: This file is intentionally insecur, BaseHTTPMiddleware, health_check(), ThreatLens FastAPI application entry point. (+8 more)
 
 ### Community 16 - "Community 16"
-Cohesion: 0.4
-Nodes (0): 
+Cohesion: 0.1
+Nodes (8): build_control_chunks(), Control, chunk_gdpr(), chunk_iso27001(), chunk_nist(), chunk_owasp(), chunk_pci(), chunk_soc2()
 
 ### Community 17 - "Community 17"
-Cohesion: 0.4
-Nodes (1): Report generation package.
+Cohesion: 0.1
+Nodes (6): cn(), handleExportJson(), handleFocusTargetAsset(), StrideIcon(), download(), delete_object_if_present()
 
 ### Community 18 - "Community 18"
-Cohesion: 0.5
-Nodes (0): 
+Cohesion: 0.19
+Nodes (12): base(), exportFindingQueue(), findingError(), getFindingCounts(), getFindingPage(), getFindingScans(), getQueueFinding(), params() (+4 more)
 
 ### Community 19 - "Community 19"
-Cohesion: 0.5
-Nodes (0): 
+Cohesion: 0.12
+Nodes (15): deserialize_user_data(), fetch_url(), get_user_avatar(), hash_token(), parse_xml_data(), Insecure utility functions. WARNING: Intentionally vulnerable for ThreatLens sca, CWE-22: Path traversal — no sanitisation of filename input., CWE-918: Server-Side Request Forgery (SSRF).     Attacker can pass internal URLs (+7 more)
 
 ### Community 20 - "Community 20"
-Cohesion: 0.5
-Nodes (0): 
+Cohesion: 0.38
+Nodes (11): _build_controls_context(), _call_llm_for_compliance(), ComplianceMappingResult, FrameworkViolation, _get_default_framework_controls(), _get_llm(), _get_val(), map_finding_to_compliance() (+3 more)
 
 ### Community 21 - "Community 21"
-Cohesion: 0.5
-Nodes (0): 
+Cohesion: 0.17
+Nodes (11): create_token(), log_login_attempt(), Insecure authentication module. WARNING: Intentionally vulnerable for ThreatLens, CWE-287: Improper authentication — timing attack possible., CWE-347: Algorithm confusion — accepts alg=none., Accepts unsigned tokens — no signature check., CWE-640: Weak password reset — predictable token., CWE-532: Sensitive data in log — logs plaintext password. (+3 more)
 
 ### Community 22 - "Community 22"
-Cohesion: 0.5
-Nodes (0): 
+Cohesion: 0.18
+Nodes (1): Report generation package.
 
 ### Community 23 - "Community 23"
-Cohesion: 0.67
-Nodes (0): 
+Cohesion: 0.2
+Nodes (9): draw_concept_5(), draw_concept_6(), draw_concept_7(), draw_concept_8(), Refined Logo Concepts for Archon / ThreatLens. Exploring: - Concept 5: The "Arch, Concept 7: The Archon Emblem (Solid Geometric Mark).     A solid shield with an, Concept 8: The Intercom-Editorial Detective Mark.     Sophisticated monoline shi, Concept 5: The Refined Archon Apex.     A bold architectural 'A' fused seamlessl (+1 more)
 
 ### Community 24 - "Community 24"
-Cohesion: 0.67
+Cohesion: 0.2
 Nodes (0): 
 
 ### Community 25 - "Community 25"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.42
+Nodes (7): _call_cvss_llm(), _compute_cvss_score(), _get_llm(), CVSS scorer — uses Groq LLM to evaluate CVSS 3.1 base metrics for a finding. Ret, Score a finding using CVSS 3.1.      Returns (score, vector_string).     Falls b, Compute CVSS 3.1 base score from metric abbreviations., score_finding()
 
 ### Community 26 - "Community 26"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.42
+Nodes (7): _call_llm(), _get_llm(), plan_remediation(), Remediation planner — generates ordered, actionable remediation steps for a find, Derive remediation priority from severity when LLM is unavailable., Generate ordered remediation steps for a finding.      Returns:         (steps:, _severity_to_priority()
 
 ### Community 27 - "Community 27"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.25
+Nodes (2): handleQuickCreateSubmit(), toSlug()
 
 ### Community 28 - "Community 28"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.5
+Nodes (6): _call_llm(), _compute_posture(), generate_executive_summary(), _get_llm(), Executive summary writer — generates C-level readable scan summaries using Groq, Generate a C-level executive summary for a completed scan.      Args:         sc
 
 ### Community 29 - "Community 29"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.29
+Nodes (1): Generate Archon / ThreatLens Master Brand Logo Candidates. Creates mathematical
 
 ### Community 30 - "Community 30"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.48
+Nodes (6): _base_upload(), test_artifact_kind_mime_and_extension_must_match_scan_type(), test_frameworks_are_supported_unique_and_bounded(), test_git_contract_forbids_upload_metadata_and_non_https_urls(), test_start_request_normalizes_sha256(), test_upload_contract_requires_all_metadata_and_forbids_git_url()
 
 ### Community 31 - "Community 31"
-Cohesion: 1.0
+Cohesion: 0.33
 Nodes (0): 
 
 ### Community 32 - "Community 32"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.33
+Nodes (1): running()
 
 ### Community 33 - "Community 33"
-Cohesion: 1.0
+Cohesion: 0.4
 Nodes (0): 
 
 ### Community 34 - "Community 34"
-Cohesion: 1.0
+Cohesion: 0.4
 Nodes (0): 
 
 ### Community 35 - "Community 35"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.6
+Nodes (3): handleNameChange(), handleSlugChange(), toSlug()
 
 ### Community 36 - "Community 36"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.4
+Nodes (1): local()
 
 ### Community 37 - "Community 37"
-Cohesion: 1.0
+Cohesion: 0.5
 Nodes (0): 
 
 ### Community 38 - "Community 38"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.67
+Nodes (2): cn(), getModelIcon()
 
 ### Community 39 - "Community 39"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.5
+Nodes (2): Landing(), useFrameworks()
 
 ### Community 40 - "Community 40"
-Cohesion: 1.0
+Cohesion: 0.5
 Nodes (0): 
 
 ### Community 41 - "Community 41"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.67
+Nodes (1): Vercel Serverless Function entry point for ThreatLens FastAPI.
 
 ### Community 42 - "Community 42"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.67
+Nodes (1): Vulnerability classification prompt template.
 
 ### Community 43 - "Community 43"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.67
+Nodes (1): Compliance mapping prompt template.
 
 ### Community 44 - "Community 44"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.67
+Nodes (1): Remediation planning prompt template.
 
 ### Community 45 - "Community 45"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.67
+Nodes (1): Executive summary prompt template.
 
 ### Community 46 - "Community 46"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 47 - "Community 47"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 48 - "Community 48"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 49 - "Community 49"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 50 - "Community 50"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 51 - "Community 51"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 52 - "Community 52"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 53 - "Community 53"
 Cohesion: 1.0
-Nodes (0): 
+Nodes (1): Generate inert synthetic ZIPs for the explicitly requested audit benchmark.
 
 ### Community 54 - "Community 54"
 Cohesion: 1.0
-Nodes (0): 
+Nodes (1): Generate IEEE publication-grade Figure 8: ThreatLens Enterprise Audit Report Art
 
 ### Community 55 - "Community 55"
 Cohesion: 1.0
@@ -479,7 +550,7 @@ Nodes (0):
 
 ### Community 82 - "Community 82"
 Cohesion: 1.0
-Nodes (0): 
+Nodes (1): Create a test ZIP file from the sample codebase for workspace testing.
 
 ### Community 83 - "Community 83"
 Cohesion: 1.0
@@ -491,11 +562,11 @@ Nodes (0):
 
 ### Community 85 - "Community 85"
 Cohesion: 1.0
-Nodes (0): 
+Nodes (1): Insecure config module. WARNING: Intentionally vulnerable for ThreatLens scanner
 
 ### Community 86 - "Community 86"
 Cohesion: 1.0
-Nodes (0): 
+Nodes (1): Generate synthetic PDF QA evidence; never reads user scans or credentials.
 
 ### Community 87 - "Community 87"
 Cohesion: 1.0
@@ -597,198 +668,568 @@ Nodes (0):
 Cohesion: 1.0
 Nodes (0): 
 
+### Community 112 - "Community 112"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 113 - "Community 113"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 114 - "Community 114"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 115 - "Community 115"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 116 - "Community 116"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 117 - "Community 117"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 118 - "Community 118"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 119 - "Community 119"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 120 - "Community 120"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 121 - "Community 121"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 122 - "Community 122"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 123 - "Community 123"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 124 - "Community 124"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 125 - "Community 125"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 126 - "Community 126"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 127 - "Community 127"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 128 - "Community 128"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 129 - "Community 129"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 130 - "Community 130"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 131 - "Community 131"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 132 - "Community 132"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 133 - "Community 133"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 134 - "Community 134"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 135 - "Community 135"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 136 - "Community 136"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 137 - "Community 137"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 138 - "Community 138"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 139 - "Community 139"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 140 - "Community 140"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 141 - "Community 141"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 142 - "Community 142"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 143 - "Community 143"
+Cohesion: 1.0
+Nodes (1): Full AI pipeline: findings → CVSS → compliance → remediation → summary.
+
+### Community 144 - "Community 144"
+Cohesion: 1.0
+Nodes (1): Upload a ZIP file and start an async AI security scan.     Returns immediately w
+
+### Community 145 - "Community 145"
+Cohesion: 1.0
+Nodes (1): Server-Sent Events stream for real-time scan progress.     Connect immediately a
+
+### Community 146 - "Community 146"
+Cohesion: 1.0
+Nodes (1): Return the full scan result JSON (findings, summary, scores).
+
+### Community 147 - "Community 147"
+Cohesion: 1.0
+Nodes (1): Generate and stream the PDF report for a completed scan.
+
+### Community 148 - "Community 148"
+Cohesion: 1.0
+Nodes (1): Directly generate and stream a PDF report from client-supplied scan data or resu
+
+### Community 149 - "Community 149"
+Cohesion: 1.0
+Nodes (1): Clean up scan state and temp files.
+
+### Community 150 - "Community 150"
+Cohesion: 1.0
+Nodes (1): Lazy-load and cache Jinja2 environment.
+
+### Community 151 - "Community 151"
+Cohesion: 1.0
+Nodes (1): Generate a horizontal bar chart of framework compliance scores.      Returns a b
+
+### Community 152 - "Community 152"
+Cohesion: 1.0
+Nodes (1): Build per-framework breakdown for the compliance section.
+
+### Community 153 - "Community 153"
+Cohesion: 1.0
+Nodes (1): Aggregate most violated controls across all findings.
+
+### Community 154 - "Community 154"
+Cohesion: 1.0
+Nodes (1): Locate an available Chromium-based browser for high-fidelity PDF printing.
+
+### Community 155 - "Community 155"
+Cohesion: 1.0
+Nodes (1): Render HTML to PDF using an optimized headless Chromium/Edge browser with isolat
+
+### Community 156 - "Community 156"
+Cohesion: 1.0
+Nodes (1): Generate a consistent cache key for scan payload.
+
+### Community 157 - "Community 157"
+Cohesion: 1.0
+Nodes (1): Generate a PDF audit report from scan_data with caching and high-speed execution
+
+### Community 158 - "Community 158"
+Cohesion: 1.0
+Nodes (1): Append an event to the scan's event queue.
+
+### Community 159 - "Community 159"
+Cohesion: 1.0
+Nodes (1): Extract text files from a ZIP archive. Returns [{path, content}].
+
+### Community 160 - "Community 160"
+Cohesion: 1.0
+Nodes (1): Build a truncated code context string from extracted files.
+
+### Community 161 - "Community 161"
+Cohesion: 1.0
+Nodes (1): Robustly extract a JSON array or object from an LLM response.     Handles: raw J
+
+### Community 162 - "Community 162"
+Cohesion: 1.0
+Nodes (1): Call OmegaPlus API (or Groq fallback) with strict timeouts, fast models, and gra
+
+### Community 163 - "Community 163"
+Cohesion: 1.0
+Nodes (1): Fast, accurate deterministic static vulnerability detector for source files.
+
+### Community 164 - "Community 164"
+Cohesion: 1.0
+Nodes (1): Full AI pipeline: findings → CVSS → compliance → remediation → summary.
+
+### Community 165 - "Community 165"
+Cohesion: 1.0
+Nodes (1): Upload a ZIP file and start an async AI security scan.     Returns immediately w
+
+### Community 166 - "Community 166"
+Cohesion: 1.0
+Nodes (1): Server-Sent Events stream for real-time scan progress.     Connect immediately a
+
+### Community 167 - "Community 167"
+Cohesion: 1.0
+Nodes (1): Return the full scan result JSON (findings, summary, scores).
+
+### Community 168 - "Community 168"
+Cohesion: 1.0
+Nodes (1): Generate and stream the PDF report for a completed scan.
+
+### Community 169 - "Community 169"
+Cohesion: 1.0
+Nodes (1): Clean up scan state and temp files.
+
+### Community 170 - "Community 170"
+Cohesion: 1.0
+Nodes (1): test_groq_pdf_pipeline.py ──────────────────────────────────────────────────────
+
+### Community 171 - "Community 171"
+Cohesion: 1.0
+Nodes (1): Test Groq API response for security findings.
+
+### Community 172 - "Community 172"
+Cohesion: 1.0
+Nodes (1): Call Groq API with retries and backoff for rate limits.
+
+### Community 173 - "Community 173"
+Cohesion: 1.0
+Nodes (1): Fast, accurate deterministic static vulnerability detector for source files.
+
+### Community 174 - "Community 174"
+Cohesion: 1.0
+Nodes (1): Full AI pipeline: findings → CVSS → compliance → remediation → summary.
+
+### Community 175 - "Community 175"
+Cohesion: 1.0
+Nodes (1): Upload a ZIP file and start an async AI security scan.     Returns immediately w
+
+### Community 176 - "Community 176"
+Cohesion: 1.0
+Nodes (1): Server-Sent Events stream for real-time scan progress.     Connect immediately a
+
+### Community 177 - "Community 177"
+Cohesion: 1.0
+Nodes (1): Return the full scan result JSON (findings, summary, scores).
+
+### Community 178 - "Community 178"
+Cohesion: 1.0
+Nodes (1): Generate and stream the PDF report for a completed scan.
+
+### Community 179 - "Community 179"
+Cohesion: 1.0
+Nodes (1): Build per-framework breakdown for the compliance section.
+
+### Community 180 - "Community 180"
+Cohesion: 1.0
+Nodes (1): Aggregate most violated controls across all findings.
+
+### Community 181 - "Community 181"
+Cohesion: 1.0
+Nodes (1): Locate an available Chromium-based browser for high-fidelity PDF printing.
+
+### Community 182 - "Community 182"
+Cohesion: 1.0
+Nodes (1): Render HTML to PDF using a headless Chromium browser with perfect CSS fidelity.
+
 ## Knowledge Gaps
-- **11 isolated node(s):** `Generate Archon raster brand assets from the canonical shield geometry.`, `initial schema  Revision ID: 0001_initial_schema Revises: Create Date: 2026-07-1`, `Raised when architecture input cannot be parsed safely.`, `Raised when source input cannot be ingested safely.`, `Raised when an archive violates extraction limits.` (+6 more)
+- **144 isolated node(s):** `Vercel Serverless Function entry point for ThreatLens FastAPI.`, `Compute CVSS 3.1 base score from metric abbreviations.`, `Score a finding using CVSS 3.1.      Returns (score, vector_string).     Falls b`, `Derive remediation priority from severity when LLM is unavailable.`, `Generate ordered remediation steps for a finding.      Returns:         (steps:` (+139 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **Thin community `Community 25`** (2 nodes): `BrutalBadge()`, `BrutalBadge.tsx`
+- **Thin community `Community 53`** (2 nodes): `create-workbench-fixtures.py`, `Generate inert synthetic ZIPs for the explicitly requested audit benchmark.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 26`** (2 nodes): `BrutalButton()`, `BrutalButton.tsx`
+- **Thin community `Community 54`** (2 nodes): `generate_fig8_audit_report.py`, `Generate IEEE publication-grade Figure 8: ThreatLens Enterprise Audit Report Art`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 27`** (2 nodes): `MarketingChrome.tsx`, `MarketingBackdrop()`
+- **Thin community `Community 55`** (2 nodes): `useSharedAiChat()`, `AiChatContext.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 28`** (2 nodes): `calendar.tsx`, `cn()`
+- **Thin community `Community 56`** (2 nodes): `editorEngine.ts`, `preloadEditor()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 29`** (2 nodes): `carousel.tsx`, `useCarousel()`
+- **Thin community `Community 57`** (2 nodes): `SourceEditor.tsx`, `theme()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 30`** (2 nodes): `chart.tsx`, `useChart()`
+- **Thin community `Community 58`** (2 nodes): `useWorkbenchData.ts`, `useWorkbenchData()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 31`** (2 nodes): `code-panel.tsx`, `cn()`
+- **Thin community `Community 59`** (2 nodes): `AuthProvider()`, `AuthProvider.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 32`** (2 nodes): `form.tsx`, `useFormField()`
+- **Thin community `Community 60`** (2 nodes): `BrutalBadge()`, `BrutalBadge.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 33`** (2 nodes): `severity-badge.tsx`, `SeverityBadge()`
+- **Thin community `Community 61`** (2 nodes): `BrutalButton()`, `BrutalButton.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 34`** (2 nodes): `sonner.tsx`, `Toaster()`
+- **Thin community `Community 62`** (2 nodes): `ThemeToggle.tsx`, `applyTheme()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 35`** (2 nodes): `use-mobile.tsx`, `useIsMobile()`
+- **Thin community `Community 63`** (2 nodes): `MarketingChrome.tsx`, `MarketingBackdrop()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 36`** (2 nodes): `useAuth.ts`, `useAuth()`
+- **Thin community `Community 64`** (2 nodes): `ProjectNotice.tsx`, `ProjectNotice()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 37`** (2 nodes): `useFrameworks.ts`, `useFrameworks()`
+- **Thin community `Community 65`** (2 nodes): `SaaSHeroMotionGraphic.tsx`, `animate()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 38`** (2 nodes): `config.server.ts`, `getServerConfig()`
+- **Thin community `Community 66`** (2 nodes): `ReportUi.tsx`, `readableValue()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 39`** (2 nodes): `lovable-error-reporting.ts`, `reportLovableError()`
+- **Thin community `Community 67`** (2 nodes): `ArchonLogo()`, `ArchonLogo.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 40`** (2 nodes): `utils.ts`, `cn()`
+- **Thin community `Community 68`** (2 nodes): `ArchonWordmark()`, `ArchonWordmark.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 41`** (2 nodes): `frameworks.ts`, `fetchFrameworks()`
+- **Thin community `Community 69`** (2 nodes): `cn()`, `audit-analytics.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 42`** (2 nodes): `main.py`, `health_check()`
+- **Thin community `Community 70`** (2 nodes): `code-panel.tsx`, `cn()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 43`** (2 nodes): `test_celery.py`, `test_celery_uses_redis_and_safe_serializers()`
+- **Thin community `Community 71`** (2 nodes): `pipeline-step.tsx`, `PipelineStep()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 44`** (1 nodes): `eslint.config.js`
+- **Thin community `Community 72`** (2 nodes): `severity-badge.tsx`, `SeverityBadge()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 45`** (1 nodes): `vite.config.ts`
+- **Thin community `Community 73`** (2 nodes): `stat-tile.tsx`, `StatTile()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 46`** (1 nodes): `AppShell.tsx`
+- **Thin community `Community 74`** (2 nodes): `useAuth.ts`, `useAuth()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 47`** (1 nodes): `accordion.tsx`
+- **Thin community `Community 75`** (2 nodes): `useScanProgress.ts`, `useScanProgress()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 48`** (1 nodes): `alert-dialog.tsx`
+- **Thin community `Community 76`** (2 nodes): `lovable-error-reporting.ts`, `reportLovableError()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 49`** (1 nodes): `alert.tsx`
+- **Thin community `Community 77`** (2 nodes): `utils.ts`, `cn()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 50`** (1 nodes): `ArchonLogo.tsx`
+- **Thin community `Community 78`** (2 nodes): `frameworks.ts`, `fetchFrameworks()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 51`** (1 nodes): `ArchonWordmark.tsx`
+- **Thin community `Community 79`** (2 nodes): `workbench.tsx`, `WorkbenchPage()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 52`** (1 nodes): `aspect-ratio.tsx`
+- **Thin community `Community 80`** (2 nodes): `mockQuery()`, `audit-log.test.mjs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 53`** (1 nodes): `avatar.tsx`
+- **Thin community `Community 81`** (2 nodes): `unsubscribe()`, `auth-bridge.test.mjs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 54`** (1 nodes): `badge.tsx`
+- **Thin community `Community 82`** (2 nodes): `create_test_zip.py`, `Create a test ZIP file from the sample codebase for workspace testing.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 55`** (1 nodes): `breadcrumb.tsx`
+- **Thin community `Community 83`** (2 nodes): `findings-api.test.mjs`, `length()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 56`** (1 nodes): `button.tsx`
+- **Thin community `Community 84`** (2 nodes): `main.tsx`, `id()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 57`** (1 nodes): `card.tsx`
+- **Thin community `Community 85`** (2 nodes): `config.py`, `Insecure config module. WARNING: Intentionally vulnerable for ThreatLens scanner`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 58`** (1 nodes): `checkbox.tsx`
+- **Thin community `Community 86`** (2 nodes): `verify_report_pdf.py`, `Generate synthetic PDF QA evidence; never reads user scans or credentials.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 59`** (1 nodes): `collapsible.tsx`
+- **Thin community `Community 87`** (2 nodes): `test_celery.py`, `test_celery_uses_redis_and_safe_serializers()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 60`** (1 nodes): `command.tsx`
+- **Thin community `Community 88`** (2 nodes): `decode_session()`, `auth.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 61`** (1 nodes): `context-menu.tsx`
+- **Thin community `Community 89`** (1 nodes): `eslint.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 62`** (1 nodes): `coverage-bar.tsx`
+- **Thin community `Community 90`** (1 nodes): `vite.config.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 63`** (1 nodes): `data-table.tsx`
+- **Thin community `Community 91`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 64`** (1 nodes): `dialog.tsx`
+- **Thin community `Community 92`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 65`** (1 nodes): `dropdown-menu.tsx`
+- **Thin community `Community 93`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 66`** (1 nodes): `hover-card.tsx`
+- **Thin community `Community 94`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 67`** (1 nodes): `input-otp.tsx`
+- **Thin community `Community 95`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 68`** (1 nodes): `input.tsx`
+- **Thin community `Community 96`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 69`** (1 nodes): `label.tsx`
+- **Thin community `Community 97`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 70`** (1 nodes): `navigation-menu.tsx`
+- **Thin community `Community 98`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 71`** (1 nodes): `popover.tsx`
+- **Thin community `Community 99`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 72`** (1 nodes): `progress.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 73`** (1 nodes): `radio-group.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 74`** (1 nodes): `resizable.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 75`** (1 nodes): `scroll-area.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 76`** (1 nodes): `section-card.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 77`** (1 nodes): `select.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 78`** (1 nodes): `separator.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 79`** (1 nodes): `sheet.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 80`** (1 nodes): `skeleton.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 81`** (1 nodes): `slider.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 82`** (1 nodes): `stat-tile.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 83`** (1 nodes): `switch.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 84`** (1 nodes): `table.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 85`** (1 nodes): `tabs.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 86`** (1 nodes): `textarea.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 87`** (1 nodes): `toggle-group.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 88`** (1 nodes): `toggle.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 89`** (1 nodes): `tooltip.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 90`** (1 nodes): `mock-data.ts`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 91`** (1 nodes): `supabase.ts`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 92`** (1 nodes): `example.functions.ts`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 93`** (1 nodes): `types.ts`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 94`** (1 nodes): `about.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 95`** (1 nodes): `index.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 96`** (1 nodes): `_app.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 97`** (1 nodes): `dashboard.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 98`** (1 nodes): `findings.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 99`** (1 nodes): `reports.$reportId.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 100`** (1 nodes): `reports.tsx`
+- **Thin community `Community 100`** (1 nodes): `celery_app.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 101`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 102`** (1 nodes): `__init__.py`
+- **Thin community `Community 102`** (1 nodes): `db.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 103`** (1 nodes): `__init__.py`
+- **Thin community `Community 103`** (1 nodes): `binary.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 104`** (1 nodes): `__init__.py`
+- **Thin community `Community 104`** (1 nodes): `main.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 105`** (1 nodes): `__init__.py`
+- **Thin community `Community 105`** (1 nodes): `db.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 106`** (1 nodes): `__init__.py`
+- **Thin community `Community 106`** (1 nodes): `binary.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 107`** (1 nodes): `__init__.py`
+- **Thin community `Community 107`** (1 nodes): `main.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 108`** (1 nodes): `__init__.py`
+- **Thin community `Community 108`** (1 nodes): `db.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 109`** (1 nodes): `__init__.py`
+- **Thin community `Community 109`** (1 nodes): `binary.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 110`** (1 nodes): `celery_app.py`
+- **Thin community `Community 110`** (1 nodes): `main.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 111`** (1 nodes): `__init__.py`
+- **Thin community `Community 111`** (1 nodes): `ScanAnimation.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 112`** (1 nodes): `RequireAuth.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 113`** (1 nodes): `coverage-bar.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 114`** (1 nodes): `data-table.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 115`** (1 nodes): `section-card.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 116`** (1 nodes): `groq-client.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 117`** (1 nodes): `types.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 118`** (1 nodes): `about.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 119`** (1 nodes): `privacy.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 120`** (1 nodes): `register.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 121`** (1 nodes): `terms.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 122`** (1 nodes): `_app.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 123`** (1 nodes): `monaco-languages.d.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 124`** (1 nodes): `auth-api.test.mjs`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 125`** (1 nodes): `auth.test.mjs`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 126`** (1 nodes): `data.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 127`** (1 nodes): `main.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 128`** (1 nodes): `supabase.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 129`** (1 nodes): `checks.js`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 130`** (1 nodes): `supabase.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 131`** (1 nodes): `supabase.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 132`** (1 nodes): `__init__.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 133`** (1 nodes): `__init__.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 134`** (1 nodes): `__init__.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 135`** (1 nodes): `__init__.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 136`** (1 nodes): `__init__.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 137`** (1 nodes): `__init__.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 138`** (1 nodes): `__init__.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 139`** (1 nodes): `__init__.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 140`** (1 nodes): `__init__.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 141`** (1 nodes): `celery_app.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 142`** (1 nodes): `__init__.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 143`** (1 nodes): `Full AI pipeline: findings → CVSS → compliance → remediation → summary.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 144`** (1 nodes): `Upload a ZIP file and start an async AI security scan.     Returns immediately w`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 145`** (1 nodes): `Server-Sent Events stream for real-time scan progress.     Connect immediately a`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 146`** (1 nodes): `Return the full scan result JSON (findings, summary, scores).`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 147`** (1 nodes): `Generate and stream the PDF report for a completed scan.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 148`** (1 nodes): `Directly generate and stream a PDF report from client-supplied scan data or resu`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 149`** (1 nodes): `Clean up scan state and temp files.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 150`** (1 nodes): `Lazy-load and cache Jinja2 environment.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 151`** (1 nodes): `Generate a horizontal bar chart of framework compliance scores.      Returns a b`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 152`** (1 nodes): `Build per-framework breakdown for the compliance section.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 153`** (1 nodes): `Aggregate most violated controls across all findings.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 154`** (1 nodes): `Locate an available Chromium-based browser for high-fidelity PDF printing.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 155`** (1 nodes): `Render HTML to PDF using an optimized headless Chromium/Edge browser with isolat`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 156`** (1 nodes): `Generate a consistent cache key for scan payload.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 157`** (1 nodes): `Generate a PDF audit report from scan_data with caching and high-speed execution`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 158`** (1 nodes): `Append an event to the scan's event queue.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 159`** (1 nodes): `Extract text files from a ZIP archive. Returns [{path, content}].`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 160`** (1 nodes): `Build a truncated code context string from extracted files.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 161`** (1 nodes): `Robustly extract a JSON array or object from an LLM response.     Handles: raw J`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 162`** (1 nodes): `Call OmegaPlus API (or Groq fallback) with strict timeouts, fast models, and gra`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 163`** (1 nodes): `Fast, accurate deterministic static vulnerability detector for source files.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 164`** (1 nodes): `Full AI pipeline: findings → CVSS → compliance → remediation → summary.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 165`** (1 nodes): `Upload a ZIP file and start an async AI security scan.     Returns immediately w`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 166`** (1 nodes): `Server-Sent Events stream for real-time scan progress.     Connect immediately a`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 167`** (1 nodes): `Return the full scan result JSON (findings, summary, scores).`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 168`** (1 nodes): `Generate and stream the PDF report for a completed scan.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 169`** (1 nodes): `Clean up scan state and temp files.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 170`** (1 nodes): `test_groq_pdf_pipeline.py ──────────────────────────────────────────────────────`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 171`** (1 nodes): `Test Groq API response for security findings.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 172`** (1 nodes): `Call Groq API with retries and backoff for rate limits.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 173`** (1 nodes): `Fast, accurate deterministic static vulnerability detector for source files.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 174`** (1 nodes): `Full AI pipeline: findings → CVSS → compliance → remediation → summary.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 175`** (1 nodes): `Upload a ZIP file and start an async AI security scan.     Returns immediately w`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 176`** (1 nodes): `Server-Sent Events stream for real-time scan progress.     Connect immediately a`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 177`** (1 nodes): `Return the full scan result JSON (findings, summary, scores).`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 178`** (1 nodes): `Generate and stream the PDF report for a completed scan.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 179`** (1 nodes): `Build per-framework breakdown for the compliance section.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 180`** (1 nodes): `Aggregate most violated controls across all findings.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 181`** (1 nodes): `Locate an available Chromium-based browser for high-fidelity PDF printing.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 182`** (1 nodes): `Render HTML to PDF using a headless Chromium browser with perfect CSS fidelity.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `_FakeSession` connect `Community 2` to `Community 0`, `Community 3`, `Community 6`?**
-  _High betweenness centrality (0.062) - this node is a cross-community bridge._
-- **Why does `StorageObjectInfo` connect `Community 3` to `Community 0`, `Community 2`, `Community 5`?**
-  _High betweenness centrality (0.048) - this node is a cross-community bridge._
-- **Are the 12 inferred relationships involving `_FakeSession` (e.g. with `Scan` and `ScanStatus`) actually correct?**
-  _`_FakeSession` has 12 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 14 inferred relationships involving `SupabaseStorage` (e.g. with `Settings` and `_NotFoundError`) actually correct?**
-  _`SupabaseStorage` has 14 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 19 inferred relationships involving `Base` (e.g. with `AuditEvent` and `ComplianceViolation`) actually correct?**
-  _`Base` has 19 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 15 inferred relationships involving `ValueError` (e.g. with `derive_and_validate_settings()` and `validate_upload_contract()`) actually correct?**
-  _`ValueError` has 15 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `Generate Archon raster brand assets from the canonical shield geometry.`, `initial schema  Revision ID: 0001_initial_schema Revises: Create Date: 2026-07-1`, `Raised when architecture input cannot be parsed safely.` to the rest of the system?**
-  _11 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Why does `get()` connect `Community 1` to `Community 0`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 7`, `Community 8`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 17`, `Community 18`, `Community 20`, `Community 21`, `Community 25`, `Community 26`, `Community 28`?**
+  _High betweenness centrality (0.307) - this node is a cross-community bridge._
+- **Why does `run_full_scan()` connect `Community 2` to `Community 0`, `Community 1`, `Community 4`, `Community 5`, `Community 7`, `Community 8`, `Community 20`, `Community 25`?**
+  _High betweenness centrality (0.092) - this node is a cross-community bridge._
+- **Why does `now()` connect `Community 1` to `Community 32`, `Community 0`, `Community 2`, `Community 3`, `Community 4`, `Community 6`, `Community 8`, `Community 10`, `Community 12`, `Community 14`?**
+  _High betweenness centrality (0.071) - this node is a cross-community bridge._
+- **Are the 149 inferred relationships involving `get()` (e.g. with `_build_controls_context()` and `_get_val()`) actually correct?**
+  _`get()` has 149 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 57 inferred relationships involving `AuthenticatedUser` (e.g. with `AuditEventResponse` and `AuditEventListResponse`) actually correct?**
+  _`AuthenticatedUser` has 57 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 50 inferred relationships involving `Scan` (e.g. with `Export API — CSV and JSON download of scan findings.  GET /api/v1/scans/{scan_id` and `Escape CSV injection by prefixing dangerous cells with a single quote.`) actually correct?**
+  _`Scan` has 50 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 42 inferred relationships involving `SupabaseStorage` (e.g. with `ReportQueueResponse` and `ReportResponse`) actually correct?**
+  _`SupabaseStorage` has 42 INFERRED edges - model-reasoned connections that need verification._

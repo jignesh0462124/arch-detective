@@ -4,10 +4,11 @@ import asyncio
 import tempfile
 import uuid
 from pathlib import Path
+from typing import Literal
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy import func, select, update
+from sqlalchemy import case, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth.dependencies import get_current_user
@@ -15,10 +16,13 @@ from app.auth.permissions import ROLE_RANK, get_workspace_role, require_workspac
 from app.config import settings
 from app.database import get_db
 from app.ingestion.code_extractor import GitSecurityError, validate_public_git_url
+from app.models.compliance_violation import ComplianceViolation
+from app.models.finding import Finding, FindingSource, Severity
 from app.models.scan import Scan, ScanStatus, SourceType
 from app.models.scan_artifact import ArtifactStatus, ScanArtifact
 from app.models.workspace import WorkspaceRole
 from app.schemas.auth import AuthenticatedUser
+from app.schemas.finding import FindingListResponse, FindingUpdateRequest
 from app.schemas.scan import (
     ScanCreate,
     ScanCreateResponse,
@@ -36,9 +40,10 @@ from app.storage.client import (
     SupabaseStorage,
 )
 from app.storage.paths import sanitize_filename, scan_input_object_path
-from app.tasks.scan_task import cleanup_scan, ingest_scan
+from app.tasks.scan_task import cleanup_scan_inputs, run_full_scan
 
 router = APIRouter(prefix="/scans", tags=["scans"])
+FrameworkFilter = Literal["gdpr", "soc2", "iso27001", "pci_dss", "nist_csf"]
 
 
 def get_scan_storage() -> SupabaseStorage:
@@ -46,12 +51,12 @@ def get_scan_storage() -> SupabaseStorage:
 
 
 def dispatch_ingestion(scan_id: UUID) -> str:
-    result = ingest_scan.delay(str(scan_id))
+    result = run_full_scan.delay(str(scan_id))
     return str(result.id)
 
 
 def dispatch_cleanup(scan_id: UUID) -> str:
-    result = cleanup_scan.delay(str(scan_id))
+    result = cleanup_scan_inputs.delay(str(scan_id))
     return str(result.id)
 
 
@@ -377,6 +382,54 @@ async def list_scans(
     return ScanListResponse(items=scans, total=total, limit=limit, offset=offset)
 
 
+@router.get("/{scan_id}/findings", response_model=FindingListResponse)
+async def list_scan_findings(
+    scan_id: UUID,
+    severity: Severity | None = Query(default=None),
+    framework: FrameworkFilter | None = Query(default=None),
+    source: FindingSource | None = Query(default=None),
+    limit: int = Query(default=20, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
+    user: AuthenticatedUser = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> FindingListResponse:
+    scan = await _load_scan(db, scan_id)
+    await _authorize_scan(db, scan, user.id, WorkspaceRole.VIEWER)
+
+    conditions = [Finding.scan_id == scan.id]
+    if severity is not None:
+        conditions.append(Finding.severity == severity)
+    if source is not None:
+        conditions.append(Finding.source == source)
+    if framework is not None:
+        conditions.append(
+            Finding.violations.any(ComplianceViolation.framework == framework)
+        )
+
+    total_result = await db.execute(
+        select(func.count()).select_from(Finding).where(*conditions)
+    )
+    severity_order = case(
+        (Finding.severity == Severity.CRITICAL, 0),
+        (Finding.severity == Severity.HIGH, 1),
+        (Finding.severity == Severity.MEDIUM, 2),
+        else_=3,
+    )
+    result = await db.execute(
+        select(Finding)
+        .where(*conditions)
+        .order_by(severity_order, Finding.created_at.desc())
+        .limit(limit)
+        .offset(offset)
+    )
+    return FindingListResponse(
+        items=result.scalars().all(),
+        total=total_result.scalar_one(),
+        limit=limit,
+        offset=offset,
+    )
+
+
 @router.get("/{scan_id}", response_model=ScanResponse)
 async def get_scan(
     scan_id: UUID,
@@ -416,3 +469,58 @@ async def delete_scan(
                 detail="Cleanup queue is temporarily unavailable",
             ) from exc
     return ScanDeleteResponse(scan_id=scan.id)
+
+
+# ── Finding triage ────────────────────────────────────────────────────────────
+
+
+@router.patch(
+    "/{scan_id}/findings/{finding_id}",
+    response_model=dict,
+    status_code=status.HTTP_200_OK,
+)
+async def update_finding_state(
+    scan_id: UUID,
+    finding_id: UUID,
+    body: FindingUpdateRequest,
+    user: AuthenticatedUser = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """Triage a finding: change its state and record an audit event."""
+    from app.models.audit_event import AuditEvent
+    from app.models.finding import Finding, FindingState
+
+    scan = await _load_scan(db, scan_id)
+    await _authorize_scan(db, scan, user.id, WorkspaceRole.ANALYST)
+
+    result = await db.execute(
+        select(Finding).where(Finding.id == finding_id, Finding.scan_id == scan_id)
+    )
+    finding = result.scalar_one_or_none()
+    if finding is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Finding not found")
+
+    previous_state = finding.state
+    finding.state = FindingState(body.state)
+
+    audit = AuditEvent(
+        workspace_id=scan.workspace_id,
+        actor_user_id=user.id,
+        event_type="finding.state_changed",
+        resource_type="finding",
+        resource_id=finding_id,
+        event_metadata={
+            "from": previous_state.value if previous_state else None,
+            "to": body.state,
+            "finding_id": str(finding_id),
+            "note": body.note,
+        },
+    )
+    db.add(audit)
+    await db.commit()
+
+    return {
+        "finding_id": str(finding_id),
+        "state": body.state,
+        "previous_state": previous_state.value if previous_state else None,
+    }

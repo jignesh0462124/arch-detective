@@ -1,0 +1,123 @@
+- generic [ref=f6e2]:
+  - generic [ref=f6e3]: Isolated Findings QA · synthetic data only
+  - generic [ref=f6e4]:
+    - generic [ref=f6e5]:
+      - complementary [ref=f6e6]:
+        - link "Archon home" [ref=f6e7] [cursor=pointer]:
+          - /url: /
+          - generic [ref=f6e8]:
+            - img "Archon" [ref=f6e9]
+            - generic [ref=f6e10]: Audit engine
+        - button "F Fixture workspace OWNER · 2 scans" [ref=f6e13]:
+          - generic [ref=f6e14]: F
+          - generic [ref=f6e15]:
+            - generic [ref=f6e16]: Fixture workspace
+            - generic [ref=f6e17]: OWNER · 2 scans
+        - navigation "Workspace navigation" [ref=f6e20]:
+          - generic [ref=f6e21]:
+            - paragraph [ref=f6e22]: Navigation
+            - 'generic "ThreatLens backend: api online" [ref=f6e23]': API online
+          - link "Dashboard" [ref=f6e25] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Codebase Audit" [ref=f6e29] [cursor=pointer]:
+            - /url: /workspace
+          - link "Attack Graph" [ref=f6e33] [cursor=pointer]:
+            - /url: /attack-graph
+          - link "Findings" [ref=f6e37] [cursor=pointer]:
+            - /url: /findings
+          - link "Reports" [ref=f6e43] [cursor=pointer]:
+            - /url: /reports
+          - link "Audit log" [ref=f6e47] [cursor=pointer]:
+            - /url: /audit-log
+          - link "Security Advisor" [ref=f6e51] [cursor=pointer]:
+            - /url: /advisor
+        - link "FU Fixture User fixture@example.invalid" [ref=f6e55] [cursor=pointer]:
+          - /url: /profile
+          - generic [ref=f6e56]: FU
+          - generic [ref=f6e59]:
+            - paragraph [ref=f6e60]: Fixture User
+            - paragraph [ref=f6e61]: fixture@example.invalid
+      - main [ref=f6e64]:
+        - generic [ref=f6e66]:
+          - generic [ref=f6e67]:
+            - paragraph [ref=f6e68]: Triage queue
+            - heading "Findings" [level=1] [ref=f6e69]
+          - toolbar "Application tools" [ref=f6e70]:
+            - 'button "AI model: GLM 5.3 Flash" [ref=f6e73]':
+              - generic [ref=f6e77]: GLM 5.3 Flash
+            - button "AI Advisor" [ref=f6e80]
+            - button "Switch to dark mode" [ref=f6e86]:
+              - generic [ref=f6e89]: Light mode
+        - generic [ref=f6e91]:
+          - generic [ref=f6e92]:
+            - generic [ref=f6e93]:
+              - text: Completed scan
+              - combobox "Completed scan" [ref=f6e94]:
+                - option "Payments service · 10/19/2026, 3:30:00 PM" [selected]
+                - option "Earlier zero-finding scan · 10/18/2026, 3:30:00 PM"
+            - generic [ref=f6e95]: Latest completed scan
+          - status [ref=f6e96]:
+            - paragraph [ref=f6e97]: Loading scan totals…
+    - dialog "AI Security Advisor" [ref=f6e98]:
+      - generic [ref=f6e99]:
+        - generic [ref=f6e105]:
+          - heading "Security Advisor" [level=3] [ref=f6e106]
+          - generic [ref=f6e107]: Online
+        - generic [ref=f6e109]:
+          - 'button "AI model: GLM 5.3 Flash" [ref=f6e111]':
+            - generic [ref=f6e115]: GLM 5.3 Flash
+          - button "Close panel" [ref=f6e118]
+      - generic [ref=f6e122]:
+        - generic [ref=f6e123]:
+          - generic [ref=f6e124]:
+            - generic [ref=f6e125]: Neural Security Reasoning Engine
+            - generic [ref=f6e129]: v2.4-STABLE
+          - generic [ref=f6e130]:
+            - generic [ref=f6e131]:
+              - generic [ref=f6e132]: ACTIVE REASONER
+              - generic [ref=f6e133]: GLM 5.3 Flash
+            - generic [ref=f6e134]:
+              - generic [ref=f6e135]: CONTEXT BUFFER
+              - text: 1,048,576 TOKENS
+            - generic [ref=f6e136]:
+              - generic [ref=f6e137]: EST. LATENCY
+              - text: ~250 ms
+            - generic [ref=f6e138]:
+              - generic [ref=f6e139]: AUDIT GROUNDING
+              - text: CVSS v3.1 + OWASP
+          - paragraph [ref=f6e140]: Ready to assist with repository vulnerability triage, CWE taxonomic analysis, compliance cross-referencing, and AST remediation blueprints.
+        - generic [ref=f6e141]:
+          - generic [ref=f6e142]: Rapid Technical Inquiries
+          - generic [ref=f6e143]:
+            - button "CWE-89 SQL Injection Mitigation How do I mitigate SQL injection using AST parameterized queries in Python / FastAPI?" [ref=f6e144]:
+              - generic [ref=f6e145]: CWE-89
+              - generic [ref=f6e146]:
+                - paragraph [ref=f6e147]: SQL Injection Mitigation
+                - paragraph [ref=f6e148]: How do I mitigate SQL injection using AST parameterized queries in Python / FastAPI?
+            - button "GDPR // ART.32 Regulatory Compliance Explain GDPR Article 32 technical security measures and required controls for user data." [ref=f6e149]:
+              - generic [ref=f6e150]: GDPR // ART.32
+              - generic [ref=f6e151]:
+                - paragraph [ref=f6e152]: Regulatory Compliance
+                - paragraph [ref=f6e153]: Explain GDPR Article 32 technical security measures and required controls for user data.
+            - 'button "CVSS v3.1 Exploitability Scoring Explain CVSS v3.1 base score metrics: Attack Vector, Complexity, Privileges, and Impact." [ref=f6e154]':
+              - generic [ref=f6e155]: CVSS v3.1
+              - generic [ref=f6e156]:
+                - paragraph [ref=f6e157]: Exploitability Scoring
+                - paragraph [ref=f6e158]: "Explain CVSS v3.1 base score metrics: Attack Vector, Complexity, Privileges, and Impact."
+            - button "CWE-798 Hardcoded Secret Remediation What is the remediation procedure for hardcoded API keys and secrets detected in source code?" [ref=f6e159]:
+              - generic [ref=f6e160]: CWE-798
+              - generic [ref=f6e161]:
+                - paragraph [ref=f6e162]: Hardcoded Secret Remediation
+                - paragraph [ref=f6e163]: What is the remediation procedure for hardcoded API keys and secrets detected in source code?
+            - button "OWASP A01 Broken Access Control How do I prevent Broken Object Level Authorization (BOLA / IDOR) in REST endpoints?" [ref=f6e164]:
+              - generic [ref=f6e165]: OWASP A01
+              - generic [ref=f6e166]:
+                - paragraph [ref=f6e167]: Broken Access Control
+                - paragraph [ref=f6e168]: How do I prevent Broken Object Level Authorization (BOLA / IDOR) in REST endpoints?
+      - generic [ref=f6e170]:
+        - generic [ref=f6e171]:
+          - generic [ref=f6e172]: ">"
+          - textbox "Ask GLM 5.3 Flash about findings, code fixes, CVSS, compliance…" [ref=f6e173]
+        - generic [ref=f6e174]:
+          - generic [ref=f6e175]: Enter to query · Shift+Enter newline
+          - button "Dispatch" [disabled] [ref=f6e176]

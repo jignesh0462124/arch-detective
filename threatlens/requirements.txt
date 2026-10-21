@@ -30,9 +30,7 @@ sentence-transformers==3.1.1
 # Security scanners and ingestion
 semgrep==1.90.0
 bandit==1.7.10
-trufflehog3==3.0.9
 pip-audit==2.7.3
-gitpython==3.1.43
 scikit-learn==1.5.2
 numpy==1.26.4
 pandas==2.2.3
@@ -48,3 +46,6 @@ slowapi==0.1.9
 flower==2.0.1
 python-dotenv==1.0.1
 structlog==24.4.0
+
+# Observability
+sentry-sdk[fastapi]==2.19.2

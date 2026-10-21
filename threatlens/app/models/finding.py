@@ -17,6 +17,7 @@ class Severity(StrEnum):
 
 
 class FindingSource(StrEnum):
+    STATIC_RULE = "static-rule"
     SEMGREP = "semgrep"
     BANDIT = "bandit"
     TRUFFLEHOG = "trufflehog"

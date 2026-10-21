@@ -1,0 +1,22 @@
+<div class="report-section">
+  <div class="section-header"><div><div class="section-eyebrow">01 · Saved Assessment</div><div class="section-heading">Executive Summary</div><div class="section-heading-sub">Automated findings and recorded priorities · human review required.</div></div></div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+    {% for severity in ['critical', 'high', 'medium', 'low'] %}
+    <div class="card-lifted" style="padding:14px;border-top:3px solid var(--severity-{{ severity }});"><div>{{ severity | title }}</div><div style="font-size:24pt;font-weight:700;">{{ severity_counts[severity] }}</div></div>
+    {% endfor %}
+  </div>
+  <div class="card-lifted" style="padding:18px;margin-bottom:20px;">
+    {% if summary.summary %}{% for paragraph in summary.summary.split('\n\n') %}<p style="margin-bottom:10px;white-space:pre-wrap;">{{ paragraph }}</p>{% endfor %}
+    {% else %}<p>No executive summary was recorded. Review the {{ findings | length }} saved findings and coverage limitations below.</p>{% endif %}
+    {% if summary.top_priorities %}<h3>Recorded priorities</h3><ol>{% for priority in summary.top_priorities %}<li>{{ priority }}</li>{% endfor %}</ol>{% endif %}
+  </div>
+  <div class="card-lifted" style="padding:18px;">
+    <h3>Coverage &amp; limitations</h3>
+    <p>Automated assessment, not a compliance certificate or proof that the project is secure. Static checks and model review have different coverage and input limits. Unreported issues may still exist.</p>
+    {% if scan.completed_at %}<p>Audit completed: {{ scan.completed_at }}</p>{% endif %}
+    {% if analysis or coverage %}<dl>{% for section in [analysis, coverage] %}{% for key, value in section.items() %}<dt style="font-weight:700;margin-top:8px;">{{ key | replace('_', ' ') | title }}</dt><dd>{% if value is sequence and value is not string and value is not mapping %}<ul>{% for item in value %}<li>{{ item }}</li>{% endfor %}</ul>{% elif value == 'static_and_ai' %}Static checks and AI review{% elif value == 'static' %}Static checks{% else %}{{ value }}{% endif %}</dd>{% endfor %}{% endfor %}</dl>
+    {% else %}<p>Detailed scan coverage was not recorded for this audit.</p>{% endif %}
+    {% if exclusions %}<p>Recorded exclusions: {{ exclusions | join('; ') }}</p>{% endif %}
+    <p>Source previews expire separately; saved findings and reports remain available. This report reflects saved evidence and current triage states and does not rerun analysis.</p>
+  </div>
+</div>

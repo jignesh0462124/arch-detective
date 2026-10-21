@@ -1,0 +1,40 @@
+- generic [ref=f3e3]:
+  - banner [ref=f3e4]:
+    - generic [ref=f3e5]:
+      - link "Archon home" [ref=f3e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f3e7]:
+          - img "Archon" [ref=f3e8]
+          - generic [ref=f3e9]: Audit engine
+      - generic [ref=f3e10]:
+        - link "Back to site" [ref=f3e11] [cursor=pointer]:
+          - /url: /
+        - button "Switch to dark mode" [ref=f3e15]
+  - main [ref=f3e18]:
+    - generic [ref=f3e19]:
+      - generic [ref=f3e21]:
+        - generic "Account access" [ref=f3e22]:
+          - button "Sign in" [pressed] [ref=f3e23]
+          - button "Create account" [ref=f3e24]
+        - generic [ref=f3e25]:
+          - heading "Welcome back" [level=1] [ref=f3e29]
+          - paragraph [ref=f3e30]: Sign in to review your scans, findings and audit reports.
+        - group [ref=f3e32]:
+          - generic [ref=f3e33]:
+            - text: Email address
+            - textbox "Email address" [ref=f3e34]:
+              - /placeholder: you@example.com
+          - generic [ref=f3e35]:
+            - generic [ref=f3e36]:
+              - generic [ref=f3e37]: Password
+              - button "Forgot password?" [ref=f3e38]
+            - generic [ref=f3e39]:
+              - textbox "Password" [ref=f3e40]
+              - button "Show password" [ref=f3e41]
+            - paragraph [ref=f3e44]: Use your existing account password.
+          - button "Sign in" [ref=f3e45]
+      - complementary [ref=f3e48]:
+        - generic [ref=f3e49]:
+          - paragraph [ref=f3e50]: YOUR AUDIT WORKSPACE
+          - paragraph [ref=f3e51]: From source evidence to clearer security decisions.
+    - paragraph [ref=f3e52]: Use a personal or work email. Your saved audits stay with your account.

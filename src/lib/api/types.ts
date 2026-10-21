@@ -10,9 +10,10 @@ export type ScanType = "codebase" | "architecture" | "logs" | "full";
 export type SourceType = "upload" | "git" | "architecture" | "logs" | "full";
 export type Severity = "critical" | "high" | "medium" | "low";
 export type WorkspaceRole = "owner" | "admin" | "analyst" | "viewer";
-export type ReportStatus = "queued" | "generating" | "ready" | "failed";
+export type ReportStatus = "pending" | "queued" | "generating" | "ready" | "failed";
 export type RemediationPriority = "immediate" | "short-term" | "long-term";
 export type FindingSource =
+  | "static-rule"
   | "semgrep"
   | "bandit"
   | "trufflehog"
@@ -20,10 +21,11 @@ export type FindingSource =
   | "npm-audit"
   | "log-anomaly"
   | "llm-review"
-  | "architecture";
+  | "architecture"
+  | "code";
 
 export interface HealthResponse {
-  status: "healthy";
+  status: "healthy" | "degraded" | "offline";
   service: "threatlens";
 }
 
@@ -71,6 +73,7 @@ export interface Scan {
   progress: number;
   finding_count: number;
   framework_scores: Record<string, number>;
+  severity_counts?: { critical: number; high: number; medium: number; low: number };
   error_code: string | null;
   error_message: string | null;
   created_at: string;
@@ -108,6 +111,13 @@ export interface Finding {
   assigned_to: string | null;
   created_at: string;
   updated_at: string;
+  violations?: Array<{
+    framework: string;
+    control_id: string;
+    control_title: string;
+    description?: string;
+    status?: string;
+  }>;
 }
 
 export interface FindingDetail extends Finding {

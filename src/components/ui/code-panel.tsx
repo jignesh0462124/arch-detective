@@ -26,7 +26,7 @@ export function CodePanel({
     <div
       className={cn(
         "overflow-hidden rounded-sm",
-        tone === "dark" ? "bg-ink text-cream hairline" : "bg-cream text-foreground hairline",
+        tone === "dark" ? "bg-[#0d1117] text-white hairline border-border" : "bg-card text-foreground hairline",
         className,
       )}
     >
@@ -34,21 +34,21 @@ export function CodePanel({
         <div
           className={cn(
             "flex items-center justify-between gap-3 border-b px-3 py-2",
-            tone === "dark" ? "border-cream/10" : "hairline-soft border-b",
+            tone === "dark" ? "border-white/10 bg-white/5" : "hairline-soft border-b bg-secondary/30",
           )}
         >
           <div className="flex items-center gap-2">
             {isTerminal ? (
               <div className="flex gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-primary" />
-                <span className="h-2 w-2 rounded-full bg-secondary" />
-                <span className="h-2 w-2 rounded-full bg-success" />
+                <span className="h-2 w-2 rounded-full bg-red-400" />
+                <span className="h-2 w-2 rounded-full bg-amber-400" />
+                <span className="h-2 w-2 rounded-full bg-emerald-400" />
               </div>
             ) : null}
             <span
               className={cn(
                 "font-mono text-[11px]",
-                tone === "dark" ? "text-cream/70" : "text-muted-foreground",
+                tone === "dark" ? "text-white/70" : "text-muted-foreground",
               )}
             >
               {filename ?? label}
@@ -58,7 +58,7 @@ export function CodePanel({
             <span
               className={cn(
                 "font-mono text-[10px] uppercase tracking-wider",
-                tone === "dark" ? "text-cream/40" : "text-muted-foreground",
+                tone === "dark" ? "text-white/40" : "text-muted-foreground",
               )}
             >
               {label}
