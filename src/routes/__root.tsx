@@ -77,30 +77,30 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Archon - LLM Compliance & Threat Modeling" },
+      { title: "Archon — Security Audits & Threat Modeling" },
       {
         name: "description",
         content:
-          "Archon is an agentic threat modeling engine that maps system architectures to compliance frameworks and ships audit-ready reports.",
+          "Review code, explore security findings, map framework controls, and prepare reports with Archon. Automated assessments require human review.",
       },
       { name: "author", content: "Archon" },
       {
         property: "og:title",
-        content: "Archon - LLM Compliance & Threat Modeling",
+        content: "Archon — Security Audits & Threat Modeling",
       },
       {
         property: "og:description",
         content:
-          "Agentic threat modeling that maps vulnerabilities to SOC 2, ISO 27001, HIPAA, GDPR, PCI-DSS and NIST controls.",
+          "Explore security findings, source evidence, framework mappings, and reports in one workspace.",
       },
       { property: "og:type", content: "website" },
       { property: "og:image", content: "/og-image.png" },
-      { property: "og:image:alt", content: "Archon agentic compliance audit engine" },
+      { property: "og:image:alt", content: "Archon security audit workspace" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: "/og-image.png" },
-      { name: "twitter:image:alt", content: "Archon agentic compliance audit engine" },
+      { name: "twitter:image:alt", content: "Archon security audit workspace" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -160,7 +160,9 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ScopedAiChatProvider><Outlet /></ScopedAiChatProvider>
+        <ScopedAiChatProvider>
+          <Outlet />
+        </ScopedAiChatProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

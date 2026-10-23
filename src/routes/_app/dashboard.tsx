@@ -414,8 +414,8 @@ function RecentScans({ scans, workspaceId }: { scans: DashboardScan[]; workspace
       title="Recent scans"
       description="The five newest scan submissions, including work in progress and failed attempts."
       actions={
-        <Link to="/workspace" className={secondaryActionClass}>
-          All audits <ArrowRight size={16} aria-hidden="true" />
+        <Link to="/reports" className={secondaryActionClass}>
+          Completed reports <ArrowRight size={16} aria-hidden="true" />
         </Link>
       }
       padding="none"

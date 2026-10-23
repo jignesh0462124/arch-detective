@@ -1,313 +1,239 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Lightning, CheckCircle } from "@phosphor-icons/react";
-import {
-  MarketingBackdrop,
-  MarketingFooter,
-  MarketingHeader,
-} from "@/components/marketing/MarketingChrome";
-import { SaaSHeroMotionGraphic } from "@/components/marketing/SaaSHeroMotionGraphic";
-import { useFrameworks } from "@/hooks/useFrameworks";
-import { CoverageBar } from "@/components/ui/coverage-bar";
+import { ArrowDown, ArrowRight } from "@phosphor-icons/react";
+import { MarketingFooter, MarketingHeader } from "@/components/marketing/MarketingChrome";
+import { LandingCodePreview } from "@/components/marketing/LandingCodePreview";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Archon — Agentic Compliance & Threat Modeling" },
+      { title: "Archon — Security Audits & Threat Modeling" },
       {
         name: "description",
         content:
-          "Archon parses architectures and logs, finds vulnerabilities, and ships audit-ready reports against SOC 2, ISO 27001, HIPAA, GDPR, PCI-DSS, and NIST in minutes.",
+          "Review project code, investigate security findings, explore framework mappings, and prepare reports with Archon.",
       },
     ],
   }),
   component: Landing,
 });
 
-const PIPELINE = [
-  { code: "01", label: "Repository analysis", note: "parse · crawl · index" },
-  { code: "02", label: "Graph extraction", note: "topology · trust boundaries" },
-  { code: "03", label: "Threat assessment", note: "STRIDE · attack paths" },
-  { code: "04", label: "Framework alignment", note: "SOC 2 · ISO · NIST · …" },
-  { code: "05", label: "Signed audit report", note: "PDF · countersign" },
+const OUTCOMES = [
+  { title: "Source evidence", note: "Trace findings to recorded file locations." },
+  { title: "Clear remediation", note: "Review suggested fixes with supporting evidence." },
+  { title: "Framework mappings", note: "Connect findings to selected controls." },
+  { title: "Exportable reports", note: "Share findings and remediation for review." },
 ];
-
-const COVERAGE = [
-  { label: "SOC 2", pct: 92 },
-  { label: "ISO 27001", pct: 78 },
-  { label: "PCI-DSS", pct: 64 },
-  { label: "HIPAA", pct: 81 },
-  { label: "GDPR", pct: 71 },
-  { label: "NIST 800-53", pct: 58 },
+const WORKFLOW = [
+  { title: "Upload your project", note: "Start with a project ZIP." },
+  { title: "Review findings", note: "Inspect severity and source evidence." },
+  { title: "Plan the fix", note: "Review remediation and verification steps." },
+  { title: "Share the report", note: "Export findings for your team." },
 ];
+// Public catalog names only; no request or sample assessment scores.
+const FRAMEWORKS = ["SOC 2", "ISO 27001", "GDPR", "PCI DSS", "NIST CSF"];
+const container = "mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10";
+const eyebrow = "font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-accent";
+const primaryAction =
+  "inline-flex min-h-12 items-center justify-center gap-3 rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background";
 
 function Landing() {
-  const { data: frameworksData } = useFrameworks();
-  const frameworks = frameworksData ?? [];
-
   return (
-    <div className="relative min-h-screen bg-background text-foreground antialiased selection:bg-accent/20">
-      <MarketingBackdrop />
-
-      <div className="relative z-10 flex min-h-screen flex-col">
-        <MarketingHeader current="home" />
-
-        <div className="mx-auto flex w-full max-w-[1280px] flex-1 flex-col">
-          <main className="flex-1 space-y-6 py-4 sm:space-y-8 sm:py-6 lg:space-y-8 lg:py-6">
-            {/* Hero — Fits 100% in viewport cleanly */}
-            <section className="px-4 sm:px-6 lg:h-[min(620px,calc(100svh-120px))] lg:min-h-[520px]">
-              <div
-                data-testid="landing-hero"
-                className="grid h-full grid-cols-1 overflow-hidden rounded-sm border border-border bg-card lg:grid-cols-12"
+    <div className="min-h-screen bg-background text-foreground antialiased selection:bg-accent/20">
+      <a
+        href="#main-content"
+        className="sr-only fixed left-4 top-4 z-50 rounded-md bg-card px-4 py-3 text-foreground focus:not-sr-only"
+      >
+        Skip to content
+      </a>
+      <MarketingHeader current="home" />
+      <main id="main-content" tabIndex={-1} className="outline-none">
+        <section aria-labelledby="hero-title" className={container}>
+          <div
+            data-testid="landing-hero"
+            className="grid items-center gap-10 py-10 sm:gap-12 sm:py-14 lg:grid-cols-[1.12fr_1fr] lg:gap-14 lg:py-12"
+          >
+            <div className="min-w-0 lg:py-10">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:text-xs">
+                Code review, with context
+              </p>
+              <h1
+                id="hero-title"
+                className="mt-6 max-w-[15ch] text-[clamp(2.6rem,4.5vw,4rem)] font-medium leading-[1.06] tracking-[-0.045em] sm:mt-8"
               >
-                <div className="flex flex-col justify-center border-b border-border px-5 py-8 sm:px-8 sm:py-10 lg:col-span-7 lg:border-b-0 lg:border-r lg:px-10 lg:py-8 xl:px-12">
-                  <div className="mb-4 flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center gap-1.5 rounded-md bg-accent/10 px-2.5 py-1 text-[12px] font-medium text-accent">
-                      <Lightning size={11} weight="fill" /> Llama 3.1 70B
-                    </span>
-                    <span className="text-[12px] text-muted-foreground">Powered by Groq</span>
-                  </div>
+                Understand your code. Prioritize{" "}
+                <span className="block text-accent">what matters.</span>
+              </h1>
+              <p className="mt-6 max-w-[42ch] text-base leading-relaxed text-muted-foreground sm:text-lg">
+                Review security findings, trace the evidence, and plan your next fix in one
+                workspace.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3 sm:mt-10">
+                <Link to="/login" className={primaryAction}>
+                  Start an audit <ArrowRight size={16} aria-hidden="true" />
+                </Link>
+                <a
+                  href="#pipeline"
+                  className="inline-flex min-h-12 items-center gap-3 text-sm font-medium underline decoration-border underline-offset-8 transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  See the workflow <ArrowDown size={15} aria-hidden="true" />
+                </a>
+              </div>
+              <p className="mt-5 text-xs leading-relaxed text-muted-foreground">
+                Automated assessments. Human review required.
+              </p>
+            </div>
+            <figure className="mx-auto w-full max-w-[520px] lg:justify-self-end">
+              <div className="overflow-hidden rounded-md bg-[#111111]">
+                <img
+                  src="/assets/archon-system-audit.webp"
+                  alt="Architectural model linking cloud infrastructure, source evidence, and an audit report"
+                  className="aspect-[1/1.02] w-full object-contain"
+                  width={1122}
+                  height={1402}
+                  loading="eager"
+                  fetchPriority="high"
+                />
+              </div>
+              <figcaption className="mt-2 text-[11px] text-muted-foreground">
+                Workflow illustration
+              </figcaption>
+            </figure>
+          </div>
+        </section>
 
-                  <h1 className="max-w-[14ch] text-[38px] font-medium leading-[1.05] sm:text-5xl lg:text-[52px] xl:text-[56px]">
-                    Audit at <span className="text-accent">machine</span> speed.
-                  </h1>
-
-                  <p className="mt-4 max-w-xl text-[16px] leading-relaxed text-muted-foreground sm:text-[17px]">
-                    Archon parses your architecture, finds vulnerabilities, maps them to controls,
-                    and ships signed audit reports in minutes — not weeks.
+        <section aria-label="From source to next steps" className="border-y border-border">
+          <div className={`${container} py-8 lg:flex lg:items-start lg:gap-8 lg:py-9`}>
+            <p className="mb-6 shrink-0 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground lg:mb-0 lg:pt-1">
+              From source to next steps
+            </p>
+            <ul className="grid flex-1 gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-7">
+              {OUTCOMES.map((item) => (
+                <li key={item.title} className="border-l border-border pl-4 lg:pl-6">
+                  <h2 className="text-sm font-medium">{item.title}</h2>
+                  <p className="mt-2 max-w-[24ch] text-xs leading-relaxed text-muted-foreground">
+                    {item.note}
                   </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
 
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    <Link
-                      to="/login"
-                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-soft transition-all hover:-translate-y-px hover:shadow-soft-lg"
-                    >
-                      Launch console <ArrowRight size={14} weight="bold" />
-                    </Link>
-                    <Link
-                      to="/reports"
-                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-card px-5 py-2.5 text-sm font-medium text-foreground hairline shadow-soft transition-all hover:-translate-y-px hover:shadow-soft-lg"
-                    >
-                      View reports
-                    </Link>
-                  </div>
-                </div>
-
-                <div className="aspect-[4/5] bg-[#111111] lg:col-span-5 lg:aspect-auto">
-                  <figure className="relative h-full overflow-hidden bg-[#111111]">
-                    <img
-                      src="/assets/archon-system-audit.webp"
-                      alt="Architectural model of cloud infrastructure connected to an audit report"
-                      className="h-full w-full object-contain object-center"
-                      width={1152}
-                      height={1434}
-                      loading="eager"
-                      fetchPriority="high"
-                    />
-                    <figcaption className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-md border border-white/20 bg-ink/90 px-2.5 py-1.5 font-mono text-[10px] text-white backdrop-blur-sm">
-                      <span className="size-1.5 rounded-full bg-success" />
-                      Live system model
-                    </figcaption>
-                  </figure>
-                </div>
+        <div className="bg-card/40">
+          <section
+            id="product"
+            aria-labelledby="product-title"
+            className={`${container} scroll-mt-24 pb-4 pt-14 sm:pt-20`}
+          >
+            <div className="mb-8 flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
+              <div>
+                <p className={eyebrow}>01 / Investigate</p>
+                <h2
+                  id="product-title"
+                  className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl"
+                >
+                  Every finding, in context.
+                </h2>
               </div>
-            </section>
-
-            {/* Product — 3-up features */}
-            <section id="product" className="scroll-mt-20 px-4 sm:px-6">
-              <div className="grid grid-cols-1 overflow-hidden rounded-sm hairline bg-card md:grid-cols-3 md:divide-x md:divide-border">
-                {[
-                  {
-                    n: "01",
-                    t: "Parse",
-                    b: "Extract assets, dataflows, and trust boundaries from code and configs.",
-                  },
-                  {
-                    n: "02",
-                    t: "Map",
-                    b: "Map code vulnerabilities directly to statutory compliance controls.",
-                  },
-                  {
-                    n: "03",
-                    t: "Report",
-                    b: "Generate auditor-ready compliance attestations and sealed PDFs.",
-                  },
-                ].map((f) => (
-                  <div
-                    key={f.n}
-                    className="border-b border-border px-6 py-8 last:border-b-0 sm:px-7 md:border-b-0"
-                  >
-                    <div className="section-title">{`// ${f.n}`}</div>
-                    <h3 className="mt-2 text-xl font-medium">{f.t}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.b}</p>
+              <p className="max-w-[36ch] text-sm leading-relaxed text-muted-foreground">
+                See the affected file, understand the evidence, and review suggested remediation.
+              </p>
+            </div>
+            <LandingCodePreview />
+          </section>
+          <section
+            id="pipeline"
+            aria-labelledby="workflow-title"
+            className={`${container} relative scroll-mt-24 py-14 sm:py-20`}
+          >
+            {/* Preserve links to the former motion section. */}
+            <span id="audit-flow" className="absolute top-0 scroll-mt-24" />
+            <p className={eyebrow}>02 / Workflow</p>
+            <h2
+              id="workflow-title"
+              className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl"
+            >
+              A clear path from upload to report.
+            </h2>
+            <ol className="mt-9 grid gap-8 sm:mt-12 sm:grid-cols-2 lg:grid-cols-4">
+              {WORKFLOW.map((step, index) => (
+                <li key={step.title}>
+                  <div className="flex items-center gap-5" aria-hidden="true">
+                    <span className="font-mono text-sm text-accent">0{index + 1}</span>
+                    <span className="h-px flex-1 bg-border" />
                   </div>
-                ))}
-              </div>
-            </section>
-
-            {/* Audit flow motion */}
-            <section id="audit-flow" className="scroll-mt-20 px-4 sm:px-6">
-              <div className="overflow-hidden rounded-sm hairline bg-card">
-                <div className="grid lg:grid-cols-12">
-                  <div className="border-b border-border p-6 sm:p-8 lg:col-span-4 lg:border-b-0 lg:border-r">
-                    <p className="section-title text-accent">// Live audit path</p>
-                    <h2 className="mt-2 max-w-[14ch] text-3xl font-medium leading-tight md:text-4xl">
-                      Audit path in motion.
-                    </h2>
-                    <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
-                      Trace from repository ingestion to ranked findings, control mapping, and sealed reports.
-                    </p>
-
-                    <div className="mt-8 grid grid-cols-3 border-y border-border text-sm">
-                      {[
-                        ["5", "stages"],
-                        ["38s", "ETA"],
-                        ["71%", "surface closed"],
-                      ].map(([value, label], index) => (
-                        <div
-                          key={label}
-                          className={[
-                            "py-4",
-                            index === 0 ? "pr-4" : "border-l border-border px-4",
-                          ].join(" ")}
-                        >
-                          <div className="font-mono text-xl font-semibold text-foreground">
-                            {value}
-                          </div>
-                          <div className="mt-1 text-xs text-muted-foreground">{label}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="lg:col-span-8">
-                    <AuditMotionGraphic />
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Pipeline */}
-            <section id="pipeline" className="scroll-mt-20 px-4 text-foreground sm:px-6">
-              <div className="overflow-hidden rounded-sm hairline bg-card">
-                <div className="grid gap-5 border-b border-border p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.62fr)] lg:items-end">
-                  <div>
-                    <p className="section-title text-accent">// Pipeline</p>
-                    <h2 className="mt-2 max-w-[20ch] text-3xl font-medium leading-tight md:text-4xl">
-                      From repository to signed report.
-                    </h2>
-                  </div>
-                  <p className="max-w-lg text-sm leading-relaxed text-muted-foreground lg:justify-self-end">
-                    Five stages keeping every finding traceable to code evidence and statutory controls.
+                  <h3 className="mt-4 text-base font-medium">{step.title}</h3>
+                  <p className="mt-2 max-w-[27ch] text-sm leading-relaxed text-muted-foreground">
+                    {step.note}
                   </p>
-                </div>
-
-                <ol className="grid md:grid-cols-5">
-                  {PIPELINE.map((stage, index) => (
-                    <li
-                      key={stage.code}
-                      className={[
-                        "relative min-h-[148px] px-6 py-6",
-                        index === PIPELINE.length - 1
-                          ? "border-b-0 md:border-r-0"
-                          : "border-b border-border md:border-b-0 md:border-r",
-                      ].join(" ")}
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="font-mono text-[11px] font-medium text-accent">
-                          {stage.code}
-                        </span>
-                        <span className="font-mono text-[10px] text-muted-foreground">step</span>
-                      </div>
-                      <h3 className="mt-7 text-base font-medium leading-snug">{stage.label}</h3>
-                      <p className="mt-1 font-mono text-[10px] leading-relaxed text-muted-foreground">
-                        {stage.note}
-                      </p>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            </section>
-
-            {/* Frameworks coverage */}
-            <section id="frameworks" className="scroll-mt-20 px-4 sm:px-6">
-              <div className="overflow-hidden rounded-sm hairline bg-card">
-                <div className="grid gap-5 border-b border-border p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-                  <div>
-                    <p className="section-title text-accent">// Frameworks</p>
-                    <h2 className="mt-2 text-3xl font-medium leading-tight md:text-4xl">
-                      Coverage across every framework.
-                    </h2>
-                    <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                      See current pass rates and the active control catalogs applied to every scan.
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground lg:pb-1">
-                    <span className="size-2 rounded-full bg-success" />
-                    {frameworks.length || 6} frameworks active
-                  </div>
-                </div>
-
-                <div className="grid lg:grid-cols-12">
-                  <div className="lg:col-span-7">
-                    <div className="border-b border-border px-6 py-5 sm:px-8">
-                      <p className="section-title">Coverage</p>
-                      <h3 className="mt-1 text-xl font-medium">Current compliance posture</h3>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        Control pass rates mapped across audit scans.
-                      </p>
-                    </div>
-                    <div className="grid gap-x-8 gap-y-6 p-6 sm:grid-cols-2 sm:p-8">
-                      {COVERAGE.map((c) => (
-                        <CoverageBar key={c.label} label={c.label} pct={c.pct} />
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="border-t border-border bg-secondary lg:col-span-5 lg:border-l lg:border-t-0">
-                    <div className="border-b border-border px-6 py-5 sm:px-8">
-                      <p className="section-title">Catalog</p>
-                      <h3 className="mt-1 text-xl font-medium">Controls included</h3>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        Each selected catalog is mapped during the same review.
-                      </p>
-                    </div>
-                    <ul className="grid sm:grid-cols-2 lg:grid-cols-2">
-                      {(frameworks.length ? frameworks : [
-                        { id: 'soc2', label: 'SOC 2', controls: 64, version: '2017' },
-                        { id: 'iso', label: 'ISO 27001', controls: 114, version: '2022' },
-                        { id: 'hipaa', label: 'HIPAA', controls: 54, version: '2013' },
-                        { id: 'gdpr', label: 'GDPR', controls: 99, version: '2018' },
-                        { id: 'pcidss', label: 'PCI-DSS', controls: 12, version: 'v4.0' },
-                        { id: 'nist', label: 'NIST 800-53', controls: 110, version: 'Rev5' },
-                      ]).map((f) => (
-                        <li
-                          key={f.id}
-                          className="flex min-h-16 items-center justify-between gap-3 border-b border-border px-6 py-3 sm:odd:border-r lg:px-4"
-                        >
-                          <span className="inline-flex items-center gap-2 font-medium">
-                            <CheckCircle size={14} weight="fill" className="text-success" />
-                            {f.label}
-                          </span>
-                          <span className="whitespace-nowrap font-mono text-[11px] text-muted-foreground">
-                            {f.controls}
-                            <span className="sr-only"> controls</span>
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </main>
+                </li>
+              ))}
+            </ol>
+          </section>
         </div>
 
-        <MarketingFooter />
-      </div>
+        <section
+          id="frameworks"
+          aria-labelledby="frameworks-title"
+          className="scroll-mt-20 border-t border-border"
+        >
+          <div
+            className={`${container} grid gap-8 py-12 sm:py-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14`}
+          >
+            <div>
+              <p className={eyebrow}>03 / Frameworks</p>
+              <h2
+                id="frameworks-title"
+                className="mt-3 max-w-[18ch] text-3xl font-medium tracking-tight sm:text-4xl"
+              >
+                Connect findings to controls.
+              </h2>
+              <p className="mt-3 max-w-[40ch] text-sm leading-relaxed text-muted-foreground">
+                Explore assessment mappings in the context of your audit.
+              </p>
+            </div>
+            <div className="flex flex-col justify-center lg:border-l lg:border-border lg:pl-12">
+              <ul className="flex flex-wrap items-center gap-x-7 gap-y-5 py-3 text-base font-medium lg:justify-between">
+                {FRAMEWORKS.map((name) => (
+                  <li key={name}>{name}</li>
+                ))}
+              </ul>
+              <p className="mt-5 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">
+                Assessment signals are not proof of compliance.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section
+          aria-labelledby="closing-title"
+          className="relative isolate overflow-hidden bg-[#111111] text-white"
+        >
+          <img
+            src="/assets/archon-infrastructure-backdrop.webp"
+            alt=""
+            className="absolute inset-0 -z-20 h-full w-full object-cover"
+            width={1672}
+            height={941}
+            loading="lazy"
+            decoding="async"
+          />
+          <div className="absolute inset-0 -z-10 bg-black/65 sm:bg-black/45" />
+          <div className={`${container} flex flex-col items-center py-14 text-center sm:py-16`}>
+            <h2 id="closing-title" className="text-3xl font-medium tracking-tight sm:text-4xl">
+              Make your next review clearer.
+            </h2>
+            <p className="mt-4 text-base text-white/85">Start with your code. Leave with a plan.</p>
+            <Link
+              to="/login"
+              className="mt-7 inline-flex min-h-12 items-center justify-center gap-3 rounded-md bg-[#f5f1ec] px-6 py-3 text-sm font-medium text-[#111111] transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-4 focus-visible:ring-offset-black"
+            >
+              Launch console <ArrowRight size={16} aria-hidden="true" />
+            </Link>
+          </div>
+        </section>
+      </main>
+      <MarketingFooter compact />
     </div>
   );
-}
-
-function AuditMotionGraphic() {
-  return <SaaSHeroMotionGraphic />;
 }

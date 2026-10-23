@@ -1,5 +1,37 @@
 import type { AttackGraphNode, AttackGraphScenario, ThreatVector } from "./api/attackGraph";
 
+/** Center a scaled DOM node in its scroll container without moving the page. */
+export function centeredGraphScroll(
+  view: {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+    scrollLeft: number;
+    scrollTop: number;
+    scrollWidth: number;
+    scrollHeight: number;
+  },
+  node: { left: number; top: number; width: number; height: number },
+) {
+  return {
+    left: Math.max(
+      0,
+      Math.min(
+        view.scrollWidth - view.width,
+        view.scrollLeft + node.left - view.left + node.width / 2 - view.width / 2,
+      ),
+    ),
+    top: Math.max(
+      0,
+      Math.min(
+        view.scrollHeight - view.height,
+        view.scrollTop + node.top - view.top + node.height / 2 - view.height / 2,
+      ),
+    ),
+  };
+}
+
 export interface PlacedNode extends AttackGraphNode {
   px: number;
   py: number;

@@ -278,7 +278,7 @@ _RENDER_SLOTS = threading.BoundedSemaphore(2)
 _ADMISSION = threading.BoundedSemaphore(6)
 _CACHE_BYTES = 50 * 1024 * 1024
 _CACHE_TTL = 600
-_TEMPLATE_VERSION = "reports-v2.1"
+_TEMPLATE_VERSION = "reports-v3.0"
 
 
 class PdfBusy(RuntimeError):
@@ -342,7 +342,28 @@ def _render_pdf_report(scan_data: dict[str, Any]) -> bytes:
 
     Returns PDF bytes.
     """
-    findings = scan_data.get("findings", [])
+    # Presentation metadata only; never alter or infer the saved evidence.
+    findings = []
+    for original in scan_data.get("findings", []):
+        finding = dict(original)
+        snippet = finding.get("code_snippet") or ""
+        finding["excerpt_lines"] = str(snippet).splitlines()
+        reported_line = finding.get("line_number")
+        finding["excerpt_start_line"] = reported_line if (
+            finding.get("source") == "ai_source_verified"
+            and isinstance(reported_line, int) and not isinstance(reported_line, bool) and reported_line > 0
+        ) else None
+        finding["evidence_language"] = {
+            ".py": "Python", ".js": "JavaScript", ".ts": "TypeScript", ".tsx": "TSX",
+            ".jsx": "JSX", ".php": "PHP", ".java": "Java", ".go": "Go", ".sql": "SQL",
+            ".json": "JSON", ".yaml": "YAML", ".yml": "YAML", ".rs": "Rust",
+        }.get(Path(str(finding.get("file_path") or "")).suffix.lower(), "Source")
+        # Saved findings do not establish a separate excerpt start line.
+        # Keep excerpt numbering distinct from the reported source location.
+        finding["remedy_steps"] = finding.get("remediation_steps") or [
+            line.strip() for line in str(finding.get("remediation") or "").splitlines() if line.strip()
+        ]
+        findings.append(finding)
     framework_scores = scan_data.get("framework_scores", {})
 
     # The modern editorial template renders high-fidelity progress bars and metrics via pure CSS/HTML.

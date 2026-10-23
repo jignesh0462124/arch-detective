@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useMemo, useEffect, useRef, type ReactNode } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
   Globe,
   Shield,
@@ -11,7 +11,7 @@ import {
   TreeStructure,
   DownloadSimple,
   Code,
-  Sparkle,
+  ChatCircle,
   X,
   Copy,
   Check,
@@ -27,8 +27,6 @@ import {
   Scan,
   ArrowRight,
   BookOpen,
-  Bug,
-  ShieldCheck,
 } from "@phosphor-icons/react";
 import { AppShell } from "@/components/brutal/AppShell";
 import { BrutalButton } from "@/components/brutal/BrutalButton";
@@ -36,10 +34,11 @@ import { BrutalBadge } from "@/components/brutal/BrutalBadge";
 import { SectionCard } from "@/components/ui/section-card";
 import { StatTile } from "@/components/ui/stat-tile";
 import { SeverityBadge } from "@/components/ui/severity-badge";
-import { PipelineList, PipelineStep } from "@/components/ui/pipeline-step";
 import { useActiveWorkspace } from "@/hooks/useWorkspace";
-import { useScans } from "@/hooks/useScans";
-import { fetchFindings } from "@/lib/api/findings";
+import { useAuth } from "@/hooks/useAuth";
+import { getFindingPage, getQueueFinding, findingError } from "@/lib/api/findingQueue";
+import { getAttackGraphScanPage } from "@/lib/api/attackGraphScans";
+import { authScope, isCurrentScope } from "@/lib/authState";
 import { loadScanHistory } from "@/lib/api/auditStorage";
 import {
   PRESET_SCENARIOS,
@@ -59,6 +58,7 @@ import {
   peakCvss,
   compactSourcePath,
   shouldShowEmptyAttackGraph,
+  centeredGraphScroll,
 } from "@/lib/attackGraphView";
 
 export const Route = createFileRoute("/_app/attack-graph")({
@@ -143,18 +143,33 @@ interface StoredScanItem {
   completedAt?: string;
   result?: unknown;
 }
+const SAVED_SCAN_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 function AttackGraphPage() {
   const navigate = useNavigate();
   const { active } = useActiveWorkspace();
-  const {
-    data: savedScans,
-    isError: scansFailed,
-    isPending: scansPending,
-    refetch: refreshScans,
-  } = useScans(active?.id);
+  const { user, isAuthenticated } = useAuth();
+  const savedScanPages = useInfiniteQuery({
+    queryKey: ["attack-graph-scans", user?.id, active?.id],
+    queryFn: ({ pageParam, signal }) => getAttackGraphScanPage(active!.id, pageParam, signal),
+    initialPageParam: 0,
+    getNextPageParam: (last) =>
+      last.offset + last.items.length < last.total && last.items.length
+        ? last.offset + last.items.length
+        : undefined,
+    enabled: isAuthenticated && Boolean(active?.id),
+    staleTime: 30_000,
+  });
+  const savedScans = useMemo(
+    () => savedScanPages.data?.pages.flatMap((page) => page.items) ?? [],
+    [savedScanPages.data],
+  );
+  const scansFailed = savedScanPages.isError && !savedScanPages.data;
+  const olderScansFailed = savedScanPages.isFetchNextPageError;
+  const scansPending = savedScanPages.isPending;
+  const refreshScans = savedScanPages.refetch;
 
   const [scenarioSelection, setScenarioSelection] = useState<{
     workspaceId: string;
@@ -166,13 +181,29 @@ function AttackGraphPage() {
   const [diffModalOpen, setDiffModalOpen] = useState(false);
   const [copiedSnippet, setCopiedSnippet] = useState<"source" | "patch" | null>(null);
   const [copyError, setCopyError] = useState("");
+  const [exportingJson, setExportingJson] = useState(false);
+  const [exportError, setExportError] = useState("");
   const [explainOpen, setExplainOpen] = useState(false);
   const [showExamples, setShowExamples] = useState(false);
   const [localHistory, setLocalHistory] = useState<{
     workspaceId: string;
     items: StoredScanItem[];
   } | null>(null);
-  const [canvasMode, setCanvasMode] = useState<"auto" | "fit" | "actual">("auto");
+  const [canvasMode, setCanvasMode] = useState<"auto" | "fit" | "actual" | "manual">("auto");
+  const [manualScale, setManualScale] = useState(1);
+  const [canvasElement, setCanvasElement] = useState<HTMLDivElement | null>(null);
+  const [viewportSize, setViewportSize] = useState({ width: 800, height: 480 });
+  useEffect(() => {
+    if (!canvasElement) return;
+    const observer = new ResizeObserver(() =>
+      setViewportSize({
+        width: canvasElement.clientWidth,
+        height: canvasElement.clientHeight,
+      }),
+    );
+    observer.observe(canvasElement);
+    return () => observer.disconnect();
+  }, [canvasElement]);
   const patchDialog = useRef<HTMLDialogElement>(null);
   const nodeButtons = useRef(new Map<string, HTMLButtonElement>());
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -185,20 +216,26 @@ function AttackGraphPage() {
   }, [active?.id]);
 
   const auditScans = useMemo(() => {
-    const local = localHistory?.workspaceId === active?.id ? (localHistory?.items ?? []) : [];
+    // A deleted saved scan must never be resurrected from browser history.
+    // Keep only explicit non-database legacy examples when the server query succeeds.
+    const local =
+      !scansFailed && savedScanPages.data && localHistory?.workspaceId === active?.id
+        ? (localHistory?.items ?? []).filter((item) => !SAVED_SCAN_ID.test(item.id))
+        : [];
     const items = new Map<string, StoredScanItem>(local.filter((s) => s?.id).map((s) => [s.id, s]));
-    for (const s of savedScans?.items ?? []) {
-      if (s.status !== "completed") continue;
+    for (const s of savedScans) {
       items.set(s.id, {
         ...items.get(s.id),
         id: s.id,
         targetName: s.target_name,
-        findingsCount: s.finding_count,
+        findingsCount: s.finding_count ?? undefined,
         completedAt: s.completed_at ?? s.created_at,
       });
     }
-    return [...items.values()];
-  }, [active?.id, localHistory, savedScans?.items]);
+    return [...items.values()].sort(
+      (a, b) => Date.parse(b.completedAt || "") - Date.parse(a.completedAt || ""),
+    );
+  }, [active?.id, localHistory, savedScans, savedScanPages.data, scansFailed]);
 
   const requestedKey =
     scenarioSelection?.workspaceId === (active?.id ?? "") ? scenarioSelection.key : null;
@@ -210,43 +247,77 @@ function AttackGraphPage() {
   const setScenarioKey = (key: string) =>
     setScenarioSelection({ workspaceId: active?.id ?? "", key });
   const selectedScan = auditScans.find((s) => s.id === scenarioKey);
-  const persistedScan = savedScans?.items.find(
-    (s) => s.id === selectedScan?.id && s.status === "completed",
-  );
+  const persistedScan = savedScans.find((s) => s.id === selectedScan?.id);
   // Only fetch findings for the selected saved scan, not every scan on each visit.
-  const scanFindings = useQuery({
-    queryKey: ["attack-graph-findings", active?.id, persistedScan?.id],
-    queryFn: () => fetchFindings(persistedScan!.id),
+  const scanFindings = useInfiniteQuery({
+    queryKey: ["attack-graph-findings", user?.id, active?.id, persistedScan?.id],
+    queryFn: ({ pageParam, signal }) =>
+      getFindingPage(
+        active!.id,
+        persistedScan!.id,
+        { severity: "all", state: "all", q: "" },
+        pageParam,
+        signal,
+      ),
+    initialPageParam: 0,
+    getNextPageParam: (last) =>
+      last.offset + last.items.length < last.total && last.items.length
+        ? last.offset + last.items.length
+        : undefined,
     enabled: Boolean(active?.id && persistedScan),
     staleTime: 30_000,
   });
+  const loadedFindings = useMemo(
+    () => scanFindings.data?.pages.flatMap((page) => page.items) ?? [],
+    [scanFindings.data],
+  );
+  const totalFindings = scanFindings.data?.pages[0]?.total ?? 0;
 
   // Current scenario object
   const currentScenario: AttackGraphScenario = useMemo(() => {
     if (PRESET_SCENARIOS[scenarioKey]) return PRESET_SCENARIOS[scenarioKey];
     if (selectedScan) {
-      const result = scanFindings.data
+      const result = persistedScan
         ? {
             scan_id: selectedScan.id,
             target_name: selectedScan.targetName,
             frameworks: persistedScan?.selected_frameworks,
-            findings: scanFindings.data.items,
+            findings: loadedFindings,
           }
         : (selectedScan.result ?? { target_name: selectedScan.targetName });
       return buildAttackGraphFromScan(result, `scan-${selectedScan.id}`);
     }
     return PRESET_SCENARIOS.fintech;
-  }, [scenarioKey, selectedScan, persistedScan, scanFindings.data]);
+  }, [scenarioKey, selectedScan, persistedScan, loadedFindings]);
 
   const isLiveScan = Boolean(selectedScan);
   const findingsLoading = Boolean(persistedScan && scanFindings.isPending);
   const findingsUnavailable = Boolean(
-    selectedScan && !selectedScan.result && (!persistedScan || scanFindings.isError),
+    selectedScan && (persistedScan ? scanFindings.isError : !selectedScan.result),
   );
 
   // Canvas layout derived from the scenario's real nodes
   const canvas = useMemo(() => layoutAttackGraph(currentScenario.nodes), [currentScenario]);
   const placedNodes = canvas.nodes;
+  const fitScale = Math.min(
+    1,
+    Math.max(1, viewportSize.width - 24) / canvas.width,
+    Math.max(1, viewportSize.height - 24) / canvas.height,
+  );
+  const canvasScale =
+    canvasMode === "fit"
+      ? fitScale
+      : canvasMode === "auto"
+        ? fitScale >= 0.75
+          ? fitScale
+          : 1
+        : canvasMode === "manual"
+          ? manualScale
+          : 1;
+  const zoomCanvas = (delta: number) => {
+    setManualScale(Math.min(2, Math.max(0.1, canvasScale + delta)));
+    setCanvasMode("manual");
+  };
   const nodeById = useMemo(() => new Map(placedNodes.map((n) => [n.id, n])), [placedNodes]);
 
   // Sync selection on scenario change
@@ -295,11 +366,38 @@ function AttackGraphPage() {
     return currentScenario.threats.filter((t) => t.stride === activeStride);
   }, [currentScenario, activeStride]);
 
-  // Active threat vector (explicit selection, falls back to first visible)
-  const activeThreat: ThreatVector | undefined = useMemo(() => {
+  // Active threat vector (explicit selection, falls back to first visible).
+  const selectedThreat = useMemo(() => {
     if (filteredThreats.length === 0) return undefined;
     return filteredThreats.find((t) => t.id === activeThreatId) ?? filteredThreats[0];
   }, [filteredThreats, activeThreatId]);
+  const findingDetail = useQuery({
+    queryKey: [
+      "attack-graph-finding-detail",
+      user?.id,
+      active?.id,
+      persistedScan?.id,
+      selectedThreat?.findingId,
+    ],
+    queryFn: ({ signal }) =>
+      getQueueFinding(active!.id, persistedScan!.id, selectedThreat!.findingId!, signal),
+    enabled: Boolean(active?.id && persistedScan && selectedThreat?.findingId),
+    staleTime: 30_000,
+  });
+  const activeThreat: ThreatVector | undefined = useMemo(() => {
+    if (!selectedThreat) return undefined;
+    const detail = findingDetail.data?.finding;
+    if (!detail || detail.id !== selectedThreat.findingId) return selectedThreat;
+    return {
+      ...selectedThreat,
+      summary: detail.description || selectedThreat.summary,
+      remediationSnippet: {
+        vulnerable: detail.code_snippet || "",
+        patched: "",
+        explanation: detail.remediation || "",
+      },
+    };
+  }, [selectedThreat, findingDetail.data]);
 
   // Edges on the active kill chain
   const activeThreatEdgeIds = useMemo(() => {
@@ -330,17 +428,79 @@ function AttackGraphPage() {
     button?.focus({ preventScroll: true });
     button?.scrollIntoView({ block: "nearest", inline: "center" });
   };
+  const handleCenterSelected = () => {
+    const id = selectedNode?.id ?? compromisedTargetNode?.id;
+    const button = id ? nodeButtons.current.get(id) : undefined;
+    if (!button || !canvasElement) return;
+    const bounds = canvasElement.getBoundingClientRect();
+    const position = centeredGraphScroll(
+      {
+        left: bounds.left + canvasElement.clientLeft,
+        top: bounds.top + canvasElement.clientTop,
+        width: canvasElement.clientWidth,
+        height: canvasElement.clientHeight,
+        scrollLeft: canvasElement.scrollLeft,
+        scrollTop: canvasElement.scrollTop,
+        scrollWidth: canvasElement.scrollWidth,
+        scrollHeight: canvasElement.scrollHeight,
+      },
+      button.getBoundingClientRect(),
+    );
+    button?.focus({ preventScroll: true });
+    canvasElement.scrollTo({ ...position, behavior: "instant" });
+  };
 
-  const handleExportJson = () => {
-    const dataStr =
-      "data:text/json;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(currentScenario, null, 2));
-    const a = document.createElement("a");
-    a.href = dataStr;
-    a.download = `attack-graph-${currentScenario.id}.json`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+  const handleExportJson = async () => {
+    if (exportingJson) return;
+    const scope = authScope();
+    setExportingJson(true);
+    setExportError("");
+    try {
+      const allFindings = [...loadedFindings];
+      if (persistedScan && !scanFindings.data) {
+        throw new Error("Saved findings are still loading. Retry the export shortly.");
+      }
+      while (persistedScan && allFindings.length < totalFindings) {
+        if (!isCurrentScope(scope)) return;
+        const page = await getFindingPage(
+          active!.id,
+          persistedScan.id,
+          { severity: "all", state: "all", q: "" },
+          allFindings.length,
+        );
+        if (page.total !== totalFindings || page.items.length === 0) {
+          throw new Error("Saved findings changed during export. Refresh the graph and retry.");
+        }
+        allFindings.push(...page.items);
+      }
+      const scenario = persistedScan
+        ? buildAttackGraphFromScan(
+            {
+              scan_id: persistedScan.id,
+              target_name: persistedScan.target_name,
+              frameworks: persistedScan.selected_frameworks,
+              findings: allFindings,
+            },
+            `scan-${persistedScan.id}`,
+          )
+        : currentScenario;
+      if (!isCurrentScope(scope)) return;
+      const url = URL.createObjectURL(
+        new Blob([JSON.stringify(scenario, null, 2)], { type: "application/json" }),
+      );
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `attack-graph-${scenario.id}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (error) {
+      if (isCurrentScope(scope))
+        setExportError(error instanceof Error ? error.message : "Graph export failed. Retry.");
+    } finally {
+      setExportingJson(false);
+    }
   };
 
   const handleCopySnippet = async (kind: "source" | "patch" = "patch") => {
@@ -365,6 +525,17 @@ function AttackGraphPage() {
     solution?: "patch" | "root_cause" | "compliance" | "hardening" | "test" | "overview",
   ) => {
     const targetThreat = threat || activeThreat;
+    if (
+      solution === "patch" &&
+      persistedScan?.source_type === "git" &&
+      targetThreat?.findingId &&
+      targetThreat.scanId
+    ) {
+      window.location.assign(
+        `/fix-verification?scanId=${encodeURIComponent(targetThreat.scanId)}&findingId=${encodeURIComponent(targetThreat.findingId)}`,
+      );
+      return;
+    }
     if (!targetThreat) {
       navigate({ to: "/advisor" });
       return;
@@ -377,7 +548,11 @@ function AttackGraphPage() {
         ...(targetThreat.cweId ? { cwe: targetThreat.cweId } : {}),
         ...(targetThreat.filePath ? { file: targetThreat.filePath } : {}),
         ...(persistedScan && active?.id && targetThreat.findingId && targetThreat.scanId
-          ? { workspaceId: active.id, scanId: targetThreat.scanId, findingId: targetThreat.findingId }
+          ? {
+              workspaceId: active.id,
+              scanId: targetThreat.scanId,
+              findingId: targetThreat.findingId,
+            }
           : { example: "1" }),
         ...(solution ? { solution } : {}),
       },
@@ -395,15 +570,24 @@ function AttackGraphPage() {
     },
     {
       code: "02 // VECTORS",
-      label: "Attack vectors",
-      value: String(currentScenario.threats.length),
-      trend: "STRIDE categorized",
+      label: isLiveScan && persistedScan ? "Loaded vectors" : "Attack vectors",
+      value: findingsLoading ? "…" : String(currentScenario.threats.length),
+      trend: findingsLoading
+        ? "Loading saved findings"
+        : isLiveScan && persistedScan
+          ? `Of ${totalFindings} saved findings`
+          : "STRIDE categorized",
     },
     {
       code: "03 // MAX CVSS",
       label: "Peak severity",
       value: findingsLoading ? "…" : formatCvss(maxCvss),
-      trend: maxCvss === null ? "No recorded CVSS score" : "Highest recorded score",
+      trend:
+        maxCvss === null
+          ? "No recorded CVSS score"
+          : isLiveScan && loadedFindings.length < totalFindings
+            ? "Highest score among loaded findings"
+            : "Highest recorded score",
     },
     {
       code: "04 // STRIDE",
@@ -414,24 +598,9 @@ function AttackGraphPage() {
   ];
 
   const killChainStages = useMemo(() => {
-    if (!activeThreat) return [];
+    if (!activeThreat || isLiveScan) return [];
     const source = nodeById.get(activeThreat.sourceNodeId);
     const target = nodeById.get(activeThreat.compromisedNodeId);
-    if (isLiveScan)
-      return [
-        {
-          title: "Finding evidence",
-          note: activeThreat.filePath
-            ? `${activeThreat.filePath}${activeThreat.lineNumber ? `:${activeThreat.lineNumber}` : ""}`
-            : "Source location not recorded",
-          detail: null as ReactNode,
-        },
-        {
-          title: "Potential impact",
-          note: "Review the finding and validate runtime reachability; no exploit is confirmed.",
-          detail: null as ReactNode,
-        },
-      ];
     return [
       {
         title: "Initial Ingress",
@@ -579,7 +748,7 @@ function AttackGraphPage() {
                       <option key={h.id} value={h.id}>
                         {h.targetName || "Scan"} (
                         {h.id === selectedScan?.id && scanFindings.data
-                          ? scanFindings.data.items.length
+                          ? totalFindings
                           : (h.findingsCount ?? "—")}{" "}
                         findings)
                       </option>
@@ -598,33 +767,58 @@ function AttackGraphPage() {
                 className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"
               />
             </div>
+            {savedScanPages.data?.pages[0]?.total ? (
+              <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+                <span>
+                  {savedScans.length} of {savedScanPages.data.pages[0].total} saved audits loaded
+                </span>
+                {savedScanPages.hasNextPage && (
+                  <button
+                    type="button"
+                    className="font-semibold text-foreground underline underline-offset-4 disabled:opacity-50"
+                    disabled={savedScanPages.isFetchingNextPage}
+                    onClick={() => void savedScanPages.fetchNextPage()}
+                  >
+                    {savedScanPages.isFetchingNextPage
+                      ? "Loading older audits…"
+                      : olderScansFailed
+                        ? "Retry older audits"
+                        : "Load older audits"}
+                  </button>
+                )}
+              </div>
+            ) : null}
           </div>
 
           <BrutalButton
             variant="secondary"
             size="sm"
-            onClick={handleExportJson}
-            disabled={findingsLoading || findingsUnavailable}
+            onClick={() => void handleExportJson()}
+            disabled={findingsLoading || findingsUnavailable || exportingJson}
             className="h-10 shrink-0"
           >
-            <DownloadSimple size={14} weight="bold" /> Export JSON
+            <DownloadSimple size={14} weight="bold" />{" "}
+            {exportingJson ? "Preparing…" : "Export JSON"}
           </BrutalButton>
         </div>
-        {(scansFailed || scanFindings.isError || findingsUnavailable) && (
+        {(scansFailed || olderScansFailed || scanFindings.isError || findingsUnavailable) && (
           <div
             role="alert"
             className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-amber-500/40 bg-amber-500/10 p-3 text-xs"
           >
             <p>
               {findingsUnavailable
-                ? "Saved findings could not be loaded. This is not a clean scan."
-                : "Saved scan data is unavailable. Showing locally cached evidence or example architectures."}
+                ? `Saved findings could not be loaded. This is not a clean scan. ${scanFindings.isError ? findingError(scanFindings.error) : ""}`
+                : olderScansFailed
+                  ? "Older saved audits could not be loaded. Already loaded audits remain available."
+                  : "Saved scan data is unavailable. Showing locally cached evidence or example architectures."}
             </p>
             <button
               type="button"
               className="font-semibold underline underline-offset-4"
               onClick={() => {
-                if (persistedScan) void scanFindings.refetch();
+                if (olderScansFailed) void savedScanPages.fetchNextPage();
+                else if (persistedScan) void scanFindings.refetch();
                 else void refreshScans();
               }}
             >
@@ -634,12 +828,17 @@ function AttackGraphPage() {
         )}
         {findingsLoading && (
           <p role="status" className="text-xs text-muted-foreground">
-            Loading saved scan findings…
+            Loading the first 50 saved finding summaries…
           </p>
         )}
         {copyError && (
           <p role="alert" className="text-xs text-destructive">
             {copyError}
+          </p>
+        )}
+        {exportError && (
+          <p role="alert" className="text-xs text-destructive">
+            {exportError}
           </p>
         )}
         {/* Top hero: architectural overview */}
@@ -827,8 +1026,17 @@ function AttackGraphPage() {
               <div
                 role="group"
                 aria-label="Canvas scale"
-                className="inline-flex rounded-md border border-border bg-secondary/40 p-1 gap-1"
+                className="inline-flex flex-wrap rounded-md border border-border bg-secondary/40 p-1 gap-1"
               >
+                <button
+                  type="button"
+                  aria-label="Zoom out graph"
+                  onClick={() => zoomCanvas(-0.1)}
+                  className="rounded px-2 text-sm"
+                  disabled={canvasScale <= 0.1}
+                >
+                  −
+                </button>
                 {(
                   [
                     ["auto", "Auto"],
@@ -840,6 +1048,13 @@ function AttackGraphPage() {
                     key={mode}
                     type="button"
                     aria-pressed={canvasMode === mode}
+                    title={
+                      mode === "fit"
+                        ? "Fit the entire graph in the viewport"
+                        : mode === "actual"
+                          ? "Display graph at actual size"
+                          : "Fit when labels remain readable; otherwise use actual size"
+                    }
                     onClick={() => setCanvasMode(mode)}
                     className={cn(
                       "rounded-sm px-2.5 py-1 text-xs font-semibold focus-visible:outline-2 focus-visible:outline-primary",
@@ -851,13 +1066,34 @@ function AttackGraphPage() {
                     {label}
                   </button>
                 ))}
+                <button
+                  type="button"
+                  aria-label="Zoom in graph"
+                  onClick={() => zoomCanvas(0.1)}
+                  className="rounded px-2 text-sm"
+                  disabled={canvasScale >= 2}
+                >
+                  +
+                </button>
+                <span className="self-center px-1 text-xs text-muted-foreground" aria-live="polite">
+                  {Math.round(canvasScale * 100)}%
+                </span>
+                <button
+                  type="button"
+                  onClick={handleCenterSelected}
+                  className="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary disabled:opacity-50"
+                  disabled={!selectedNode && !compromisedTargetNode}
+                  title="Center the selected node inside the graph canvas"
+                >
+                  <Target size={14} aria-hidden="true" /> Center selected
+                </button>
               </div>
             }
             headerExtra={null}
           >
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-5 py-3 text-[11px] text-muted-foreground border-b border-border">
               <span className="inline-flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-border" /> Modeled component
+                <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground" /> Modeled component
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Vulnerable Component
@@ -869,14 +1105,17 @@ function AttackGraphPage() {
                 <span className="inline-block h-0.5 w-3.5 bg-destructive rounded-full" /> Selected
                 path
               </span>
-              <span className="sm:ml-auto">Scroll to explore · Fit for overview</span>
+              <span className="sm:ml-auto">
+                Auto keeps labels readable · Fit shows the complete graph · Zoom to inspect
+              </span>
             </div>
             <div
+              ref={setCanvasElement}
               tabIndex={0}
               role="region"
               aria-label="Attack graph canvas"
               className="relative w-full min-w-0 overflow-auto bg-background focus-visible:outline-2 focus-visible:outline-primary"
-              style={{ maxHeight: 560 }}
+              style={{ height: "clamp(320px, 60dvh, 560px)" }}
             >
               <div
                 className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20"
@@ -890,14 +1129,10 @@ function AttackGraphPage() {
                 viewBox={`0 0 ${canvas.width} ${canvas.height}`}
                 className="relative z-10 block h-auto select-none mx-auto"
                 style={{
-                  width: canvas.width,
-                  maxWidth: canvasMode === "actual" ? undefined : "100%",
-                  minWidth:
-                    canvasMode === "fit"
-                      ? 0
-                      : canvasMode === "actual"
-                        ? canvas.width
-                        : Math.min(canvas.width, 1300),
+                  width: canvas.width * canvasScale,
+                  height: canvas.height * canvasScale,
+                  maxWidth: "none",
+                  marginTop: Math.max(0, (viewportSize.height - canvas.height * canvasScale) / 2),
                 }}
                 role="group"
                 aria-label={`Attack graph topology for ${currentScenario.title}`}
@@ -912,7 +1147,7 @@ function AttackGraphPage() {
                     markerHeight="6"
                     orient="auto-start-reverse"
                   >
-                    <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--border)" />
+                    <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--muted-foreground)" />
                   </marker>
                   <marker
                     id="arrow-threat"
@@ -923,7 +1158,7 @@ function AttackGraphPage() {
                     markerHeight="7"
                     orient="auto-start-reverse"
                   >
-                    <path d="M 0 1 L 9 5 L 0 9 z" fill="#ef4444" />
+                    <path d="M 0 1 L 9 5 L 0 9 z" fill="var(--destructive)" />
                   </marker>
                 </defs>
 
@@ -941,7 +1176,7 @@ function AttackGraphPage() {
                       <path
                         d={d}
                         fill="none"
-                        stroke={isThreat ? "#ef4444" : "var(--border)"}
+                        stroke={isThreat ? "var(--destructive)" : "var(--muted-foreground)"}
                         strokeWidth={isThreat ? "3.5" : "2"}
                         strokeDasharray={isThreat ? "8 8" : undefined}
                         markerEnd={isThreat ? "url(#arrow-threat)" : "url(#arrow-norm)"}
@@ -1146,16 +1381,26 @@ function AttackGraphPage() {
         </section>
 
         {/* 2. Threat vector picker */}
-        {filteredThreats.length > 0 ? (
-          <section className="w-full min-w-0">
-            <SectionCard
-              padding="md"
-              eyebrow={`// THREAT VECTORS · ${filteredThreats.length} SHOWN`}
-              title={
-                <span className="font-bold text-lg text-foreground">Select a vector to trace</span>
-              }
-              description="Each vector redraws the red breach path on the canvas and loads its kill chain, blast radius, and patch below."
-            >
+        <section className="w-full min-w-0">
+          <SectionCard
+            padding="md"
+            eyebrow={
+              isLiveScan && persistedScan
+                ? `// THREAT VECTORS · ${filteredThreats.length} SHOWN · ${loadedFindings.length}/${totalFindings} LOADED`
+                : `// THREAT VECTORS · ${filteredThreats.length} SHOWN`
+            }
+            title={
+              <span className="font-bold text-lg text-foreground">Select a vector to trace</span>
+            }
+            description="Choose a finding to inspect its source evidence and remediation. Connectors are source associations, not verified exploit paths."
+          >
+            {isLiveScan && persistedScan && loadedFindings.length < totalFindings && (
+              <p className="mb-3 text-xs text-muted-foreground">
+                STRIDE filters and category counts apply to loaded findings. Load more to review the
+                rest of this scan.
+              </p>
+            )}
+            {filteredThreats.length ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {filteredThreats.map((threat) => {
                   const isActive = activeThreat?.id === threat.id;
@@ -1209,16 +1454,42 @@ function AttackGraphPage() {
                   );
                 })}
               </div>
-            </SectionCard>
-          </section>
-        ) : null}
+            ) : (
+              <p className="rounded border border-dashed border-border p-4 text-sm text-muted-foreground">
+                {findingsLoading
+                  ? "Loading threat vectors…"
+                  : totalFindings > loadedFindings.length
+                    ? "No vector in this category is loaded yet. Load more findings below."
+                    : "No threat vectors in this category."}
+              </p>
+            )}
+            {persistedScan && scanFindings.hasNextPage && (
+              <div className="mt-4 flex justify-center">
+                <BrutalButton
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  disabled={scanFindings.isFetchingNextPage}
+                  onClick={() => void scanFindings.fetchNextPage()}
+                >
+                  {scanFindings.isFetchingNextPage ? "Loading…" : "Load 50 more vectors"}
+                </BrutalButton>
+              </div>
+            )}
+            {scanFindings.isFetchNextPageError && (
+              <p role="alert" className="mt-3 text-xs text-destructive">
+                More vectors could not be loaded. Retry using Load 50 more vectors.
+              </p>
+            )}
+          </SectionCard>
+        </section>
 
         {/* 3. Threat vector detail & kill chain */}
         <section className="w-full min-w-0">
           <SectionCard
             className="w-full min-w-0"
             padding="lg"
-            eyebrow="// THREAT VECTOR"
+            eyebrow={isLiveScan ? "// SAVED FINDING" : "// EXAMPLE THREAT VECTOR"}
             title={activeThreat ? activeThreat.title : "No threat vectors in this view"}
             description={
               activeThreat
@@ -1272,7 +1543,29 @@ function AttackGraphPage() {
                       </p>
                     </div>
 
-                    {/* Exploit Origin & Code Block */}
+                    {persistedScan && findingDetail.isPending && (
+                      <p role="status" className="text-xs text-muted-foreground">
+                        Loading recorded evidence and remediation…
+                      </p>
+                    )}
+                    {persistedScan && findingDetail.isError && (
+                      <div
+                        role="alert"
+                        className="rounded border border-destructive/30 bg-destructive/5 p-3 text-xs"
+                      >
+                        Full evidence could not be loaded. The summary above is not a complete
+                        finding.{" "}
+                        <button
+                          type="button"
+                          className="font-semibold underline"
+                          onClick={() => void findingDetail.refetch()}
+                        >
+                          Retry
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Recorded source evidence */}
                     {activeThreat.filePath && (
                       <div className="space-y-1.5 min-w-0">
                         <div className="overflow-hidden rounded-sm border border-border bg-[#0d1117] text-white shadow-2xs min-w-0">
@@ -1295,7 +1588,7 @@ function AttackGraphPage() {
 
                             <div className="flex items-center gap-2 shrink-0">
                               <span className="rounded-sm bg-destructive/20 border border-destructive/30 px-2 py-0.5 text-destructive font-semibold text-[10px] uppercase tracking-wider whitespace-nowrap">
-                                Vulnerable Call
+                                Recorded source
                               </span>
                               {activeThreat.remediationSnippet?.vulnerable && (
                                 <button
@@ -1320,7 +1613,7 @@ function AttackGraphPage() {
                           {/* Code Body with IDE Line Number Gutter */}
                           {activeThreat.remediationSnippet?.vulnerable ? (
                             <div className="flex text-xs font-mono leading-relaxed bg-[#0a0d12] text-white overflow-x-auto">
-                              <div className="select-none py-3 px-3 text-right text-white/40 border-r border-white/10 bg-white/[0.03] shrink-0 font-mono text-xs min-w-[42px]">
+                              <div className="select-none py-3 px-3 text-right text-white/70 border-r border-white/10 bg-white/[0.03] shrink-0 font-mono text-xs min-w-[42px]">
                                 {activeThreat.lineNumber ?? 1}
                               </div>
                               <div className="p-3 font-mono overflow-x-auto whitespace-pre flex-1 bg-red-950/30 border-l border-red-500/20">
@@ -1331,13 +1624,42 @@ function AttackGraphPage() {
                             </div>
                           ) : (
                             <div className="p-3.5 font-mono text-xs leading-relaxed text-white/60">
-                              Source snippet not captured for this finding — open the patch view for
-                              remediation guidance.
+                              No source snippet was captured for this finding. Review the recorded
+                              path and remediation below.
                             </div>
                           )}
                         </div>
                       </div>
                     )}
+
+                    <div className="rounded-sm border border-accent/30 bg-accent/5 p-4 space-y-3">
+                      <div>
+                        <h4 className="text-sm font-semibold text-foreground">
+                          Remediation and verification
+                        </h4>
+                        <p className="mt-1 whitespace-pre-line text-xs leading-relaxed text-foreground/85">
+                          {activeThreat.remediationSnippet?.explanation ||
+                            (persistedScan && findingDetail.isPending
+                              ? "Loading the saved remediation…"
+                              : "No remediation steps were saved for this finding. Review the evidence before choosing a fix.")}
+                        </p>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        After changing code, test the affected path and confirm the finding is
+                        resolved in a new audit.
+                      </p>
+                      <BrutalButton
+                        type="button"
+                        size="sm"
+                        onClick={() => handleOpenAdvisor(activeThreat, "patch")}
+                      >
+                        <Code size={14} weight="bold" /> Suggest code fix
+                      </BrutalButton>
+                      <p className="text-[11px] text-muted-foreground">
+                        AI suggestions are examples to review and test; no code is applied
+                        automatically.
+                      </p>
+                    </div>
 
                     {/* Blast Radius Section */}
                     <div className="space-y-2">
@@ -1391,25 +1713,16 @@ function AttackGraphPage() {
                       )}
                     </div>
 
-                    {/* Actions: Open in AI Advisor + Inspect Code & Patch + View in Findings */}
+                    {/* Evidence and triage actions */}
                     <div className="space-y-3 pt-3 border-t border-border/80">
                       <div className="flex flex-wrap items-center gap-2.5">
-                        <BrutalButton
-                          variant="primary"
-                          size="md"
-                          className="w-full sm:w-auto flex-1 justify-center text-xs font-semibold py-2.5 shadow-sm"
-                          onClick={() => handleOpenAdvisor(activeThreat)}
-                        >
-                          <Sparkle size={15} weight="bold" /> Open in AI Advisor
-                        </BrutalButton>
-
                         <BrutalButton
                           variant="secondary"
                           size="md"
                           className="w-full sm:w-auto justify-center text-xs font-semibold py-2.5"
                           onClick={() => setDiffModalOpen(true)}
                         >
-                          <Code size={15} weight="bold" /> Inspect Code & Patch
+                          <Code size={15} weight="bold" /> Inspect evidence
                         </BrutalButton>
 
                         <BrutalButton
@@ -1420,93 +1733,39 @@ function AttackGraphPage() {
                             navigate({ to: "/findings" });
                           }}
                         >
-                          <ShareNetwork size={14} weight="bold" /> View in Findings Triage
+                          <ShareNetwork size={14} weight="bold" /> View in Findings
                         </BrutalButton>
-                      </div>
-
-                      {/* Targeted Instant Solutions for this Threat */}
-                      <div className="rounded-sm border border-border/70 bg-secondary/25 p-2.5 space-y-1.5">
-                        <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground font-semibold block">
-                          // DIRECT ADVICE SOLUTIONS · CLICK TO LAUNCH ADVISOR
-                        </span>
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          <button
-                            type="button"
-                            onClick={() => handleOpenAdvisor(activeThreat, "patch")}
-                            className="inline-flex items-center gap-1.5 rounded-sm border border-accent/40 bg-accent/10 px-2.5 py-1 text-xs font-semibold text-foreground hover:bg-accent hover:text-white transition-colors cursor-pointer"
-                            title="Open AI Advisor directly with Production Code Patch"
-                          >
-                            <Code size={13} weight="bold" /> Production Patch
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleOpenAdvisor(activeThreat, "root_cause")}
-                            className="inline-flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1 text-xs font-medium text-foreground hover:border-accent hover:bg-secondary transition-colors cursor-pointer"
-                            title="Ask AI Advisor to analyze the root cause"
-                          >
-                            <TreeStructure size={13} weight="bold" /> Root Cause
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleOpenAdvisor(activeThreat, "hardening")}
-                            className="inline-flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1 text-xs font-medium text-foreground hover:border-accent hover:bg-secondary transition-colors cursor-pointer"
-                            title="Open AI Advisor directly with Perimeter & DB Hardening"
-                          >
-                            <Shield size={13} weight="bold" /> Hardening
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleOpenAdvisor(activeThreat, "compliance")}
-                            className="inline-flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1 text-xs font-medium text-foreground hover:border-accent hover:bg-secondary transition-colors cursor-pointer"
-                            title="Open AI Advisor directly with Compliance Mapping"
-                          >
-                            <ShieldCheck size={13} weight="bold" /> Compliance
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleOpenAdvisor(activeThreat, "test")}
-                            className="inline-flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1 text-xs font-medium text-foreground hover:border-accent hover:bg-secondary transition-colors cursor-pointer"
-                            title="Open AI Advisor directly with Automated Unit Regression Test"
-                          >
-                            <Bug size={13} weight="bold" /> Regression Test
-                          </button>
-                        </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Right column: kill chain + reasoning */}
                   <div className="xl:col-span-5 space-y-3 xl:border-l xl:hairline xl:pl-6 min-w-0 w-full">
-                    {/* 1. Kill chain */}
-                    <div className="rounded-sm border hairline bg-card p-4 min-w-0 w-full overflow-hidden">
-                      <div className="flex items-center justify-between gap-2 border-b hairline-soft pb-2.5">
-                        <span className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase font-semibold">
-                          // {isLiveScan ? "EVIDENCE REVIEW" : "MODELED SEQUENCE"}
-                        </span>
-                        <span className="rounded-sm bg-primary/10 px-1.5 py-0.5 font-mono text-[10px] text-primary font-bold whitespace-nowrap">
-                          {killChainStages.length} STAGES
-                        </span>
-                      </div>
-
-                      <div className="pt-3">
-                        <PipelineList>
-                          {killChainStages.map((stage, i) => (
-                            <PipelineStep
-                              key={stage.title}
-                              index={i + 1}
-                              state={i < killChainStages.length - 1 ? "done" : "active"}
-                              title={stage.title}
-                              note={
-                                <span className="block">
-                                  <span className="block leading-relaxed">{stage.note}</span>
-                                  {stage.detail}
-                                </span>
-                              }
-                            />
+                    {!isLiveScan && (
+                      <section className="rounded-sm border border-border bg-card p-4">
+                        <h4 className="text-xs font-semibold">
+                          Illustrative sequence · example only
+                        </h4>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          A modeled scenario, not recorded execution or a confirmed exploit.
+                        </p>
+                        <ol className="mt-3 space-y-3">
+                          {killChainStages.map((stage, index) => (
+                            <li key={stage.title} className="flex gap-3">
+                              <span className="flex size-6 shrink-0 items-center justify-center rounded-full border border-border text-xs">
+                                {index + 1}
+                              </span>
+                              <div className="min-w-0">
+                                <h5 className="text-xs font-semibold">{stage.title}</h5>
+                                <p className="mt-1 break-words text-xs text-muted-foreground">
+                                  {stage.note}
+                                </p>
+                              </div>
+                            </li>
                           ))}
-                        </PipelineList>
-                      </div>
-                    </div>
+                        </ol>
+                      </section>
+                    )}
 
                     {/* 2. Attack chain reasoning */}
                     <div className="rounded-sm border border-border bg-card p-4 min-w-0 w-full overflow-hidden shadow-2xs">
@@ -1762,7 +2021,7 @@ function AttackGraphPage() {
         </section>
       </div>
 
-      {/* Code inspection & remediation diff modal */}
+      {/* Recorded evidence and example remediation modal */}
       {diffModalOpen && activeThreat && (
         <dialog
           ref={patchDialog}
@@ -1774,7 +2033,7 @@ function AttackGraphPage() {
             <div className="flex items-center justify-between px-5 py-4 border-b hairline bg-secondary/30">
               <div className="min-w-0">
                 <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider block">
-                  // REMEDIATION BLUEPRINT
+                  // EVIDENCE AND REMEDIATION
                 </span>
                 <h3
                   id="attack-patch-title"
@@ -1782,13 +2041,13 @@ function AttackGraphPage() {
                 >
                   {activeThreat.filePath
                     ? `${activeThreat.filePath}${activeThreat.lineNumber != null ? `:${activeThreat.lineNumber}` : ""}`
-                    : "Source Code Patch"}
+                    : "Remediation guidance"}
                 </h3>
               </div>
               <button
                 onClick={() => setDiffModalOpen(false)}
                 className="p-1 rounded-sm text-muted-foreground hover:text-foreground hover:bg-secondary cursor-pointer"
-                aria-label="Close patch view"
+                aria-label="Close evidence view"
               >
                 <X size={16} weight="bold" />
               </button>
@@ -1812,7 +2071,7 @@ function AttackGraphPage() {
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
-                    // {isLiveScan ? "CAPTURED EVIDENCE" : "ILLUSTRATIVE PATCH"}
+                    // {isLiveScan ? "CAPTURED EVIDENCE" : "ILLUSTRATIVE EXAMPLE"}
                   </span>
                   {activeThreat.remediationSnippet?.patched && (
                     <button
@@ -1838,14 +2097,14 @@ function AttackGraphPage() {
                       <span className="text-white/80 truncate min-w-0">
                         {activeThreat.filePath || "patch"}
                       </span>
-                      <span className="text-white/40 text-[10px] uppercase shrink-0 ml-2">
+                      <span className="text-white/70 text-[10px] uppercase shrink-0 ml-2">
                         {isLiveScan ? "Source" : "Example"}
                       </span>
                     </div>
                     <div className="p-4 font-mono text-xs leading-relaxed space-y-2">
                       {activeThreat.lineNumber != null && (
                         <div className="text-white/50">
-                          # Recorded line {activeThreat.lineNumber}
+                          # {isLiveScan ? "Recorded" : "Example"} line {activeThreat.lineNumber}
                         </div>
                       )}
                       {activeThreat.remediationSnippet.vulnerable && (
@@ -1873,9 +2132,8 @@ function AttackGraphPage() {
                 ) : (
                   <div className="rounded-sm border hairline bg-secondary/20 p-4">
                     <p className="text-xs text-muted-foreground leading-relaxed">
-                      No patch snippet was captured for this vector. Open it in the AI Advisor for a
-                      tailored remediation plan based on the finding description and affected
-                      assets.
+                      No code snippet was captured for this vector. Review the saved remediation
+                      guidance, or ask Security Advisor for a proposed change.
                     </p>
                   </div>
                 )}
@@ -1896,7 +2154,7 @@ function AttackGraphPage() {
             <div className="flex flex-wrap items-center justify-between gap-2 px-5 py-3 border-t hairline bg-secondary/30">
               <div className="flex flex-wrap items-center gap-1.5">
                 <span className="font-mono text-[10px] text-muted-foreground uppercase font-semibold hidden sm:inline">
-                  AI Solution:
+                  Need more help?
                 </span>
                 <button
                   type="button"
@@ -1905,20 +2163,20 @@ function AttackGraphPage() {
                     handleOpenAdvisor(activeThreat, "patch");
                   }}
                   className="inline-flex items-center gap-1 rounded-sm border border-accent/40 bg-accent/10 px-2 py-1 text-xs font-semibold text-foreground hover:bg-accent hover:text-white transition-colors cursor-pointer"
-                  title="Open in AI Advisor with Code Patch advice"
+                  title="Ask Security Advisor for a code-fix suggestion"
                 >
-                  <Code size={12} weight="bold" /> Code Patch
+                  <Code size={12} weight="bold" /> Suggest code fix
                 </button>
                 <button
                   type="button"
                   onClick={() => {
                     setDiffModalOpen(false);
-                    handleOpenAdvisor(activeThreat, "root_cause");
+                    handleOpenAdvisor(activeThreat, "test");
                   }}
                   className="inline-flex items-center gap-1 rounded-sm border border-border bg-card px-2 py-1 text-xs font-medium text-foreground hover:border-accent hover:bg-secondary transition-colors cursor-pointer"
-                  title="Open in AI Advisor with AST Taint Path analysis"
+                  title="Ask Security Advisor how to verify the fix"
                 >
-                  <TreeStructure size={12} weight="bold" /> AST Path
+                  <Check size={12} weight="bold" /> How to verify
                 </button>
               </div>
 
@@ -1934,7 +2192,7 @@ function AttackGraphPage() {
                     handleOpenAdvisor(activeThreat);
                   }}
                 >
-                  <Sparkle size={14} weight="bold" /> Open in AI Advisor
+                  <ChatCircle size={14} weight="bold" /> Open Security Advisor
                 </BrutalButton>
               </div>
             </div>

@@ -2,11 +2,10 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import {
-  ArrowRight,
   CheckCircle,
   PaperPlaneRight,
   ShieldCheck,
-  Sparkle,
+  Info,
   StopCircle,
   Trash,
   WarningCircle,
@@ -18,6 +17,7 @@ import { AiModelSelector } from "@/components/ai-assistant/AiModelSelector";
 import { useSharedAiChat } from "@/components/ai-assistant/AiChatContext";
 import { useActiveWorkspace } from "@/hooks/useWorkspace";
 import { getWorkbenchFinding } from "@/lib/api/workbench";
+import { advisorErrorMessage } from "@/lib/advisorPresentation";
 
 type AdvisorSearch = {
   prompt?: string;
@@ -50,12 +50,12 @@ export const Route = createFileRoute("/_app/advisor")({
 });
 
 type Guidance = "explain" | "fix" | "verify";
-const actions: { id: Guidance; title: string; description: string; icon: typeof Sparkle }[] = [
+const actions: { id: Guidance; title: string; description: string; icon: typeof Info }[] = [
   {
     id: "explain",
     title: "Explain",
     description: "Understand the issue and what the evidence shows.",
-    icon: Sparkle,
+    icon: Info,
   },
   {
     id: "fix",
@@ -89,6 +89,8 @@ function AdvisorPage() {
   const search = Route.useSearch();
   const navigate = useNavigate();
   const chat = useSharedAiChat();
+  const { activateAdvisor } = chat;
+  useEffect(() => activateAdvisor(), [activateAdvisor]);
   const { findingContext, setFindingContext, sendMessage } = chat;
   const [input, setInput] = useState("");
   const [exampleTitle, setExampleTitle] = useState<string | null>(null);
@@ -209,35 +211,31 @@ function AdvisorPage() {
       subtitle={workspace ? `Workspace · ${workspace.name}` : "Security guidance"}
     >
       <div className="mx-auto max-w-6xl space-y-4">
-        <div className="rounded border border-border bg-card p-4 sm:p-5">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <p className="section-title">AI guidance</p>
-              <h2 className="mt-1 text-lg font-semibold">
-                Ask about a finding or security question
-              </h2>
-              <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-                The advisor explains evidence and suggests next steps. Review its answers and test
-                any proposed change before using it.
-              </p>
+        <div className="rounded border border-border bg-card p-3 sm:p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="max-w-2xl text-sm text-muted-foreground">
+              Ask about a saved finding or security question. Review and test suggestions before
+              use.
+            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <AiModelSelector
+                selectedModel={chat.selectedModel}
+                onSelectModel={chat.setSelectedModel}
+                disabled={chat.isStreaming}
+              />
+              <span className="inline-flex min-h-9 items-center gap-1 rounded border border-border bg-secondary px-2.5 text-xs">
+                <ShieldCheck size={14} />{" "}
+                {chat.availability === "ready"
+                  ? "Ready"
+                  : chat.availability === "checking"
+                    ? "Checking…"
+                    : chat.availability === "unavailable"
+                      ? "Not configured"
+                      : "Unavailable"}
+              </span>
             </div>
-            <AiModelSelector
-              selectedModel={chat.selectedModel}
-              onSelectModel={chat.setSelectedModel}
-              disabled={chat.isStreaming}
-            />
           </div>
-          <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
-            <span className="inline-flex items-center gap-1 rounded border border-border bg-secondary px-2.5 py-1.5">
-              <ShieldCheck size={14} />{" "}
-              {chat.availability === "ready"
-                ? "Ready to ask"
-                : chat.availability === "checking"
-                  ? "Checking advisor…"
-                  : chat.availability === "unavailable"
-                    ? "Advisor not configured"
-                    : "Advisor unavailable"}
-            </span>
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
             {(chat.availability === "error" || chat.availability === "unavailable") && (
               <button
                 type="button"
@@ -298,31 +296,6 @@ function AdvisorPage() {
           )}
         </div>
 
-        <section className="grid gap-3 sm:grid-cols-3" aria-label="Advisor actions">
-          {actions.map((action) => {
-            const Icon = action.icon;
-            return (
-              <button
-                key={action.id}
-                type="button"
-                disabled={!chat.configured || chat.isStreaming || !contextReady}
-                onClick={() => void chat.sendMessage(actionPrompt(action.id, selectedTitle))}
-                className="group rounded border border-border bg-card p-4 text-left transition-colors hover:border-accent hover:bg-secondary disabled:opacity-50"
-              >
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <Icon size={17} className="text-accent" />
-                  {action.title}
-                  <ArrowRight
-                    size={14}
-                    className="ml-auto text-muted-foreground group-hover:text-accent"
-                  />
-                </div>
-                <p className="mt-2 text-xs text-muted-foreground">{action.description}</p>
-              </button>
-            );
-          })}
-        </section>
-
         <section
           className="flex min-h-[420px] flex-col overflow-hidden rounded border border-border bg-card"
           aria-label="Advisor conversation"
@@ -350,10 +323,10 @@ function AdvisorPage() {
           <div className="max-h-[550px] min-h-[280px] flex-1 space-y-4 overflow-y-auto p-4 sm:p-5">
             {!chat.messages.length && (
               <div className="mx-auto max-w-lg py-10 text-center">
-                <Sparkle size={28} className="mx-auto text-accent" />
+                <ShieldCheck size={28} className="mx-auto text-accent" />
                 <h3 className="mt-3 font-semibold">Start with a question</h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Choose an action above or ask your own question below.
+                  Choose a prompt below or ask your own question.
                 </p>
                 {!selectedTitle && (
                   <div className="mt-5 flex flex-col gap-2">
@@ -381,12 +354,34 @@ function AdvisorPage() {
                 className="rounded border border-destructive/30 bg-destructive/10 p-3 text-xs"
               >
                 <p className="font-semibold text-destructive">Could not complete that answer</p>
-                <p className="mt-1 text-muted-foreground">{chat.error}</p>
+                <p className="mt-1 text-muted-foreground">{advisorErrorMessage(chat.error)}</p>
               </div>
             )}
             <div ref={end} />
           </div>
           <div className="border-t border-border bg-secondary/20 p-3 sm:p-4">
+            <div
+              className="mb-3 flex flex-wrap gap-2"
+              role="group"
+              aria-label="Quick advisor prompts"
+            >
+              {actions.map((action) => {
+                const Icon = action.icon;
+                return (
+                  <button
+                    key={action.id}
+                    type="button"
+                    title={action.description}
+                    disabled={!chat.configured || chat.isStreaming || !contextReady}
+                    onClick={() => void chat.sendMessage(actionPrompt(action.id, selectedTitle))}
+                    className="inline-flex min-h-9 items-center gap-1.5 rounded border border-border bg-card px-3 text-xs font-medium hover:border-accent disabled:opacity-50"
+                  >
+                    <Icon size={15} className="text-accent" />
+                    {action.title}
+                  </button>
+                );
+              })}
+            </div>
             <label htmlFor="advisor-question" className="sr-only">
               Your security question
             </label>

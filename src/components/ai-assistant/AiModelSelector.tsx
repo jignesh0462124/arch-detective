@@ -1,12 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import {
-  Cpu,
-  CaretDown,
-  Check,
-  Lightning,
-  ShieldCheck,
-  TerminalWindow,
-} from "@phosphor-icons/react";
+import { useState, useRef, useEffect, useId } from "react";
+import { SlidersHorizontal, CaretDown, Check } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { SUPPORTED_MODELS, getModelConfig } from "@/lib/api/ai-models";
 
@@ -27,6 +20,8 @@ export function AiModelSelector({
 }: AiModelSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuId = useId();
 
   const activeConfig = getModelConfig(selectedModel);
 
@@ -39,53 +34,76 @@ export function AiModelSelector({
     }
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      containerRef.current
+        ?.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')
+        ?.focus();
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
 
-  const getModelIcon = (id: string) => {
-    switch (id) {
-      case "glm-5-3-flash":
-        return <Cpu size={13} weight="duotone" className="text-accent" />;
-      case "qwen-3-8-flash":
-        return <Lightning size={13} weight="duotone" className="text-cyan-400" />;
-      case "qwen-3-8-groq":
-        return <Lightning size={13} weight="fill" className="text-amber-400" />;
-      case "qwen-3-8":
-        return <ShieldCheck size={13} weight="duotone" className="text-emerald-400" />;
-      default:
-        return <TerminalWindow size={13} weight="duotone" className="text-muted-foreground" />;
-    }
-  };
-
   return (
-    <div className="relative inline-block text-left" ref={containerRef}>
+    <div
+      className="relative inline-block text-left"
+      ref={containerRef}
+      onKeyDown={(event) => {
+        if (!isOpen) return;
+        if (event.key === "Escape") {
+          event.preventDefault();
+          setIsOpen(false);
+          triggerRef.current?.focus();
+        }
+        if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+          event.preventDefault();
+          const options = Array.from(
+            containerRef.current?.querySelectorAll<HTMLButtonElement>('[role="option"]') ?? [],
+          );
+          if (!options.length) return;
+          const current = options.findIndex((option) => option === document.activeElement);
+          const next =
+            event.key === "Home"
+              ? 0
+              : event.key === "End"
+                ? options.length - 1
+                : (current + (event.key === "ArrowDown" ? 1 : -1) + options.length) %
+                  options.length;
+          options[next]?.focus();
+        }
+      }}
+    >
       <button
+        ref={triggerRef}
         type="button"
         disabled={disabled}
         onClick={() => setIsOpen((prev) => !prev)}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        aria-label={`AI model: ${activeConfig.shortName}`}
-        title="Switch Security Reasoning Model"
+        aria-controls={isOpen ? menuId : undefined}
+        onKeyDown={(event) => {
+          if (!isOpen && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
+            event.preventDefault();
+            setIsOpen(true);
+          }
+        }}
+        aria-label="Select model"
+        title="Select model"
         className={cn(
           "flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 text-xs font-mono font-medium transition-colors",
           "hover:bg-secondary focus:outline-none focus:border-accent",
           disabled && "cursor-not-allowed opacity-50",
           compact ? "h-7 text-[11px]" : "h-9",
-          toolbar && "w-44 justify-between",
+          toolbar && "justify-between",
         )}
       >
-        {getModelIcon(activeConfig.id)}
+        <SlidersHorizontal size={14} aria-hidden="true" className="text-muted-foreground" />
         <span
           className={cn(
             "font-bold text-foreground",
             toolbar && "min-w-0 flex-1 truncate text-left",
           )}
         >
-          {activeConfig.shortName}
+          Model
         </span>
         <CaretDown
           size={12}
@@ -99,22 +117,15 @@ export function AiModelSelector({
 
       {isOpen && (
         <div
+          id={menuId}
           role="listbox"
-          aria-label="Available AI reasoning models"
-          className="absolute right-0 top-full z-50 mt-1.5 w-72 origin-top-right rounded-sm border border-border bg-card p-1.5 shadow-2xl animate-in fade-in-0 zoom-in-95"
+          aria-label="Available models"
+          className="absolute left-0 top-full z-50 mt-1.5 w-72 max-w-[calc(100vw-2rem)] origin-top-left rounded-sm border border-border bg-card p-1.5 shadow-2xl animate-in fade-in-0 zoom-in-95 sm:left-auto sm:right-0 sm:origin-top-right"
         >
           <div className="border-b border-border/80 px-2.5 py-2">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-foreground">
-                Neural Reasoning Engine
-              </span>
-              <span className="inline-flex items-center gap-1 rounded border border-success/30 bg-success/10 px-1.5 py-0.5 font-mono text-[9px] font-bold text-success">
-                <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse-dot" />
-                ONLINE
-              </span>
-            </div>
+            <p className="text-xs font-semibold text-foreground">Select model</p>
             <p className="mt-0.5 text-[10px] text-muted-foreground leading-tight">
-              Select model for codebase audit & vulnerability remediation
+              Used for codebase review and Security Advisor suggestions.
             </p>
           </div>
 
@@ -130,6 +141,7 @@ export function AiModelSelector({
                   onClick={() => {
                     onSelectModel(model.id);
                     setIsOpen(false);
+                    triggerRef.current?.focus();
                   }}
                   className={cn(
                     "flex w-full items-start gap-2.5 rounded-sm p-2 text-left transition-colors border",
@@ -138,27 +150,10 @@ export function AiModelSelector({
                       : "border-transparent text-muted-foreground hover:bg-secondary hover:text-foreground",
                   )}
                 >
-                  <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-sm border border-border bg-secondary">
-                    {getModelIcon(model.id)}
-                  </div>
-
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="text-xs font-bold text-foreground">{model.name}</span>
-                      <span className="rounded border border-border bg-secondary px-1 py-0.2 font-mono text-[9px] font-bold uppercase text-muted-foreground">
-                        {model.badge}
-                      </span>
-                    </div>
-
-                    <p className="mt-0.5 line-clamp-1 text-[10px] text-muted-foreground">
-                      {model.tagline}
-                    </p>
-
-                    <div className="mt-1 flex items-center gap-2 font-mono text-[9px] text-muted-foreground">
-                      <span>{model.latencyEstimate}</span>
-                      <span>·</span>
-                      <span>{model.contextWindow}</span>
-                    </div>
+                    <span className="text-xs font-semibold text-foreground">
+                      {model.id === "qwen-3-8-groq" ? "Groq LPU" : model.name}
+                    </span>
                   </div>
 
                   {isSelected && (
@@ -169,11 +164,9 @@ export function AiModelSelector({
             })}
           </div>
 
-          <div className="mt-2 border-t border-border/60 px-2 py-1.5 text-center font-mono text-[9px] text-muted-foreground">
-            Provider:{" "}
-            <span className="font-bold text-foreground">{activeConfig.providerLabel}</span> ·{" "}
-            {activeConfig.contextWindow}
-          </div>
+          <p className="mt-2 border-t border-border/60 px-2 py-1.5 text-[10px] text-muted-foreground">
+            Selected: {activeConfig.shortName}. Review and test suggestions before use.
+          </p>
         </div>
       )}
     </div>

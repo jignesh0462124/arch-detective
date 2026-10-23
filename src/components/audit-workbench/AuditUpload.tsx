@@ -1,5 +1,5 @@
 import { authScope, isCurrentScope, accountStorage } from "@/lib/authState";
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import {
@@ -13,7 +13,6 @@ import {
 } from "@phosphor-icons/react";
 import { AppShell } from "@/components/brutal/AppShell";
 import { BrutalButton } from "@/components/brutal/BrutalButton";
-import { useScans } from "@/hooks/useScans";
 import {
   startWorkbenchAudit,
   getWorkbenchProgress,
@@ -23,14 +22,16 @@ import {
 import { validateAuditFile } from "@/lib/auditView";
 import { ScanAnimation } from "./ScanAnimation";
 import { prefetchWorkbench } from "./preload";
+import { AuditHistoryButton } from "./AuditHistory";
+const GitHubRepositories = lazy(() =>
+  import("@/components/github/GitHubRepositories").then((module) => ({
+    default: module.GitHubRepositories,
+  })),
+);
+import { AUDIT_FRAMEWORKS, auditDefaults } from "@/lib/workspaceSettings";
+import type { WorkspaceSettings } from "@/lib/api/workspaces";
 
-const frameworks = [
-  { id: "gdpr", label: "GDPR" },
-  { id: "soc2", label: "SOC 2" },
-  { id: "iso27001", label: "ISO 27001" },
-  { id: "pci_dss", label: "PCI DSS" },
-  { id: "nist_csf", label: "NIST CSF" },
-];
+const frameworks = AUDIT_FRAMEWORKS;
 const jobKey = (workspaceId: string) => `archon-workbench-job:${workspaceId}`;
 function readJob(workspaceId: string): { id: string; name: string; created: string } | null {
   try {
@@ -51,13 +52,13 @@ export function AuditUpload({
   workspaceName,
   role,
   capabilities,
-  onLegacy,
+  settings,
 }: {
   workspaceId: string;
   workspaceName: string;
   role: string;
   capabilities: WorkbenchCapabilities;
-  onLegacy: () => void;
+  settings?: WorkspaceSettings;
 }) {
   const navigate = useNavigate();
   const client = useQueryClient();
@@ -65,17 +66,20 @@ export function AuditUpload({
   const upload = useRef<AbortController | null>(null);
   const mounted = useRef(true);
   const [file, setFile] = useState<File | null>(null);
+  const [source, setSource] = useState<"zip" | "github">("zip");
   const [name, setName] = useState("");
-  const [selected, setSelected] = useState(["gdpr", "soc2", "iso27001"]);
+  const [selected, setSelected] = useState(() => auditDefaults(settings));
+  const touchedDefaults = useRef(false);
+  useEffect(() => {
+    if (!touchedDefaults.current) setSelected(auditDefaults(settings));
+  }, [settings]);
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [job, setJob] = useState(() =>
     typeof window !== "undefined" ? readJob(workspaceId) : null,
   );
   const [elapsed, setElapsed] = useState(0);
-  const [historyFilter, setHistoryFilter] = useState("");
   const [idempotencyKey, setIdempotencyKey] = useState(() => crypto.randomUUID());
-  const history = useScans(workspaceId);
   const progress = useQuery({
     queryKey: ["workbench-progress", workspaceId, job?.id],
     queryFn: ({ signal }) => getWorkbenchProgress(job!.id, signal),
@@ -126,6 +130,7 @@ export function AuditUpload({
       /* Optional navigation metadata. */
     }
     void client.invalidateQueries({ queryKey: ["scans"] });
+    void client.invalidateQueries({ queryKey: ["audit-history"] });
     void client.invalidateQueries({ queryKey: ["findings"] });
     void navigate({
       to: "/workspace/$workspaceId/scans/$scanId/workbench",
@@ -177,6 +182,7 @@ export function AuditUpload({
         /* Audit evidence is stored on the server. */
       }
       setJob(next);
+      void client.invalidateQueries({ queryKey: ["audit-history"] });
       if (capabilities.progressive_workbench && result.status !== "failed") {
         void navigate({
           to: "/workspace/$workspaceId/scans/$scanId/workbench",
@@ -190,6 +196,8 @@ export function AuditUpload({
     }
   };
   const reset = () => {
+    touchedDefaults.current = false;
+    setSelected(auditDefaults(settings));
     setJob(null);
     setFile(null);
     setError("");
@@ -201,12 +209,6 @@ export function AuditUpload({
     }
   };
   const canStart = ["owner", "admin", "analyst"].includes(role);
-  const completed = (history.data?.items || []).filter(
-    (scan) =>
-      scan.status === "completed" &&
-      scan.scan_type === "codebase" &&
-      scan.target_name.toLowerCase().includes(historyFilter.trim().toLowerCase()),
-  );
   return (
     <AppShell title="Codebase Audit" subtitle={`Workspace · ${workspaceName}`}>
       <div className="space-y-5">
@@ -221,9 +223,7 @@ export function AuditUpload({
                 : "Upload your project and review security findings in context."}
             </p>
           </div>
-          <BrutalButton variant="secondary" size="sm" onClick={onLegacy}>
-            Previous audit view
-          </BrutalButton>
+          <AuditHistoryButton workspaceId={workspaceId} role={role} />
         </div>
         <ol className="grid grid-cols-3 border-b border-border text-[10px] sm:text-xs">
           {["Upload and configure", "Scan project", "Review in workbench"].map((label, index) => (
@@ -238,6 +238,26 @@ export function AuditUpload({
             </li>
           ))}
         </ol>
+        {!job && !uploading && (
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Project source">
+            <BrutalButton
+              size="sm"
+              variant={source === "zip" ? "primary" : "secondary"}
+              aria-pressed={source === "zip"}
+              onClick={() => setSource("zip")}
+            >
+              Upload ZIP
+            </BrutalButton>
+            <BrutalButton
+              size="sm"
+              variant={source === "github" ? "primary" : "secondary"}
+              aria-pressed={source === "github"}
+              onClick={() => setSource("github")}
+            >
+              GitHub repository
+            </BrutalButton>
+          </div>
+        )}
         {error ? (
           <p
             role="alert"
@@ -276,6 +296,16 @@ export function AuditUpload({
               </div>
             ) : null}
           </>
+        ) : source === "github" ? (
+          <Suspense fallback={<p role="status">Opening repository selection…</p>}>
+            <GitHubRepositories
+              key={workspaceId}
+              workspaceId={workspaceId}
+              role={role}
+              scan
+              defaults={selected}
+            />
+          </Suspense>
         ) : (
           <>
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(280px,1fr)]">
@@ -366,6 +396,7 @@ export function AuditUpload({
                           type="checkbox"
                           checked={selected.includes(framework.id)}
                           onChange={() => {
+                            touchedDefaults.current = true;
                             setSelected((previous) =>
                               previous.includes(framework.id)
                                 ? previous.filter((v) => v !== framework.id)
@@ -424,65 +455,6 @@ export function AuditUpload({
             ) : null}
           </>
         )}
-        <section className="overflow-hidden rounded-md border border-border bg-card">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border p-4">
-            <div>
-              <h3 className="text-sm font-semibold">Scan history</h3>
-              <p className="mt-1 text-[11px] text-muted-foreground">
-                Reopen recorded findings and retained source.
-              </p>
-            </div>
-            <input
-              aria-label="Search scan history"
-              value={historyFilter}
-              onChange={(e) => setHistoryFilter(e.target.value)}
-              placeholder="Find an audit…"
-              className="h-9 rounded border border-border bg-transparent px-3 text-xs"
-            />
-          </div>
-          {history.isPending ? (
-            <p role="status" className="p-5 text-xs">
-              Loading audit history…
-            </p>
-          ) : history.isError ? (
-            <p role="alert" className="p-5 text-xs">
-              Scan history could not be loaded.
-            </p>
-          ) : completed.length ? (
-            <ul className="divide-y divide-border">
-              {completed.map((scan) => (
-                <li
-                  key={scan.id}
-                  className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
-                >
-                  <div className="min-w-0">
-                    <p className="truncate text-xs font-medium">{scan.target_name}</p>
-                    <p className="mt-1 text-[10px] text-muted-foreground">
-                      {scan.finding_count} findings ·{" "}
-                      {new Date(scan.completed_at || scan.created_at).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <BrutalButton
-                    variant="secondary"
-                    size="sm"
-                    onClick={() =>
-                      navigate({
-                        to: "/workspace/$workspaceId/scans/$scanId/workbench",
-                        params: { workspaceId, scanId: scan.id },
-                      })
-                    }
-                  >
-                    Open workbench
-                  </BrutalButton>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="p-5 text-xs text-muted-foreground">
-              No completed audits{historyFilter ? " match your search" : " yet"}.
-            </p>
-          )}
-        </section>
       </div>
     </AppShell>
   );

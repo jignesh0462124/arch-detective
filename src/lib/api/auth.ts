@@ -3,6 +3,25 @@ import type { Session } from "@supabase/supabase-js";
 import { api } from "./client";
 import type { BootstrapResponse, CurrentUserResponse } from "./types";
 import { supabase } from "../supabase";
+import { safeAuthDestination } from "../authState";
+
+export async function signInWithGitHub(next?: string) {
+  const redirect = new URL("/login", window.location.origin);
+  redirect.searchParams.set("next", safeAuthDestination(next));
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "github",
+    options: { redirectTo: redirect.toString() },
+  });
+  if (error) throw error;
+}
+
+export async function linkGitHubSignIn() {
+  const { error } = await supabase.auth.linkIdentity({
+    provider: "github",
+    options: { redirectTo: `${window.location.origin}/profile` },
+  });
+  if (error) throw error;
+}
 
 export async function signUp(email: string, password: string, displayName?: string) {
   const result = await supabase.auth.signUp({

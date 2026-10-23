@@ -117,9 +117,12 @@ export async function exportFindingQueue(
 
 export function findingError(error: unknown): string {
   if (error instanceof ApiError) {
-    if (error.status === 401) return error.authCheck === "invalid"
-      ? "Your session has ended. Sign in again to view findings."
-      : "The server could not verify this request. Refresh and retry.";
+    if (error.status === 401)
+      return error.authCheck === "invalid"
+        ? "Your session has ended. Sign in again to view findings."
+        : "You are signed in, but the server could not verify this request. Retry shortly.";
+    if (error.status === 503)
+      return "The audit service is temporarily unavailable. Your session and saved findings are unchanged. Retry shortly.";
     if (error.status === 403 || error.status === 404)
       return "This scan or finding is unavailable, or you no longer have access.";
     if (error.status === 409) return "The scan or findings changed. Refresh and try again.";

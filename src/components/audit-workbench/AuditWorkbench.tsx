@@ -16,6 +16,8 @@ import {
   MagnifyingGlass,
   X,
   WarningCircle,
+  ArrowsOut,
+  ArrowsIn,
 } from "@phosphor-icons/react";
 import { AppShell } from "@/components/brutal/AppShell";
 import { BrutalButton } from "@/components/brutal/BrutalButton";
@@ -335,6 +337,36 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
   const [exporting, setExporting] = useState(false);
   const [start, setStart] = useState(1);
   const [explorerWidth, setExplorerWidth] = useState(220);
+  const [expanded, setExpanded] = useState(false);
+  const [hideFiles, setHideFiles] = useState(false);
+  const [hideDetails, setHideDetails] = useState(false);
+  const expandButton = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!expanded) return;
+    const scroll = window.scrollY;
+    const trigger = expandButton.current;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const escape = (event: KeyboardEvent) => {
+      if (
+        event.key === "Escape" &&
+        !event.defaultPrevented &&
+        !dialog.current?.open &&
+        !document.querySelector(
+          ".monaco-editor .suggest-widget.visible, .monaco-editor .find-widget.visible",
+        )
+      ) {
+        setExpanded(false);
+      }
+    };
+    window.addEventListener("keydown", escape);
+    return () => {
+      document.body.style.overflow = overflow;
+      window.removeEventListener("keydown", escape);
+      window.scrollTo(0, scroll);
+      trigger?.focus({ preventScroll: true });
+    };
+  }, [expanded]);
   const deferredSearch = useDeferredValue(search.trim().toLowerCase());
   const deferredFileSearch = useDeferredValue(fileSearch.trim().toLowerCase());
   const {
@@ -647,9 +679,10 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
   return (
     <AppShell
       title="Audit Workbench"
+      immersive={expanded}
       subtitle={`${active?.name} / Codebase Audit / ${data.scan.target_name}`}
     >
-      <div className="min-w-0 space-y-4">
+      <div className={cn("min-w-0 space-y-4", expanded && "workbench-full")}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
             <h2 className="truncate text-lg font-semibold">{data.scan.target_name}</h2>
@@ -658,6 +691,48 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
+            {complete && finding && (
+              <a
+                className="inline-flex min-h-9 items-center rounded-md border border-border bg-card px-3 text-xs font-medium"
+                href={
+                  data.scan.source_type === "git"
+                    ? `/fix-verification?scanId=${encodeURIComponent(scanId)}&findingId=${encodeURIComponent(finding.id)}`
+                    : `/advisor?workspaceId=${encodeURIComponent(workspaceId)}&scanId=${encodeURIComponent(scanId)}&findingId=${encodeURIComponent(finding.id)}&solution=patch`
+                }
+              >
+                Suggest fix
+              </a>
+            )}
+            <button
+              ref={expandButton}
+              type="button"
+              className="inline-flex min-h-9 items-center gap-2 rounded-md border border-border bg-card px-3 text-xs font-medium hover:bg-secondary"
+              onClick={() => setExpanded((value) => !value)}
+              aria-pressed={expanded}
+            >
+              {expanded ? <ArrowsIn size={15} /> : <ArrowsOut size={15} />}
+              {expanded ? "Exit full page" : "Expand workbench"}
+            </button>
+            {expanded && (
+              <>
+                <button
+                  type="button"
+                  aria-pressed={!hideFiles}
+                  onClick={() => setHideFiles((value) => !value)}
+                  className="hidden rounded border border-border px-3 text-xs lg:block"
+                >
+                  {hideFiles ? "Show files" : "Hide files"}
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={!hideDetails}
+                  onClick={() => setHideDetails((value) => !value)}
+                  className="hidden rounded border border-border px-3 text-xs xl:block"
+                >
+                  {hideDetails ? "Show details" : "Hide details"}
+                </button>
+              </>
+            )}
             <BrutalButton
               variant="secondary"
               size="sm"
@@ -669,7 +744,7 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
               variant="secondary"
               size="sm"
               disabled={!complete}
-              onClick={() => navigate({ to: "/workspace", search: { reportScan: scanId } })}
+              onClick={() => navigate({ to: "/reports/$reportId", params: { reportId: scanId } })}
             >
               View audit report
             </BrutalButton>
@@ -803,6 +878,8 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
         </div>
         <div
           className="audit-workbench-grid grid min-w-0 overflow-hidden rounded-md border border-border bg-card"
+          data-hide-files={expanded && hideFiles}
+          data-hide-details={expanded && hideDetails}
           style={{ "--explorer-width": `${explorerWidth}px` } as React.CSSProperties}
         >
           <aside
@@ -954,7 +1031,7 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
                 <List size={14} />
               </button>
             </div>
-            <div className="h-[420px] min-w-0 sm:h-[480px]">
+            <div className="workbench-code-height h-[420px] min-w-0 sm:h-[480px]">
               {!sourceAllowed ? (
                 <div className="flex h-full flex-col items-center justify-center gap-3 p-6 text-center text-sm text-muted-foreground">
                   <Code size={28} />

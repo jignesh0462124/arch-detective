@@ -168,6 +168,29 @@ try {
       );
     }
   }
+  // The History helper's exact conditional DELETE, including eligibility and tenant scope.
+  for (const role of ["owner", "admin", "analyst", "viewer", "outsider", "anon"]) {
+    for (const status of ["completed", "failed", "running", "pending"]) {
+      await db.exec("RESET ROLE");
+      const temporary = (
+        await q(`INSERT INTO scans(workspace_id,created_by,target_name,scan_type,status)
+        VALUES ('${ids.workspace}','${ids.owner}','Deletion fixture','codebase','${status}') RETURNING id`)
+      ).rows[0].id;
+      await as(role === "anon" ? "anon" : "authenticated", ids[role]);
+      const deletion = (workspace) =>
+        `DELETE FROM scans WHERE id='${temporary}' AND workspace_id='${workspace}' AND scan_type='codebase' AND status IN ('completed','failed') RETURNING id`;
+      if (role === "anon") await denied(deletion(ids.workspace));
+      else {
+        await count(deletion(ids.other), 0);
+        const eligible =
+          ["owner", "admin"].includes(role) && ["completed", "failed"].includes(status);
+        await count(deletion(ids.workspace), eligible ? 1 : 0);
+        if (eligible) await count(deletion(ids.workspace), 0);
+      }
+      await db.exec("RESET ROLE");
+      await q(`DELETE FROM scans WHERE id='${temporary}'`);
+    }
+  }
   await as("authenticated", ids.viewer);
   // Findings triage must persist every state, reject wrong scan scopes and honor role revocation.
   for (const state of ["open", "accepted_risk", "resolved", "false_positive"]) {
@@ -190,6 +213,10 @@ try {
   );
   await as("authenticated", ids.analyst);
   await count(`SELECT * FROM findings WHERE id='${ids.finding}'`, 0);
+  await count(
+    `DELETE FROM scans WHERE id='${ids.scan}' AND workspace_id='${ids.workspace}' AND status IN ('completed','failed') RETURNING id`,
+    0,
+  );
   await count(`UPDATE findings SET state='open' WHERE id='${ids.finding}' RETURNING id`, 0);
   await as("authenticated", ids.owner);
   await q(
@@ -330,8 +357,78 @@ try {
     0,
   );
   await as("authenticated", ids.owner);
+  // GitHub metadata is readable only within the scan's workspace; all writes,
+  // OAuth credentials and private patches remain backend-only.
+  await db.exec("RESET ROLE");
+  const integrationId = "00000000-0000-4000-8000-000000000101";
+  const proposalId = "00000000-0000-4000-8000-000000000102";
+  await q(
+    `INSERT INTO repository_integrations(id,workspace_id,repository_id,installation_id,full_name,created_by) VALUES ('${integrationId}','${ids.workspace}',101,202,'fixture/repo','${ids.owner}')`,
+  );
+  await q(
+    `INSERT INTO repository_scan_refs(scan_id,integration_id,workspace_id,branch,commit_sha) VALUES ('${ids.scan}','${integrationId}','${ids.workspace}','main','${"a".repeat(40)}')`,
+  );
+  await q(
+    `INSERT INTO fix_proposals(id,workspace_id,scan_id,finding_id,snapshot_id,created_by,expires_at) VALUES ('${proposalId}','${ids.workspace}','${ids.scan}','${ids.finding}','${snapshotId}','${ids.owner}',now()+interval '30 days')`,
+  );
+  await q(
+    `INSERT INTO github_private_records(id,workspace_id,proposal_id,snapshot_id,ciphertext,expires_at) VALUES ('proposal:${proposalId}','${ids.workspace}','${proposalId}','${snapshotId}','encrypted-fixture',now()+interval '30 days')`,
+  );
+  for (const role of ["owner", "admin", "analyst", "viewer"]) {
+    await as("authenticated", ids[role]);
+    for (const table of ["repository_integrations", "repository_scan_refs", "fix_proposals"]) {
+      await count(`SELECT * FROM ${table}`, 1);
+      await denied(`DELETE FROM ${table}`);
+      await denied(`UPDATE ${table} SET workspace_id='${ids.other}'`);
+    }
+    for (const table of ["github_private_records", "github_webhook_deliveries"])
+      await denied(`SELECT * FROM ${table}`);
+  }
+  await as("authenticated", ids.outsider);
+  for (const table of ["repository_integrations", "repository_scan_refs", "fix_proposals"])
+    await count(`SELECT * FROM ${table}`, 0);
+  await as("anon");
+  for (const table of [
+    "repository_integrations",
+    "repository_scan_refs",
+    "fix_proposals",
+    "github_private_records",
+    "github_webhook_deliveries",
+  ])
+    await denied(`SELECT * FROM ${table}`);
+  await as("authenticated", ids.owner);
+  await q(
+    `DELETE FROM workspace_members WHERE workspace_id='${ids.workspace}' AND user_id='${ids.viewer}'`,
+  );
+  await as("authenticated", ids.viewer);
+  for (const table of ["repository_integrations", "repository_scan_refs", "fix_proposals"])
+    await count(`SELECT * FROM ${table}`, 0);
+  await db.exec("RESET ROLE");
+  await assert.rejects(
+    q(`UPDATE fix_proposals SET workspace_id='${ids.other}' WHERE id='${proposalId}'`),
+    (error) => error.code === "23503",
+  );
+  checks++;
+  await q(`DELETE FROM source_snapshots WHERE id='${snapshotId}'`);
+  await count("SELECT * FROM github_private_records", 0);
+  await count(`SELECT * FROM fix_proposals WHERE id='${proposalId}' AND snapshot_id IS NULL`, 1);
+  await as("authenticated", ids.owner);
+  await count(
+    `DELETE FROM scans WHERE id='${ids.scan}' AND workspace_id='${ids.workspace}' AND status IN ('completed','failed') RETURNING id`,
+    1,
+  );
+  for (const table of [
+    "findings",
+    "reports",
+    "compliance_violations",
+    "repository_scan_refs",
+    "fix_proposals",
+  ])
+    await count(`SELECT * FROM ${table}`, 0);
   await count(`DELETE FROM workspaces WHERE id='${ids.workspace}' RETURNING id`, 1);
   await db.exec("RESET ROLE");
+  await count("SELECT * FROM github_private_records", 0);
+  await count("SELECT * FROM fix_proposals", 0);
   await count("SELECT * FROM source_cleanup_queue", 1);
   for (const table of sourceTables) await count(`SELECT * FROM ${table}`, 0);
   await as("authenticated", ids.outsider);

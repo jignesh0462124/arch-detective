@@ -26,7 +26,9 @@ export function CodePanel({
     <div
       className={cn(
         "overflow-hidden rounded-sm",
-        tone === "dark" ? "bg-[#0d1117] text-white hairline border-border" : "bg-card text-foreground hairline",
+        tone === "dark"
+          ? "bg-[#0d1117] text-white hairline border-border"
+          : "bg-card text-foreground hairline",
         className,
       )}
     >
@@ -34,7 +36,9 @@ export function CodePanel({
         <div
           className={cn(
             "flex items-center justify-between gap-3 border-b px-3 py-2",
-            tone === "dark" ? "border-white/10 bg-white/5" : "hairline-soft border-b bg-secondary/30",
+            tone === "dark"
+              ? "border-white/10 bg-white/5"
+              : "hairline-soft border-b bg-secondary/30",
           )}
         >
           <div className="flex items-center gap-2">
@@ -58,7 +62,7 @@ export function CodePanel({
             <span
               className={cn(
                 "font-mono text-[10px] uppercase tracking-wider",
-                tone === "dark" ? "text-white/40" : "text-muted-foreground",
+                tone === "dark" ? "text-white/70" : "text-muted-foreground",
               )}
             >
               {label}

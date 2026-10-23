@@ -154,7 +154,7 @@ def make_social() -> None:
     draw.text((96 * scale, 292 * scale), "Archon", font=load_font(72 * scale, True), fill=INK)
     draw.text(
         (99 * scale, 389 * scale),
-        "Agentic compliance & threat modeling",
+        "Security audits & threat modeling",
         font=load_font(25 * scale),
         fill=MUTED,
     )

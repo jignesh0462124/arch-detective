@@ -59,7 +59,7 @@ export function usePendingInvites(workspaceId: string | null | undefined) {
 export function useRevokeInvite(workspaceId: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (inviteId: string) => revokeInvite(inviteId),
+    mutationFn: (inviteId: string) => revokeInvite(inviteId, workspaceId),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["workspace-invites", workspaceId] });
     },

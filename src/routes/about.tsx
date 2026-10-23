@@ -47,8 +47,7 @@ const WORKFLOW: WorkflowStage[] = [
     step: "01",
     label: "Connect",
     title: "Upload a codebase archive.",
-    description:
-      "Upload a ZIP archive to start reviewing source code and its security findings.",
+    description: "Upload a ZIP archive to start reviewing source code and its security findings.",
     image: "/assets/archon-about-connect.webp",
     alt: "Repository and architecture document connected to analysis engine",
     icon: GitBranch,
@@ -88,21 +87,21 @@ const WORKFLOW: WorkflowStage[] = [
     points: [
       "Combined severity and exploitability scoring",
       "Cross-framework compliance mapping",
-      "Actionable remediation code patches",
+      "Suggested remediation to review and test",
     ],
   },
   {
     step: "04",
     label: "Report",
-    title: "Generate signed audit reports.",
+    title: "Prepare clear audit reports.",
     description:
       "Assembles executive summaries, control matrices, and evidence into downloadable PDFs.",
     image: "/assets/archon-about-report.webp",
-    alt: "Audit machine delivering an attestation report",
+    alt: "Audit workspace preparing a report for review",
     icon: FileText,
     imageFirst: true,
     points: [
-      "Attestation deliverable generated from scan state",
+      "Report prepared from saved scan results",
       "Direct regulatory citations alongside code evidence",
       "Downloadable PDF ready for security review",
     ],
@@ -260,7 +259,8 @@ function AboutPage() {
                 Bring one repository. Leave with a defensible next step.
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                Connect a repository to scan source code, map statutory compliance, and generate audit reports.
+                Connect a repository to scan source code, map statutory compliance, and generate
+                audit reports.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3 border-t border-border px-6 py-7 sm:px-9 lg:col-span-4 lg:justify-end lg:border-l lg:border-t-0 lg:px-10">

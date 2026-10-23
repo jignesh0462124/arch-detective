@@ -116,8 +116,8 @@ export async function fetchPendingInvites(workspaceId: string): Promise<Workspac
 /**
  * Revoke/cancel a pending workspace invitation.
  */
-export async function revokeInvite(inviteId: string): Promise<void> {
-  return dbRevokeInvite(inviteId);
+export async function revokeInvite(inviteId: string, workspaceId?: string): Promise<void> {
+  return dbRevokeInvite(inviteId, workspaceId);
 }
 
 /**
@@ -129,14 +129,21 @@ export async function updateMemberRole(
   role: string,
 ): Promise<WorkspaceMember> {
   const { supabase } = await import("@/lib/supabase");
-  const { error } = await supabase
+  if (!["admin", "analyst", "viewer"].includes(role))
+    throw new Error("Choose a supported member role.");
+  const { data, error } = await supabase
     .from("workspace_members")
     .update({ role, updated_at: new Date().toISOString() })
     .eq("workspace_id", workspaceId)
-    .eq("user_id", userId);
+    .eq("user_id", userId)
+    .neq("role", "owner")
+    .select("user_id,role,created_at")
+    .maybeSingle();
 
   if (error) throw error;
-  return { user_id: userId, role: role as WorkspaceMember["role"], created_at: new Date().toISOString() };
+  if (!data)
+    throw new Error("Member role was not changed. Refresh the list and check your access.");
+  return data as WorkspaceMember;
 }
 
 /**

@@ -22,6 +22,7 @@ import { Route as AppAttackGraphRouteImport } from './routes/_app/attack-graph'
 import { Route as AppAuditLogRouteImport } from './routes/_app/audit-log'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppFindingsRouteImport } from './routes/_app/findings'
+import { Route as AppFixVerificationRouteImport } from './routes/_app/fix-verification'
 import { Route as AppProfileRouteImport } from './routes/_app/profile'
 import { Route as AppReportsRouteImport } from './routes/_app/reports'
 import { Route as AppWorkspaceRouteImport } from './routes/_app/workspace'
@@ -94,6 +95,11 @@ const AppFindingsRoute = AppFindingsRouteImport.update({
   path: '/findings',
   getParentRoute: () => AppRoute,
 } as any)
+const AppFixVerificationRoute = AppFixVerificationRouteImport.update({
+  id: '/fix-verification',
+  path: '/fix-verification',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppProfileRoute = AppProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -145,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/audit-log': typeof AppAuditLogRoute
   '/dashboard': typeof AppDashboardRoute
   '/findings': typeof AppFindingsRoute
+  '/fix-verification': typeof AppFixVerificationRoute
   '/profile': typeof AppProfileRoute
   '/reports': typeof AppReportsRouteWithChildren
   '/workspace': typeof AppWorkspaceRoute
@@ -166,6 +173,7 @@ export interface FileRoutesByTo {
   '/audit-log': typeof AppAuditLogRoute
   '/dashboard': typeof AppDashboardRoute
   '/findings': typeof AppFindingsRoute
+  '/fix-verification': typeof AppFixVerificationRoute
   '/profile': typeof AppProfileRoute
   '/reports': typeof AppReportsRouteWithChildren
   '/workspace': typeof AppWorkspaceRoute
@@ -189,6 +197,7 @@ export interface FileRoutesById {
   '/_app/audit-log': typeof AppAuditLogRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/findings': typeof AppFindingsRoute
+  '/_app/fix-verification': typeof AppFixVerificationRoute
   '/_app/profile': typeof AppProfileRoute
   '/_app/reports': typeof AppReportsRouteWithChildren
   '/_app/workspace': typeof AppWorkspaceRoute
@@ -212,6 +221,7 @@ export interface FileRouteTypes {
     | '/audit-log'
     | '/dashboard'
     | '/findings'
+    | '/fix-verification'
     | '/profile'
     | '/reports'
     | '/workspace'
@@ -233,6 +243,7 @@ export interface FileRouteTypes {
     | '/audit-log'
     | '/dashboard'
     | '/findings'
+    | '/fix-verification'
     | '/profile'
     | '/reports'
     | '/workspace'
@@ -255,6 +266,7 @@ export interface FileRouteTypes {
     | '/_app/audit-log'
     | '/_app/dashboard'
     | '/_app/findings'
+    | '/_app/fix-verification'
     | '/_app/profile'
     | '/_app/reports'
     | '/_app/workspace'
@@ -371,6 +383,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFindingsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/fix-verification': {
+      id: '/_app/fix-verification'
+      path: '/fix-verification'
+      fullPath: '/fix-verification'
+      preLoaderRoute: typeof AppFixVerificationRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/profile': {
       id: '/_app/profile'
       path: '/profile'
@@ -441,6 +460,7 @@ interface AppRouteChildren {
   AppAuditLogRoute: typeof AppAuditLogRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppFindingsRoute: typeof AppFindingsRoute
+  AppFixVerificationRoute: typeof AppFixVerificationRoute
   AppProfileRoute: typeof AppProfileRoute
   AppReportsRoute: typeof AppReportsRouteWithChildren
   AppWorkspaceRoute: typeof AppWorkspaceRoute
@@ -452,6 +472,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAuditLogRoute: AppAuditLogRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppFindingsRoute: AppFindingsRoute,
+  AppFixVerificationRoute: AppFixVerificationRoute,
   AppProfileRoute: AppProfileRoute,
   AppReportsRoute: AppReportsRouteWithChildren,
   AppWorkspaceRoute: AppWorkspaceRoute,

@@ -43,7 +43,7 @@
     </div>
 
     {% for finding in sev_findings %}
-    <div class="card-lifted no-break" style="border-left: 3.5px solid {% if finding.severity == 'critical' %}var(--severity-critical){% elif finding.severity == 'high' %}var(--severity-high){% elif finding.severity == 'medium' %}var(--severity-medium){% else %}var(--severity-low){% endif %}; margin-bottom: 14px;">
+    <div class="card-lifted finding-card" style="border-left: 3.5px solid {% if finding.severity == 'critical' %}var(--severity-critical){% elif finding.severity == 'high' %}var(--severity-high){% elif finding.severity == 'medium' %}var(--severity-medium){% else %}var(--severity-low){% endif %}; margin-bottom: 14px;">
 
       <!-- Card Header -->
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--card-surface); border-bottom: 1px solid var(--border-subtle);">
@@ -114,25 +114,23 @@
 
         <!-- Code Snippet -->
         {% if finding.code_snippet %}
-        <div style="background: #111111; border: 1px solid #27272a; border-radius: 6px; overflow: hidden; margin-bottom: 10px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 10px; background: #19191b; border-bottom: 1px solid #27272a; font-size: 7pt; color: #a1a1aa; font-family: var(--font-mono);">
-            <span>Recorded evidence: {{ finding.file_path or 'source' }}{% if finding.line_number %} · Line {{ finding.line_number }}{% endif %}</span>
-            <span style="color: #a1a1aa;">Redacted source excerpt</span>
-          </div>
-          <pre style="margin: 0; padding: 8px 12px; font-family: var(--font-mono); font-size: 7pt; color: #e4e4e7; line-height: 1.5; white-space: pre-wrap; word-break: break-all;"><code>{{ finding.code_snippet }}</code></pre>
-        </div>
+        <table class="evidence-code">
+          <colgroup><col style="width:34px"><col></colgroup>
+          <thead><tr><th colspan="2">{{ finding.evidence_language }} · Recorded evidence · {{ finding.file_path or 'source excerpt' }}{% if finding.line_number %}<br>Reported source line: {{ finding.line_number }}{% endif %}<br><span>{% if finding.excerpt_start_line %}Source-grounded excerpt. The marked line identifies the recorded finding.{% else %}Gutter numbers identify excerpt lines. Source position is not inferred.{% endif %}</span></th></tr></thead>
+          <tbody>{% for line in finding.excerpt_lines %}<tr{% if finding.excerpt_start_line and loop.first %} class="finding-code-line"{% endif %}><td class="code-gutter">{{ finding.excerpt_start_line + loop.index0 if finding.excerpt_start_line else loop.index }}</td><td class="code-text"><code>{{ line or ' ' }}</code></td></tr>{% endfor %}</tbody>
+        </table>
         {% else %}<p>No source evidence was recorded for this finding.</p>{% endif %}
         <p style="font-size: 8pt;">Triage: {{ finding.state | default('Not recorded', true) | replace('_', ' ') }} · CVE: {{ finding.cve_id | default('Not recorded', true) }}</p>
         {% if not finding.violations %}<p>No control mapping was recorded for the selected frameworks.</p>{% endif %}
 
         <!-- Remediation Steps -->
-        {% if finding.remediation_steps %}
+        {% if finding.remedy_steps %}
         <div style="background: var(--card-surface); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 10px 12px;">
           <div style="font-size: 7.5pt; font-weight: 700; text-transform: uppercase; color: var(--accent); letter-spacing: 0.06em; margin-bottom: 6px;">
             Remediation Steps
           </div>
           <div style="display: flex; flex-direction: column; gap: 4px;">
-            {% for step in finding.remediation_steps %}
+            {% for step in finding.remedy_steps %}
             <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 8pt; color: var(--text-primary); line-height: 1.45;">
               <span style="width: 14px; height: 14px; border-radius: 50%; background: var(--cream-deep); border: 1px solid var(--border-subtle); font-size: 6.5pt; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;">{{ loop.index }}</span>
               <span>{{ step }}</span>
@@ -146,6 +144,11 @@
           {{ finding.remediation }}
         </div>
         {% else %}<p>No remediation guidance was recorded. Review with your security team.</p>{% endif %}
+
+        <div class="verification-block">
+          <h4>Suggested verification checks</h4>
+          <ol><li>Review the affected code path and confirm the recorded issue applies.</li><li>Test the changed path with valid and invalid inputs; check expected behavior and access controls.</li><li>Run a new audit and compare the recorded evidence. These checks have not been executed by this report.</li></ol>
+        </div>
 
       </div>
     </div>

@@ -44,6 +44,12 @@ function placedMark(x,y,s,ink=C.ink,accent=C.orange) { return `<g transform="tra
 function placedLogo(x,y,s,ink=C.ink,accent=C.orange) { return `<g transform="translate(${x} ${y}) scale(${s})">${lockup(ink,accent)}</g>`; }
 
 async function main() {
+  if (process.argv.includes('--social-only')) {
+    const social = svg(1200,630,`<rect width="1200" height="630" fill="${C.cream}"/>${placedLogo(180,180,2.5)}${txt(600,430,'Security audits and threat modeling',27,C.muted,400,'text-anchor="middle"')}`,'Archon security audit workspace');
+    await sharp(Buffer.from(social)).png().toFile(path.resolve(__dirname,'../public/og-image.png'));
+    console.log('Updated social preview only.');
+    return;
+  }
   await fs.mkdir(OUT, { recursive: true });
   const assets = {
     'archon-mark.svg': svg(64,64,mark(),'Archon architectural inspection mark'),
@@ -104,7 +110,7 @@ async function main() {
     for (const [name, size] of [['favicon.png',32],['apple-touch-icon.png',180],['icon-192.png',192],['icon-512.png',512]]) {
       await sharp(icon).resize(size,size).png().toFile(path.join(publicDir,name));
     }
-    const social = svg(1200,630,`<rect width="1200" height="630" fill="${C.cream}"/>${placedLogo(180,180,2.5)}${txt(600,430,'Agentic compliance and threat modeling',27,C.muted,400,'text-anchor="middle"')}`,'Archon audit engine');
+    const social = svg(1200,630,`<rect width="1200" height="630" fill="${C.cream}"/>${placedLogo(180,180,2.5)}${txt(600,430,'Security audits and threat modeling',27,C.muted,400,'text-anchor="middle"')}`,'Archon security audit workspace');
     await sharp(Buffer.from(social)).png().toFile(path.join(publicDir,'og-image.png'));
     console.log('Installed public logo assets, browser/app icons and social preview.');
   }

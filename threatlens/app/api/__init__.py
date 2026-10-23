@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from app.api.github_review import router as github_review_router
 
 from app.api.audit_events import router as audit_events_router
 from app.api.ai_chat import router as ai_chat_router
@@ -14,6 +15,7 @@ from app.api.ws import router as ws_router
 
 
 api_router = APIRouter(prefix="/api/v1")
+api_router.include_router(github_review_router)
 api_router.include_router(auth_router)
 api_router.include_router(ai_chat_router)
 api_router.include_router(audit_workbench_router)

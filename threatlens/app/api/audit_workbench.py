@@ -115,6 +115,10 @@ async def start_audit(workspace_id: uuid.UUID, file: UploadFile = File(...), tar
         raise HTTPException(400, "Archive is corrupt, unsafe, unsupported or exceeds the configured limits") from exc
     validation_seconds = perf_counter() - validation_started
     await repository.rest("POST", "scans", params={"on_conflict": "id"}, body={"id": scan_id, "workspace_id": str(workspace_id), "created_by": str(user.id), "scan_type": "codebase", "source_type": "upload", "target_name": target_name.strip(), "selected_frameworks": selected, "status": "running", "started_at": now().isoformat()}, prefer="resolution=ignore-duplicates,return=representation")
+    # A trusted adapter may bind immutable repository provenance before job acceptance.
+    attach = getattr(repository, "attach_source_reference", None)
+    if attach is not None:
+        await attach(scan_id)
     claimed = await repository.rest("POST", "audit_workbench_jobs", params={"on_conflict": "scan_id"}, body={"scan_id": scan_id, "workspace_id": str(workspace_id), "created_by": str(user.id), "idempotency_key": key, "request_hash": digest}, prefer="resolution=ignore-duplicates,return=representation")
     if claimed:
         await record_scan_event(repository, scan_id, str(workspace_id), str(user.id), "scan.started", target_name.strip())
@@ -614,4 +618,10 @@ async def maintenance_loop():
                 await maintenance_once(store())
             except Exception:
                 logger.warning("Workbench maintenance deferred; persistence unavailable")
+        if settings.GITHUB_ENABLED and settings.SUPABASE_SERVICE_ROLE_KEY:
+            try:
+                from app.services.github_connection import cleanup_private_records
+                await cleanup_private_records(store())
+            except Exception:
+                logger.warning("GitHub expiry cleanup deferred; persistence unavailable")
         await asyncio.sleep(60)

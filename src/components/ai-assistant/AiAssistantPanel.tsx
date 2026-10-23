@@ -5,7 +5,7 @@ import {
   CheckCircle,
   PaperPlaneRight,
   ShieldCheck,
-  Sparkle,
+  Info,
   StopCircle,
   Trash,
   WarningCircle,
@@ -15,21 +15,22 @@ import {
 import { AiMessage } from "@/components/ai-assistant/AiMessage";
 import { AiModelSelector } from "@/components/ai-assistant/AiModelSelector";
 import { useSharedAiChat } from "@/components/ai-assistant/AiChatContext";
+import { advisorErrorMessage } from "@/lib/advisorPresentation";
 
 const actions = [
   {
     label: "Explain",
-    icon: Sparkle,
+    icon: Info,
     prompt: "Explain this security issue in plain language. Separate evidence from assumptions.",
   },
   {
-    label: "Suggest fix",
+    label: "Suggest a fix",
     icon: Wrench,
     prompt:
       "Suggest a practical fix for this security issue and what must be reviewed before applying it.",
   },
   {
-    label: "Verify",
+    label: "How to verify",
     icon: CheckCircle,
     prompt: "How should I verify this security fix? Give short test steps and expected results.",
   },
@@ -37,6 +38,10 @@ const actions = [
 
 export function AiAssistantPanel({ open, onClose }: { open: boolean; onClose: () => void }) {
   const chat = useSharedAiChat();
+  const { activateAdvisor } = chat;
+  useEffect(() => {
+    if (open) activateAdvisor();
+  }, [open, activateAdvisor]);
   const [input, setInput] = useState("");
   const panel = useRef<HTMLElement>(null);
   const close = useRef<HTMLButtonElement>(null);
@@ -180,36 +185,13 @@ export function AiAssistantPanel({ open, onClose }: { open: boolean; onClose: ()
             </button>
           </div>
         )}
-        <div className="grid grid-cols-3 gap-2 border-b border-border p-3">
-          {actions.map((action) => {
-            const Icon = action.icon;
-            return (
-              <button
-                type="button"
-                key={action.label}
-                disabled={!chat.configured || chat.isStreaming}
-                onClick={() =>
-                  void chat.sendMessage(
-                    chat.findingContext
-                      ? `${action.prompt} Use the selected saved finding.`
-                      : action.prompt,
-                  )
-                }
-                className="flex min-h-16 flex-col items-center justify-center gap-1 rounded border border-border px-1.5 text-center text-[11px] font-medium hover:border-accent disabled:opacity-50"
-              >
-                <Icon size={16} className="text-accent" />
-                {action.label}
-              </button>
-            );
-          })}
-        </div>
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
           {!chat.messages.length && (
             <div className="mx-auto max-w-xs py-9 text-center">
-              <Sparkle size={25} className="mx-auto text-accent" />
+              <ShieldCheck size={25} className="mx-auto text-accent" />
               <h3 className="mt-3 text-sm font-semibold">Ask a security question</h3>
               <p className="mt-1 text-xs text-muted-foreground">
-                Choose an action above or type below. Advice needs human review before
+                Choose a prompt below or type your own question. Advice needs human review before
                 implementation.
               </p>
             </div>
@@ -223,12 +205,39 @@ export function AiAssistantPanel({ open, onClose }: { open: boolean; onClose: ()
               className="flex items-start gap-2 rounded border border-destructive/30 bg-destructive/10 p-3 text-xs"
             >
               <WarningCircle size={16} className="shrink-0 text-destructive" />
-              <span>{chat.error}</span>
+              <span>{advisorErrorMessage(chat.error)}</span>
             </div>
           )}
           <div ref={end} />
         </div>
         <div className="border-t border-border bg-secondary/20 p-3">
+          <div
+            className="mb-3 flex flex-wrap gap-1.5"
+            role="group"
+            aria-label="Quick advisor prompts"
+          >
+            {actions.map((action) => {
+              const Icon = action.icon;
+              return (
+                <button
+                  type="button"
+                  key={action.label}
+                  disabled={!chat.configured || chat.isStreaming}
+                  onClick={() =>
+                    void chat.sendMessage(
+                      chat.findingContext
+                        ? `${action.prompt} Use the selected saved finding.`
+                        : action.prompt,
+                    )
+                  }
+                  className="inline-flex min-h-9 items-center gap-1 rounded border border-border bg-card px-2.5 text-[11px] font-medium hover:border-accent disabled:opacity-50"
+                >
+                  <Icon size={14} className="text-accent" />
+                  {action.label}
+                </button>
+              );
+            })}
+          </div>
           <label htmlFor="advisor-panel-input" className="sr-only">
             Your security question
           </label>

@@ -61,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (next) {
         const { error: validationError } = await supabase.auth.getUser();
         if (validationError) {
-          if (validationError.status === 401 || validationError.status === 403) {
+          if (validationError.status === 401) {
             if (alive.current && version === revision.current) {
               try {
                 await signOut("local");

@@ -1,7 +1,7 @@
 {
   "name": "Archon Audit Engine",
   "short_name": "Archon",
-  "description": "Agentic compliance and threat modeling engine.",
+  "description": "Security audits and threat modeling workspace.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f5f1ec",

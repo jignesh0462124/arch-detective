@@ -12,6 +12,14 @@ import {
 import { AuditWorkbench } from "../../src/components/audit-workbench/AuditWorkbench";
 import { AuditUpload } from "../../src/components/audit-workbench/AuditUpload";
 import { ScanAnimation } from "../../src/components/audit-workbench/ScanAnimation";
+import { Route as ProfileRoute } from "../../src/routes/_app/profile";
+import { Route as GraphRoute } from "../../src/routes/_app/attack-graph";
+import { Route as AdvisorRoute } from "../../src/routes/_app/advisor";
+import { Route as LandingRoute } from "../../src/routes/index";
+import { Route as FixRoute } from "../../src/routes/_app/fix-verification";
+import { AiChatProvider } from "../../src/components/ai-assistant/AiChatProvider";
+import { WorkspaceSettingsPage } from "../../src/components/workspace/WorkspaceSettingsPage";
+import type { ComponentType } from "react";
 import { workspace } from "./hooks";
 import "../../src/styles.css";
 
@@ -23,8 +31,25 @@ const state = options.get("state") || "ready";
 const view = options.get("view") || "workbench";
 const progressive = options.get("progressive") !== "false";
 const fixtureStarted = Date.now();
+const Profile = ProfileRoute.options.component as ComponentType;
+const Graph = GraphRoute.options.component as ComponentType;
+const Advisor = AdvisorRoute.options.component as ComponentType;
+const Landing = LandingRoute.options.component as ComponentType;
+const FixVerification = FixRoute.options.component as ComponentType;
+const proposalId = "55555555-5555-4555-8555-555555555555";
+const integrationId = "66666666-6666-4666-8666-666666666666";
+let proposalValidated = false;
+let proposalPublished = false;
 // Visible fixture-only metrics, never imported by the production application.
-const metrics = { sourceDownloads: 0, editorMounts: 0, lastTabMilliseconds: 0 };
+const metrics = {
+  sourceDownloads: 0,
+  editorMounts: 0,
+  lastTabMilliseconds: 0,
+  advisorRequests: 0,
+  advisorCancellations: 0,
+  advisorModel: "",
+  advisorContext: null as unknown,
+};
 let tabStart = 0;
 const mountedEditors = new WeakSet<Element>();
 function showMetrics() {
@@ -207,6 +232,147 @@ window.fetch = async (input, init) => {
     typeof input === "string" ? input : input instanceof URL ? input.href : input.url,
     location.origin,
   );
+  const fixtureProposal = {
+    id: proposalId,
+    scan_id: scanId,
+    finding_id: finding.id,
+    revision: 1,
+    status: proposalPublished ? "published" : "proposed",
+    expires_at: "2026-11-20T00:00:00Z",
+    metadata: {
+      title: "Use parameterized database queries",
+      explanation:
+        "Bind the request value as a query parameter rather than interpolating it into SQL.",
+      repository: "fixture/security-demo",
+      branch: "main",
+      commit_sha: "a".repeat(40),
+      tests: [
+        "Confirm normal lookups still return the expected user.",
+        "Confirm SQL control characters are treated as data.",
+      ],
+      assumptions: ["The database client supports query parameters."],
+    },
+    diff: "--- a/src/server.ts\n+++ b/src/server.ts\n@@ -1 +1 @@\n-const rows = database.query(`SELECT * FROM users WHERE id = ${id}`);\n+const rows = database.query('SELECT * FROM users WHERE id = ?', [id]);\n",
+    checks: proposalValidated ? [{ path: "src/server.ts", status: "passed" }] : null,
+    operation: proposalPublished
+      ? {
+          url: "https://github.com/fixture/security-demo/pull/1",
+          branch: "archon/fix-fixture",
+          commit: "b".repeat(40),
+        }
+      : {},
+  };
+  const json = (value: unknown) =>
+    new Response(JSON.stringify(value), { headers: { "Content-Type": "application/json" } });
+  if (url.pathname === "/api/v1/github/capabilities")
+    return json({
+      enabled: state !== "github-disabled",
+      publishing: true,
+      reason: "GitHub App setup is required. ZIP audits remain available.",
+      install_url: "https://github.com/apps/archon-fixture/installations/new",
+    });
+  if (url.pathname === "/api/v1/github/connection")
+    return json({ connected: true, login: "fixture-user" });
+  if (url.pathname === "/api/v1/github/repositories")
+    return json(
+      url.searchParams.has("installation_id")
+        ? {
+            repositories: [{ id: 123, full_name: "fixture/security-demo", private: true }],
+            total_count: 1,
+          }
+        : { installations: [{ id: 456, account: { login: "fixture-user" } }] },
+    );
+  if (url.pathname.endsWith("/repositories"))
+    return json([
+      {
+        id: integrationId,
+        full_name: "fixture/security-demo",
+        repository_id: 123,
+        installation_id: 456,
+      },
+    ]);
+  if (url.pathname.endsWith("/branches"))
+    return json([{ name: "main", commit: { sha: "a".repeat(40) } }]);
+  if (url.pathname.endsWith("/repository-scans"))
+    return json({
+      items: [
+        {
+          id: scanId,
+          target_name: "Security demo",
+          status: "completed",
+          created_at: "2026-10-20T10:00:00Z",
+        },
+      ],
+      total: 1,
+    });
+  if (url.pathname.endsWith("/fix-proposals"))
+    return json(
+      init?.method === "POST" ? { id: proposalId } : { items: [fixtureProposal], total: 1 },
+    );
+  if (url.pathname === `/api/v1/fix-proposals/${proposalId}`) return json(fixtureProposal);
+  if (url.pathname.endsWith("/validate")) {
+    proposalValidated = true;
+    return json({ checks: [{ path: "src/server.ts", status: "passed" }] });
+  }
+  if (url.pathname.endsWith("/publish")) {
+    proposalPublished = true;
+    return json({ url: "https://github.com/fixture/security-demo/pull/1" });
+  }
+  if (url.pathname.endsWith("/github-status"))
+    return json({
+      state: "open",
+      merged: false,
+      checks: [{ name: "Unit tests", status: "completed", conclusion: "success" }],
+      statuses: [],
+    });
+  if (url.pathname === "/api/v1/ai/capabilities")
+    return new Response(JSON.stringify({ available: state !== "unavailable" }), {
+      headers: { "Content-Type": "application/json" },
+    });
+  if (url.pathname === "/api/v1/ai/chat") {
+    const payload = JSON.parse(String(init?.body));
+    metrics.advisorRequests++;
+    metrics.advisorModel = payload.model;
+    metrics.advisorContext = payload.context || null;
+    showMetrics();
+    const encoder = new TextEncoder();
+    let timer: ReturnType<typeof setTimeout>;
+    let stopped = false;
+    const signal = init?.signal;
+    const abort = () => {
+      if (stopped) return;
+      stopped = true;
+      clearTimeout(timer);
+      metrics.advisorCancellations++;
+      showMetrics();
+    };
+    return new Response(
+      new ReadableStream({
+        start(controller) {
+          signal?.addEventListener("abort", abort, { once: true });
+          timer = setTimeout(
+            () => {
+              if (stopped) return;
+              stopped = true;
+              signal?.removeEventListener("abort", abort);
+              controller.enqueue(
+                encoder.encode(
+                  'data: {"choices":[{"delta":{"content":"Fixture suggestion: review and test the change."}}]}\n\ndata: [DONE]\n\n',
+                ),
+              );
+              controller.close();
+            },
+            state === "slow" ? 10000 : 800,
+          );
+        },
+        cancel() {
+          abort();
+          signal?.removeEventListener("abort", abort);
+        },
+      }),
+      { headers: { "Content-Type": "text/event-stream" } },
+    );
+  }
   if (url.pathname.startsWith("/api/") || url.pathname === "/health") {
     let body: unknown = { status: "healthy" };
     let status = 200;
@@ -331,9 +497,9 @@ function Upload() {
     <AuditUpload
       workspaceId={workspace.id}
       workspaceName={workspace.name}
-      role="owner"
+      role={workspace.role}
+      settings={workspace.settings}
       capabilities={capabilities}
-      onLegacy={() => {}}
     />
   );
 }
@@ -341,6 +507,10 @@ function Workbench() {
   return <AuditWorkbench workspaceId={workspace.id} scanId={scanId} />;
 }
 function Preview() {
+  if (view === "settings") return <WorkspaceSettingsPage workspaceId={workspace.id} />;
+  if (view === "landing") return <Landing />;
+  if (view === "profile") return <Profile />;
+  if (view === "graph") return <Graph />;
   return view === "upload" ? (
     <Upload />
   ) : view === "scan" ? (
@@ -384,7 +554,7 @@ const root = createRootRoute({
       <Outlet />
       <output
         id="workbench-test-metrics"
-        className="block p-3 font-mono text-xs"
+        className="block break-all p-3 font-mono text-xs"
         aria-label="Workbench fixture performance"
       />
     </>
@@ -397,12 +567,32 @@ const workbench = createRoute({
   path: "/workspace/$workspaceId/scans/$scanId/workbench",
   component: Workbench,
 });
+const app = createRoute({ getParentRoute: () => root, id: "_app", component: Outlet });
+const advisor = createRoute({ getParentRoute: () => app, path: "/advisor", component: Advisor });
+const fixes = createRoute({
+  getParentRoute: () => app,
+  path: "/fix-verification",
+  component: FixVerification,
+  validateSearch: FixRoute.options.validateSearch,
+});
 const router = createRouter({
-  routeTree: root.addChildren([home, upload, workbench]),
-  history: createMemoryHistory({ initialEntries: ["/"] }),
+  routeTree: root.addChildren([home, upload, workbench, app.addChildren([advisor, fixes])]),
+  history: createMemoryHistory({
+    initialEntries: [
+      view === "advisor"
+        ? options.get("context") === "finding"
+          ? `/advisor?workspaceId=${workspace.id}&scanId=${scanId}&findingId=${finding.id}`
+          : "/advisor"
+        : view === "fixes"
+          ? `/fix-verification?scanId=${scanId}&findingId=${finding.id}`
+          : "/",
+    ],
+  }),
 });
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
-    <RouterProvider router={router} />
+    <AiChatProvider>
+      <RouterProvider router={router} />
+    </AiChatProvider>
   </QueryClientProvider>,
 );

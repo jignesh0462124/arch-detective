@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Check, Copy, ShieldCheck, User } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type { UiMessage } from "@/hooks/useGroqChat";
-import { getModelConfig } from "@/lib/api/ai-models";
 
 interface AiMessageProps {
   message: UiMessage;
@@ -163,10 +162,7 @@ function renderTable(tableLines: string[]): React.ReactNode {
               className="border-b border-border/40 hover:bg-secondary/30 transition-colors"
             >
               {row.map((cell, ci) => (
-                <td
-                  key={ci}
-                  className="px-3 py-2 text-foreground/90 align-top leading-relaxed"
-                >
+                <td key={ci} className="px-3 py-2 text-foreground/90 align-top leading-relaxed">
                   {renderInline(cell)}
                 </td>
               ))}
@@ -237,7 +233,7 @@ function renderContent(text: string): React.ReactNode {
           >
             <span className="h-1.5 w-1.5 shrink-0 rounded-xs bg-accent" />
             <span>{renderInline(cleanHeading)}</span>
-          </div>
+          </div>,
         );
         continue;
       }
@@ -251,7 +247,7 @@ function renderContent(text: string): React.ReactNode {
             className="my-1 border-l-2 border-accent/60 bg-accent/5 py-1 pl-2.5 text-[11px] italic text-foreground/90 rounded-r-xs"
           >
             {renderInline(quoteContent)}
-          </div>
+          </div>,
         );
         continue;
       }
@@ -266,7 +262,7 @@ function renderContent(text: string): React.ReactNode {
             <span className="flex-1 leading-relaxed text-foreground/90">
               {renderInline(content)}
             </span>
-          </div>
+          </div>,
         );
         continue;
       }
@@ -284,7 +280,7 @@ function renderContent(text: string): React.ReactNode {
             <span className="flex-1 leading-relaxed text-foreground/90">
               {renderInline(content)}
             </span>
-          </div>
+          </div>,
         );
         continue;
       }
@@ -294,7 +290,7 @@ function renderContent(text: string): React.ReactNode {
       output.push(
         <p key={`p-${lineIdx}`} className="leading-relaxed text-foreground/90">
           {renderInline(cleanedLine)}
-        </p>
+        </p>,
       );
     }
 
@@ -309,7 +305,6 @@ function renderContent(text: string): React.ReactNode {
 export function AiMessage({ message }: AiMessageProps) {
   const [copied, setCopied] = useState(false);
   const isUser = message.role === "user";
-  const modelConfig = message.modelId ? getModelConfig(message.modelId) : null;
 
   const handleCopy = () => {
     void navigator.clipboard.writeText(message.content);
@@ -323,7 +318,7 @@ export function AiMessage({ message }: AiMessageProps) {
       <div className="flex flex-col gap-1 items-end">
         <div className="flex items-center gap-1.5 text-[10px] font-mono text-muted-foreground">
           <User size={11} className="text-accent" />
-          <span>ANALYST QUERY</span>
+          <span>You</span>
         </div>
         <div className="max-w-[92%] sm:max-w-[85%] rounded-sm border border-border bg-secondary/60 p-3.5 text-xs text-foreground leading-relaxed shadow-xs">
           {message.content}
@@ -339,12 +334,7 @@ export function AiMessage({ message }: AiMessageProps) {
       <div className="flex items-center justify-between text-[10px] font-mono text-muted-foreground px-1">
         <div className="flex items-center gap-1.5">
           <ShieldCheck size={13} weight="duotone" className="text-accent" />
-          <span className="font-bold text-foreground">SECURITY ADVISOR</span>
-          {modelConfig && (
-            <span className="rounded border border-border bg-secondary px-1.5 py-0.2 text-[9px] text-muted-foreground uppercase">
-              {modelConfig.shortName}
-            </span>
-          )}
+          <span className="font-bold text-foreground">Security Advisor</span>
         </div>
 
         {!message.streaming && message.content && (
@@ -382,7 +372,7 @@ export function AiMessage({ message }: AiMessageProps) {
           /* Streaming initialization indicator */
           <div className="flex items-center gap-2 py-1 font-mono text-[11px] text-accent">
             <span className="inline-block h-2 w-2 rounded-full bg-accent animate-ping" />
-            <span>ANALYZING CODEBASE CONTEXT & GENERATING ADVISORY...</span>
+            <span role="status">Preparing response…</span>
           </div>
         )}
 

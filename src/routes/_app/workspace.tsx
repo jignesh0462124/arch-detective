@@ -34,6 +34,7 @@ import { CodePanel } from "@/components/ui/code-panel";
 import { AuditAnalytics } from "@/components/ui/audit-analytics";
 import { useActiveWorkspace } from "@/hooks/useWorkspace";
 import { useScans } from "@/hooks/useScans";
+import { AuditHistoryButton } from "@/components/audit-workbench/AuditHistory";
 import { fetchFindings } from "@/lib/api/findings";
 import {
   dbCreateScan,
@@ -242,7 +243,6 @@ async function loadHistoryEvidence(
 function WorkspacePage() {
   const { active } = useActiveWorkspace();
   const { reportScan } = Route.useSearch();
-  const [legacy, setLegacy] = useState(false);
   const capabilities = useQuery({
     queryKey: ["workbench-capabilities", active?.id],
     queryFn: ({ signal }) => getWorkbenchCapabilities(signal),
@@ -259,7 +259,7 @@ function WorkspacePage() {
         <p role="status">Loading workspace…</p>
       </AppShell>
     );
-  if (!legacy && !reportScan && capabilities.isPending)
+  if (!reportScan && capabilities.isPending)
     return (
       <AppShell title="Codebase Audit">
         <p role="status" className="p-5 text-sm">
@@ -267,7 +267,21 @@ function WorkspacePage() {
         </p>
       </AppShell>
     );
-  if (!legacy && !reportScan && capabilities.data?.enabled)
+  if (!reportScan && capabilities.isError)
+    return (
+      <AppShell title="Codebase Audit" subtitle={`Workspace · ${active.name}`}>
+        <div role="alert" className="rounded-md border border-border bg-card p-5 text-sm">
+          <p>Audit intake is temporarily unavailable. Your saved scans are unchanged.</p>
+          <div className="mt-3">
+            <AuditHistoryButton workspaceId={active.id} />
+          </div>
+          <BrutalButton className="mt-4" size="sm" onClick={() => void capabilities.refetch()}>
+            Retry
+          </BrutalButton>
+        </div>
+      </AppShell>
+    );
+  if (!reportScan && capabilities.data?.enabled)
     return (
       <AuditUpload
         key={active.id}
@@ -275,8 +289,28 @@ function WorkspacePage() {
         workspaceName={active.name}
         role={active.role}
         capabilities={capabilities.data}
-        onLegacy={() => setLegacy(true)}
+        settings={active.settings}
       />
+    );
+  if (!reportScan)
+    return (
+      <AppShell title="Codebase Audit" subtitle={`Workspace · ${active.name}`}>
+        <div role="status" className="rounded-md border border-border bg-card p-5 text-sm">
+          <p>
+            Codebase Audit is not available on this server. Saved scans remain available in Reports
+            and Findings.
+          </p>
+          <div className="mt-3">
+            <AuditHistoryButton workspaceId={active.id} />
+          </div>
+          {capabilities.data?.reason && (
+            <p className="mt-2 text-muted-foreground">{capabilities.data.reason}</p>
+          )}
+          <BrutalButton className="mt-4" size="sm" onClick={() => void capabilities.refetch()}>
+            Check again
+          </BrutalButton>
+        </div>
+      </AppShell>
     );
   return <WorkspaceAudit key={`${active.id}/${reportScan || "legacy"}`} reportScan={reportScan} />;
 }
@@ -1500,7 +1534,7 @@ function WorkspaceAudit({ reportScan }: { reportScan?: string }) {
                             className={cn(
                               "mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border",
                               isChecked
-                                ? "border-accent bg-accent text-white"
+                                ? "border-accent bg-accent text-accent-foreground"
                                 : "border-border bg-card",
                             )}
                           >
@@ -2470,7 +2504,7 @@ function WorkspaceAudit({ reportScan }: { reportScan?: string }) {
                         className={cn(
                           "flex items-center gap-1.5 rounded px-2 py-0.5 font-mono text-[10px] font-bold uppercase transition-colors shrink-0 cursor-pointer",
                           isSelected
-                            ? "bg-accent text-white shadow-xs"
+                            ? "bg-accent text-accent-foreground shadow-xs"
                             : "bg-secondary text-muted-foreground hover:text-foreground",
                         )}
                       >
@@ -2479,7 +2513,7 @@ function WorkspaceAudit({ reportScan }: { reportScan?: string }) {
                           className={cn(
                             "rounded px-1 text-[9px] font-mono",
                             isSelected
-                              ? "bg-white/20 text-white"
+                              ? "bg-primary/10 text-accent-foreground"
                               : "bg-background/80 text-muted-foreground",
                           )}
                         >

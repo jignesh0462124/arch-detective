@@ -1,6 +1,7 @@
 /** Authenticated advisor transport. Provider credentials stay on the backend. */
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import { DEFAULT_MODEL_ID, getStoredModelId } from "./ai-models";
+import { apiClient, validateSessionAfter401 } from "./client";
 
 export type ChatMessage = { role: "user" | "assistant" | "system"; content: string };
 export type FindingContextIds = { workspace_id: string; scan_id: string; finding_id: string };
@@ -16,11 +17,12 @@ async function accessToken() {
 
 async function authFailureMessage() {
   try {
-    const { error } = await supabase.auth.getUser();
-    if (!error)
+    const { data, error } = await supabase.auth.getSession();
+    if (error || !data.session) return "Sign in to use the Security Advisor.";
+    const result = await validateSessionAfter401(data.session);
+    if (result.check === "valid")
       return "You are signed in, but the server could not verify this request. Retry shortly.";
-    if (error.status === 401 || error.status === 403) {
-      window.dispatchEvent(new Event("archon-auth-revalidate"));
+    if (result.check === "invalid") {
       return "Your session has ended. Sign in again.";
     }
   } catch {
@@ -30,15 +32,10 @@ async function authFailureMessage() {
 }
 
 export async function advisorCapabilities(signal?: AbortSignal): Promise<{ available: boolean }> {
-  const token = await accessToken();
-  const base = (import.meta.env.VITE_API_URL || "http://127.0.0.1:8000").replace(/\/+$/, "");
-  const response = await fetch(`${base}/api/v1/ai/capabilities`, {
+  return apiClient<{ available: boolean }>("/api/v1/ai/capabilities", {
     signal,
-    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
   });
-  if (response.status === 401) throw new Error(await authFailureMessage());
-  if (!response.ok) throw new Error("Advisor availability could not be checked. Retry shortly.");
-  return response.json();
 }
 
 export async function* streamChat(

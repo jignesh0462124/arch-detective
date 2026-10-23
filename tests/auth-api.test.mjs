@@ -105,6 +105,34 @@ test("valid session retries a safe read once with a refreshed token", async () =
   assert.deepEqual(authorization, ["Bearer old-token", "Bearer new-token"]);
   assert.equal(refreshes, 1);
 });
+test("a fresh valid session is not repeatedly refreshed for a backend 401", async () => {
+  let requests = 0;
+  let refreshes = 0;
+  globalThis.sdkFixture = {
+    getSession: async () => ({
+      data: {
+        session: { access_token: "fresh-token", expires_at: Math.floor(Date.now() / 1000) + 3600 },
+      },
+      error: null,
+    }),
+    getUser: async () => ({ error: null }),
+    refreshSession: async () => {
+      refreshes++;
+      throw new Error("A fresh token must not be refreshed");
+    },
+  };
+  globalThis.fetch = async () => {
+    requests++;
+    return Response.json({}, { status: 401 });
+  };
+  await assert.rejects(api.apiClient("/safe-read"), (error) => {
+    assert.equal(error.status, 401);
+    assert.equal(error.authCheck, "valid");
+    return true;
+  });
+  assert.equal(requests, 1);
+  assert.equal(refreshes, 0);
+});
 test("account changes abort active private requests and discard late responses", async () => {
   api.setAuthOwner("alice");
   let release, requestSignal;
@@ -121,4 +149,130 @@ test("account changes abort active private requests and discard late responses",
   assert.equal(requestSignal.aborted, true);
   release();
   await assert.rejects(pending, /Account changed/);
+});
+
+test("safe read rereads SDK session after validation, without unnecessary refresh", async () => {
+  api.setAuthOwner("current-user");
+  let checked = false;
+  const tokens = [];
+  globalThis.sdkFixture = {
+    getSession: async () => ({
+      data: {
+        session: {
+          access_token: checked ? "already-refreshed" : "initial",
+          expires_at: Date.now() / 1000 + 3600,
+        },
+      },
+      error: null,
+    }),
+    getUser: async () => {
+      checked = true;
+      return { error: null };
+    },
+    refreshSession: async () => {
+      throw Error("SDK already refreshed the token");
+    },
+  };
+  globalThis.fetch = async (_, options) => {
+    tokens.push(options.headers.get("Authorization"));
+    return tokens.length === 1 ? Response.json({}, { status: 401 }) : Response.json({ ok: true });
+  };
+  assert.deepEqual(await api.apiClient("/safe"), { ok: true });
+  assert.deepEqual(tokens, ["Bearer initial", "Bearer already-refreshed"]);
+});
+
+test("concurrent 401s share Auth validation and one refresh, without retry loops", async () => {
+  let checks = 0,
+    refreshes = 0,
+    requests = 0,
+    release;
+  const gate = new Promise((resolve) => {
+    release = resolve;
+  });
+  globalThis.sdkFixture = {
+    getSession: async () => ({
+      data: { session: { access_token: "concurrent-old" } },
+      error: null,
+    }),
+    getUser: async () => {
+      checks++;
+      await gate;
+      return { error: null };
+    },
+    refreshSession: async () => {
+      refreshes++;
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      return { data: { session: { access_token: "concurrent-new" } }, error: null };
+    },
+  };
+  globalThis.fetch = async () => {
+    requests++;
+    return Response.json({}, { status: 401 });
+  };
+  const reads = Array.from({ length: 8 }, () =>
+    api.apiClient("/concurrent").catch((error) => error),
+  );
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  release();
+  const results = await Promise.all(reads);
+  assert.equal(checks, 1);
+  assert.equal(refreshes, 1);
+  assert.equal(requests, 16);
+  assert.ok(results.every((error) => error.status === 401 && error.authCheck === "valid"));
+});
+
+test("Auth outages, denied accounts and backend 503 never announce session expiry", async () => {
+  let announcements = 0,
+    checks = 0,
+    requests = 0;
+  window.dispatchEvent = () => {
+    announcements++;
+  };
+  for (const status of [403, 503]) {
+    globalThis.sdkFixture = {
+      getSession: async () => ({
+        data: { session: { access_token: `status-${status}` } },
+        error: null,
+      }),
+      getUser: async () => {
+        checks++;
+        return { error: { status } };
+      },
+    };
+    globalThis.fetch = async () => {
+      requests++;
+      return Response.json({}, { status: 401 });
+    };
+    await assert.rejects(api.apiClient("/service"), (error) => error.authCheck === "unavailable");
+  }
+  globalThis.fetch = async () => {
+    requests++;
+    return Response.json({}, { status: 503 });
+  };
+  await assert.rejects(api.apiClient("/service"), (error) => error.status === 503);
+  assert.equal(checks, 2);
+  assert.equal(requests, 3);
+  assert.equal(announcements, 0);
+});
+
+test("confirmed invalid Auth credentials expose Sign in without replaying deletion", async () => {
+  let announcements = 0,
+    requests = 0;
+  window.dispatchEvent = () => {
+    announcements++;
+  };
+  globalThis.sdkFixture = {
+    getSession: async () => ({ data: { session: { access_token: "invalid" } }, error: null }),
+    getUser: async () => ({ error: { status: 401 } }),
+  };
+  globalThis.fetch = async () => {
+    requests++;
+    return Response.json({}, { status: 401 });
+  };
+  await assert.rejects(
+    api.apiClient("/delete", { method: "DELETE" }),
+    (error) => error.authCheck === "invalid",
+  );
+  assert.equal(requests, 1);
+  assert.equal(announcements, 1);
 });

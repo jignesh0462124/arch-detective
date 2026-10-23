@@ -24,8 +24,8 @@ export function useReports(
     enabled: !!user && !!workspace,
     retry: false,
     gcTime: 0,
-    staleTime: 0,
-    refetchInterval: 15000,
+    staleTime: 15_000,
+    refetchOnWindowFocus: true,
   });
 }
 export function useReport(user: string, workspace: string, id: string) {
@@ -35,8 +35,8 @@ export function useReport(user: string, workspace: string, id: string) {
     enabled: !!user && !!workspace && !!id,
     retry: false,
     gcTime: 0,
-    staleTime: 0,
-    refetchInterval: 15000,
+    staleTime: 30_000,
+    refetchOnWindowFocus: true,
   });
 }
 export function useReportDownloads(user: string, workspace: string) {

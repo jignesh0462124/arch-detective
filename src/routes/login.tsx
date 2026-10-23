@@ -12,7 +12,7 @@ import { ThemeToggle } from "@/components/brutal/ThemeToggle";
 import { MarketingBackdrop } from "@/components/marketing/MarketingChrome";
 import { ArchonWordmark } from "@/components/ui/ArchonWordmark";
 import { useAuth } from "@/hooks/useAuth";
-import { resendConfirmation } from "@/lib/api/auth";
+import { resendConfirmation, signInWithGitHub } from "@/lib/api/auth";
 import { authErrorMessage, safeAuthDestination } from "@/lib/authState";
 import { authCallbackFailed } from "@/lib/supabase";
 
@@ -154,269 +154,289 @@ export function AuthPage() {
 
       <div className="relative z-10 flex min-h-screen flex-col">
         <header className="border-b border-border bg-background/95 backdrop-blur-md">
-        <div className="mx-auto flex min-h-16 max-w-[1280px] items-center justify-between px-4 sm:px-6">
-          <Link to="/" aria-label="Archon home">
-            <ArchonWordmark size="sm" />
-          </Link>
-          <div className="flex items-center gap-2">
-            <Link
-              to="/"
-              aria-label="Back to site"
-              className="flex min-h-10 items-center gap-2 px-3 text-sm text-muted-foreground"
-            >
-              <ArrowLeft size={14} />
-              <span className="hidden sm:inline">Back to site</span>
+          <div className="mx-auto flex min-h-16 max-w-[1280px] items-center justify-between px-4 sm:px-6">
+            <Link to="/" aria-label="Archon home">
+              <ArchonWordmark size="sm" />
             </Link>
-            <ThemeToggle />
+            <div className="flex items-center gap-2">
+              <Link
+                to="/"
+                aria-label="Back to site"
+                className="flex min-h-10 items-center gap-2 px-3 text-sm text-muted-foreground"
+              >
+                <ArrowLeft size={14} />
+                <span className="hidden sm:inline">Back to site</span>
+              </Link>
+              <ThemeToggle />
+            </div>
           </div>
-        </div>
-      </header>
-      <main className="mx-auto max-w-[1280px] px-4 py-6 sm:px-6 sm:py-10">
-        <section className="grid overflow-hidden rounded-sm border border-border bg-card lg:min-h-[650px] lg:grid-cols-12">
-          <div className="flex min-w-0 items-center justify-center px-5 py-8 sm:px-10 lg:col-span-5">
-            <div className="w-full max-w-[420px]">
-              <div
-                className="grid grid-cols-2 gap-1 rounded-lg bg-secondary p-1"
-                aria-label="Account access"
-              >
-                {(["signin", "signup"] as const).map((value) => (
-                  <button
-                    key={value}
-                    type="button"
-                    disabled={busy}
-                    aria-pressed={mode === value}
-                    onClick={() => switchMode(value)}
-                    className={`h-10 rounded-md text-sm font-medium focus-visible:shadow-ring ${mode === value ? "border border-border bg-card" : "text-muted-foreground"}`}
-                  >
-                    {value === "signin" ? "Sign in" : "Create account"}
-                  </button>
-                ))}
-              </div>
-              <div className="mb-6 mt-7">
-                <div className="mb-3 flex size-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
-                  <LockKey size={20} />
-                </div>
-                <h1 className="text-[28px] font-semibold leading-tight">
-                  {mode === "signup"
-                    ? "Create your account"
-                    : mode === "forgot"
-                      ? "Forgot your password?"
-                      : "Welcome back"}
-                </h1>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {mode === "signup"
-                    ? "Create an account, verify your email if requested, then create or join a workspace."
-                    : mode === "forgot"
-                      ? "Enter your account email. We’ll send instructions to reset your password."
-                      : "Sign in to review your scans, findings and audit reports."}
-                </p>
-              </div>
-              {auth.status === "error" && (
-                <div role="alert" className="mb-4 text-sm">
-                  {auth.error}{" "}
-                  <button className="underline" onClick={() => void auth.retry()}>
-                    Retry session check
-                  </button>
-                </div>
-              )}
-              {error && (
-                <p
-                  id="auth-error"
-                  role="alert"
-                  className="mb-4 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm"
-                >
-                  {error}
-                </p>
-              )}
-              {message && (
+        </header>
+        <main className="mx-auto max-w-[1280px] px-4 py-6 sm:px-6 sm:py-10">
+          <section className="grid overflow-hidden rounded-sm border border-border bg-card lg:min-h-[650px] lg:grid-cols-12">
+            <div className="flex min-w-0 items-center justify-center px-5 py-8 sm:px-10 lg:col-span-5">
+              <div className="w-full max-w-[420px]">
                 <div
-                  role="status"
-                  className="mb-4 rounded-md border border-accent/30 bg-accent/10 p-3 text-sm leading-relaxed"
+                  className="grid grid-cols-2 gap-1 rounded-lg bg-secondary p-1"
+                  aria-label="Account access"
                 >
-                  <EnvelopeSimple size={18} className="mb-2 text-accent" />
-                  {message}
+                  {(["signin", "signup"] as const).map((value) => (
+                    <button
+                      key={value}
+                      type="button"
+                      disabled={busy}
+                      aria-pressed={mode === value}
+                      onClick={() => switchMode(value)}
+                      className={`h-10 rounded-md text-sm font-medium focus-visible:shadow-ring ${mode === value ? "border border-border bg-card" : "text-muted-foreground"}`}
+                    >
+                      {value === "signin" ? "Sign in" : "Create account"}
+                    </button>
+                  ))}
                 </div>
-              )}
-              <form
-                onInput={(event) => {
-                  const confirm = event.currentTarget.elements.namedItem("confirm");
-                  if (confirm instanceof HTMLInputElement) confirm.setCustomValidity("");
-                }}
-                onSubmit={(event) => void submit(event)}
-                aria-describedby={error ? "auth-error" : undefined}
-              >
-                <fieldset disabled={busy || auth.isLoading} className="space-y-4">
-                  {mode === "signup" && (
-                    <label className="block text-sm font-medium">
-                      Full name
-                      <input
-                        name="name"
-                        autoComplete="name"
-                        required
-                        maxLength={100}
-                        className={inputClass + " mt-1.5"}
-                      />
-                    </label>
-                  )}
-                  <label className="block text-sm font-medium">
-                    Email address
-                    <input
-                      name="email"
-                      type="email"
-                      autoComplete={mode === "signin" ? "username" : "email"}
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@example.com"
-                      className={inputClass + " mt-1.5"}
-                    />
-                  </label>
-                  {mode !== "forgot" && (
-                    <div>
-                      <div className="mb-1.5 flex items-center justify-between gap-2">
-                        <label htmlFor="auth-password" className="text-sm font-medium">
-                          Password
-                        </label>
-                        {mode === "signin" && (
-                          <button
-                            type="button"
-                            onClick={() => switchMode("forgot")}
-                            className="min-h-8 text-xs text-accent hover:underline"
-                          >
-                            Forgot password?
-                          </button>
-                        )}
-                      </div>
-                      <div className="relative">
-                        <input
-                          id="auth-password"
-                          name="password"
-                          type={show ? "text" : "password"}
-                          autoComplete={mode === "signup" ? "new-password" : "current-password"}
-                          required
-                          minLength={mode === "signup" ? 8 : undefined}
-                          onKeyUp={(e) => setCaps(e.getModifierState("CapsLock"))}
-                          onBlur={() => setCaps(false)}
-                          aria-describedby="password-help"
-                          className={inputClass + " pr-12"}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShow((v) => !v)}
-                          aria-label={show ? "Hide password" : "Show password"}
-                          className="absolute right-1 top-1 flex size-10 items-center justify-center rounded-md hover:bg-secondary"
-                        >
-                          {show ? <EyeSlash size={17} /> : <Eye size={17} />}
-                        </button>
-                      </div>
-                      <p id="password-help" className="mt-1.5 text-xs text-muted-foreground">
-                        {caps ? "Caps Lock is on. " : ""}
-                        {mode === "signup"
-                          ? "At least 8 characters. A longer, unique password is recommended."
-                          : "Use your existing account password."}
-                      </p>
-                    </div>
-                  )}
-                  {mode === "signup" && (
-                    <>
+                <div className="mb-6 mt-7">
+                  <div className="mb-3 flex size-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
+                    <LockKey size={20} />
+                  </div>
+                  <h1 className="text-[28px] font-semibold leading-tight">
+                    {mode === "signup"
+                      ? "Create your account"
+                      : mode === "forgot"
+                        ? "Forgot your password?"
+                        : "Welcome back"}
+                  </h1>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {mode === "signup"
+                      ? "Create an account, verify your email if requested, then create or join a workspace."
+                      : mode === "forgot"
+                        ? "Enter your account email. We’ll send instructions to reset your password."
+                        : "Sign in to review your scans, findings and audit reports."}
+                  </p>
+                </div>
+                {auth.status === "error" && (
+                  <div role="alert" className="mb-4 text-sm">
+                    {auth.error}{" "}
+                    <button className="underline" onClick={() => void auth.retry()}>
+                      Retry session check
+                    </button>
+                  </div>
+                )}
+                {error && (
+                  <p
+                    id="auth-error"
+                    role="alert"
+                    className="mb-4 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm"
+                  >
+                    {error}
+                  </p>
+                )}
+                {message && (
+                  <div
+                    role="status"
+                    className="mb-4 rounded-md border border-accent/30 bg-accent/10 p-3 text-sm leading-relaxed"
+                  >
+                    <EnvelopeSimple size={18} className="mb-2 text-accent" />
+                    {message}
+                  </div>
+                )}
+                {mode !== "forgot" && (
+                  <button
+                    type="button"
+                    disabled={busy || auth.isLoading}
+                    className="mb-5 flex min-h-12 w-full items-center justify-center rounded-lg border border-border bg-card text-sm font-medium disabled:opacity-60"
+                    onClick={() => {
+                      if (task.current) return;
+                      task.current = true;
+                      setBusy(true);
+                      setError("");
+                      void signInWithGitHub(search.next).catch(() => {
+                        setError("GitHub sign-in could not start. Please retry.");
+                        task.current = false;
+                        setBusy(false);
+                      });
+                    }}
+                  >
+                    Continue with GitHub
+                  </button>
+                )}
+                <form
+                  onInput={(event) => {
+                    const confirm = event.currentTarget.elements.namedItem("confirm");
+                    if (confirm instanceof HTMLInputElement) confirm.setCustomValidity("");
+                  }}
+                  onSubmit={(event) => void submit(event)}
+                  aria-describedby={error ? "auth-error" : undefined}
+                >
+                  <fieldset disabled={busy || auth.isLoading} className="space-y-4">
+                    {mode === "signup" && (
                       <label className="block text-sm font-medium">
-                        Confirm password
+                        Full name
                         <input
-                          name="confirm"
-                          type={show ? "text" : "password"}
-                          autoComplete="new-password"
+                          name="name"
+                          autoComplete="name"
                           required
-                          onInput={(e) => e.currentTarget.setCustomValidity("")}
+                          maxLength={100}
                           className={inputClass + " mt-1.5"}
                         />
                       </label>
-                      <p className="text-xs leading-relaxed text-muted-foreground">
-                        Read our{" "}
-                        <Link to="/terms" className="underline">
-                          usage notes
-                        </Link>{" "}
-                        and{" "}
-                        <Link to="/privacy" className="underline">
-                          data handling notice
-                        </Link>{" "}
-                        before continuing.
-                      </p>
-                    </>
-                  )}
+                    )}
+                    <label className="block text-sm font-medium">
+                      Email address
+                      <input
+                        name="email"
+                        type="email"
+                        autoComplete={mode === "signin" ? "username" : "email"}
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="you@example.com"
+                        className={inputClass + " mt-1.5"}
+                      />
+                    </label>
+                    {mode !== "forgot" && (
+                      <div>
+                        <div className="mb-1.5 flex items-center justify-between gap-2">
+                          <label htmlFor="auth-password" className="text-sm font-medium">
+                            Password
+                          </label>
+                          {mode === "signin" && (
+                            <button
+                              type="button"
+                              onClick={() => switchMode("forgot")}
+                              className="min-h-8 text-xs text-accent hover:underline"
+                            >
+                              Forgot password?
+                            </button>
+                          )}
+                        </div>
+                        <div className="relative">
+                          <input
+                            id="auth-password"
+                            name="password"
+                            type={show ? "text" : "password"}
+                            autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                            required
+                            minLength={mode === "signup" ? 8 : undefined}
+                            onKeyUp={(e) => setCaps(e.getModifierState("CapsLock"))}
+                            onBlur={() => setCaps(false)}
+                            aria-describedby="password-help"
+                            className={inputClass + " pr-12"}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShow((v) => !v)}
+                            aria-label={show ? "Hide password" : "Show password"}
+                            className="absolute right-1 top-1 flex size-10 items-center justify-center rounded-md hover:bg-secondary"
+                          >
+                            {show ? <EyeSlash size={17} /> : <Eye size={17} />}
+                          </button>
+                        </div>
+                        <p id="password-help" className="mt-1.5 text-xs text-muted-foreground">
+                          {caps ? "Caps Lock is on. " : ""}
+                          {mode === "signup"
+                            ? "At least 8 characters. A longer, unique password is recommended."
+                            : "Use your existing account password."}
+                        </p>
+                      </div>
+                    )}
+                    {mode === "signup" && (
+                      <>
+                        <label className="block text-sm font-medium">
+                          Confirm password
+                          <input
+                            name="confirm"
+                            type={show ? "text" : "password"}
+                            autoComplete="new-password"
+                            required
+                            onInput={(e) => e.currentTarget.setCustomValidity("")}
+                            className={inputClass + " mt-1.5"}
+                          />
+                        </label>
+                        <p className="text-xs leading-relaxed text-muted-foreground">
+                          Read our{" "}
+                          <Link to="/terms" className="underline">
+                            usage notes
+                          </Link>{" "}
+                          and{" "}
+                          <Link to="/privacy" className="underline">
+                            data handling notice
+                          </Link>{" "}
+                          before continuing.
+                        </p>
+                      </>
+                    )}
+                    <button
+                      type="submit"
+                      disabled={busy || (mode === "forgot" && seconds > 0)}
+                      className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:cursor-wait disabled:opacity-60"
+                    >
+                      {busy
+                        ? mode === "forgot"
+                          ? "Sending instructions…"
+                          : mode === "signup"
+                            ? "Creating account…"
+                            : "Signing in…"
+                        : mode === "forgot"
+                          ? seconds
+                            ? `Resend in ${seconds}s`
+                            : "Send reset link"
+                          : mode === "signup"
+                            ? "Create account"
+                            : "Sign in"}
+                      <ArrowRight size={15} />
+                    </button>
+                  </fieldset>
+                </form>
+                {confirmation && (
                   <button
-                    type="submit"
-                    disabled={busy || (mode === "forgot" && seconds > 0)}
-                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:cursor-wait disabled:opacity-60"
+                    type="button"
+                    disabled={busy || seconds > 0}
+                    onClick={() => void resend()}
+                    className="mt-3 min-h-10 w-full rounded-lg border border-border px-3 text-sm disabled:opacity-60"
                   >
-                    {busy
-                      ? mode === "forgot"
-                        ? "Sending instructions…"
-                        : mode === "signup"
-                          ? "Creating account…"
-                          : "Signing in…"
-                      : mode === "forgot"
-                        ? seconds
-                          ? `Resend in ${seconds}s`
-                          : "Send reset link"
-                        : mode === "signup"
-                          ? "Create account"
-                          : "Sign in"}
-                    <ArrowRight size={15} />
+                    {seconds ? `Resend confirmation in ${seconds}s` : "Resend confirmation email"}
                   </button>
-                </fieldset>
-              </form>
-              {confirmation && (
-                <button
-                  type="button"
-                  disabled={busy || seconds > 0}
-                  onClick={() => void resend()}
-                  className="mt-3 min-h-10 w-full rounded-lg border border-border px-3 text-sm disabled:opacity-60"
-                >
-                  {seconds ? `Resend confirmation in ${seconds}s` : "Resend confirmation email"}
-                </button>
-              )}
-              {mode === "forgot" && (
-                <button
-                  type="button"
-                  disabled={busy}
-                  onClick={() => switchMode("signin")}
-                  className="mt-3 min-h-10 text-sm text-muted-foreground hover:underline"
-                >
-                  Back to sign in
-                </button>
-              )}
-              {message && (
-                <p className="mt-3 text-xs text-muted-foreground">
-                  Wrong address? Edit the email above. Resend is available after 60 seconds.
+                )}
+                {mode === "forgot" && (
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => switchMode("signin")}
+                    className="mt-3 min-h-10 text-sm text-muted-foreground hover:underline"
+                  >
+                    Back to sign in
+                  </button>
+                )}
+                {message && (
+                  <p className="mt-3 text-xs text-muted-foreground">
+                    Wrong address? Edit the email above. Resend is available after 60 seconds.
+                  </p>
+                )}
+              </div>
+            </div>
+            <aside className="relative hidden overflow-hidden border-l border-border bg-[#0d0d0d] lg:col-span-7 lg:block">
+              <picture>
+                <source media="(min-width: 1024px)" srcSet="/assets/archon-auth-gateway.webp" />
+                <img
+                  alt=""
+                  width={1024}
+                  height={1280}
+                  loading="lazy"
+                  src="/assets/archon-auth-gateway.webp"
+                  className="absolute inset-0 h-full w-full object-contain"
+                />
+              </picture>
+              <div className="absolute left-7 top-7 max-w-[270px] border-l-2 border-[#ff5600] bg-black/85 px-4 py-3 text-white">
+                <p className="font-mono text-[10px] text-white/70">YOUR AUDIT WORKSPACE</p>
+                <p className="mt-2 text-sm font-medium">
+                  From source evidence to clearer security decisions.
                 </p>
-              )}
-            </div>
-          </div>
-          <aside className="relative hidden overflow-hidden border-l border-border bg-[#0d0d0d] lg:col-span-7 lg:block">
-            <picture>
-              <source media="(min-width: 1024px)" srcSet="/assets/archon-auth-gateway.webp" />
-              <img
-                alt=""
-                width={1024}
-                height={1280}
-                loading="lazy"
-                src="/assets/archon-auth-gateway.webp"
-                className="absolute inset-0 h-full w-full object-contain"
-              />
-            </picture>
-            <div className="absolute left-7 top-7 max-w-[270px] border-l-2 border-[#ff5600] bg-black/85 px-4 py-3 text-white">
-              <p className="font-mono text-[10px] text-white/70">YOUR AUDIT WORKSPACE</p>
-              <p className="mt-2 text-sm font-medium">
-                From source evidence to clearer security decisions.
-              </p>
-            </div>
-          </aside>
-        </section>
-        <p className="mt-4 text-center text-xs text-muted-foreground">
-          Use a personal or work email. Your saved audits stay with your account.
-        </p>
-      </main>
+              </div>
+            </aside>
+          </section>
+          <p className="mt-4 text-center text-xs text-muted-foreground">
+            Use a personal or work email. Your saved audits stay with your account.
+          </p>
+        </main>
+      </div>
     </div>
-  </div>
-);
+  );
 }

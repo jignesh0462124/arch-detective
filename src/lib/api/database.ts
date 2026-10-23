@@ -23,12 +23,7 @@ import type {
   WorkspaceSettings,
   WorkspaceUpdatePayload,
 } from "./workspaces";
-import type {
-  Scan,
-  Finding,
-  Report,
-  FindingSource,
-} from "./types";
+import type { Scan, Finding, Report, FindingSource } from "./types";
 import type { AuditEvent } from "./auditEvents";
 
 /**
@@ -39,18 +34,28 @@ async function getCurrentUserId(): Promise<string> {
   if (error) {
     if (error.status === 401 || error.status === 403)
       throw new Error("Your session has ended. Sign in again to continue.");
-    throw new Error("Your account could not be verified right now. Check your connection and retry.");
+    throw new Error(
+      "Your account could not be verified right now. Check your connection and retry.",
+    );
   }
   if (!data.user) throw new Error("Please sign in to continue.");
   return data.user.id;
 }
 
-async function getWorkspaceRoles(): Promise<{ userId: string; roles: Map<string, Workspace["role"]> }> {
+async function getWorkspaceRoles(): Promise<{
+  userId: string;
+  roles: Map<string, Workspace["role"]>;
+}> {
   const userId = await getCurrentUserId();
-  const { data, error } = await supabase.from("workspace_members")
-    .select("workspace_id, role").eq("user_id", userId);
+  const { data, error } = await supabase
+    .from("workspace_members")
+    .select("workspace_id, role")
+    .eq("user_id", userId);
   if (error) throw error;
-  return { userId, roles: new Map((data ?? []).map((m) => [m.workspace_id, m.role as Workspace["role"]])) };
+  return {
+    userId,
+    roles: new Map((data ?? []).map((m) => [m.workspace_id, m.role as Workspace["role"]])),
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -71,7 +76,7 @@ export async function dbFetchWorkspaces(): Promise<Workspace[]> {
       name: row.name,
       slug: row.slug,
       owner_user_id: row.owner_user_id,
-      role: row.owner_user_id === userId ? "owner" : roles.get(row.id) ?? "viewer",
+      role: row.owner_user_id === userId ? "owner" : (roles.get(row.id) ?? "viewer"),
       member_count: row.member_count ?? 1,
       scan_count: row.scan_count ?? 0,
       settings: (row.settings as WorkspaceSettings) ?? {
@@ -86,7 +91,8 @@ export async function dbFetchWorkspaces(): Promise<Workspace[]> {
   // Resilient fallback to direct table query
   const { data, error } = await supabase
     .from("workspaces")
-    .select(`
+    .select(
+      `
       id,
       name,
       slug,
@@ -94,7 +100,8 @@ export async function dbFetchWorkspaces(): Promise<Workspace[]> {
       settings,
       created_at,
       updated_at
-    `)
+    `,
+    )
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -107,7 +114,7 @@ export async function dbFetchWorkspaces(): Promise<Workspace[]> {
     name: row.name,
     slug: row.slug,
     owner_user_id: row.owner_user_id,
-    role: row.owner_user_id === userId ? "owner" : roles.get(row.id) ?? "viewer",
+    role: row.owner_user_id === userId ? "owner" : (roles.get(row.id) ?? "viewer"),
     member_count: 1,
     scan_count: 0,
     settings: (row.settings as WorkspaceSettings) ?? {
@@ -134,7 +141,7 @@ export async function dbFetchWorkspace(workspaceId: string): Promise<Workspace> 
       name: viewData.name,
       slug: viewData.slug,
       owner_user_id: viewData.owner_user_id,
-      role: viewData.owner_user_id === userId ? "owner" : roles.get(viewData.id) ?? "viewer",
+      role: viewData.owner_user_id === userId ? "owner" : (roles.get(viewData.id) ?? "viewer"),
       member_count: viewData.member_count ?? 1,
       scan_count: viewData.scan_count ?? 0,
       settings: (viewData.settings as WorkspaceSettings) ?? {
@@ -162,7 +169,7 @@ export async function dbFetchWorkspace(workspaceId: string): Promise<Workspace> 
     name: data.name,
     slug: data.slug,
     owner_user_id: data.owner_user_id,
-    role: data.owner_user_id === userId ? "owner" : roles.get(data.id) ?? "viewer",
+    role: data.owner_user_id === userId ? "owner" : (roles.get(data.id) ?? "viewer"),
     member_count: 1,
     scan_count: 0,
     settings: (data.settings as WorkspaceSettings) ?? {
@@ -234,14 +241,17 @@ export async function dbUpdateWorkspace(
     }
   }
 
-  const { error } = await supabase
+  const { data: changed, error } = await supabase
     .from("workspaces")
     .update(updateData)
-    .eq("id", workspaceId);
+    .eq("id", workspaceId)
+    .select("id")
+    .maybeSingle();
 
   if (error) {
     throw new Error(`Failed to update workspace: ${error.message}`);
   }
+  if (!changed) throw new Error("Workspace was not updated. Check your access and retry.");
 
   void dbLogAuditEvent({
     workspace_id: workspaceId,
@@ -267,14 +277,17 @@ export async function dbDeleteWorkspace(workspaceId: string): Promise<void> {
     // Non-blocking
   }
 
-  const { error } = await supabase
+  const { data: deleted, error } = await supabase
     .from("workspaces")
     .delete()
-    .eq("id", workspaceId);
+    .eq("id", workspaceId)
+    .select("id")
+    .maybeSingle();
 
   if (error) {
     throw new Error(`Failed to delete workspace: ${error.message}`);
   }
+  if (!deleted) throw new Error("Workspace was not deleted. Check your access and retry.");
 }
 
 export async function dbFetchMembers(workspaceId: string): Promise<WorkspaceMember[]> {
@@ -284,8 +297,7 @@ export async function dbFetchMembers(workspaceId: string): Promise<WorkspaceMemb
     .eq("workspace_id", workspaceId);
 
   if (error) {
-    console.error("Failed to fetch members:", error);
-    return [];
+    throw error;
   }
 
   const userIds = (members ?? []).map((m) => m.user_id);
@@ -333,8 +345,7 @@ export async function dbFetchPendingInvites(workspaceId: string): Promise<Worksp
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("Failed to fetch pending invites:", error);
-    return [];
+    throw error;
   }
 
   return (data ?? []).map((inv) => ({
@@ -347,15 +358,15 @@ export async function dbFetchPendingInvites(workspaceId: string): Promise<Worksp
   }));
 }
 
-export async function dbRevokeInvite(inviteId: string): Promise<void> {
-  const { error } = await supabase
-    .from("workspace_invites")
-    .delete()
-    .eq("id", inviteId);
+export async function dbRevokeInvite(inviteId: string, workspaceId?: string): Promise<void> {
+  let request = supabase.from("workspace_invites").delete().eq("id", inviteId);
+  if (workspaceId) request = request.eq("workspace_id", workspaceId);
+  const { data: deleted, error } = await request.select("id").maybeSingle();
 
   if (error) {
     throw new Error(`Failed to revoke invite: ${error.message}`);
   }
+  if (!deleted) throw new Error("Invitation was not revoked. Refresh the list and retry.");
 }
 
 export async function dbInviteMember(
@@ -363,6 +374,8 @@ export async function dbInviteMember(
   email: string,
   role: string,
 ): Promise<WorkspaceInvite> {
+  if (!["admin", "analyst", "viewer"].includes(role))
+    throw new Error("Choose a supported invitation role.");
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
   const token = crypto.randomUUID();
 
@@ -404,13 +417,17 @@ export async function dbInviteMember(
 }
 
 export async function dbRemoveMember(workspaceId: string, userId: string): Promise<void> {
-  const { error } = await supabase
+  const { data: deleted, error } = await supabase
     .from("workspace_members")
     .delete()
     .eq("workspace_id", workspaceId)
-    .eq("user_id", userId);
+    .eq("user_id", userId)
+    .neq("role", "owner")
+    .select("user_id")
+    .maybeSingle();
 
   if (error) throw error;
+  if (!deleted) throw new Error("Member was not removed. Refresh the list and check your access.");
 
   void dbLogAuditEvent({
     workspace_id: workspaceId,
@@ -454,7 +471,7 @@ export async function dbFetchScans(workspaceId: string): Promise<Scan[]> {
 
   // Preserve the existing scan query; load severity evidence in one scoped batch.
   // A child-table problem must not make all parent scan rows disappear.
-  const scanIds = (data ?? []).map(s => s.id);
+  const scanIds = (data ?? []).map((s) => s.id);
   const { data: evidence, error: evidenceError } = scanIds.length
     ? await supabase.from("findings").select("scan_id, severity").in("scan_id", scanIds)
     : { data: [], error: null };
@@ -472,7 +489,9 @@ export async function dbFetchScans(workspaceId: string): Promise<Scan[]> {
     progress: s.status === "completed" ? 100 : s.status === "running" ? 50 : 0,
     finding_count: s.finding_count ?? 0,
     framework_scores: s.framework_scores ?? {},
-    severity_counts: evidenceError ? undefined : countSeverities((evidence ?? []).filter(f => f.scan_id === s.id)),
+    severity_counts: evidenceError
+      ? undefined
+      : countSeverities((evidence ?? []).filter((f) => f.scan_id === s.id)),
     error_code: null,
     error_message: null,
     created_at: s.created_at,
@@ -482,11 +501,7 @@ export async function dbFetchScans(workspaceId: string): Promise<Scan[]> {
 }
 
 export async function dbFetchScan(scanId: string): Promise<Scan | null> {
-  const { data, error } = await supabase
-    .from("scans")
-    .select("*")
-    .eq("id", scanId)
-    .single();
+  const { data, error } = await supabase.from("scans").select("*").eq("id", scanId).single();
 
   if (error || !data) return null;
 
@@ -571,10 +586,7 @@ export async function dbCreateScan(record: DbScanRecord): Promise<Scan> {
   };
 }
 
-export async function dbUpdateScan(
-  scanId: string,
-  updates: Partial<DbScanRecord>,
-): Promise<void> {
+export async function dbUpdateScan(scanId: string, updates: Partial<DbScanRecord>): Promise<void> {
   const { error } = await supabase
     .from("scans")
     .update({ ...updates })
@@ -628,10 +640,7 @@ export async function dbFetchFindings(
     }
   }
 
-  let query = supabase
-    .from("findings")
-    .select("*", { count: "exact" })
-    .eq("scan_id", targetScanId);
+  let query = supabase.from("findings").select("*", { count: "exact" }).eq("scan_id", targetScanId);
 
   if (filters?.severity && filters.severity !== "all") {
     query = query.eq("severity", filters.severity);
@@ -650,7 +659,8 @@ export async function dbFetchFindings(
     offset += page.data?.length ?? 0;
     if (page.count !== null && offset >= page.count) break;
     if (!page.data?.length) {
-      if (page.count && offset < page.count) throw new Error("Findings changed while loading. Please retry.");
+      if (page.count && offset < page.count)
+        throw new Error("Findings changed while loading. Please retry.");
       break;
     }
     if (page.count === null && page.data.length < 1000) break;
@@ -666,7 +676,8 @@ export async function dbFetchFindings(
       title: f.title,
       description: f.description,
       severity: f.severity,
-      cvss_score: f.cvss_score != null && Number.isFinite(Number(f.cvss_score)) ? Number(f.cvss_score) : null,
+      cvss_score:
+        f.cvss_score != null && Number.isFinite(Number(f.cvss_score)) ? Number(f.cvss_score) : null,
       cvss_vector: f.cvss_vector ?? null,
       cwe_id: f.cwe_id ?? null,
       cve_id: f.cve_id ?? null,
@@ -686,9 +697,7 @@ export async function dbFetchFindings(
   return uniqueFindings;
 }
 
-export async function dbCreateFindingsBatch(
-  findings: DbFindingInsert[],
-): Promise<void> {
+export async function dbCreateFindingsBatch(findings: DbFindingInsert[]): Promise<void> {
   if (!findings.length) return;
 
   // Deduplicate incoming batch by title + file_path + line_number
@@ -734,7 +743,10 @@ export async function dbUpdateFindingState(
   const { data, error } = await supabase
     .from("findings")
     .update({ state, updated_at: new Date().toISOString() })
-    .eq("id", findingId).eq("scan_id", scanId).select("id").single();
+    .eq("id", findingId)
+    .eq("scan_id", scanId)
+    .select("id")
+    .single();
 
   if (error) throw error;
   if (!data) throw new Error("Finding update was not permitted.");
@@ -746,10 +758,7 @@ export async function dbUpdateFindingState(
 
 export async function dbFetchReports(workspaceId: string): Promise<Report[]> {
   // reports table links to scans which link to workspaces — filter via scan join
-  const { data: scans } = await supabase
-    .from("scans")
-    .select("id")
-    .eq("workspace_id", workspaceId);
+  const { data: scans } = await supabase.from("scans").select("id").eq("workspace_id", workspaceId);
 
   const scanIds = (scans ?? []).map((s) => s.id);
   if (!scanIds.length) return [];
@@ -779,13 +788,19 @@ export async function dbFetchReports(workspaceId: string): Promise<Report[]> {
   }));
 }
 
-export async function dbFetchReport(reportId: string, workspaceId?: string): Promise<Report | null> {
+export async function dbFetchReport(
+  reportId: string,
+  workspaceId?: string,
+): Promise<Report | null> {
   let query = supabase
     .from("reports")
     .select("*, scans!inner(workspace_id)")
     .or(`id.eq.${reportId},scan_id.eq.${reportId}`);
   if (workspaceId) query = query.eq("scans.workspace_id", workspaceId);
-  const { data, error } = await query.order("created_at", { ascending: false }).limit(1).maybeSingle();
+  const { data, error } = await query
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
 
   if (error || !data) return null;
 

@@ -1,0 +1,125 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - text: Isolated UI test · fixture data only ·
+    - link "Workbench" [ref=e4] [cursor=pointer]:
+      - /url: "?view=workbench"
+    - text: ·
+    - link "Upload" [ref=e5] [cursor=pointer]:
+      - /url: "?view=upload"
+    - text: ·
+    - link "Scan animation" [ref=e6] [cursor=pointer]:
+      - /url: "?view=scan"
+  - generic [ref=e8]:
+    - complementary [ref=e9]:
+      - link "Archon home" [ref=e10] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e11]:
+          - img "Archon" [ref=e12]
+          - generic [ref=e13]: Audit engine
+      - button "U UI test workspace OWNER · 0 scans" [ref=e16]:
+        - generic [ref=e17]: U
+        - generic [ref=e18]:
+          - generic [ref=e19]: UI test workspace
+          - generic [ref=e20]: OWNER · 0 scans
+      - navigation "Workspace navigation" [ref=e23]:
+        - generic [ref=e24]:
+          - paragraph [ref=e25]: Navigation
+          - 'generic "ThreatLens backend: api online" [ref=e26]': API online
+        - link "Dashboard" [ref=e28] [cursor=pointer]:
+          - /url: /dashboard
+        - link "Codebase Audit" [ref=e32] [cursor=pointer]:
+          - /url: /workspace
+        - link "Attack Graph" [ref=e36] [cursor=pointer]:
+          - /url: /attack-graph
+        - link "Findings" [ref=e40] [cursor=pointer]:
+          - /url: /findings
+        - link "Fix verification" [ref=e44] [cursor=pointer]:
+          - /url: /fix-verification
+        - link "Reports" [ref=e48] [cursor=pointer]:
+          - /url: /reports
+        - link "Audit log" [ref=e52] [cursor=pointer]:
+          - /url: /audit-log
+        - link "Security Advisor" [ref=e56] [cursor=pointer]:
+          - /url: /advisor
+      - link "UT UI Test fixture@example.invalid" [ref=e60] [cursor=pointer]:
+        - /url: /profile
+        - generic [ref=e61]: UT
+        - generic [ref=e64]:
+          - paragraph [ref=e65]: UI Test
+          - paragraph [ref=e66]: fixture@example.invalid
+    - main [ref=e69]:
+      - generic [ref=e71]:
+        - generic [ref=e72]:
+          - paragraph [ref=e73]: Workspace · UI test workspace
+          - heading "Codebase Audit" [level=1] [ref=e74]
+        - toolbar "Application tools" [ref=e75]:
+          - button "Select model" [ref=e78]:
+            - generic [ref=e81]: Model
+          - button "Open Security Advisor" [ref=e84]:
+            - generic [ref=e88]: Security Advisor
+          - generic [ref=e89]:
+            - button "Switch to light mode" [pressed] [ref=e90]:
+              - generic [ref=e93]: Dark mode
+            - group [ref=e94]:
+              - generic "Account menu" [ref=e95] [cursor=pointer]
+      - generic [ref=e99]:
+        - generic [ref=e100]:
+          - generic [ref=e101]:
+            - heading "New audit" [level=2] [ref=e102]
+            - paragraph [ref=e103]: Upload your project and review security findings in context.
+          - button "History" [ref=e104]
+        - list [ref=e107]:
+          - listitem [ref=e108]:
+            - generic [ref=e109]: "1"
+            - text: Upload and configure
+          - listitem [ref=e110]:
+            - generic [ref=e111]: "2"
+            - text: Scan project
+          - listitem [ref=e112]:
+            - generic [ref=e113]: "3"
+            - text: Review in workbench
+        - group "Project source" [ref=e114]:
+          - button "Upload ZIP" [pressed] [ref=e115]
+          - button "GitHub repository" [ref=e116]
+        - generic [ref=e117]:
+          - generic [ref=e118]:
+            - heading "Project source" [level=3] [ref=e122]
+            - paragraph [ref=e123]: Choose a ZIP containing your source code. Generated files and dependencies are excluded from previews.
+            - button "Drop a project ZIP here or browse files .zip · Up to 50 MB" [ref=e124]:
+              - generic [ref=e127]: Drop a project ZIP here
+              - generic [ref=e128]: or browse files
+              - generic [ref=e129]: .zip · Up to 50 MB
+            - generic [ref=e130]: Private to your workspace · Read-only source preview
+          - generic [ref=e133]:
+            - heading "Audit settings" [level=3] [ref=e134]
+            - generic [ref=e135]: Project name
+            - textbox "Project name" [ref=e136]:
+              - /placeholder: Your project
+            - group "Compliance frameworks" [ref=e137]:
+              - generic [ref=e139]:
+                - generic [ref=e140]:
+                  - checkbox "GDPR" [checked] [ref=e141]
+                  - text: GDPR
+                - generic [ref=e142]:
+                  - checkbox "SOC 2" [checked] [ref=e143]
+                  - text: SOC 2
+                - generic [ref=e144]:
+                  - checkbox "ISO 27001" [ref=e145]
+                  - text: ISO 27001
+                - generic [ref=e146]:
+                  - checkbox "PCI DSS" [ref=e147]
+                  - text: PCI DSS
+                - generic [ref=e148]:
+                  - checkbox "NIST CSF" [ref=e149]
+                  - text: NIST CSF
+              - paragraph [ref=e150]: Findings include suggested control mappings for review.
+            - generic [ref=e151]:
+              - heading "After the scan" [level=4] [ref=e152]
+              - paragraph [ref=e153]: Open Audit Workbench
+              - paragraph [ref=e156]: Browse files, inspect findings and understand remediation. Source previews remain available for 30 days.
+        - generic [ref=e157]:
+          - generic [ref=e158]:
+            - paragraph [ref=e159]: Choose a project to begin
+            - paragraph [ref=e160]: Files are validated before analysis.
+          - button "Start audit" [disabled]
+  - status "Workbench fixture performance" [ref=e161]: "{\"sourceDownloads\":0,\"editorMounts\":0,\"lastTabMilliseconds\":0,\"advisorRequests\":0,\"advisorCancellations\":0,\"advisorModel\":\"\",\"advisorContext\":null}"

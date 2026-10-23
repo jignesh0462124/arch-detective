@@ -126,19 +126,29 @@ export function useGroqChatState() {
   const { user, isAuthenticated } = useAuth();
   const { active: workspace } = useActiveWorkspace();
   const workspaceId = workspace?.id;
+  const currentWorkspaceIdRef = useRef(workspaceId);
+  currentWorkspaceIdRef.current = workspaceId;
 
   const [messages, setMessages] = useState<UiMessage[]>(() => loadPersistedChat(workspaceId));
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedModel, setSelectedModelState] = useState<string>(() => getStoredModelId());
   const [findingContext, setFindingContextState] = useState<AdvisorFindingContext | null>(null);
+  const [advisorVisible, setAdvisorVisible] = useState(false);
+  const activateAdvisor = useCallback(() => setAdvisorVisible(true), []);
   const availability = useQuery({
     queryKey: ["advisor-capabilities", user?.id],
     queryFn: ({ signal }) => advisorCapabilities(signal),
-    enabled: isAuthenticated && isAiConfigured(),
+    enabled: isAuthenticated && isAiConfigured() && advisorVisible,
     staleTime: 60_000,
     retry: 1,
   });
+  const {
+    data: availabilityData,
+    isPending: availabilityPending,
+    isError: availabilityError,
+    refetch: refetchAvailability,
+  } = availability;
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const isStreamingRef = useRef(false);
@@ -221,11 +231,17 @@ export function useGroqChatState() {
         setMessages((prev) => prev.map((m) => (m.streaming ? { ...m, streaming: false } : m)));
       }
 
-      if (!availability.data?.available) {
+      let advisorAvailable = availabilityData?.available === true;
+      if (!advisorAvailable && availabilityPending && isAiConfigured()) {
+        const checked = await refetchAvailability();
+        if (!isCurrentScope(ownerScope) || currentWorkspaceIdRef.current !== workspaceId) return;
+        advisorAvailable = checked.data?.available === true;
+      }
+      if (!advisorAvailable) {
         setError(
-          availability.isError
+          availabilityError
             ? "Could not reach Security Advisor. Check the backend and retry."
-            : "Security Advisor is not available yet. Retry its availability check.",
+            : "Security Advisor is unavailable right now. Retry its availability check.",
         );
         return;
       }
@@ -323,7 +339,17 @@ export function useGroqChatState() {
         }
       }
     },
-    [selectedModel, workspace, findingContext, availability.data?.available, availability.isError],
+    [
+      selectedModel,
+      workspace,
+      workspaceId,
+      findingContext,
+      ownerScope,
+      availabilityData?.available,
+      availabilityPending,
+      availabilityError,
+      refetchAvailability,
+    ],
   );
 
   // Abort running stream on unmount
@@ -368,6 +394,7 @@ export function useGroqChatState() {
           ? "ready"
           : "unavailable",
     retryAvailability: availability.refetch,
+    activateAdvisor,
     findingContext,
     setFindingContext,
     selectedModel,

@@ -127,6 +127,24 @@ test("source locations are grouped, Windows paths normalized and duplicate findi
   assert.equal(scenario.threats[0].filePath, "src/api.ts");
 });
 
+test("paged summary inputs preserve distinct vectors through large scans", () => {
+  for (const count of [0, 5, 50, 90, 1001]) {
+    const scenario = buildAttackGraphFromScan({
+      scan_id: "00000000-0000-4000-8000-000000000001",
+      findings: Array.from({ length: count }, (_, index) =>
+        finding({
+          id: `00000000-0000-4000-8000-${String(index).padStart(12, "0")}`,
+          title: "Repeated title",
+          file_path: `src/file-${index % 25}.ts`,
+        }),
+      ),
+    });
+    assert.equal(scenario.threats.length, count);
+    assert.equal(new Set(scenario.threats.map((threat) => threat.id)).size, count);
+    assert.ok(scenario.threats.every((threat) => !threat.remediationSnippet?.patched));
+  }
+});
+
 test("zero CVSS is preserved and missing, invalid and out-of-range scores are not fabricated", () => {
   const threats = buildAttackGraphFromScan({
     findings: [0, null, undefined, NaN, Infinity, -1, 11, "9.8", 7.1].map((cvss_score) =>

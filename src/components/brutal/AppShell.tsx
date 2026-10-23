@@ -1,5 +1,5 @@
 import { AccountMenu } from "@/components/auth/AccountMenu";
-import { useState, useEffect } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
@@ -18,7 +18,6 @@ import {
 import { ThemeToggle } from "@/components/brutal/ThemeToggle";
 import { ArchonWordmark } from "@/components/ui/ArchonWordmark";
 import { WorkspaceSwitcher } from "@/components/workspace-switcher";
-import { AiAssistantPanel } from "@/components/ai-assistant/AiAssistantPanel";
 import { AiModelSelector } from "@/components/ai-assistant/AiModelSelector";
 import type { ReactNode } from "react";
 import { api } from "@/lib/api/client";
@@ -32,15 +31,21 @@ const NAV = [
   { to: "/workspace", label: "Codebase Audit", icon: FolderOpen },
   { to: "/attack-graph", label: "Attack Graph", icon: TreeStructure },
   { to: "/findings", label: "Findings", icon: ShieldWarning },
+  { to: "/fix-verification", label: "Fix verification", icon: ShieldCheck },
   { to: "/reports", label: "Reports", icon: FileText },
   { to: "/audit-log", label: "Audit log", icon: ClockCounterClockwise },
   { to: "/advisor", label: "Security Advisor", icon: ShieldCheck },
 ] as const;
 
+const AiAssistantPanel = lazy(() =>
+  import("@/components/ai-assistant/AiAssistantPanel").then((module) => ({
+    default: module.AiAssistantPanel,
+  })),
+);
+
 const MOBILE_NAV = NAV.slice(0, 5);
 const MOBILE_MORE_NAV = [
-  NAV[5],
-  NAV[6],
+  NAV[5], NAV[6], NAV[7],
   { to: "/profile", label: "Profile", icon: UserCircle },
 ] as const;
 
@@ -49,11 +54,13 @@ export function AppShell({
   subtitle,
   actions,
   children,
+  immersive = false,
 }: {
   title: string;
   subtitle?: string;
   actions?: ReactNode;
   children: ReactNode;
+  immersive?: boolean;
 }) {
   const [aiOpen, setAiOpen] = useState(false);
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
@@ -74,7 +81,11 @@ export function AppShell({
   }, []);
 
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isAdvisorPage = pathname.startsWith("/advisor");
   useEffect(() => setMobileMoreOpen(false), [pathname]);
+  useEffect(() => {
+    if (isAdvisorPage) setAiOpen(false);
+  }, [isAdvisorPage]);
   const { user } = useAuth();
   const displayName =
     (user?.user_metadata?.full_name as string | undefined) ||
@@ -114,7 +125,12 @@ export function AppShell({
       : "API offline";
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div
+      className={cn(
+        "min-h-screen bg-background text-foreground",
+        immersive && "workbench-shell-expanded",
+      )}
+    >
       <div className="mx-auto flex min-h-screen w-full max-w-[1760px]">
         {/* Sidebar */}
         <aside
@@ -171,7 +187,11 @@ export function AppShell({
                       : "border-l-transparent text-muted-foreground hover:bg-sidebar-active hover:text-foreground",
                   )}
                 >
-                  <Icon size={17} weight={active ? "fill" : "regular"} className="flex shrink-0 items-center gap-2" />
+                  <Icon
+                    size={17}
+                    weight={active ? "fill" : "regular"}
+                    className="flex shrink-0 items-center gap-2"
+                  />
                   <span>{item.label}</span>
                   {active ? <CaretRight size={14} weight="bold" className="ml-auto" /> : null}
                 </Link>
@@ -191,7 +211,7 @@ export function AppShell({
               {avatarUrl ? (
                 <img src={avatarUrl} alt="" className="h-7 w-7 rounded-full object-cover" />
               ) : (
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-white">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">
                   {initials}
                 </div>
               )}
@@ -226,39 +246,47 @@ export function AppShell({
                 aria-label="Application tools"
               >
                 {/* Model switcher in top bar */}
-                <div className="hidden md:block">
-                  <AiModelSelector
-                    selectedModel={activeModelId}
-                    onSelectModel={(id) => {
-                      setActiveModelId(id);
-                      setStoredModelId(id);
-                    }}
-                    toolbar
-                  />
-                </div>
+                {!isAdvisorPage && (
+                  <div className="hidden md:block">
+                    <AiModelSelector
+                      selectedModel={activeModelId}
+                      onSelectModel={(id) => {
+                        setActiveModelId(id);
+                        setStoredModelId(id);
+                      }}
+                      toolbar
+                    />
+                  </div>
+                )}
 
                 {/* AI Security Advisor button */}
-                <button
-                  id="ai-assistant-toggle"
-                  type="button"
-                  onClick={() => setAiOpen((v) => !v)}
-                  aria-expanded={aiOpen}
-                  aria-controls="ai-assistant-panel"
-                  className={cn(
-                    "flex size-9 shrink-0 items-center justify-center gap-1.5 rounded-md border text-xs font-mono font-bold transition-colors md:h-9 md:w-32",
-                    aiOpen
-                      ? "border-accent bg-accent text-accent-foreground"
-                      : "border-border bg-card text-foreground hover:bg-secondary hover:border-accent/40",
-                  )}
+                {!isAdvisorPage && (
+                  <button
+                    id="ai-assistant-toggle"
+                    type="button"
+                    onClick={() => setAiOpen((v) => !v)}
+                    aria-expanded={aiOpen}
+                    aria-controls="ai-assistant-panel"
+                    aria-label="Open Security Advisor"
+                    className={cn(
+                      "flex size-9 shrink-0 items-center justify-center gap-1.5 rounded-md border text-xs font-mono font-bold transition-colors md:h-9 md:w-auto md:px-3",
+                      aiOpen
+                        ? "border-accent bg-accent text-accent-foreground"
+                        : "border-border bg-card text-foreground hover:bg-secondary hover:border-accent/40",
+                    )}
+                  >
+                    <ShieldCheck
+                      size={14}
+                      weight="duotone"
+                      className={aiOpen ? "text-accent-foreground" : "text-accent"}
+                    />
+                    <span className="hidden md:inline">Security Advisor</span>
+                  </button>
+                )}
+                <div
+                  className="flex shrink-0 items-center gap-1.5 sm:gap-2"
+                  data-testid="account-tools"
                 >
-                  <ShieldCheck
-                    size={14}
-                    weight="duotone"
-                    className={aiOpen ? "text-accent-foreground" : "text-accent"}
-                  />
-                  <span className="hidden md:inline">AI Advisor</span>
-                </button>
-                <div className="flex shrink-0 items-center gap-1.5 sm:gap-2" data-testid="account-tools">
                   <ThemeToggle toolbar />
                   <AccountMenu />
                 </div>
@@ -346,7 +374,11 @@ export function AppShell({
       </nav>
 
       {/* AI Assistant panel — rendered at root so it overlays everything */}
-      <AiAssistantPanel open={aiOpen} onClose={() => setAiOpen(false)} />
+      {aiOpen && !isAdvisorPage && (
+        <Suspense fallback={null}>
+          <AiAssistantPanel open onClose={() => setAiOpen(false)} />
+        </Suspense>
+      )}
     </div>
   );
 }

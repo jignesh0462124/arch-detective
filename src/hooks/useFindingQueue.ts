@@ -21,7 +21,7 @@ export function useFindingScans(userId: string | undefined, workspaceId: string)
         : undefined,
     enabled: !!userId,
     retry: false,
-    refetchInterval: 15000,
+    refetchOnWindowFocus: true,
     gcTime: 0,
   });
 }
@@ -42,7 +42,7 @@ export function useFindingQueue(
     enabled: !!userId,
     retry: false,
     gcTime: 0,
-    refetchInterval: 15000,
+    refetchOnWindowFocus: true,
   });
   const page = useQuery({
     queryKey: ["finding-queue", ...scope, filters, offset],

@@ -1,7 +1,7 @@
 from functools import lru_cache
 from typing import Annotated, Literal
 
-from pydantic import Field, computed_field, field_validator, model_validator
+from pydantic import AliasChoices, Field, computed_field, field_validator, model_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
@@ -30,6 +30,11 @@ class Settings(BaseSettings):
         default_factory=lambda: ["RS256", "ES256"],
     )
     SUPABASE_SERVICE_ROLE_KEY: str = ""
+    # Public gateway key for Auth validation; never reuse the service-role key.
+    SUPABASE_PUBLISHABLE_KEY: str = Field(
+        default="",
+        validation_alias=AliasChoices("SUPABASE_PUBLISHABLE_KEY", "VITE_SUPABASE_PUBLISHABLE_KEY"),
+    )
     SUPABASE_SCAN_BUCKET: str = "scan-inputs"
     SUPABASE_REPORT_BUCKET: str = "audit-reports"
     SIGNED_URL_TTL_SECONDS: int = Field(default=300, ge=30, le=3600)
@@ -41,6 +46,17 @@ class Settings(BaseSettings):
     SUPABASE_SOURCE_BUCKET: Literal["audit-source"] = "audit-source"
 
     REDIS_URL: str = "redis://localhost:6379/0"
+    GITHUB_ENABLED: bool = False
+    GITHUB_APP_SLUG: str = ""
+    GITHUB_PUBLISH_ENABLED: bool = False
+    GITHUB_CLIENT_ID: str = ""
+    GITHUB_CLIENT_SECRET: str = ""
+    GITHUB_APP_ID: str = ""
+    GITHUB_PRIVATE_KEY: str = ""
+    GITHUB_WEBHOOK_SECRET: str = ""
+    GITHUB_TOKEN_ENCRYPTION_KEY: str = ""
+    GITHUB_CALLBACK_URL: str = "http://127.0.0.1:8000/api/v1/github/callback"
+    GITHUB_FRONTEND_URL: str = "http://127.0.0.1:5173"
 
     QDRANT_URL: str = ""
     QDRANT_HOST: str = "localhost"

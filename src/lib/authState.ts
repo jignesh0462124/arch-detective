@@ -85,7 +85,7 @@ export function safeAuthDestination(value: unknown): string {
       path.split("/").some((part) => part === "." || part === "..")
     )
       return "/dashboard";
-    return /^\/(dashboard|code-audit|attack-graph|findings|reports|profile|compliance|settings|workspace)(\/|$)/.test(
+    return /^\/(dashboard|code-audit|attack-graph|findings|fix-verification|reports|profile|compliance|settings|workspace)(\/|$)/.test(
       path,
     )
       ? url.pathname + url.search + url.hash

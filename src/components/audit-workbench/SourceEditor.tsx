@@ -77,7 +77,7 @@ export default function SourceEditor({
           colors: {
             "editor.background": "#FFFFFF",
             "editor.lineHighlightBackground": "#F5F1EC",
-            "editorLineNumber.foreground": "#92908A",
+            "editorLineNumber.foreground": "#626260",
             "editor.selectionBackground": "#FF560025",
           },
         });
@@ -87,6 +87,9 @@ export default function SourceEditor({
           rules: [],
           colors: {
             "editor.background": "#191918",
+            "editor.foreground": "#eeeeeb",
+            "editorLineNumber.foreground": "#b4b4ae",
+            "editorLineNumber.activeForeground": "#ffffff",
             "editor.lineHighlightBackground": "#313130",
             "editor.selectionBackground": "#FF560040",
           },

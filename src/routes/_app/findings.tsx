@@ -558,11 +558,20 @@ function FindingDetail({
           )}
         </DetailSection>
         <DetailSection icon={Wrench} label="Remediation">
+          <a
+            className="mb-3 inline-flex min-h-10 items-center rounded-md border border-border px-3 text-sm"
+            href={`/fix-verification?scanId=${encodeURIComponent(scanId)}&findingId=${encodeURIComponent(f.id)}`}
+          >
+            Suggest fix
+          </a>
           <p className="whitespace-pre-wrap break-words text-sm leading-relaxed">
             {f.remediation || "No remediation guidance recorded."}
           </p>
-          <Link to="/advisor" search={{ workspaceId, scanId, findingId: f.id, solution: "overview" }}
-            className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-accent underline">
+          <Link
+            to="/advisor"
+            search={{ workspaceId, scanId, findingId: f.id, solution: "overview" }}
+            className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-accent underline"
+          >
             Ask Security Advisor about this saved finding
           </Link>
         </DetailSection>

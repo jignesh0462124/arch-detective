@@ -8,7 +8,7 @@ type MarketingPage = "home" | "about";
 
 const productLinks = [
   { href: "/#product", label: "Product" },
-  { href: "/#pipeline", label: "Pipeline" },
+  { href: "/#pipeline", label: "Workflow" },
   { href: "/#frameworks", label: "Frameworks" },
 ];
 
@@ -29,13 +29,18 @@ export function MarketingBackdrop() {
 export function MarketingHeader({ current }: { current: MarketingPage }) {
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur-md">
-      <div className="mx-auto flex min-h-16 w-full max-w-[1280px] items-center justify-between gap-3 px-4 sm:px-6">
+      <div className="mx-auto flex min-h-18 w-full max-w-[1280px] items-center justify-between gap-2 px-5 sm:gap-3 sm:px-8 lg:px-10">
         <Link to="/" aria-label="Archon home" className="flex min-h-10 min-w-0 items-center">
-          <ArchonWordmark size="sm" taglineClassName="hidden sm:block" />
+          <ArchonWordmark
+            size="sm"
+            hideTagline={current === "home"}
+            taglineClassName="hidden sm:block"
+            className="[&>img]:w-[128px] sm:[&>img]:w-[168px]"
+          />
         </Link>
 
         <nav
-          className="hidden h-16 items-center text-[13px] font-medium md:flex"
+          className="hidden h-16 items-center text-[13px] font-medium lg:flex"
           aria-label="Marketing"
         >
           {productLinks.map((item) => (
@@ -57,8 +62,16 @@ export function MarketingHeader({ current }: { current: MarketingPage }) {
         </nav>
 
         <div className="flex shrink-0 items-center gap-2">
-          <div className="relative md:hidden">
-            <details className="group">
+          <div className="relative lg:hidden">
+            <details
+              className="group"
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  event.currentTarget.open = false;
+                  event.currentTarget.querySelector("summary")?.focus();
+                }
+              }}
+            >
               <summary
                 role="button"
                 aria-label="Open navigation"
@@ -94,13 +107,20 @@ export function MarketingHeader({ current }: { current: MarketingPage }) {
               </nav>
             </details>
           </div>
-          <ThemeToggle />
           <Link
             to="/login"
-            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary/85 sm:px-4"
+            className="hidden min-h-11 items-center px-2 text-[13px] text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring xl:inline-flex"
           >
-            <span className="hidden sm:inline">Launch</span>
-            <ArrowRight size={13} weight="bold" />
+            Sign in
+          </Link>
+          <ThemeToggle className="size-10 sm:size-11" />
+          <Link
+            to="/login"
+            aria-label="Launch console"
+            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-primary px-3 py-2 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:min-h-11 sm:px-4"
+          >
+            <span className="hidden sm:inline">Launch console</span>
+            <ArrowRight size={13} weight="bold" aria-hidden="true" />
           </Link>
         </div>
       </div>
@@ -108,7 +128,42 @@ export function MarketingHeader({ current }: { current: MarketingPage }) {
   );
 }
 
-export function MarketingFooter() {
+export function MarketingFooter({ compact = false }: { compact?: boolean }) {
+  if (compact) {
+    return (
+      <footer className="border-t border-border bg-background">
+        <div className="mx-auto flex w-full max-w-[1280px] flex-col justify-between gap-3 px-5 py-6 text-xs sm:flex-row sm:items-center sm:px-8 lg:px-10">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+            <Link
+              to="/"
+              aria-label="Archon home"
+              className="inline-flex min-h-11 items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <ArchonWordmark size="sm" hideTagline />
+            </Link>
+            <span className="text-muted-foreground sm:border-l sm:border-border sm:pl-5">
+              Security audits &amp; threat modeling
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
+            <Link
+              to="/about"
+              className="inline-flex min-h-11 items-center hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              About
+            </Link>
+            <Link
+              to="/login"
+              className="inline-flex min-h-11 items-center hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              Sign in
+            </Link>
+            <span>© 2026 Archon</span>
+          </div>
+        </div>
+      </footer>
+    );
+  }
   return (
     <footer className="border-t border-border bg-background/95 backdrop-blur-md">
       <div className="mx-auto flex w-full max-w-[1280px] flex-col items-start justify-between gap-3 px-4 py-4 text-xs sm:min-h-16 sm:flex-row sm:items-center sm:gap-6 sm:px-6 sm:py-0">

@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 const local = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  optimizeDeps: { entries: ["tests/workbench-preview/index.html"] },
   resolve: {
     alias: [
       { find: "@/hooks/useAuth", replacement: local("./hooks.ts") },
