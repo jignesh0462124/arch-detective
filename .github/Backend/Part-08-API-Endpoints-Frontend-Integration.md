@@ -1,5 +1,7 @@
 # Part 8 — FastAPI Endpoints + Frontend Integration
 
+> Historical build plan. References below to `useScanProgress` and `useFindings` describe the original design, not maintained modules. Current workbench and saved Findings queries are implemented in `src/components/audit-workbench`, `src/lib/api/workbench.ts` and `src/routes/_app/findings.tsx`. See the root README and cleanup verification report for current setup.
+
 > **Timeline:** Week 10 (final integration)  
 > **Priority:** 🔴 Critical  
 > **Dependencies:** All previous parts  

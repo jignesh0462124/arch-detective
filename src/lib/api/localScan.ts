@@ -106,6 +106,10 @@ export async function uploadLocalScan(
   }
 
   if (!resp.ok) {
+    if (resp.status === 404 || resp.status === 403)
+      throw new Error(
+        "Legacy local audits are unavailable. Use the signed-in Codebase Audit page. Existing browser reports remain available.",
+      );
     const err = await resp.json().catch(() => ({ detail: resp.statusText }));
     throw new Error((err as { detail?: string }).detail ?? "Upload failed");
   }

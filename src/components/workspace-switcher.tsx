@@ -143,13 +143,7 @@ export function WorkspaceSwitcher() {
           {/* Text stack */}
           <div className="min-w-0 flex-1 overflow-hidden">
             <span className="block truncate text-[13px] font-semibold tracking-tight text-foreground leading-snug">
-              {isLoading ? (
-                "Loading…"
-              ) : active ? (
-                active.name
-              ) : (
-                "Select workspace"
-              )}
+              {isLoading ? "Loading…" : active ? active.name : "Select workspace"}
             </span>
             <span className="block truncate font-mono text-[10px] text-muted-foreground mt-0.5">
               {isLoading
@@ -191,7 +185,11 @@ export function WorkspaceSwitcher() {
             <div className="max-h-56 overflow-y-auto divide-y divide-border/30 py-1">
               {workspaceList.length === 0 ? (
                 <div className="px-3 py-4 text-center">
-                  <Buildings size={24} weight="duotone" className="mx-auto text-muted-foreground/60 mb-1.5" />
+                  <Buildings
+                    size={24}
+                    weight="duotone"
+                    className="mx-auto text-muted-foreground/60 mb-1.5"
+                  />
                   <p className="text-[12px] font-medium text-foreground">No workspaces found</p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">
                     Create a workspace to isolate project audits

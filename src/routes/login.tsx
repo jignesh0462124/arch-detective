@@ -1,12 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Eye,
-  EyeSlash,
-  LockKey,
-  EnvelopeSimple,
-} from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, GithubLogo, EnvelopeSimple } from "@phosphor-icons/react";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { ThemeToggle } from "@/components/brutal/ThemeToggle";
 import { MarketingBackdrop } from "@/components/marketing/MarketingChrome";
@@ -171,32 +164,15 @@ export function AuthPage() {
             </div>
           </div>
         </header>
-        <main className="mx-auto max-w-[1280px] px-4 py-6 sm:px-6 sm:py-10">
-          <section className="grid overflow-hidden rounded-sm border border-border bg-card lg:min-h-[650px] lg:grid-cols-12">
-            <div className="flex min-w-0 items-center justify-center px-5 py-8 sm:px-10 lg:col-span-5">
+        <main className="mx-auto w-full max-w-[1280px] px-4 py-6 sm:px-6 sm:py-10">
+          <section className="grid overflow-hidden rounded-xl border border-border bg-card lg:min-h-[740px] lg:grid-cols-12">
+            <div className="flex min-w-0 items-center justify-center px-5 py-8 sm:px-10 lg:col-span-6 lg:px-16 lg:py-12">
               <div className="w-full max-w-[420px]">
-                <div
-                  className="grid grid-cols-2 gap-1 rounded-lg bg-secondary p-1"
-                  aria-label="Account access"
-                >
-                  {(["signin", "signup"] as const).map((value) => (
-                    <button
-                      key={value}
-                      type="button"
-                      disabled={busy}
-                      aria-pressed={mode === value}
-                      onClick={() => switchMode(value)}
-                      className={`h-10 rounded-md text-sm font-medium focus-visible:shadow-ring ${mode === value ? "border border-border bg-card" : "text-muted-foreground"}`}
-                    >
-                      {value === "signin" ? "Sign in" : "Create account"}
-                    </button>
-                  ))}
-                </div>
-                <div className="mb-6 mt-7">
-                  <div className="mb-3 flex size-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
-                    <LockKey size={20} />
-                  </div>
-                  <h1 className="text-[28px] font-semibold leading-tight">
+                <p className="mb-5 border-l-2 border-accent pl-3 text-xs font-medium tracking-wide text-muted-foreground">
+                  ACCOUNT ACCESS
+                </p>
+                <div className="mb-8">
+                  <h1 className="text-[32px] font-semibold leading-tight sm:text-4xl">
                     {mode === "signup"
                       ? "Create your account"
                       : mode === "forgot"
@@ -236,26 +212,6 @@ export function AuthPage() {
                     <EnvelopeSimple size={18} className="mb-2 text-accent" />
                     {message}
                   </div>
-                )}
-                {mode !== "forgot" && (
-                  <button
-                    type="button"
-                    disabled={busy || auth.isLoading}
-                    className="mb-5 flex min-h-12 w-full items-center justify-center rounded-lg border border-border bg-card text-sm font-medium disabled:opacity-60"
-                    onClick={() => {
-                      if (task.current) return;
-                      task.current = true;
-                      setBusy(true);
-                      setError("");
-                      void signInWithGitHub(search.next).catch(() => {
-                        setError("GitHub sign-in could not start. Please retry.");
-                        task.current = false;
-                        setBusy(false);
-                      });
-                    }}
-                  >
-                    Continue with GitHub
-                  </button>
                 )}
                 <form
                   onInput={(event) => {
@@ -326,7 +282,7 @@ export function AuthPage() {
                             aria-label={show ? "Hide password" : "Show password"}
                             className="absolute right-1 top-1 flex size-10 items-center justify-center rounded-md hover:bg-secondary"
                           >
-                            {show ? <EyeSlash size={17} /> : <Eye size={17} />}
+                            <span className="text-xs">{show ? "Hide" : "Show"}</span>
                           </button>
                         </div>
                         <p id="password-help" className="mt-1.5 text-xs text-muted-foreground">
@@ -385,6 +341,46 @@ export function AuthPage() {
                     </button>
                   </fieldset>
                 </form>
+                {mode !== "forgot" && (
+                  <>
+                    <div className="my-5 flex items-center gap-4 text-xs text-muted-foreground">
+                      <span className="h-px flex-1 bg-border" />
+                      or
+                      <span className="h-px flex-1 bg-border" />
+                    </div>
+                    <button
+                      type="button"
+                      disabled={busy || auth.isLoading}
+                      className="flex min-h-12 w-full items-center justify-center gap-2 rounded-lg border border-border bg-card text-sm font-medium hover:bg-secondary disabled:opacity-60"
+                      onClick={() => {
+                        if (task.current) return;
+                        task.current = true;
+                        setBusy(true);
+                        setError("");
+                        void signInWithGitHub(search.next).catch(() => {
+                          if (mounted.current) {
+                            setError("GitHub sign-in could not start. Please retry.");
+                            setBusy(false);
+                          }
+                          task.current = false;
+                        });
+                      }}
+                    >
+                      <GithubLogo size={20} /> Continue with GitHub
+                    </button>
+                    <p className="mt-5 text-center text-sm text-muted-foreground">
+                      {mode === "signin" ? "New to Archon? " : "Already have an account? "}
+                      <button
+                        type="button"
+                        disabled={busy || auth.isLoading}
+                        onClick={() => switchMode(mode === "signin" ? "signup" : "signin")}
+                        className="min-h-9 font-medium text-accent underline underline-offset-4"
+                      >
+                        {mode === "signin" ? "Create an account" : "Sign in"}
+                      </button>
+                    </p>
+                  </>
+                )}
                 {confirmation && (
                   <button
                     type="button"
@@ -412,7 +408,7 @@ export function AuthPage() {
                 )}
               </div>
             </div>
-            <aside className="relative hidden overflow-hidden border-l border-border bg-[#0d0d0d] lg:col-span-7 lg:block">
+            <aside className="relative hidden overflow-hidden border-l border-border bg-[#0d0d0d] lg:col-span-6 lg:block">
               <picture>
                 <source media="(min-width: 1024px)" srcSet="/assets/archon-auth-gateway.webp" />
                 <img
@@ -421,20 +417,32 @@ export function AuthPage() {
                   height={1280}
                   loading="lazy"
                   src="/assets/archon-auth-gateway.webp"
-                  className="absolute inset-0 h-full w-full object-contain"
+                  className="absolute inset-x-0 bottom-0 h-[77%] w-full object-contain"
                 />
               </picture>
-              <div className="absolute left-7 top-7 max-w-[270px] border-l-2 border-[#ff5600] bg-black/85 px-4 py-3 text-white">
-                <p className="font-mono text-[10px] text-white/70">YOUR AUDIT WORKSPACE</p>
-                <p className="mt-2 text-sm font-medium">
-                  From source evidence to clearer security decisions.
+              <div className="absolute left-9 right-9 top-9 text-white">
+                <p className="border-l-2 border-[#ff5600] pl-3 text-xs text-[#ff914d]">
+                  YOUR AUDIT WORKSPACE
+                </p>
+                <p className="mt-4 text-2xl font-medium leading-snug">
+                  Review the evidence.
+                  <br />
+                  Understand the next step.
                 </p>
               </div>
             </aside>
           </section>
-          <p className="mt-4 text-center text-xs text-muted-foreground">
-            Use a personal or work email. Your saved audits stay with your account.
-          </p>
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 py-3 text-xs text-muted-foreground">
+            <p>Use a personal or work email. Your saved audits stay with your account.</p>
+            <div className="flex gap-5">
+              <Link to="/privacy" className="underline-offset-4 hover:underline">
+                Privacy
+              </Link>
+              <Link to="/terms" className="underline-offset-4 hover:underline">
+                Terms
+              </Link>
+            </div>
+          </div>
         </main>
       </div>
     </div>

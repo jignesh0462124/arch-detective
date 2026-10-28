@@ -1,7 +1,9 @@
 // Isolated UI fixtures only. Run with playwright-cli run-code --filename this file.
 // prettier-ignore
 async (page) => {
-  const base="http://127.0.0.1:5175/tests/workbench-preview/index.html";
+  page.setDefaultTimeout(15000);
+  page.setDefaultNavigationTimeout(20000);
+  const base="http://127.0.0.1:5193/tests/workbench-preview/index.html";
   const open=async(query)=>{await page.goto(`${base}?${query}`,{waitUntil:"domcontentloaded"});};
   const check=async()=>{if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error("Page overflows horizontally");};
   await open("view=upload");

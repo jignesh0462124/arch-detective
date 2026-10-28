@@ -8,6 +8,7 @@ import { gh, githubError, type Proposal } from "@/lib/api/github";
 import { getStoredModelId } from "@/lib/api/ai-models";
 import { getFindingPage, type FindingSummary } from "@/lib/api/findingQueue";
 import { authScope, isCurrentScope } from "@/lib/authState";
+import { visiblePageInterval } from "@/lib/browserVisibility";
 
 function SavedScanSelect({
   workspace,
@@ -243,8 +244,7 @@ function Review({
         statuses?: { name: string; state: string }[];
       }>(`/fix-proposals/${selected}/github-status`, undefined, "GET", signal),
     enabled: !!detail.data?.operation?.url,
-    refetchInterval: (q) =>
-      document.visibilityState === "visible" && q.state.data?.state === "open" ? 15000 : false,
+    refetchInterval: (q) => (q.state.data?.state === "open" ? visiblePageInterval(15000) : false),
   });
   const comparison = useQuery({
     queryKey: ["fix-comparison", user?.id, workspace, compare, comparePage],

@@ -36,6 +36,8 @@ import {
 import { cn } from "@/lib/utils";
 import { useWorkbenchData } from "./useWorkbenchData";
 import { loadSourceEditor } from "./preload";
+import { rememberAudit } from "@/lib/auditResume";
+import { CodeSolution } from "./CodeSolution";
 
 const SourceEditor = lazy(loadSourceEditor);
 const rank = { critical: 0, high: 1, medium: 2, low: 3 };
@@ -144,6 +146,9 @@ function TreeFolder({
 }
 
 function FindingInspector({
+  workspaceId,
+  scanId,
+  sourceAvailable,
   finding,
   tab,
   setTab,
@@ -152,6 +157,9 @@ function FindingInspector({
   index,
   total,
 }: {
+  workspaceId: string;
+  scanId: string;
+  sourceAvailable: boolean;
   finding: WorkbenchFinding | undefined;
   tab: InspectorTab;
   setTab: (tab: InspectorTab) => void;
@@ -296,15 +304,13 @@ function FindingInspector({
           </>
         ) : (
           <>
-            <h3 className="text-xs font-semibold">Suggested remediation</h3>
-            <p className="whitespace-pre-wrap text-xs leading-6 text-muted-foreground">
-              {finding.remediation ||
-                "No remediation was captured. Review this finding in Security Advisor for guidance."}
-            </p>
-            <p className="rounded-md border border-border p-3 text-[11px] leading-5 text-muted-foreground">
-              Suggestions do not change your uploaded code. Validate changes with your project's
-              tests.
-            </p>
+            <CodeSolution
+              key={finding.id}
+              workspaceId={workspaceId}
+              scanId={scanId}
+              finding={finding}
+              available={sourceAvailable}
+            />
           </>
         )}
       </div>
@@ -390,6 +396,14 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
     selectedId,
   );
   const findings = useMemo(() => overview.data?.findings || [], [overview.data?.findings]);
+  useEffect(() => {
+    if (overview.data?.scan)
+      rememberAudit(workspaceId, {
+        id: scanId,
+        name: overview.data.scan.target_name,
+        created: overview.data.scan.created_at,
+      });
+  }, [workspaceId, scanId, overview.data?.scan]);
   const selectedSummary = findings.find((f) => f.id === selectedId) || findings[0];
   const finding = progressive
     ? detail.data && detail.data.finding.id === (selectedId || selectedSummary?.id)
@@ -598,6 +612,9 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
       </p>
     ) : (
       <FindingInspector
+        workspaceId={workspaceId}
+        scanId={scanId}
+        sourceAvailable={sourceAllowed}
         finding={finding}
         tab={inspectorTab}
         setTab={setInspectorTab}
@@ -692,16 +709,17 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
           </div>
           <div className="flex flex-wrap gap-2">
             {complete && finding && (
-              <a
+              <Link
                 className="inline-flex min-h-9 items-center rounded-md border border-border bg-card px-3 text-xs font-medium"
-                href={
+                to={data.scan.source_type === "git" ? "/fix-verification" : "/advisor"}
+                search={
                   data.scan.source_type === "git"
-                    ? `/fix-verification?scanId=${encodeURIComponent(scanId)}&findingId=${encodeURIComponent(finding.id)}`
-                    : `/advisor?workspaceId=${encodeURIComponent(workspaceId)}&scanId=${encodeURIComponent(scanId)}&findingId=${encodeURIComponent(finding.id)}&solution=patch`
+                    ? { scanId, findingId: finding.id }
+                    : { workspaceId, scanId, findingId: finding.id, solution: "patch" }
                 }
               >
                 Suggest fix
-              </a>
+              </Link>
             )}
             <button
               ref={expandButton}

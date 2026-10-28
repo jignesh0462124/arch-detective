@@ -1,1 +1,0 @@
-query = f'SELECT {user_input}'

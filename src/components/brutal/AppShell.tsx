@@ -14,9 +14,11 @@ import {
   UserCircle,
   User,
   DotsThreeCircle,
+  Gear,
 } from "@phosphor-icons/react";
 import { ThemeToggle } from "@/components/brutal/ThemeToggle";
 import { ArchonWordmark } from "@/components/ui/ArchonWordmark";
+import { ArchonLogo } from "@/components/ui/ArchonLogo";
 import { WorkspaceSwitcher } from "@/components/workspace-switcher";
 import { AiModelSelector } from "@/components/ai-assistant/AiModelSelector";
 import type { ReactNode } from "react";
@@ -35,6 +37,7 @@ const NAV = [
   { to: "/reports", label: "Reports", icon: FileText },
   { to: "/audit-log", label: "Audit log", icon: ClockCounterClockwise },
   { to: "/advisor", label: "Security Advisor", icon: ShieldCheck },
+  { to: "/settings", label: "Settings", icon: Gear },
 ] as const;
 
 const AiAssistantPanel = lazy(() =>
@@ -45,7 +48,10 @@ const AiAssistantPanel = lazy(() =>
 
 const MOBILE_NAV = NAV.slice(0, 5);
 const MOBILE_MORE_NAV = [
-  NAV[5], NAV[6], NAV[7],
+  NAV[5],
+  NAV[6],
+  NAV[7],
+  NAV[8],
   { to: "/profile", label: "Profile", icon: UserCircle },
 ] as const;
 
@@ -55,12 +61,14 @@ export function AppShell({
   actions,
   children,
   immersive = false,
+  tools,
 }: {
   title: string;
   subtitle?: string;
   actions?: ReactNode;
   children: ReactNode;
   immersive?: boolean;
+  tools?: ReactNode;
 }) {
   const [aiOpen, setAiOpen] = useState(false);
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
@@ -135,23 +143,28 @@ export function AppShell({
         {/* Sidebar */}
         <aside
           data-testid="desktop-sidebar"
-          className="sticky top-0 hidden h-dvh w-[248px] shrink-0 self-start flex-col overflow-y-auto overflow-x-hidden border-r border-border bg-sidebar px-3 py-4 lg:flex"
+          className={cn(
+            "sticky top-0 hidden h-dvh shrink-0 self-start flex-col overflow-y-auto overflow-x-hidden border-r border-border bg-sidebar px-3 py-4 lg:flex",
+            isAdvisorPage ? "w-[72px]" : "w-[248px]",
+          )}
         >
           <Link
             to="/"
             aria-label="Archon home"
             className="group flex min-h-11 items-center px-2 py-1.5 transition-colors hover:bg-sidebar-active"
           >
-            <ArchonWordmark />
+            {isAdvisorPage ? <ArchonLogo size={28} /> : <ArchonWordmark />}
           </Link>
 
           {/* Workspace switcher */}
-          <div className="mt-3.5 w-full">
+          <div className={isAdvisorPage ? "hidden" : "mt-3.5 w-full"}>
             <WorkspaceSwitcher />
           </div>
 
           <nav className="mt-5 flex flex-col gap-1" aria-label="Workspace navigation">
-            <div className="mb-2 flex items-center justify-between px-2">
+            <div
+              className={isAdvisorPage ? "hidden" : "mb-2 flex items-center justify-between px-2"}
+            >
               <p className="text-xs font-medium text-muted-foreground">Navigation</p>
               {(backendHealth.isPending || backendOnline) && (
                 <span
@@ -180,6 +193,8 @@ export function AppShell({
                 <Link
                   key={item.to}
                   to={item.to}
+                  title={isAdvisorPage ? item.label : undefined}
+                  aria-label={isAdvisorPage ? item.label : undefined}
                   className={cn(
                     "group relative flex h-10 items-center gap-3 border-l-2 px-3 text-[13px] font-medium transition-colors",
                     active
@@ -192,8 +207,10 @@ export function AppShell({
                     weight={active ? "fill" : "regular"}
                     className="flex shrink-0 items-center gap-2"
                   />
-                  <span>{item.label}</span>
-                  {active ? <CaretRight size={14} weight="bold" className="ml-auto" /> : null}
+                  <span className={isAdvisorPage ? "sr-only" : undefined}>{item.label}</span>
+                  {active && !isAdvisorPage ? (
+                    <CaretRight size={14} weight="bold" className="ml-auto" />
+                  ) : null}
                 </Link>
               );
             })}
@@ -217,7 +234,7 @@ export function AppShell({
               )}
               <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border border-sidebar bg-success" />
             </div>
-            <div className="min-w-0 flex-1">
+            <div className={isAdvisorPage ? "hidden" : "min-w-0 flex-1"}>
               <p className="truncate text-[12px] font-semibold leading-tight">
                 {displayName ?? email ?? "Profile"}
               </p>
@@ -225,12 +242,18 @@ export function AppShell({
                 <p className="truncate text-[10px] text-muted-foreground">{email}</p>
               )}
             </div>
-            <User size={13} className="shrink-0 text-muted-foreground" />
+            {!isAdvisorPage && <User size={13} className="shrink-0 text-muted-foreground" />}
           </Link>
         </aside>
 
         {/* Main */}
-        <main className="archon-app-canvas min-w-0 flex-1 px-4 py-4 pb-24 sm:px-6 sm:py-5 lg:px-7 lg:pb-7 xl:px-8">
+        <main
+          className={
+            isAdvisorPage
+              ? "flex h-[calc(100dvh-68px)] min-w-0 flex-1 flex-col bg-card lg:h-dvh"
+              : "archon-app-canvas min-w-0 flex-1 px-4 py-4 pb-24 sm:px-6 sm:py-5 lg:px-7 lg:pb-7 xl:px-8"
+          }
+        >
           {/* Header */}
           <header className="border-b border-border bg-background">
             <div className="flex items-center justify-between gap-3 px-3 py-3 sm:px-5">
@@ -245,6 +268,7 @@ export function AppShell({
                 role="toolbar"
                 aria-label="Application tools"
               >
+                {tools}
                 {/* Model switcher in top bar */}
                 {!isAdvisorPage && (
                   <div className="hidden md:block">
@@ -299,7 +323,9 @@ export function AppShell({
             ) : null}
           </header>
 
-          <div className="mt-5 min-w-0">{children}</div>
+          <div className={isAdvisorPage ? "flex min-h-0 min-w-0 flex-1" : "mt-5 min-w-0"}>
+            {children}
+          </div>
         </main>
       </div>
 

@@ -3,6 +3,9 @@ from __future__ import annotations
 import os
 import subprocess
 import tempfile
+import signal
+import threading
+import time
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Collection, Mapping, Sequence
@@ -34,6 +37,30 @@ class ScannerError(RuntimeError):
 
 class ScannerUnavailableError(ScannerError):
     """Raised when a required scanner executable is not installed."""
+
+
+class ScannerCoverageError(ScannerError):
+    """Coverage is incomplete; callers must not report a clean completed audit."""
+
+
+def _stop_scanner(process: subprocess.Popen) -> None:
+    # Scanners are trusted executables, but their subprocess trees need bounded cleanup.
+    if os.name == "nt":
+        if process.poll() is None:
+            try:
+                subprocess.run(["taskkill", "/PID", str(process.pid), "/T", "/F"],
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
+            except (OSError, subprocess.TimeoutExpired):
+                process.kill()
+    else:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+    try:
+        process.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        process.kill()
 
 
 @dataclass(frozen=True, slots=True)
@@ -120,39 +147,74 @@ def run_scanner_command(
     if not command or not command[0]:
         raise ScannerError("Scanner command is empty")
     try:
-        completed = subprocess.run(
+        process = subprocess.Popen(
             list(command),
             cwd=str(cwd),
             env=scanner_environment(network_access=network_access),
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            timeout=timeout,
-            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            stdin=subprocess.DEVNULL,
+            start_new_session=os.name != "nt",
+            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0,
             shell=False,
         )
     except FileNotFoundError as exc:
         raise ScannerUnavailableError(f"{command[0]} is not installed") from exc
-    except subprocess.TimeoutExpired as exc:
-        raise ScannerError(f"{command[0]} exceeded the {timeout}-second timeout") from exc
     except OSError as exc:
         raise ScannerError(f"{command[0]} could not be started") from exc
 
-    if (
-        len(completed.stdout.encode("utf-8"))
-        + len(completed.stderr.encode("utf-8"))
-        > MAX_SCANNER_OUTPUT_BYTES
-    ):
-        raise ScannerError(f"{command[0]} produced too much output")
-    if completed.returncode not in accepted_returncodes:
+    output = [bytearray(), bytearray()]
+    lock = threading.Lock()
+    exceeded = threading.Event()
+    read_failed = threading.Event()
+    done = [threading.Event(), threading.Event()]
+
+    def collect(stream, index):
+        try:
+            while chunk := os.read(stream.fileno(), 64 * 1024):
+                with lock:
+                    remaining = MAX_SCANNER_OUTPUT_BYTES - sum(map(len, output))
+                    output[index].extend(chunk[:remaining])
+                    if len(chunk) > remaining:
+                        exceeded.set()
+                        return
+        except OSError:
+            read_failed.set()
+        finally:
+            done[index].set()
+
+    readers = [threading.Thread(target=collect, args=(stream, index), daemon=True)
+               for index, stream in enumerate((process.stdout, process.stderr))]
+    for reader in readers:
+        reader.start()
+    deadline = time.monotonic() + timeout
+    try:
+        while not (process.poll() is not None and all(event.is_set() for event in done)):
+            if exceeded.is_set():
+                raise ScannerError(f"{command[0]} produced too much output")
+            if read_failed.is_set():
+                raise ScannerError(f"{command[0]} output could not be read")
+            if time.monotonic() >= deadline:
+                raise ScannerError(f"{command[0]} exceeded the {timeout}-second timeout")
+            time.sleep(0.01)
+        if exceeded.is_set():
+            raise ScannerError(f"{command[0]} produced too much output")
+        if read_failed.is_set():
+            raise ScannerError(f"{command[0]} output could not be read")
+    finally:
+        _stop_scanner(process)
+        for reader in readers:
+            reader.join(timeout=1)
+        process.stdout.close()
+        process.stderr.close()
+    if process.returncode not in accepted_returncodes:
         raise ScannerError(
-            f"{command[0]} failed with exit code {completed.returncode}"
+            f"{command[0]} failed with exit code {process.returncode}"
         )
     return ScannerCommandResult(
-        stdout=completed.stdout,
-        stderr=completed.stderr,
-        returncode=completed.returncode,
+        stdout=output[0].decode("utf-8", errors="replace"),
+        stderr=output[1].decode("utf-8", errors="replace"),
+        returncode=process.returncode,
     )
 
 

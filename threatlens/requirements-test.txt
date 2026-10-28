@@ -1,0 +1,7 @@
+-r requirements-api.txt
+pytest==8.3.4
+pytest-asyncio==0.25.2
+# Unit-tested legacy agent interfaces, not downloaded embedding models/scanner binaries.
+langchain-groq==0.2.0
+groq==0.13.0
+tenacity==8.5.0

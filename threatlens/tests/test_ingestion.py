@@ -143,9 +143,12 @@ def test_source_collection_skips_vendor_binary_and_unsupported_files(tmp_path: P
     assert [item["path"] for item in files] == ["src/main.py"]
 
 
-def test_cleanup_refuses_unrelated_temp_directories(tmp_path: Path) -> None:
+def test_cleanup_refuses_unrelated_temp_directories(tmp_path: Path, monkeypatch) -> None:
+    # Exercise the unrelated-name guard regardless of pytest's --basetemp.
+    monkeypatch.setattr("app.ingestion.code_extractor.tempfile.gettempdir", lambda: str(tmp_path.parent))
     with pytest.raises(ValueError, match="unrelated"):
         cleanup_temp_directory(str(tmp_path))
+    assert tmp_path.is_dir()
 
 
 @pytest.mark.parametrize(

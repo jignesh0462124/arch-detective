@@ -12,24 +12,26 @@ function CodeBlock({ code, language }: { code: string; language?: string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    void navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    void navigator.clipboard
+      .writeText(code)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch(() => setCopied(false));
   };
 
   const lines = code.split("\n");
   const showGutter = lines.length > 1;
 
   return (
-    <div className="my-3 overflow-hidden rounded-sm border border-border bg-[#f6f3ee] text-[#111111] dark:bg-[#0a0b0e] dark:text-[#ededed] shadow-xs">
+    <div className="my-3 min-w-0 overflow-hidden rounded-lg border border-white/15 bg-[#17191b] text-[#ededed]">
       {/* Code Header Bar */}
-      <div className="flex items-center justify-between border-b border-border/80 bg-[#ebe5dc] px-3 py-1.5 text-[10px] font-mono text-[#525250] dark:bg-secondary/50 dark:border-border/80 dark:text-muted-foreground">
+      <div className="flex items-center justify-between border-b border-white/15 bg-[#222426] px-3 py-2 text-xs text-[#d5d5d0]">
         <div className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-          <span className="font-bold uppercase tracking-wider text-foreground">
-            {language || "source code"}
-          </span>
-          <span className="text-[9px] text-muted-foreground">
+          <span className="font-medium">{language || "source code"}</span>
+          <span className="text-[10px] text-[#b5b5b0]">
             ({lines.length} {lines.length === 1 ? "line" : "lines"})
           </span>
         </div>
@@ -63,17 +65,17 @@ function CodeBlock({ code, language }: { code: string; language?: string }) {
                 key={idx}
                 className="table-row hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
               >
-                <span className="table-cell select-none pr-3.5 text-right font-mono text-[10px] text-muted-foreground/60 w-8 align-top">
+                <span className="table-cell w-8 select-none pr-3.5 text-right font-mono text-[10px] text-[#a5a5a0] align-top">
                   {idx + 1}
                 </span>
-                <span className="table-cell whitespace-pre-wrap break-all text-foreground align-top">
+                <span className="table-cell whitespace-pre-wrap break-all text-[#ededed] align-top">
                   {line || " "}
                 </span>
               </div>
             ))}
           </div>
         ) : (
-          <pre className="whitespace-pre-wrap break-all text-foreground">
+          <pre className="whitespace-pre-wrap break-all text-[#ededed]">
             <code>{code}</code>
           </pre>
         )}
@@ -82,24 +84,10 @@ function CodeBlock({ code, language }: { code: string; language?: string }) {
   );
 }
 
-/** Clean any stray heading hashes or markdown hash markers from a text string */
-function stripHeadingHashes(str: string): string {
-  return str
-    .replace(/^#{1,6}\s*/, "") // leading #
-    .replace(/\s*#{1,6}$/, "") // trailing #
-    .replace(/(?:^|\s)#{1,6}(?=\s|$)/g, "") // standalone #
-    .replace(/(\*\*)#{1,6}\s*/g, "$1") // bold with # inside: **## Title** -> **Title**
-    .replace(/\s*#{1,6}(\*\*)/g, "$1")
-    .trim();
-}
-
-/** Format inline markdown (bold, inline code) while removing raw hash symbols */
+/** Format inline markdown without rewriting code or URL fragments. */
 function renderInline(text: string): React.ReactNode {
-  // Strip raw hash symbols that aren't inside code backticks
-  const cleaned = text.replace(/(?<!`)#{1,6}(?!`)/g, "");
-
   // Split on code backticks and bold markdown
-  const parts = cleaned.split(/(`[^`]+`|\*\*[^*]+\*\*)/g);
+  const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*)/g);
 
   return parts.map((seg, k) => {
     if (seg.startsWith("`") && seg.endsWith("`")) {
@@ -114,7 +102,7 @@ function renderInline(text: string): React.ReactNode {
     }
 
     if (seg.startsWith("**") && seg.endsWith("**")) {
-      const boldContent = stripHeadingHashes(seg.slice(2, -2));
+      const boldContent = seg.slice(2, -2);
       return (
         <strong key={k} className="font-bold text-foreground">
           {boldContent}
@@ -223,9 +211,9 @@ function renderContent(text: string): React.ReactNode {
       }
 
       // Markdown Headings
-      const isHeading = /^#{1,6}\s+/.test(trimmed) || /^#{1,6}[^*#]/.test(trimmed);
+      const isHeading = /^#{1,6}\s+/.test(trimmed);
       if (isHeading) {
-        const cleanHeading = stripHeadingHashes(trimmed);
+        const cleanHeading = trimmed.replace(/^#{1,6}\s+/, "").replace(/\s+#+\s*$/, "");
         output.push(
           <div
             key={`h-${lineIdx}`}
@@ -240,7 +228,7 @@ function renderContent(text: string): React.ReactNode {
 
       // Blockquote
       if (/^>\s*/.test(trimmed)) {
-        const quoteContent = stripHeadingHashes(trimmed.replace(/^>\s*/, ""));
+        const quoteContent = trimmed.replace(/^>\s*/, "");
         output.push(
           <div
             key={`q-${lineIdx}`}
@@ -255,7 +243,7 @@ function renderContent(text: string): React.ReactNode {
       // Bullet points
       const isBullet = /^[-*•]\s+/.test(trimmed);
       if (isBullet) {
-        const content = stripHeadingHashes(trimmed.replace(/^[-*•]\s+/, ""));
+        const content = trimmed.replace(/^[-*•]\s+/, "");
         output.push(
           <div key={`b-${lineIdx}`} className="flex items-start gap-2 py-0.5">
             <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent" />
@@ -271,7 +259,7 @@ function renderContent(text: string): React.ReactNode {
       const isNumbered = /^\d+\.\s+/.test(trimmed);
       if (isNumbered) {
         const num = trimmed.match(/^(\d+)\./)?.[1] ?? "1";
-        const content = stripHeadingHashes(trimmed.replace(/^\d+\.\s+/, ""));
+        const content = trimmed.replace(/^\d+\.\s+/, "");
         output.push(
           <div key={`n-${lineIdx}`} className="flex items-start gap-2 py-0.5">
             <span className="mt-0.5 shrink-0 font-mono text-[10px] font-bold text-accent">
@@ -286,10 +274,9 @@ function renderContent(text: string): React.ReactNode {
       }
 
       // Standard paragraph
-      const cleanedLine = stripHeadingHashes(trimmed);
       output.push(
         <p key={`p-${lineIdx}`} className="leading-relaxed text-foreground/90">
-          {renderInline(cleanedLine)}
+          {renderInline(trimmed)}
         </p>,
       );
     }
@@ -307,9 +294,13 @@ export function AiMessage({ message }: AiMessageProps) {
   const isUser = message.role === "user";
 
   const handleCopy = () => {
-    void navigator.clipboard.writeText(message.content);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    void navigator.clipboard
+      .writeText(message.content)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch(() => setCopied(false));
   };
 
   // User Message: Sharp Brutalist Card
@@ -320,7 +311,7 @@ export function AiMessage({ message }: AiMessageProps) {
           <User size={11} className="text-accent" />
           <span>You</span>
         </div>
-        <div className="max-w-[92%] sm:max-w-[85%] rounded-sm border border-border bg-secondary/60 p-3.5 text-xs text-foreground leading-relaxed shadow-xs">
+        <div className="max-w-[92%] whitespace-pre-wrap break-words rounded-xl bg-secondary px-4 py-3 text-sm leading-7 text-foreground sm:max-w-[85%]">
           {message.content}
         </div>
       </div>
@@ -360,25 +351,27 @@ export function AiMessage({ message }: AiMessageProps) {
       </div>
 
       {/* Response Box */}
-      <div
-        className={cn(
-          "rounded-sm border border-border bg-card p-4 text-xs leading-relaxed text-foreground shadow-xs space-y-2",
-          message.streaming && "border-accent/40 bg-accent/5",
-        )}
-      >
+      <div className={cn("min-w-0 space-y-3 break-words py-3 text-sm leading-7 text-foreground")}>
         {message.content ? (
           renderContent(message.content)
         ) : (
           /* Streaming initialization indicator */
-          <div className="flex items-center gap-2 py-1 font-mono text-[11px] text-accent">
-            <span className="inline-block h-2 w-2 rounded-full bg-accent animate-ping" />
-            <span role="status">Preparing response…</span>
+          <div className="flex items-center gap-2 py-1 text-xs text-muted-foreground">
+            <span role="status">
+              {message.streaming ? "Preparing response…" : "No complete response was saved."}
+            </span>
           </div>
         )}
 
         {message.streaming && message.content && (
           <span className="inline-block h-3.5 w-1.5 bg-accent animate-pulse align-middle ml-1" />
         )}
+        {!message.streaming &&
+          (message.status === "interrupted" || message.status === "failed") && (
+            <p className="text-xs text-muted-foreground">
+              Response interrupted. You can ask again to retry.
+            </p>
+          )}
       </div>
     </div>
   );

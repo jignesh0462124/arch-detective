@@ -2,12 +2,7 @@ import { RequireAuth } from "@/components/auth/RequireAuth";
 import { useState } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { ArchonWordmark } from "@/components/ui/ArchonWordmark";
-import {
-  Buildings,
-  ArrowRight,
-  CircleNotch,
-  ShieldWarning,
-} from "@phosphor-icons/react";
+import { Buildings, ArrowRight, CircleNotch, ShieldWarning } from "@phosphor-icons/react";
 import { useCreateWorkspace } from "@/hooks/useWorkspace";
 
 export const Route = createFileRoute("/workspace/new")({
@@ -16,12 +11,15 @@ export const Route = createFileRoute("/workspace/new")({
       { title: "Create Workspace · Archon" },
       {
         name: "description",
-        content:
-          "Create your Archon workspace to run security scans and manage review findings.",
+        content: "Create your Archon workspace to run security scans and manage review findings.",
       },
     ],
   }),
-  component: () => <RequireAuth><NewWorkspacePage /></RequireAuth>,
+  component: () => (
+    <RequireAuth>
+      <NewWorkspacePage />
+    </RequireAuth>
+  ),
 });
 
 /** Slug-safe character filter — allows lowercase letters, digits, and hyphens. */
@@ -31,7 +29,8 @@ function toSlug(value: string): string {
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "")
     .replace(/-{2,}/g, "-")
-    .slice(0, 48).replace(/^-+|-+$/g, "");
+    .slice(0, 48)
+    .replace(/^-+|-+$/g, "");
 }
 
 function NewWorkspacePage() {
@@ -76,8 +75,7 @@ function NewWorkspacePage() {
         to: "/dashboard",
       });
     } catch (err: unknown) {
-      const msg =
-        err instanceof Error ? err.message : "Failed to create workspace in database.";
+      const msg = err instanceof Error ? err.message : "Failed to create workspace in database.";
       setFieldError(msg);
     }
   }
@@ -86,16 +84,16 @@ function NewWorkspacePage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 text-foreground">
       {/* Brand mark */}
       <div className="mb-8 flex flex-col items-center gap-3">
-        <Link to="/dashboard" aria-label="Back to dashboard"><ArchonWordmark size="sm" /></Link>
+        <Link to="/dashboard" aria-label="Back to dashboard">
+          <ArchonWordmark size="sm" />
+        </Link>
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
           <ShieldWarning size={26} weight="duotone" className="text-primary" />
         </div>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Create your workspace
-        </h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Create your workspace</h1>
         <p className="max-w-xs text-center text-sm text-muted-foreground">
-          A workspace groups scans, findings, and reports for your team.
-          Keep your project scans, findings and team in one workspace.
+          A workspace groups scans, findings, and reports for your team. Keep your project scans,
+          findings and team in one workspace.
         </p>
       </div>
 
@@ -106,10 +104,7 @@ function NewWorkspacePage() {
       >
         {/* Name field */}
         <div className="space-y-1.5">
-          <label
-            htmlFor="ws-name"
-            className="block text-sm font-medium"
-          >
+          <label htmlFor="ws-name" className="block text-sm font-medium">
             Workspace name
           </label>
           <input
@@ -126,10 +121,7 @@ function NewWorkspacePage() {
 
         {/* Slug field */}
         <div className="space-y-1.5">
-          <label
-            htmlFor="ws-slug"
-            className="block text-sm font-medium"
-          >
+          <label htmlFor="ws-slug" className="block text-sm font-medium">
             Project URL slug
           </label>
           <div className="flex items-center gap-0 rounded-lg border border-border bg-background focus-within:ring-2 focus-within:ring-primary/30 focus-within:border-primary transition-shadow overflow-hidden">
@@ -181,7 +173,9 @@ function NewWorkspacePage() {
           )}
         </button>
       </form>
-      <Link to="/dashboard" className="mt-4 text-sm text-muted-foreground hover:text-foreground">Cancel and return to dashboard</Link>
+      <Link to="/dashboard" className="mt-4 text-sm text-muted-foreground hover:text-foreground">
+        Cancel and return to dashboard
+      </Link>
 
       {/* Info footer */}
       <p className="mt-5 text-center text-xs text-muted-foreground">

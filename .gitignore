@@ -51,3 +51,11 @@ celerybeat.pid
 .vercel
 
 backend-deploy/
+
+# Reproducible test output; curated documentation screenshots remain tracked.
+.pytest_cache/
+.playwright-cli/page-*.yml
+output/pytest-*/
+output/reports-test-temp/
+output/cleanup-*/
+output/cleanup-*.json

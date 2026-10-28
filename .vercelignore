@@ -12,3 +12,8 @@ docs
 .github
 work
 outputs
+output
+.playwright-cli
+graphify-out
+.code-review-graph
+scratch

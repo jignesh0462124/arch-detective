@@ -1,0 +1,26 @@
+# Local API / progressive-workbench profile. See INSTALLATION.md for boundaries.
+# Full Celery scanner, research and embedding dependencies remain in requirements.txt.
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+pydantic-settings==2.7.1
+sqlalchemy[asyncio]==2.0.36
+asyncpg==0.30.0
+psycopg2-binary==2.9.10
+celery==5.4.0
+redis==5.2.1
+orjson==3.10.13
+email-validator==2.2.0
+python-multipart==0.0.32
+PyJWT[crypto]==2.13.0
+httpx==0.28.1
+groq==0.13.0
+cryptography==46.0.5
+tree-sitter-language-pack==0.13.0
+qdrant-client==1.11.3
+PyYAML==6.0.2
+Jinja2==3.1.6
+weasyprint==62.3
+python-dotenv==1.0.1
+slowapi==0.1.9
+

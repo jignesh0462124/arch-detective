@@ -409,7 +409,46 @@ try {
     (error) => error.code === "23503",
   );
   checks++;
+  const conversationId = "abababab-abab-4bab-8bab-abababababab";
+  const expiredChat = "abababab-abab-4bab-8bab-abababababac";
+  await q(
+    `INSERT INTO advisor_conversations(id, owner_user_id, workspace_id, scan_id, finding_id, snapshot_id, title) VALUES ('${conversationId}','${ids.owner}','${ids.workspace}','${ids.scan}','${ids.finding}','${snapshotId}','Private source question')`,
+  );
+  await q(
+    `INSERT INTO advisor_conversations(id, owner_user_id, workspace_id, title, created_at, expires_at) VALUES ('${expiredChat}','${ids.owner}','${ids.workspace}','Expired',now()-interval '40 days',now()-interval '10 days')`,
+  );
+  await q(
+    `INSERT INTO advisor_messages(conversation_id,submission_id,role,content,status) VALUES ('${conversationId}',gen_random_uuid(),'user','Private question','completed')`,
+  );
+  await as("authenticated", ids.owner);
+  await count("SELECT * FROM advisor_conversations", 1);
+  await count("SELECT * FROM advisor_messages", 1);
+  for (const member of ["admin", "analyst", "viewer", "outsider"]) {
+    await as("authenticated", ids[member]);
+    await count("SELECT * FROM advisor_conversations", 0);
+    await count("SELECT * FROM advisor_messages", 0);
+    await denied(`UPDATE advisor_conversations SET title='Changed' WHERE id='${conversationId}'`);
+    await denied(`DELETE FROM advisor_messages WHERE conversation_id='${conversationId}'`);
+  }
+  await as("authenticated", ids.owner);
+  await denied(
+    `INSERT INTO advisor_conversations(owner_user_id,workspace_id,title) VALUES ('${ids.owner}','${ids.workspace}','Bypass')`,
+  );
+  await denied(
+    `UPDATE advisor_conversations SET owner_user_id='${ids.admin}' WHERE id='${conversationId}'`,
+  );
+  await as("anon");
+  await denied("SELECT * FROM advisor_conversations");
+  await denied("SELECT * FROM advisor_messages");
+  await db.exec("RESET ROLE");
+  await q(`UPDATE source_snapshots SET state='expired' WHERE id='${snapshotId}'`);
+  await as("authenticated", ids.owner);
+  await count(`SELECT * FROM advisor_conversations WHERE id='${conversationId}'`, 0);
+  await count("SELECT * FROM advisor_messages", 0);
+  await db.exec("RESET ROLE");
   await q(`DELETE FROM source_snapshots WHERE id='${snapshotId}'`);
+  await count(`SELECT * FROM advisor_conversations WHERE id='${conversationId}'`, 0);
+  await count("SELECT * FROM advisor_messages", 0);
   await count("SELECT * FROM github_private_records", 0);
   await count(`SELECT * FROM fix_proposals WHERE id='${proposalId}' AND snapshot_id IS NULL`, 1);
   await as("authenticated", ids.owner);

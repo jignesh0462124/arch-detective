@@ -1,6 +1,10 @@
+// Playwright CLI requires a function expression without a trailing semicolon.
+// prettier-ignore
 async (page) => {
+  page.setDefaultTimeout(15000);
+  page.setDefaultNavigationTimeout(20000);
   const passed = [];
-  await page.goto("http://127.0.0.1:5177/");
+  await page.goto("http://127.0.0.1:5177/tests/reports-preview/index.html");
   await page.getByRole("heading", { name: "Completed audits", exact: true }).waitFor();
   await page.getByRole("checkbox").first().waitFor();
   await page.getByRole("button", { name: "Next", exact: true }).click();
@@ -17,7 +21,7 @@ async (page) => {
   await page.getByText("ZIP download started: 8 reports included.", { exact: true }).waitFor();
   passed.push("ZIP of eight PDFs");
   for (const theme of ["light", "dark"]) {
-    await page.goto("http://127.0.0.1:5177/?theme=" + theme);
+    await page.goto("http://127.0.0.1:5177/tests/reports-preview/index.html?theme=" + theme);
     await page.getByRole("heading", { name: "Completed audits", exact: true }).waitFor();
     await page.waitForFunction(
       (expected) => document.documentElement.dataset.theme === expected,
@@ -32,7 +36,7 @@ async (page) => {
     if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth))
       throw new Error("Mobile overflow: " + theme);
     passed.push(theme + " library desktop/mobile");
-    await page.goto("http://127.0.0.1:5177/?detail=1&theme=" + theme);
+    await page.goto("http://127.0.0.1:5177/tests/reports-preview/index.html?detail=1&theme=" + theme);
     await page.getByRole("heading", { name: "Executive summary", exact: true }).waitFor();
     await page.waitForFunction(
       (expected) => document.documentElement.dataset.theme === expected,
@@ -69,9 +73,9 @@ async (page) => {
     ["error", "Report preparation is busy or unavailable. Wait a moment and retry."],
     ["denied", "This report is unavailable, or you no longer have access."],
   ]) {
-    await page.goto("http://127.0.0.1:5177/?scenario=" + scenario);
+    await page.goto("http://127.0.0.1:5177/tests/reports-preview/index.html?scenario=" + scenario);
     await page.getByRole("heading", { name: title, exact: true }).waitFor();
     passed.push(scenario + " explicit state");
   }
   return { passed };
-};
+}

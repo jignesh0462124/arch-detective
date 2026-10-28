@@ -1,5 +1,12 @@
 /** Only controlled interface messages may be displayed as Advisor errors. */
 const messages = new Set([
+  "Security Advisor is unavailable. Retry its availability check.",
+  "The response could not be saved. Copy any visible suggestion before retrying.",
+  "This conversation expired, was deleted, or is no longer accessible.",
+  "This conversation belongs to another workspace.",
+  "Older messages could not load. Please retry.",
+  "Source preview expired or unavailable. Rescan for a code solution.",
+  "Source location is unverified. Review the evidence before requesting code.",
   "Sign in to use the Security Advisor.",
   "You are signed in, but the server could not verify this request. Retry shortly.",
   "Your session has ended. Sign in again.",

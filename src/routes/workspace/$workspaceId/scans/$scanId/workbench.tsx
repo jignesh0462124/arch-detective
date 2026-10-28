@@ -4,7 +4,11 @@ import { AuditWorkbench } from "@/components/audit-workbench/AuditWorkbench";
 
 export const Route = createFileRoute("/workspace/$workspaceId/scans/$scanId/workbench")({
   head: () => ({ meta: [{ title: "Audit Workbench · Archon" }] }),
-  component: () => <RequireAuth><WorkbenchPage /></RequireAuth>,
+  component: () => (
+    <RequireAuth>
+      <WorkbenchPage />
+    </RequireAuth>
+  ),
 });
 
 function WorkbenchPage() {

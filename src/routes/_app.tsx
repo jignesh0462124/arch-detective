@@ -16,11 +16,12 @@ function WorkspaceGate() {
   const { isAuthenticated } = useAuth();
   const { data, isSuccess, isError, refetch } = useWorkspaces();
   const location = useLocation();
+  const personalSettings = location.pathname === "/settings";
   useEffect(() => {
-    if (isAuthenticated && isSuccess && data.length === 0)
+    if (!personalSettings && isAuthenticated && isSuccess && data.length === 0)
       void navigate({ to: "/workspace/new", replace: true });
-  }, [data, isSuccess, isAuthenticated, navigate]);
-  if (isError)
+  }, [data, isSuccess, isAuthenticated, navigate, personalSettings]);
+  if (isError && !personalSettings)
     return (
       <div className="p-8" role="alert">
         Workspaces couldn’t load. Your data hasn’t been removed.{" "}

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import os
+import re
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -11,6 +13,7 @@ from app.schemas.finding import FindingCreate
 from app.scanners.base import (
     MAX_FINDINGS_PER_SCANNER,
     ScannerError,
+    ScannerCoverageError,
     run_scanner_command,
     validate_repository_path,
 )
@@ -34,8 +37,8 @@ def _find_manifests(root: Path, names: set[str]) -> list[Path]:
             path = Path(current_root) / filename
             if not path.is_symlink():
                 manifests.append(path)
-            if len(manifests) >= MAX_MANIFESTS_PER_SCAN:
-                return sorted(manifests)
+            if len(manifests) > MAX_MANIFESTS_PER_SCAN:
+                raise ScannerCoverageError("Dependency coverage incomplete: too many manifests (maximum 20).")
     return sorted(manifests)
 
 
@@ -73,6 +76,8 @@ def parse_pip_audit_output(
     for dependency in dependencies:
         if not isinstance(dependency, dict):
             continue
+        if dependency.get("skip_reason"):
+            raise ScannerCoverageError("Dependency coverage incomplete: a pinned package could not be audited.")
         name = str(dependency.get("name") or "unknown")
         version = str(dependency.get("version") or "unknown")
         vulnerabilities = dependency.get("vulns")
@@ -108,28 +113,53 @@ def parse_pip_audit_output(
     return findings
 
 
+def _safe_requirement_pins(manifest: Path) -> list[str]:
+    # Never give uploaded pip syntax (URLs/options/includes/build metadata) to a resolver.
+    with manifest.open("rb") as stream:
+        raw = stream.read(512 * 1024 + 1)
+    if len(raw) > 512 * 1024:
+        raise ScannerCoverageError("Dependency coverage incomplete: requirements exceed the size limit.")
+    try:
+        text = raw.decode("utf-8-sig")
+    except UnicodeError as exc:
+        raise ScannerCoverageError("Dependency coverage incomplete: requirements must be UTF-8.") from exc
+    pins = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        line = re.split(r"\s+#", line, maxsplit=1)[0].strip()
+        match = re.fullmatch(r"([A-Za-z0-9][A-Za-z0-9._-]{0,127})\s*==\s*([0-9][A-Za-z0-9.!+_-]{0,63})", line)
+        if not match:
+            raise ScannerCoverageError(
+                "Dependency coverage incomplete: only exact name==version pins are supported. "
+                "Export a fully pinned dependency list; ranges, extras, markers, URLs and pip options are not resolved on the server."
+            )
+        pins.append(f"{match[1]}=={match[2]}")
+    if len(pins) > 5000:
+        raise ScannerCoverageError("Dependency coverage incomplete: too many pinned packages.")
+    return pins
+
+
 def run_pip_audit(repo_path: str) -> list[FindingCreate]:
     root = validate_repository_path(repo_path)
     manifests = _find_manifests(root, {"requirements.txt", "requirements-dev.txt"})
     findings: list[FindingCreate] = []
     for manifest in manifests:
-        result = run_scanner_command(
-            [
-                "pip-audit",
-                "-r",
-                str(manifest),
-                "--format",
-                "json",
-                "--progress-spinner",
-                "off",
-            ],
-            cwd=manifest.parent,
-            accepted_returncodes=(0, 1),
-            network_access=True,
-        )
+        pins = _safe_requirement_pins(manifest)
+        if not pins:
+            continue
+        with tempfile.TemporaryDirectory(prefix="threatlens-pins-") as temporary:
+            sanitized = Path(temporary) / "requirements.txt"
+            sanitized.write_text("\n".join(pins) + "\n", encoding="utf-8")
+            result = run_scanner_command(
+                ["pip-audit", "-r", str(sanitized), "--no-deps", "--disable-pip",
+                 "--format", "json", "--progress-spinner", "off"],
+                cwd=Path(temporary), accepted_returncodes=(0, 1), network_access=True,
+            )
         findings.extend(parse_pip_audit_output(result.stdout, root, manifest))
         if len(findings) >= MAX_FINDINGS_PER_SCANNER:
-            break
+            raise ScannerCoverageError("Dependency coverage incomplete: finding limit reached.")
     return findings[:MAX_FINDINGS_PER_SCANNER]
 
 

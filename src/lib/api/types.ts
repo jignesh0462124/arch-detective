@@ -1,11 +1,5 @@
 export type ScanStatus =
-  | "pending"
-  | "uploading"
-  | "queued"
-  | "running"
-  | "completed"
-  | "failed"
-  | "cancelled";
+  "pending" | "uploading" | "queued" | "running" | "completed" | "failed" | "cancelled";
 export type ScanType = "codebase" | "architecture" | "logs" | "full";
 export type SourceType = "upload" | "git" | "architecture" | "logs" | "full";
 export type Severity = "critical" | "high" | "medium" | "low";
@@ -121,7 +115,8 @@ export interface Finding {
 }
 
 export interface FindingDetail extends Finding {
-  violations: ComplianceViolation[];
+  // Legacy mappings can lack database IDs/evidence; do not fabricate those fields.
+  violations: (NonNullable<Finding["violations"]>[number] & Partial<ComplianceViolation>)[];
   remediation_steps: string[];
   remediation_priority: RemediationPriority | null;
 }

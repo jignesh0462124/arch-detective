@@ -2,7 +2,9 @@
 // Run via playwright-cli run-code --filename tests/audit-deletion-browser.cjs.
 // prettier-ignore
 async (page) => {
-  const base="http://127.0.0.1:5176/tests/workbench-preview/index.html?view=upload";
+  page.setDefaultTimeout(15000);
+  page.setDefaultNavigationTimeout(20000);
+  const base="http://127.0.0.1:5193/tests/workbench-preview/index.html?view=upload";
   const open=async(query="")=>{
     await page.goto(base+query,{waitUntil:"domcontentloaded"});
     await page.getByRole("button",{name:"History",exact:true}).click();

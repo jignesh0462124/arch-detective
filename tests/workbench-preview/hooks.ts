@@ -42,10 +42,22 @@ export function useAuth() {
   };
 }
 export function useActiveWorkspace() {
-  return { active: workspace, workspaces: [workspace], isLoading: false, setActive: () => {} };
+  return {
+    active: state === "no-workspace" ? undefined : workspace,
+    workspaces: state === "no-workspace" ? [] : [workspace],
+    isLoading: false,
+    setActive: () => {},
+  };
 }
 export function useWorkspaces() {
-  return { data: [workspace], isLoading: false };
+  return {
+    data: state === "no-workspace" ? [] : [workspace],
+    isLoading: false,
+    isPending: false,
+    isError: state === "workspace-error",
+    isSuccess: state !== "workspace-error",
+    refetch: async () => {},
+  };
 }
 export function useCreateWorkspace() {
   return {

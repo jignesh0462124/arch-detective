@@ -1,5 +1,7 @@
 # Backend ↔ Frontend Connection Guide
 
+> Historical implementation design, not a current executable-file inventory. The unused `useScanProgress`, `useFrameworks`, `useFindings`, `DataTable` and `PipelineStep` modules were removed after reference and build checks. Current saved-audit UI uses `src/components/audit-workbench`, `src/lib/api/workbench.ts` and the page-specific queries in `src/routes/_app`. Examples below are retained as design history; see `README.md` and `.github/maintenance/CLEANUP_REPORT.md` for current setup and verification.
+
 > **Purpose:** Single-source reference for connecting every ThreatLens backend service to the existing TanStack Start frontend.  
 > **Why this file exists:** The 8 Part files describe *what* to build on each side. This file describes *how* to wire them together — the exact data contracts, file changes, component modifications, and testing steps needed to replace mock data with live API calls.
 

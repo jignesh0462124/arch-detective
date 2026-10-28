@@ -7,7 +7,7 @@ async function checkFindings(page) {
     if (!condition) throw new Error(message);
     checks.push(message);
   };
-  await page.goto("http://127.0.0.1:5176/");
+  await page.goto("http://127.0.0.1:5176/tests/findings-preview/index.html");
   const main = page.getByRole("main");
   await main.getByRole("heading", { name: "105 matching findings" }).waitFor();
   if (await main.getByRole("button", { name: "Switch to light mode", exact: true }).count()) {
@@ -104,14 +104,17 @@ async function checkFindings(page) {
   for (const [state, expected] of [
     ["no-scans", "No completed scans available"],
     ["empty", "No findings recorded for this scan"],
-    ["error", "Findings could not be loaded or saved. Check your connection and try again."],
+    [
+      "error",
+      "The audit service is temporarily unavailable. Your session and saved findings are unchanged. Retry shortly.",
+    ],
     ["denied", "This scan or finding is unavailable, or you no longer have access."],
   ]) {
-    await page.goto(`http://127.0.0.1:5176/?state=${state}`);
+    await page.goto(`http://127.0.0.1:5176/tests/findings-preview/index.html?state=${state}`);
     await page.getByRole("main").getByText(expected, { exact: true }).waitFor();
     checks.push(`Explicit ${state} state`);
   }
-  await page.goto("http://127.0.0.1:5176/?role=viewer");
+  await page.goto("http://127.0.0.1:5176/tests/findings-preview/index.html?role=viewer");
   await page
     .getByRole("main")
     .getByRole("button", { name: /^Untrusted input reaches/ })
@@ -126,7 +129,7 @@ async function checkFindings(page) {
     (await page.getByRole("button", { name: "Resolve", exact: true }).count()) === 0,
     "Viewers cannot see triage actions",
   );
-  await page.goto("http://127.0.0.1:5176/?state=write-error");
+  await page.goto("http://127.0.0.1:5176/tests/findings-preview/index.html?state=write-error");
   await page
     .getByRole("main")
     .getByRole("button", { name: /^Untrusted input reaches/ })

@@ -162,7 +162,12 @@ export const getWorkbenchFindings = (
     `${workbenchPath(id)}/findings?${new URLSearchParams({ severity, q, offset: String(offset) })}`,
     { signal },
   );
-export const getWorkbenchFinding = (id: string, finding: string, signal?: AbortSignal, workspaceId?: string) =>
+export const getWorkbenchFinding = (
+  id: string,
+  finding: string,
+  signal?: AbortSignal,
+  workspaceId?: string,
+) =>
   request<{ finding: WorkbenchFinding; file: SnapshotFile | null }>(
     `${workbenchPath(id)}/findings/${encodeURIComponent(finding)}${workspaceId ? `?workspace_id=${encodeURIComponent(workspaceId)}` : ""}`,
     { signal },

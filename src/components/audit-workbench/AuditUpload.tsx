@@ -1,4 +1,4 @@
-import { authScope, isCurrentScope, accountStorage } from "@/lib/authState";
+import { authScope, isCurrentScope } from "@/lib/authState";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
@@ -23,6 +23,10 @@ import { validateAuditFile } from "@/lib/auditView";
 import { ScanAnimation } from "./ScanAnimation";
 import { prefetchWorkbench } from "./preload";
 import { AuditHistoryButton } from "./AuditHistory";
+import { readAuditResume, rememberAudit, forgetAudit } from "@/lib/auditResume";
+import { useAuth } from "@/hooks/useAuth";
+import { ApiError } from "@/lib/api/client";
+import { useUnsavedSettings } from "@/hooks/useUnsavedSettings";
 const GitHubRepositories = lazy(() =>
   import("@/components/github/GitHubRepositories").then((module) => ({
     default: module.GitHubRepositories,
@@ -32,20 +36,6 @@ import { AUDIT_FRAMEWORKS, auditDefaults } from "@/lib/workspaceSettings";
 import type { WorkspaceSettings } from "@/lib/api/workspaces";
 
 const frameworks = AUDIT_FRAMEWORKS;
-const jobKey = (workspaceId: string) => `archon-workbench-job:${workspaceId}`;
-function readJob(workspaceId: string): { id: string; name: string; created: string } | null {
-  try {
-    const value = JSON.parse(accountStorage.getItem(jobKey(workspaceId)) || "null");
-    return value &&
-      typeof value.id === "string" &&
-      typeof value.name === "string" &&
-      typeof value.created === "string"
-      ? value
-      : null;
-  } catch {
-    return null;
-  }
-}
 
 export function AuditUpload({
   workspaceId,
@@ -62,9 +52,18 @@ export function AuditUpload({
 }) {
   const navigate = useNavigate();
   const client = useQueryClient();
+  const { user } = useAuth();
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const changed = () => setVisible(document.visibilityState === "visible");
+    changed();
+    document.addEventListener("visibilitychange", changed);
+    return () => document.removeEventListener("visibilitychange", changed);
+  }, []);
   const input = useRef<HTMLInputElement>(null);
   const upload = useRef<AbortController | null>(null);
   const mounted = useRef(true);
+  const accepted = useRef(false);
   const [file, setFile] = useState<File | null>(null);
   const [source, setSource] = useState<"zip" | "github">("zip");
   const [name, setName] = useState("");
@@ -76,23 +75,35 @@ export function AuditUpload({
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [job, setJob] = useState(() =>
-    typeof window !== "undefined" ? readJob(workspaceId) : null,
+    typeof window !== "undefined" ? readAuditResume(workspaceId) : null,
+  );
+  const [acceptedHere, setAcceptedHere] = useState(false);
+  const [newAudit, setNewAudit] = useState(false);
+  useUnsavedSettings(
+    () => uploading && !accepted.current,
+    "This upload has not yet been accepted. Leaving stops the upload. Continue?",
   );
   const [elapsed, setElapsed] = useState(0);
   const [idempotencyKey, setIdempotencyKey] = useState(() => crypto.randomUUID());
   const progress = useQuery({
-    queryKey: ["workbench-progress", workspaceId, job?.id],
+    queryKey: ["workbench-progress", user?.id, workspaceId, job?.id],
     queryFn: ({ signal }) => getWorkbenchProgress(job!.id, signal),
     enabled: !!job,
     retry: 1,
     refetchInterval: (query) =>
-      query.state.error
+      !visible || query.state.error
         ? false
         : query.state.data?.status === "running" || !query.state.data
           ? 1500
           : false,
     gcTime: 0,
   });
+  useEffect(() => {
+    if (progress.error instanceof ApiError && [403, 404, 410].includes(progress.error.status)) {
+      forgetAudit(workspaceId);
+      setJob(null);
+    }
+  }, [progress.error, workspaceId]);
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -118,17 +129,13 @@ export function AuditUpload({
   useEffect(() => {
     if (
       !job ||
+      !acceptedHere ||
       !(
         progress.data?.status === "completed" ||
         (capabilities.progressive_workbench && progress.data?.status === "running")
       )
     )
       return;
-    try {
-      if (progress.data?.status === "completed") accountStorage.removeItem(jobKey(workspaceId));
-    } catch {
-      /* Optional navigation metadata. */
-    }
     void client.invalidateQueries({ queryKey: ["scans"] });
     void client.invalidateQueries({ queryKey: ["audit-history"] });
     void client.invalidateQueries({ queryKey: ["findings"] });
@@ -143,6 +150,7 @@ export function AuditUpload({
     client,
     navigate,
     capabilities.progressive_workbench,
+    acceptedHere,
   ]);
   const choose = (chosen: File | undefined) => {
     if (!chosen) return;
@@ -162,6 +170,7 @@ export function AuditUpload({
     const scope = authScope();
     if (!file || !selected.length || !name.trim() || uploading) return;
     setUploading(true);
+    accepted.current = false;
     setError("");
     const controller = new AbortController();
     upload.current = controller;
@@ -176,12 +185,11 @@ export function AuditUpload({
       );
       if (!mounted.current || !isCurrentScope(scope)) return;
       const next = { id: result.scan_id, name: name.trim(), created: new Date().toISOString() };
-      try {
-        accountStorage.setItem(jobKey(workspaceId), JSON.stringify(next));
-      } catch {
-        /* Audit evidence is stored on the server. */
-      }
+      rememberAudit(workspaceId, next);
+      accepted.current = true;
       setJob(next);
+      setAcceptedHere(true);
+      setNewAudit(false);
       void client.invalidateQueries({ queryKey: ["audit-history"] });
       if (capabilities.progressive_workbench && result.status !== "failed") {
         void navigate({
@@ -198,15 +206,13 @@ export function AuditUpload({
   const reset = () => {
     touchedDefaults.current = false;
     setSelected(auditDefaults(settings));
-    setJob(null);
+    setNewAudit(true);
+    accepted.current = false;
+    setAcceptedHere(false);
     setFile(null);
+    setName("");
     setError("");
     setIdempotencyKey(crypto.randomUUID());
-    try {
-      accountStorage.removeItem(jobKey(workspaceId));
-    } catch {
-      /* Optional navigation metadata. */
-    }
   };
   const canStart = ["owner", "admin", "analyst"].includes(role);
   return (
@@ -215,244 +221,295 @@ export function AuditUpload({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-2xl font-semibold tracking-tight">
-              {job || uploading ? "Scan project" : "New audit"}
+              {(job && !newAudit) || uploading ? "Scan project" : "New audit"}
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              {job || uploading
+              {(job && !newAudit) || uploading
                 ? "Follow the analysis, then review findings beside your source."
                 : "Upload your project and review security findings in context."}
             </p>
           </div>
           <AuditHistoryButton workspaceId={workspaceId} role={role} />
         </div>
-        <ol className="grid grid-cols-3 border-b border-border text-[10px] sm:text-xs">
-          {["Upload and configure", "Scan project", "Review in workbench"].map((label, index) => (
-            <li
-              key={label}
-              className={`flex min-h-12 items-center gap-2 border-b-2 px-2 ${index === (job || uploading ? 1 : 0) ? "border-accent font-semibold" : "border-transparent text-muted-foreground"}`}
-            >
-              <span className="flex size-5 shrink-0 items-center justify-center rounded-full border border-border font-mono text-[10px]">
-                {index + 1}
-              </span>
-              {label}
-            </li>
-          ))}
-        </ol>
-        {!job && !uploading && (
-          <div className="flex flex-wrap gap-2" role="group" aria-label="Project source">
-            <BrutalButton
-              size="sm"
-              variant={source === "zip" ? "primary" : "secondary"}
-              aria-pressed={source === "zip"}
-              onClick={() => setSource("zip")}
-            >
-              Upload ZIP
-            </BrutalButton>
-            <BrutalButton
-              size="sm"
-              variant={source === "github" ? "primary" : "secondary"}
-              aria-pressed={source === "github"}
-              onClick={() => setSource("github")}
-            >
-              GitHub repository
-            </BrutalButton>
-          </div>
-        )}
-        {error ? (
-          <p
-            role="alert"
-            className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm"
+        {job && !newAudit && !acceptedHere ? (
+          <section
+            className="rounded-lg border border-border bg-card p-5 sm:p-6"
+            aria-label="Resume audit"
           >
-            {error}
-          </p>
-        ) : null}
-        {job || uploading ? (
-          <>
-            <ScanAnimation
-              progressive={capabilities.progressive_workbench}
-              progress={progress.data?.progress || 0}
-              events={progress.data?.events || []}
-              elapsed={elapsed}
-              name={job?.name || name}
-              paused={progress.isError || progress.data?.status === "failed"}
-            />
-            {progress.isError || progress.data?.status === "failed" ? (
-              <div role="alert" className="rounded-md border border-destructive/30 bg-card p-5">
-                <p className="text-sm font-medium">
-                  {progress.data?.error_message || workbenchError(progress.error)}
-                </p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <BrutalButton
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => void progress.refetch()}
-                  >
-                    Reconnect
-                  </BrutalButton>
-                  <BrutalButton size="sm" onClick={reset}>
-                    Start a new audit
-                  </BrutalButton>
-                </div>
-              </div>
-            ) : null}
-          </>
-        ) : source === "github" ? (
-          <Suspense fallback={<p role="status">Opening repository selection…</p>}>
-            <GitHubRepositories
-              key={workspaceId}
-              workspaceId={workspaceId}
-              role={role}
-              scan
-              defaults={selected}
-            />
-          </Suspense>
-        ) : (
-          <>
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(280px,1fr)]">
-              <section className="rounded-md border border-border bg-card p-5 sm:p-6">
-                <div className="flex items-center gap-2">
-                  <FileZip size={19} />
-                  <h3 className="text-base font-semibold">Project source</h3>
-                </div>
-                <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                  Choose a ZIP containing your source code. Generated files and dependencies are
-                  excluded from previews.
-                </p>
-                <input
-                  ref={input}
-                  type="file"
-                  accept=".zip,application/zip"
-                  className="hidden"
-                  aria-label="Choose project ZIP"
-                  onChange={(e) => choose(e.target.files?.[0])}
-                />
-                <button
-                  type="button"
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    choose(e.dataTransfer.files[0]);
-                  }}
-                  onClick={() => input.current?.click()}
-                  className="mt-5 flex min-h-56 w-full flex-col items-center justify-center rounded-md border border-dashed border-border bg-background/50 p-5 transition-colors hover:border-accent hover:bg-accent/5 focus-visible:outline-2 focus-visible:outline-accent"
+            <p className="text-xs text-muted-foreground">Your previous audit</p>
+            <h3 className="mt-2 break-words text-lg font-semibold">{job.name}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {progress.isPending
+                ? "Checking saved scan…"
+                : progress.isError
+                  ? "Scan status could not be checked."
+                  : `Status: ${progress.data?.status}`}{" "}
+              · {new Date(job.created).toLocaleDateString()}
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              {progress.isError ? (
+                <BrutalButton size="sm" onClick={() => void progress.refetch()}>
+                  Retry
+                </BrutalButton>
+              ) : (
+                <BrutalButton
+                  size="sm"
+                  disabled={progress.isPending}
+                  onClick={() =>
+                    void navigate({
+                      to: "/workspace/$workspaceId/scans/$scanId/workbench",
+                      params: { workspaceId, scanId: job.id },
+                    })
+                  }
                 >
-                  <UploadSimple size={28} className="text-muted-foreground" />
-                  <span className="mt-4 text-sm font-semibold">Drop a project ZIP here</span>
-                  <span className="mt-2 text-xs text-accent">or browse files</span>
-                  <span className="mt-4 text-[11px] text-muted-foreground">
-                    .zip · Up to {Math.floor(capabilities.max_zip_bytes / 1048576)} MB
-                  </span>
-                </button>
-                {file ? (
-                  <div className="mt-4 flex min-w-0 items-center gap-3 rounded border border-border p-3">
-                    <FileZip size={18} />
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-xs font-medium">{file.name}</p>
-                      <p className="mt-1 text-[10px] text-muted-foreground">
-                        {(file.size / 1048576).toFixed(2)} MB · Ready to upload
-                      </p>
-                    </div>
-                    <CheckCircle size={18} className="text-success" />
-                    <button
-                      type="button"
-                      aria-label="Remove selected ZIP"
-                      onClick={() => {
-                        setFile(null);
-                        if (input.current) input.current.value = "";
-                      }}
-                      className="rounded p-2 hover:bg-secondary"
-                    >
-                      <X size={15} />
-                    </button>
-                  </div>
-                ) : null}
-                <div className="mt-6 flex items-center gap-2 border-t border-border pt-4 text-xs text-muted-foreground">
-                  <LockSimple size={15} />
-                  Private to your workspace · Read-only source preview
-                </div>
-              </section>
-              <section className="rounded-md border border-border bg-card p-5 sm:p-6">
-                <h3 className="text-base font-semibold">Audit settings</h3>
-                <label className="mt-5 block text-xs font-medium" htmlFor="workbench-project-name">
-                  Project name
-                </label>
-                <input
-                  id="workbench-project-name"
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                    setIdempotencyKey(crypto.randomUUID());
-                  }}
-                  maxLength={200}
-                  placeholder="Your project"
-                  className="mt-2 h-10 w-full rounded-md border border-border bg-transparent px-3 text-sm"
-                />
-                <fieldset className="mt-5">
-                  <legend className="text-xs font-medium">Compliance frameworks</legend>
-                  <div className="mt-3 space-y-2">
-                    {frameworks.map((framework) => (
-                      <label key={framework.id} className="flex min-h-8 items-center gap-2 text-sm">
-                        <input
-                          type="checkbox"
-                          checked={selected.includes(framework.id)}
-                          onChange={() => {
-                            touchedDefaults.current = true;
-                            setSelected((previous) =>
-                              previous.includes(framework.id)
-                                ? previous.filter((v) => v !== framework.id)
-                                : [...previous, framework.id],
-                            );
-                            setIdempotencyKey(crypto.randomUUID());
-                          }}
-                          className="size-4 accent-[#ff5600]"
-                        />
-                        {framework.label}
-                      </label>
-                    ))}
-                  </div>
-                  <p className="mt-3 text-[11px] leading-5 text-muted-foreground">
-                    Findings include suggested control mappings for review.
-                  </p>
-                </fieldset>
-                <section className="mt-5 border-t border-border pt-4">
-                  <h4 className="text-xs font-medium">After the scan</h4>
-                  <p className="mt-3 flex items-center gap-2 text-sm">
-                    <FolderOpen size={17} className="text-accent" />
-                    Open Audit Workbench
-                  </p>
-                  <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
-                    Browse files, inspect findings and understand remediation. Source previews
-                    remain available for {Math.round(capabilities.retention_hours / 24)} days.
-                  </p>
-                </section>
-              </section>
-            </div>
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-md border border-border bg-card p-4">
-              <div>
-                <p className="text-xs font-medium">
-                  {file ? "1 project selected" : "Choose a project to begin"}
-                </p>
-                <p className="mt-1 text-[11px] text-muted-foreground">
-                  Files are validated before analysis.
-                </p>
-              </div>
-              <BrutalButton
-                onClick={() => void start()}
-                disabled={!canStart || !file || !name.trim() || !selected.length || uploading}
-              >
-                {uploading ? (
-                  <CircleNotch className="animate-spin" size={16} />
-                ) : (
-                  <UploadSimple size={16} />
-                )}
-                Start audit
+                  {progress.data?.status === "running" ? "Continue scan" : "Open workbench"}
+                </BrutalButton>
+              )}
+              <BrutalButton size="sm" variant="secondary" onClick={reset}>
+                New audit
               </BrutalButton>
             </div>
-            {!canStart ? (
-              <p className="text-xs text-muted-foreground">
-                Your viewer role can review completed audits. Ask an analyst to start a scan.
+          </section>
+        ) : (
+          <>
+            <ol className="grid grid-cols-3 border-b border-border text-[10px] sm:text-xs">
+              {["Upload and configure", "Scan project", "Review in workbench"].map(
+                (label, index) => (
+                  <li
+                    key={label}
+                    className={`flex min-h-12 items-center gap-2 border-b-2 px-2 ${index === (job || uploading ? 1 : 0) ? "border-accent font-semibold" : "border-transparent text-muted-foreground"}`}
+                  >
+                    <span className="flex size-5 shrink-0 items-center justify-center rounded-full border border-border font-mono text-[10px]">
+                      {index + 1}
+                    </span>
+                    {label}
+                  </li>
+                ),
+              )}
+            </ol>
+            {(!job || newAudit) && !uploading && (
+              <div className="flex flex-wrap gap-2" role="group" aria-label="Project source">
+                <BrutalButton
+                  size="sm"
+                  variant={source === "zip" ? "primary" : "secondary"}
+                  aria-pressed={source === "zip"}
+                  onClick={() => setSource("zip")}
+                >
+                  Upload ZIP
+                </BrutalButton>
+                <BrutalButton
+                  size="sm"
+                  variant={source === "github" ? "primary" : "secondary"}
+                  aria-pressed={source === "github"}
+                  onClick={() => setSource("github")}
+                >
+                  GitHub repository
+                </BrutalButton>
+              </div>
+            )}
+            {error ? (
+              <p
+                role="alert"
+                className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm"
+              >
+                {error}
               </p>
             ) : null}
+            {(job && !newAudit) || uploading ? (
+              <>
+                <ScanAnimation
+                  progressive={capabilities.progressive_workbench}
+                  progress={progress.data?.progress || 0}
+                  events={progress.data?.events || []}
+                  elapsed={elapsed}
+                  name={job?.name || name}
+                  paused={progress.isError || progress.data?.status === "failed"}
+                />
+                {progress.isError || progress.data?.status === "failed" ? (
+                  <div role="alert" className="rounded-md border border-destructive/30 bg-card p-5">
+                    <p className="text-sm font-medium">
+                      {progress.data?.error_message || workbenchError(progress.error)}
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <BrutalButton
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => void progress.refetch()}
+                      >
+                        Reconnect
+                      </BrutalButton>
+                      <BrutalButton size="sm" onClick={reset}>
+                        Start a new audit
+                      </BrutalButton>
+                    </div>
+                  </div>
+                ) : null}
+              </>
+            ) : source === "github" ? (
+              <Suspense fallback={<p role="status">Opening repository selection…</p>}>
+                <GitHubRepositories
+                  key={workspaceId}
+                  workspaceId={workspaceId}
+                  role={role}
+                  scan
+                  defaults={selected}
+                />
+              </Suspense>
+            ) : (
+              <>
+                <div className="grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(280px,1fr)]">
+                  <section className="rounded-md border border-border bg-card p-5 sm:p-6">
+                    <div className="flex items-center gap-2">
+                      <FileZip size={19} />
+                      <h3 className="text-base font-semibold">Project source</h3>
+                    </div>
+                    <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                      Choose a ZIP containing your source code. Generated files and dependencies are
+                      excluded from previews.
+                    </p>
+                    <input
+                      ref={input}
+                      type="file"
+                      accept=".zip,application/zip"
+                      className="hidden"
+                      aria-label="Choose project ZIP"
+                      onChange={(e) => choose(e.target.files?.[0])}
+                    />
+                    <button
+                      type="button"
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        choose(e.dataTransfer.files[0]);
+                      }}
+                      onClick={() => input.current?.click()}
+                      className="mt-5 flex min-h-56 w-full flex-col items-center justify-center rounded-md border border-dashed border-border bg-background/50 p-5 transition-colors hover:border-accent hover:bg-accent/5 focus-visible:outline-2 focus-visible:outline-accent"
+                    >
+                      <UploadSimple size={28} className="text-muted-foreground" />
+                      <span className="mt-4 text-sm font-semibold">Drop a project ZIP here</span>
+                      <span className="mt-2 text-xs text-accent">or browse files</span>
+                      <span className="mt-4 text-[11px] text-muted-foreground">
+                        .zip · Up to {Math.floor(capabilities.max_zip_bytes / 1048576)} MB
+                      </span>
+                    </button>
+                    {file ? (
+                      <div className="mt-4 flex min-w-0 items-center gap-3 rounded border border-border p-3">
+                        <FileZip size={18} />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-xs font-medium">{file.name}</p>
+                          <p className="mt-1 text-[10px] text-muted-foreground">
+                            {(file.size / 1048576).toFixed(2)} MB · Ready to upload
+                          </p>
+                        </div>
+                        <CheckCircle size={18} className="text-success" />
+                        <button
+                          type="button"
+                          aria-label="Remove selected ZIP"
+                          onClick={() => {
+                            setFile(null);
+                            if (input.current) input.current.value = "";
+                          }}
+                          className="rounded p-2 hover:bg-secondary"
+                        >
+                          <X size={15} />
+                        </button>
+                      </div>
+                    ) : null}
+                    <div className="mt-6 flex items-center gap-2 border-t border-border pt-4 text-xs text-muted-foreground">
+                      <LockSimple size={15} />
+                      Private to your workspace · Read-only source preview
+                    </div>
+                  </section>
+                  <section className="rounded-md border border-border bg-card p-5 sm:p-6">
+                    <h3 className="text-base font-semibold">Audit settings</h3>
+                    <label
+                      className="mt-5 block text-xs font-medium"
+                      htmlFor="workbench-project-name"
+                    >
+                      Project name
+                    </label>
+                    <input
+                      id="workbench-project-name"
+                      value={name}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                        setIdempotencyKey(crypto.randomUUID());
+                      }}
+                      maxLength={200}
+                      placeholder="Your project"
+                      className="mt-2 h-10 w-full rounded-md border border-border bg-transparent px-3 text-sm"
+                    />
+                    <fieldset className="mt-5">
+                      <legend className="text-xs font-medium">Compliance frameworks</legend>
+                      <div className="mt-3 space-y-2">
+                        {frameworks.map((framework) => (
+                          <label
+                            key={framework.id}
+                            className="flex min-h-8 items-center gap-2 text-sm"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selected.includes(framework.id)}
+                              onChange={() => {
+                                touchedDefaults.current = true;
+                                setSelected((previous) =>
+                                  previous.includes(framework.id)
+                                    ? previous.filter((v) => v !== framework.id)
+                                    : [...previous, framework.id],
+                                );
+                                setIdempotencyKey(crypto.randomUUID());
+                              }}
+                              className="size-4 accent-[#ff5600]"
+                            />
+                            {framework.label}
+                          </label>
+                        ))}
+                      </div>
+                      <p className="mt-3 text-[11px] leading-5 text-muted-foreground">
+                        Findings include suggested control mappings for review.
+                      </p>
+                    </fieldset>
+                    <section className="mt-5 border-t border-border pt-4">
+                      <h4 className="text-xs font-medium">After the scan</h4>
+                      <p className="mt-3 flex items-center gap-2 text-sm">
+                        <FolderOpen size={17} className="text-accent" />
+                        Open Audit Workbench
+                      </p>
+                      <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+                        Browse files, inspect findings and understand remediation. Source previews
+                        remain available for {Math.round(capabilities.retention_hours / 24)} days.
+                      </p>
+                    </section>
+                  </section>
+                </div>
+                <div className="flex flex-wrap items-center justify-between gap-4 rounded-md border border-border bg-card p-4">
+                  <div>
+                    <p className="text-xs font-medium">
+                      {file ? "1 project selected" : "Choose a project to begin"}
+                    </p>
+                    <p className="mt-1 text-[11px] text-muted-foreground">
+                      Files are validated before analysis.
+                    </p>
+                  </div>
+                  <BrutalButton
+                    onClick={() => void start()}
+                    disabled={!canStart || !file || !name.trim() || !selected.length || uploading}
+                  >
+                    {uploading ? (
+                      <CircleNotch className="animate-spin" size={16} />
+                    ) : (
+                      <UploadSimple size={16} />
+                    )}
+                    Start audit
+                  </BrutalButton>
+                </div>
+                {!canStart ? (
+                  <p className="text-xs text-muted-foreground">
+                    Your viewer role can review completed audits. Ask an analyst to start a scan.
+                  </p>
+                ) : null}
+              </>
+            )}
           </>
         )}
       </div>

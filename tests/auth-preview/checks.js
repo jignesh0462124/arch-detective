@@ -1,6 +1,10 @@
+// Playwright CLI requires a function expression without a trailing semicolon.
+// prettier-ignore
 async (page) => {
+  page.setDefaultTimeout(15000);
+  page.setDefaultNavigationTimeout(20000);
   const passed = [];
-  const base = "http://127.0.0.1:5178/tests/auth-preview/index.html";
+  const base = "http://127.0.0.1:5194/tests/auth-preview/index.html";
   const open = async (q = "") => {
     await page.goto(base + q);
   };
@@ -13,7 +17,7 @@ async (page) => {
   await page.getByRole("alert").filter({ hasText: "incorrect" }).waitFor();
   if ((await stats()).calls !== 1) throw Error("Existing short password was blocked");
   passed.push("short existing password reaches authentication; safe credential error");
-  await page.getByRole("button", { name: "Create account", exact: true }).first().click();
+  await page.getByRole("button", { name: "Create an account", exact: true }).first().click();
   await page.getByLabel("Full name").fill("Fixture User");
   await page.getByRole("textbox", { name: "Password", exact: true }).fill("NewPassword42!");
   await page.getByLabel("Confirm password").fill("different");
@@ -94,4 +98,4 @@ async (page) => {
       passed.push(`${theme} ${width}px layout`);
     }
   return passed;
-};
+}

@@ -32,7 +32,8 @@ export const SUPPORTED_MODELS: AiModelConfig[] = [
     providerLabel: "OmegaPlus · z.ai",
     badge: "Recommended",
     tagline: "Sub-second speed & advanced cyber reasoning",
-    description: "Ultra-fast intelligent model with 1M context window. Excellent for live threat investigation and remediation advice.",
+    description:
+      "Ultra-fast intelligent model with 1M context window. Excellent for live threat investigation and remediation advice.",
     contextWindow: "1,000,000 tokens",
     latencyEstimate: "~250 ms",
     throughputEstimate: "820 tok/s",
@@ -46,7 +47,8 @@ export const SUPPORTED_MODELS: AiModelConfig[] = [
     providerLabel: "OmegaPlus · Alibaba",
     badge: "Fastest",
     tagline: "High-throughput lightning-fast vulnerability triage",
-    description: "Optimized for ultra-low latency response times. Ideal for quick CVE lookups and rapid security queries.",
+    description:
+      "Optimized for ultra-low latency response times. Ideal for quick CVE lookups and rapid security queries.",
     contextWindow: "1,000,000 tokens",
     latencyEstimate: "~190 ms",
     throughputEstimate: "950 tok/s",
@@ -60,7 +62,8 @@ export const SUPPORTED_MODELS: AiModelConfig[] = [
     providerLabel: "OmegaPlus · Alibaba",
     badge: "Deep Audit",
     tagline: "Full-capability deep cybersecurity review & compliance",
-    description: "Full-scale parameter architecture for intricate vulnerability verification, remediation synthesis, and compliance analysis.",
+    description:
+      "Full-scale parameter architecture for intricate vulnerability verification, remediation synthesis, and compliance analysis.",
     contextWindow: "1,000,000 tokens",
     latencyEstimate: "~420 ms",
     throughputEstimate: "680 tok/s",
@@ -74,7 +77,8 @@ export const SUPPORTED_MODELS: AiModelConfig[] = [
     providerLabel: "Groq LPUs · 250ms",
     badge: "Instant LPU",
     tagline: "Sub-second near-zero latency streaming via dedicated LPUs",
-    description: "Hardware-accelerated cybersecurity reasoning engine running on Groq LPUs. Ideal for immediate answers without waiting.",
+    description:
+      "Hardware-accelerated cybersecurity reasoning engine running on Groq LPUs. Ideal for immediate answers without waiting.",
     contextWindow: "128,000 tokens",
     latencyEstimate: "~180 ms",
     throughputEstimate: "1,200 tok/s",
@@ -104,16 +108,12 @@ export function getStoredModelId(): string {
 export function setStoredModelId(modelId: string): void {
   if (typeof window === "undefined") return;
   localStorage.setItem(STORAGE_KEY, modelId);
-  window.dispatchEvent(
-    new CustomEvent("threatlens-model-changed", { detail: { modelId } }),
-  );
+  window.dispatchEvent(new CustomEvent("threatlens-model-changed", { detail: { modelId } }));
 }
 
 /**
  * Get full model configuration by ID.
  */
 export function getModelConfig(modelId: string): AiModelConfig {
-  return (
-    SUPPORTED_MODELS.find((m) => m.id === modelId) ?? SUPPORTED_MODELS[0]
-  );
+  return SUPPORTED_MODELS.find((m) => m.id === modelId) ?? SUPPORTED_MODELS[0];
 }

@@ -6,3 +6,15 @@ pnpm-lock.yaml
 package-lock.json
 bun.lock
 routeTree.gen.ts
+.vercel
+.tanstack
+.nitro
+.playwright-cli
+.pytest_cache
+**/.pytest_cache
+**/__pycache__
+output
+graphify-out
+.code-review-graph
+backend-deploy
+threatlens/.venv

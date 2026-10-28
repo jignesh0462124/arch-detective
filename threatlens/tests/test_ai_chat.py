@@ -34,9 +34,10 @@ def test_chat_requires_provider(client, monkeypatch):
 def test_capabilities_reflect_backend_provider_state(client, monkeypatch):
     monkeypatch.setattr(ai_chat.settings, 'OMEGAPLUS_API_KEY', '')
     monkeypatch.setattr(ai_chat.settings, 'GROQ_API_KEY', '')
-    assert client.get('/api/v1/ai/capabilities').json() == {'available': False}
+    monkeypatch.setattr(ai_chat.settings, 'ADVISOR_HISTORY_ENABLED', False)
+    assert client.get('/api/v1/ai/capabilities').json() == {'available': False, 'history_available': False}
     monkeypatch.setattr(ai_chat.settings, 'GROQ_API_KEY', 'test-key')
-    assert client.get('/api/v1/ai/capabilities').json() == {'available': True}
+    assert client.get('/api/v1/ai/capabilities').json() == {'available': True, 'history_available': False}
 
 
 @pytest.mark.asyncio
@@ -107,3 +108,13 @@ def test_chat_falls_back_without_exposing_upstream_errors(client, monkeypatch):
     response = client.post('/api/v1/ai/chat', json={'messages': [{'role': 'user', 'content': 'hello'}]})
     assert len(calls) == 2 and 'Fallback' in response.text
     assert 'secret' not in response.text and 'sensitive-upstream-error' not in response.text
+
+
+def test_incomplete_provider_stream_never_appears_completed(client, monkeypatch):
+    monkeypatch.setattr(ai_chat.settings, 'OMEGAPLUS_API_KEY', 'isolated-key')
+    monkeypatch.setattr(ai_chat.settings, 'GROQ_API_KEY', '')
+    original = httpx.AsyncClient
+    monkeypatch.setattr(ai_chat.httpx, 'AsyncClient', lambda **kwargs: original(transport=httpx.MockTransport(lambda request: httpx.Response(200, text='data: {"choices":[{"delta":{"content":"Partial suggestion"}}]}\n\n')), **kwargs))
+    response = client.post('/api/v1/ai/chat', json={'messages':[{'role':'user','content':'Question'}]})
+    assert 'Partial suggestion' in response.text
+    assert 'stream_interrupted' in response.text and '[DONE]' not in response.text

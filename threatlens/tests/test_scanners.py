@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import os
-import subprocess
+import sys
 from pathlib import Path
 from types import SimpleNamespace
 from uuid import uuid4
@@ -52,13 +52,20 @@ def test_scanner_command_converts_timeout_to_sanitized_error(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
-    def timeout(*_args: object, **_kwargs: object) -> object:
-        raise subprocess.TimeoutExpired("scanner", 300)
+    with pytest.raises(ScannerError, match="0.1-second timeout"):
+        run_scanner_command([sys.executable, "-c", "import time; time.sleep(30)"], cwd=tmp_path, timeout=0.1)
 
-    monkeypatch.setattr(subprocess, "run", timeout)
 
-    with pytest.raises(ScannerError, match="300-second timeout"):
-        run_scanner_command(["scanner"], cwd=tmp_path)
+def test_scanner_output_is_bounded_while_running(monkeypatch, tmp_path):
+    from app.scanners import base
+    monkeypatch.setattr(base, "MAX_SCANNER_OUTPUT_BYTES", 1024)
+    with pytest.raises(ScannerError, match="too much output"):
+        run_scanner_command([sys.executable, "-c", "import os;\nwhile True: os.write(1, b'x'*4096); os.write(2, b'y'*4096)"], cwd=tmp_path, timeout=5)
+
+
+def test_scanner_drains_both_streams_and_keeps_exit_contract(tmp_path):
+    result = run_scanner_command([sys.executable, "-c", "import os; os.write(1,b'out'); os.write(2,b'err'); exit(1)"], cwd=tmp_path, accepted_returncodes=(0, 1))
+    assert (result.stdout, result.stderr, result.returncode) == ("out", "err", 1)
 
 
 def test_semgrep_output_is_normalized(tmp_path: Path) -> None:

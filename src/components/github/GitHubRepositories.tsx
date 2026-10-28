@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { gh, githubError, type Integration } from "@/lib/api/github";
 import { linkGitHubSignIn } from "@/lib/api/auth";
 import { AUDIT_FRAMEWORKS } from "@/lib/workspaceSettings";
+import { rememberAudit } from "@/lib/auditResume";
 
 const button = "min-h-10 rounded-md border border-border bg-card px-3 text-sm disabled:opacity-50";
 const input = "min-h-10 w-full rounded-md border border-border bg-card px-3 text-sm";
@@ -153,18 +154,39 @@ export function GitHubRepositories({
               </a>
             )}
             <span className="text-sm">
-              {connected.data?.connected
-                ? `Connected as ${connected.data.login}`
-                : "GitHub is not connected"}
+              {connected.isPending
+                ? "Checking connection…"
+                : connected.isError
+                  ? "Connection could not be checked"
+                  : connected.data?.connected
+                    ? `Connected as ${connected.data.login}`
+                    : "GitHub is not connected"}
             </span>
             <button
               className={button}
-              disabled={busy}
+              disabled={busy || connected.isPending || connected.isError}
               onClick={() =>
                 void action(async () => {
                   if (connected.data?.connected) {
+                    if (
+                      !window.confirm(
+                        "Disconnect your personal GitHub repository access? Saved audits and GitHub branches and pull requests will remain. Workspace repository sharing is managed separately.",
+                      )
+                    )
+                      return;
+                    const scope = authScope();
                     await gh("/github/connection", undefined, "DELETE");
-                    await client.invalidateQueries({ queryKey: ["github-connection"] });
+                    if (!alive.current || !isCurrentScope(scope)) return;
+                    for (const key of [
+                      "github-connection",
+                      "github-installations",
+                      "github-repositories",
+                      "github-branches",
+                    ]) {
+                      await client.cancelQueries({ queryKey: [key, user?.id] });
+                      client.removeQueries({ queryKey: [key, user?.id] });
+                    }
+                    await connected.refetch();
                   } else {
                     const scope = authScope();
                     const result = await gh<{ url: string }>("/github/connect", {
@@ -384,6 +406,13 @@ export function GitHubRepositories({
                       },
                     );
                     if (!alive.current) return;
+                    rememberAudit(workspaceId, {
+                      id: result.scan_id,
+                      name:
+                        shared.data?.find((item: Integration) => item.id === selected)?.full_name ||
+                        "Repository audit",
+                      created: new Date().toISOString(),
+                    });
                     window.location.assign(
                       `/workspace/${workspaceId}/scans/${result.scan_id}/workbench`,
                     );

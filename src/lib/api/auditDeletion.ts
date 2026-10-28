@@ -61,6 +61,7 @@ const privateKinds = new Set([
   "fix-comparison",
 ]);
 const workspaceKinds = new Set([
+  "advisor-history",
   "audit-history",
   "dashboard-scans",
   "finding-scans",
@@ -95,6 +96,8 @@ export async function refreshAfterAuditDeletion(
   workspace: string,
   scan: string,
 ) {
+  if (typeof window !== "undefined")
+    window.dispatchEvent(new CustomEvent("archon-audit-deleted", { detail: { workspace, scan } }));
   const privateQuery = (query: { queryKey: QueryKey; state: { data: unknown } }) =>
     (privateKinds.has(String(query.queryKey[0])) &&
       auditQueryInScope(query.queryKey, user, workspace) &&

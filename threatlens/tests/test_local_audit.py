@@ -135,7 +135,15 @@ def test_upload_result_and_sse_http_flow_without_external_ai(monkeypatch, source
         archive.writestr("project/app.php", source)
     application = FastAPI()
     application.include_router(api.router)
-    with TestClient(application) as client:
+    @application.middleware("http")
+    async def fixture_peer(request, call_next):
+        request.scope["client"] = ("127.0.0.1", 12345)
+        return await call_next(request)
+    from app.config import settings
+    monkeypatch.setattr(settings, "LOCAL_SCAN_ENABLED", True)
+    monkeypatch.setattr(settings, "ENVIRONMENT", "development")
+    monkeypatch.setattr(settings, "DEBUG", True)
+    with TestClient(application, base_url="http://127.0.0.1") as client:
         response = client.post("/api/local/scan", files={"file": ("Fixture.ZIP", buffer.getvalue(), "application/zip")}, data={"target_name": "HTTP regression fixture", "frameworks": "gdpr"})
         assert response.status_code == 200
         scan_id = response.json()["scan_id"]

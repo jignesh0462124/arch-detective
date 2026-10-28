@@ -24,9 +24,10 @@ from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Any, AsyncGenerator
 
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
 from app.api.local_scan_evidence import ground_ai_findings, build_evidence_summary
+from app.api.local_access import require_local_access
 
 # Load .env so GROQ_API_KEY is available even when run standalone
 try:
@@ -38,7 +39,7 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/local", tags=["local-scan"])
+router = APIRouter(prefix="/api/local", tags=["local-scan"], dependencies=[Depends(require_local_access)])
 
 # ── Scan store with persistent disk backing ────────────────────────────────────
 # { scan_id: { "status": str, "events": [...], "result": {...} | None } }

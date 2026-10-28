@@ -15,7 +15,7 @@ Full scan Celery task — wires the complete pipeline:
 Security rules:
  - Task payload contains scan_id ONLY (no paths, credentials, source content)
  - Atomic queued→running claim prevents duplicate concurrent execution
- - Each scanner wrapped in individual try/except (one failure ≠ scan failure)
+ - Dependency coverage failures fail closed instead of looking clean
  - Scanner subprocesses receive NO infrastructure credentials
  - All temp dirs cleaned in finally block
 """
@@ -40,6 +40,7 @@ from app.models.scan_artifact import ArtifactKind, ArtifactStatus, ScanArtifact
 from app.storage.client import StorageOperationError, SupabaseStorage
 from app.storage.lifecycle import delete_object_if_present
 from app.tasks.celery_app import celery_app
+from app.scanners.base import ScannerCoverageError
 
 logger = logging.getLogger(__name__)
 
@@ -339,8 +340,12 @@ def run_full_scan(self, scan_id: str) -> dict[str, Any]:
                 all_findings.extend(pip_findings)
                 all_findings.extend(npm_findings)
                 logger.info("Dependency audit: %d findings", len(pip_findings) + len(npm_findings))
-            except Exception:
-                logger.exception("Dependency audit failed for scan %s (continuing)", scan_id)
+            except ScannerCoverageError:
+                raise
+            except Exception as exc:
+                raise ScannerCoverageError(
+                    "Dependency coverage incomplete: the dependency audit could not finish. Retry after checking scanner availability."
+                ) from exc
 
         _update_progress(scan_uuid, 55)
 
@@ -472,6 +477,10 @@ def run_full_scan(self, scan_id: str) -> dict[str, Any]:
         )
         return {"scan_id": scan_id, "status": "completed", "finding_count": final_count}
 
+    except ScannerCoverageError as exc:
+        # Unsupported inputs are not transient and must never look clean/completed.
+        _set_failed(scan_uuid, error_code="incomplete_coverage", error_message=str(exc))
+        return {"scan_id": scan_id, "status": "failed", "error_code": "incomplete_coverage"}
     except Exception as exc:
         logger.exception("run_full_scan failed for scan %s", scan_id)
         _set_failed(scan_uuid, error_code="scan_error", error_message=str(exc))

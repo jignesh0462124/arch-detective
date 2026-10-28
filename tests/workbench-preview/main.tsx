@@ -16,7 +16,10 @@ import { Route as ProfileRoute } from "../../src/routes/_app/profile";
 import { Route as GraphRoute } from "../../src/routes/_app/attack-graph";
 import { Route as AdvisorRoute } from "../../src/routes/_app/advisor";
 import { Route as LandingRoute } from "../../src/routes/index";
+import { Route as AboutRoute } from "../../src/routes/about";
 import { Route as FixRoute } from "../../src/routes/_app/fix-verification";
+import { Route as SettingsRoute } from "../../src/routes/_app/settings";
+import { Route as ProtectedRoute } from "../../src/routes/_app";
 import { AiChatProvider } from "../../src/components/ai-assistant/AiChatProvider";
 import { WorkspaceSettingsPage } from "../../src/components/workspace/WorkspaceSettingsPage";
 import type { ComponentType } from "react";
@@ -35,6 +38,55 @@ const Profile = ProfileRoute.options.component as ComponentType;
 const Graph = GraphRoute.options.component as ComponentType;
 const Advisor = AdvisorRoute.options.component as ComponentType;
 const Landing = LandingRoute.options.component as ComponentType;
+const About = AboutRoute.options.component as ComponentType;
+const fixtureChatId = "77777777-7777-4777-8777-777777777777";
+let conversations = [
+  {
+    id: fixtureChatId,
+    workspace_id: workspace.id,
+    title: "Review database query parameters",
+    scan_id: null,
+    finding_id: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    expires_at: new Date(Date.now() + 30 * 86400000).toISOString(),
+  },
+];
+const chatMessages: Record<
+  string,
+  { id: string; role: string; content: string; status: string; created_at: string }[]
+> = {};
+chatMessages[fixtureChatId] = [
+  {
+    id: crypto.randomUUID(),
+    role: "user",
+    content: "How should I bind a query parameter?",
+    status: "completed",
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: crypto.randomUUID(),
+    role: "assistant",
+    content:
+      "Bind the request value separately from SQL.\n\n```ts\nconst rows = database.query('SELECT id FROM users WHERE id = ?', [id]);\n```\n\nVerify normal lookups and confirm quotes are treated as data.",
+    status: "completed",
+    created_at: new Date().toISOString(),
+  },
+];
+try {
+  const cached = JSON.parse(sessionStorage.getItem("archon-fixture-conversations-v2") || "null");
+  if (cached) {
+    conversations = cached.conversations;
+    Object.assign(chatMessages, cached.messages);
+  }
+} catch {
+  /* Isolated fixture history only. */
+}
+const saveFixtureConversations = () =>
+  sessionStorage.setItem(
+    "archon-fixture-conversations-v2",
+    JSON.stringify({ conversations, messages: chatMessages }),
+  );
 const FixVerification = FixRoute.options.component as ComponentType;
 const proposalId = "55555555-5555-4555-8555-555555555555";
 const integrationId = "66666666-6666-4666-8666-666666666666";
@@ -326,14 +378,80 @@ window.fetch = async (input, init) => {
       statuses: [],
     });
   if (url.pathname === "/api/v1/ai/capabilities")
-    return new Response(JSON.stringify({ available: state !== "unavailable" }), {
-      headers: { "Content-Type": "application/json" },
+    return new Response(
+      JSON.stringify({ available: state !== "unavailable", history_available: true }),
+      {
+        headers: { "Content-Type": "application/json" },
+      },
+    );
+  if (url.pathname.startsWith("/api/v1/ai/conversations")) {
+    const id = url.pathname.split("/")[5];
+    const payload = init?.body ? JSON.parse(String(init.body)) : null;
+    if (init?.method === "POST") {
+      const item = {
+        id: crypto.randomUUID(),
+        workspace_id: workspace.id,
+        title: payload.title,
+        scan_id: payload.context?.scan_id || null,
+        finding_id: payload.context?.finding_id || null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        expires_at: new Date(Date.now() + 30 * 86400000).toISOString(),
+      };
+      conversations.unshift(item);
+      chatMessages[item.id] = [];
+      saveFixtureConversations();
+      return json(item);
+    }
+    if (init?.method === "PATCH") {
+      const item = conversations.find((c) => c.id === id)!;
+      item.title = payload.title;
+      saveFixtureConversations();
+      return json(item);
+    }
+    if (init?.method === "DELETE") {
+      conversations = conversations.filter((c) => c.id !== id);
+      delete chatMessages[id];
+      saveFixtureConversations();
+      return json({ deleted: id });
+    }
+    if (url.pathname.endsWith("/messages"))
+      return json({ items: [...(chatMessages[id] || [])].reverse(), next_cursor: null });
+    if (id) return json(conversations.find((c) => c.id === id));
+    return json({
+      items: conversations.filter((c) =>
+        c.title.toLowerCase().includes((url.searchParams.get("q") || "").toLowerCase()),
+      ),
+      next_cursor: null,
     });
+  }
   if (url.pathname === "/api/v1/ai/chat") {
     const payload = JSON.parse(String(init?.body));
     metrics.advisorRequests++;
     metrics.advisorModel = payload.model;
     metrics.advisorContext = payload.context || null;
+    const question = payload.messages[payload.messages.length - 1].content;
+    const answer =
+      "Bind the request value separately from SQL.\n\n```ts\nconst rows = database.query('SELECT id FROM users WHERE id = ?', [id]);\n```\n\nAssumption: the database client supports placeholders.\n\nVerify normal lookups and confirm quotes are treated as data.";
+    if (payload.conversation_id)
+      chatMessages[payload.conversation_id] = [
+        ...(chatMessages[payload.conversation_id] || []),
+        {
+          id: crypto.randomUUID(),
+          role: "user",
+          content: question,
+          status: "completed",
+          created_at: new Date().toISOString(),
+        },
+        {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: answer,
+          status: "completed",
+          created_at: new Date().toISOString(),
+        },
+      ];
+    saveFixtureConversations();
     showMetrics();
     const encoder = new TextEncoder();
     let timer: ReturnType<typeof setTimeout>;
@@ -357,7 +475,7 @@ window.fetch = async (input, init) => {
               signal?.removeEventListener("abort", abort);
               controller.enqueue(
                 encoder.encode(
-                  'data: {"choices":[{"delta":{"content":"Fixture suggestion: review and test the change."}}]}\n\ndata: [DONE]\n\n',
+                  `data: ${JSON.stringify({ choices: [{ delta: { content: answer } }] })}\n\ndata: [DONE]\n\n`,
                 ),
               );
               controller.close();
@@ -560,32 +678,58 @@ const root = createRootRoute({
     </>
   ),
 });
-const home = createRoute({ getParentRoute: () => root, path: "/", component: Preview });
+const home = createRoute({
+  getParentRoute: () => root,
+  path: "/",
+  component: view === "about" ? About : Preview,
+});
 const upload = createRoute({ getParentRoute: () => root, path: "/workspace", component: Upload });
 const workbench = createRoute({
   getParentRoute: () => root,
   path: "/workspace/$workspaceId/scans/$scanId/workbench",
   component: Workbench,
 });
-const app = createRoute({ getParentRoute: () => root, id: "_app", component: Outlet });
-const advisor = createRoute({ getParentRoute: () => app, path: "/advisor", component: Advisor });
+const app = createRoute({
+  getParentRoute: () => root,
+  id: "_app",
+  component: view === "preferences" ? ProtectedRoute.options.component : Outlet,
+});
+const advisor = createRoute({
+  getParentRoute: () => app,
+  path: "/advisor",
+  component: Advisor,
+  validateSearch: AdvisorRoute.options.validateSearch,
+});
 const fixes = createRoute({
   getParentRoute: () => app,
   path: "/fix-verification",
   component: FixVerification,
   validateSearch: FixRoute.options.validateSearch,
 });
+const settings = createRoute({
+  getParentRoute: () => app,
+  path: "/settings",
+  component: SettingsRoute.options.component,
+  validateSearch: SettingsRoute.options.validateSearch,
+});
 const router = createRouter({
-  routeTree: root.addChildren([home, upload, workbench, app.addChildren([advisor, fixes])]),
+  routeTree: root.addChildren([
+    home,
+    upload,
+    workbench,
+    app.addChildren([advisor, fixes, settings]),
+  ]),
   history: createMemoryHistory({
     initialEntries: [
-      view === "advisor"
-        ? options.get("context") === "finding"
-          ? `/advisor?workspaceId=${workspace.id}&scanId=${scanId}&findingId=${finding.id}`
-          : "/advisor"
-        : view === "fixes"
-          ? `/fix-verification?scanId=${scanId}&findingId=${finding.id}`
-          : "/",
+      view === "preferences"
+        ? `/settings?section=${options.get("section") || "overview"}`
+        : view === "advisor"
+          ? options.get("context") === "finding"
+            ? `/advisor?workspaceId=${workspace.id}&scanId=${scanId}&findingId=${finding.id}`
+            : "/advisor"
+          : view === "fixes"
+            ? `/fix-verification?scanId=${scanId}&findingId=${finding.id}`
+            : "/",
     ],
   }),
 });

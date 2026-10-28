@@ -1,4 +1,5 @@
 from functools import lru_cache
+from pathlib import Path
 from typing import Annotated, Literal
 
 from pydantic import AliasChoices, Field, computed_field, field_validator, model_validator
@@ -7,7 +8,9 @@ from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=(".env", "threatlens/.env", "../threatlens/.env"),
+        # Resolve project defaults independently of the directory used to launch
+        # uvicorn/maintenance commands; the frontend public key is a supported alias.
+        env_file=(Path(__file__).resolve().parents[2] / ".env", Path(__file__).resolve().parents[1] / ".env", ".env", "threatlens/.env", "../threatlens/.env"),
         env_file_encoding="utf-8",
         case_sensitive=True,
         extra="ignore",
@@ -15,6 +18,8 @@ class Settings(BaseSettings):
 
     ENVIRONMENT: str = "development"
     DEBUG: bool = True
+    # Unauthenticated compatibility routes: explicit development opt-in only.
+    LOCAL_SCAN_ENABLED: bool = False
 
     # Local defaults keep imports and unit tests usable. Production must override both.
     DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:54322/postgres"
@@ -40,6 +45,7 @@ class Settings(BaseSettings):
     SIGNED_URL_TTL_SECONDS: int = Field(default=300, ge=30, le=3600)
     SOURCE_RETENTION_HOURS: int = Field(default=24, ge=0, le=720)
     AUDIT_WORKBENCH_ENABLED: bool = True
+    ADVISOR_HISTORY_ENABLED: bool = False
     AUDIT_WORKBENCH_PROGRESSIVE_ENABLED: bool = False
     SNAPSHOT_RETENTION_HOURS: int = Field(default=720, ge=1, le=720)
     # This bucket is protected by the migration's restrictive Storage policy.

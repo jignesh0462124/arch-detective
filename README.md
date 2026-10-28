@@ -19,7 +19,7 @@ The landing page introduces the workflow and opens the console. Sign in with ema
 
 ### 2. Choose a source and run an audit
 
-Codebase Audit accepts ZIP projects. If the GitHub App is configured, a user can connect GitHub, choose an authorized repository and branch, and start a repository scan. The History button reopens saved scans. Owners and admins can delete completed or failed scans there.
+Codebase Audit accepts ZIP projects. If the GitHub App is configured, a user can connect GitHub, choose an authorized repository and branch, and start a repository scan. Returning to Codebase Audit shows a resume card for the last opened audit. The History button reopens saved scans. Owners and admins can delete completed or failed scans there.
 
 ![Codebase Audit upload and settings, isolated fixture](docs/screenshots/codebase-audit.png)
 
@@ -31,7 +31,7 @@ Codebase Audit accepts ZIP projects. If the GitHub App is configured, a user can
 
 ### 3. Investigate the result
 
-The workbench presents a file tree, source preview, findings, and framework context after a scan is accepted. The Findings page filters saved results and opens full evidence on selection. Attack Graph relates saved finding locations; its modeled examples are marked as examples.
+The workbench presents a file tree, source preview, findings, and framework context after a scan is accepted. Remediation includes written steps and an on-demand code solution with copyable snippets and verification guidance. The Findings page filters saved results and opens full evidence on selection. Attack Graph relates saved finding locations; its modeled examples are marked as examples.
 
 ![Audit Workbench with source and finding, isolated fixture](docs/screenshots/workbench.png)
 
@@ -51,7 +51,11 @@ For eligible repository findings, Fix Verification displays a proposed diff and 
 
 ### 5. Get guidance and manage the workspace
 
-Security Advisor answers general questions and can explain an authorized finding. Workspace Settings manages defaults, members, invitations, and integrations according to role. Profile holds account and session controls.
+Security Advisor answers general questions and can explain an authorized finding. Its private, searchable conversation history is saved per account and workspace when `ADVISOR_HISTORY_ENABLED=true` is enabled after the chat migration. Chats expire after 30 days, or earlier when their linked source window ends. Workspace Settings manages defaults, members, invitations, and integrations according to role. Profile holds account and session controls.
+
+Settings, below Security Advisor in navigation, brings account controls, appearance, workspace management, GitHub connections, privacy/data notices, proposed pricing and help into one place. Personal settings remain available without a workspace. Pricing is informational; billing is not enabled. Existing Profile and workspace-settings links remain supported.
+
+![Settings overview, isolated fixture](docs/screenshots/settings.png)
 
 ![Security Advisor](docs/screenshots/advisor.png)
 
@@ -76,6 +80,7 @@ Security Advisor answers general questions and can explain an authorized finding
 | Reports / detail         | `/reports`, `/reports/:reportId`                  | Saved reports and PDF access                                   |
 | Audit Log                | `/audit-log`                                      | Recorded workspace events and scan history; owner/admin access |
 | Security Advisor         | `/advisor`                                        | General or finding-specific guidance                           |
+| Settings                 | `/settings`                                       | Account, appearance, workspace, integrations, privacy and help |
 | Workspace Settings       | `/workspace/:workspaceId/settings`                | Workspace configuration and members                            |
 | Profile                  | `/profile`                                        | Account, connected accounts, session controls                  |
 
@@ -106,14 +111,16 @@ See [supabase/migrations](supabase/migrations) for database changes and [threatl
 
 Requirements: Node.js, npm, Python, and access to a Supabase project with the repository's migrations applied. Use the versions supported by [package.json](package.json) and [threatlens/requirements.txt](threatlens/requirements.txt).
 
-1. Install frontend dependencies: `npm install`.
+1. Install the locked frontend dependencies: `npm ci`.
 2. Copy [`.env.example`](.env.example) to `.env`. Set the public API URL, Supabase URL, and Supabase publishable key for your project.
 3. Create `threatlens/.env` from [`threatlens/.env.example`](threatlens/.env.example). Set the matching Supabase project URL, issuer, JWKS URL, publishable key, and server-only service role key. Configure the other services you use. Never commit either local environment file.
-4. Install Python packages with `pip install -r threatlens/requirements.txt` in a virtual environment.
+4. Follow [Python installation profiles](threatlens/INSTALLATION.md). Install `threatlens/requirements-api.txt` in an activated virtual environment for the local API/workbench, or the full `threatlens/requirements.txt` for the separate scanner-worker deployment. The test profile adds regression-test dependencies. These profiles are not interchangeable.
 5. Apply the additive migrations in [supabase/migrations](supabase/migrations) to your own Supabase project before using saved audits. Follow your team's Supabase CLI linking and migration process.
 6. Run `npm run dev`, then open `http://127.0.0.1:5173`. The API is served at `http://127.0.0.1:8000`; its health endpoint is `/health`.
 
 The frontend and API must point to the same Supabase project. Set a frontend origin allowed by the backend if you use a different local port. GitHub login additionally needs the GitHub provider enabled in Supabase; repository scanning and publishing need the GitHub App settings from the backend example file.
+
+Use the signed-in Codebase Audit workflow normally. The unauthenticated legacy `/api/local` compatibility routes are disabled by default and in production. Local development requires all three settings: `LOCAL_SCAN_ENABLED=true`, `DEBUG=true`, and `ENVIRONMENT=development`, plus a loopback connection, loopback Host and an allowed loopback Origin. Do not expose this compatibility mode through a reverse proxy. No saved history is deleted by disabling it.
 
 ## Development checks
 
@@ -126,6 +133,8 @@ python -m pytest threatlens/tests -q
 ```
 
 The tests use isolated fixtures where possible. Do not use a production repository for patch publishing or deletion checks.
+
+See the [cleanup and security verification report](.github/maintenance/CLEANUP_REPORT.md) for the removal manifest, exact changed-file inventory, verification results and remaining deployment checks.
 
 ## Screenshot notes
 

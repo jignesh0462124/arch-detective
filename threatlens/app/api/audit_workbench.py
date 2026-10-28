@@ -613,6 +613,12 @@ async def maintenance_once(repository):
 
 async def maintenance_loop():
     while True:
+        if settings.ADVISOR_HISTORY_ENABLED and settings.SUPABASE_SERVICE_ROLE_KEY:
+            try:
+                from app.services.advisor_history import cleanup
+                await cleanup(store())
+            except Exception:
+                logger.warning("Advisor history cleanup deferred; persistence unavailable")
         if settings.AUDIT_WORKBENCH_ENABLED and settings.SUPABASE_SERVICE_ROLE_KEY:
             try:
                 await maintenance_once(store())

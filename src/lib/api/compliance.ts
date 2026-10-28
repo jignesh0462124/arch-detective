@@ -46,7 +46,9 @@ export function resolveComplianceViolations(
   const existingMap = new Map<string, ResolvedComplianceViolation>();
   if (Array.isArray(finding.violations) && finding.violations.length > 0) {
     for (const v of finding.violations) {
-      const fwKey = String(v.framework || "").toLowerCase().replace(/[-_\s]/g, "");
+      const fwKey = String(v.framework || "")
+        .toLowerCase()
+        .replace(/[-_\s]/g, "");
       existingMap.set(fwKey, {
         framework: v.framework,
         control_id: v.control_id,

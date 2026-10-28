@@ -40,7 +40,7 @@ export function AiAssistantPanel({ open, onClose }: { open: boolean; onClose: ()
   const chat = useSharedAiChat();
   const { activateAdvisor } = chat;
   useEffect(() => {
-    if (open) activateAdvisor();
+    if (open) return activateAdvisor();
   }, [open, activateAdvisor]);
   const [input, setInput] = useState("");
   const panel = useRef<HTMLElement>(null);

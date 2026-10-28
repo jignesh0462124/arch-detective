@@ -25,6 +25,7 @@ import { Route as AppFindingsRouteImport } from './routes/_app/findings'
 import { Route as AppFixVerificationRouteImport } from './routes/_app/fix-verification'
 import { Route as AppProfileRouteImport } from './routes/_app/profile'
 import { Route as AppReportsRouteImport } from './routes/_app/reports'
+import { Route as AppSettingsRouteImport } from './routes/_app/settings'
 import { Route as AppWorkspaceRouteImport } from './routes/_app/workspace'
 import { Route as WorkspaceNewRouteImport } from './routes/workspace/new'
 import { Route as AppReportsReportIdRouteImport } from './routes/_app/reports.$reportId'
@@ -110,6 +111,11 @@ const AppReportsRoute = AppReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppWorkspaceRoute = AppWorkspaceRouteImport.update({
   id: '/workspace',
   path: '/workspace',
@@ -154,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/fix-verification': typeof AppFixVerificationRoute
   '/profile': typeof AppProfileRoute
   '/reports': typeof AppReportsRouteWithChildren
+  '/settings': typeof AppSettingsRoute
   '/workspace': typeof AppWorkspaceRoute
   '/workspace/new': typeof WorkspaceNewRoute
   '/reports/$reportId': typeof AppReportsReportIdRoute
@@ -176,6 +183,7 @@ export interface FileRoutesByTo {
   '/fix-verification': typeof AppFixVerificationRoute
   '/profile': typeof AppProfileRoute
   '/reports': typeof AppReportsRouteWithChildren
+  '/settings': typeof AppSettingsRoute
   '/workspace': typeof AppWorkspaceRoute
   '/workspace/new': typeof WorkspaceNewRoute
   '/reports/$reportId': typeof AppReportsReportIdRoute
@@ -200,6 +208,7 @@ export interface FileRoutesById {
   '/_app/fix-verification': typeof AppFixVerificationRoute
   '/_app/profile': typeof AppProfileRoute
   '/_app/reports': typeof AppReportsRouteWithChildren
+  '/_app/settings': typeof AppSettingsRoute
   '/_app/workspace': typeof AppWorkspaceRoute
   '/workspace/new': typeof WorkspaceNewRoute
   '/_app/reports/$reportId': typeof AppReportsReportIdRoute
@@ -224,6 +233,7 @@ export interface FileRouteTypes {
     | '/fix-verification'
     | '/profile'
     | '/reports'
+    | '/settings'
     | '/workspace'
     | '/workspace/new'
     | '/reports/$reportId'
@@ -246,6 +256,7 @@ export interface FileRouteTypes {
     | '/fix-verification'
     | '/profile'
     | '/reports'
+    | '/settings'
     | '/workspace'
     | '/workspace/new'
     | '/reports/$reportId'
@@ -269,6 +280,7 @@ export interface FileRouteTypes {
     | '/_app/fix-verification'
     | '/_app/profile'
     | '/_app/reports'
+    | '/_app/settings'
     | '/_app/workspace'
     | '/workspace/new'
     | '/_app/reports/$reportId'
@@ -404,6 +416,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReportsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/workspace': {
       id: '/_app/workspace'
       path: '/workspace'
@@ -463,6 +482,7 @@ interface AppRouteChildren {
   AppFixVerificationRoute: typeof AppFixVerificationRoute
   AppProfileRoute: typeof AppProfileRoute
   AppReportsRoute: typeof AppReportsRouteWithChildren
+  AppSettingsRoute: typeof AppSettingsRoute
   AppWorkspaceRoute: typeof AppWorkspaceRoute
 }
 
@@ -475,6 +495,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppFixVerificationRoute: AppFixVerificationRoute,
   AppProfileRoute: AppProfileRoute,
   AppReportsRoute: AppReportsRouteWithChildren,
+  AppSettingsRoute: AppSettingsRoute,
   AppWorkspaceRoute: AppWorkspaceRoute,
 }
 

@@ -33,6 +33,9 @@ export function AccountMenu() {
         <UserCircle size={19} />
       </summary>
       <div className="absolute right-0 z-50 mt-2 w-64 rounded-lg border border-border bg-card p-3 text-sm shadow-xl">
+        <Link to="/settings" className="flex min-h-10 items-center rounded px-2 hover:bg-secondary">
+          Settings
+        </Link>
         <Link to="/profile" className="flex min-h-10 items-center rounded px-2 hover:bg-secondary">
           Profile and sessions
         </Link>

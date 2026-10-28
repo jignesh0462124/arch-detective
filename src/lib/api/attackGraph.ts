@@ -815,7 +815,9 @@ export function buildAttackGraphFromScan(
     return {
       id: `${text(f.id) || "finding"}-${idx}`,
       findingId: /^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(text(f.id)) ? text(f.id) : undefined,
-      scanId: /^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(text(scan.scan_id)) ? text(scan.scan_id) : undefined,
+      scanId: /^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(text(scan.scan_id))
+        ? text(scan.scan_id)
+        : undefined,
       stride,
       strideCode: `${def.code}: ${def.name}`,
       title: text(f.title) || "Detected finding",

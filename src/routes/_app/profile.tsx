@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   User,
   EnvelopeSimple,
@@ -11,6 +11,7 @@ import {
   CheckCircle,
 } from "@phosphor-icons/react";
 import { AppShell } from "@/components/brutal/AppShell";
+import { SettingsFrame } from "@/components/ui/SettingsFrame";
 import { GitHubAccounts } from "@/components/github/GitHubRepositories";
 import { BrutalButton } from "@/components/brutal/BrutalButton";
 import { useAuth } from "@/hooks/useAuth";
@@ -30,10 +31,21 @@ function date(value?: string | null) {
 const covers = ["Grid", "Terrain", "Bauhaus", "Noir", "Circuit"];
 const coverKey = "archon-profile-cover";
 function ProfilePage() {
+  return <ProfileContent />;
+}
+// Shared with the Settings account section.
+export function ProfileContent({
+  embedded = false,
+  accountForm,
+}: {
+  embedded?: boolean;
+  accountForm?: ReactNode;
+}) {
+  const Shell = embedded ? SettingsFrame : AppShell;
   const { user, signOut, resetPassword } = useAuth();
   const { active: workspace } = useActiveWorkspace();
   const navigate = useNavigate();
-  const canReadActivity = workspace?.role === "owner" || workspace?.role === "admin";
+  const canReadActivity = !embedded && (workspace?.role === "owner" || workspace?.role === "admin");
   const activity = useQuery({
     queryKey: ["profile-activity", user?.id, workspace?.id],
     queryFn: ({ signal }) => fetchAuditEvents({ workspace_id: workspace!.id, limit: 4, signal }),
@@ -70,6 +82,14 @@ function ProfilePage() {
   }, [resetUntil]);
   const [signingOut, setSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState("");
+  useEffect(() => {
+    setResetState("idle");
+    setResetError("");
+    setResetUntil(0);
+    setSignOutError("");
+    setSigningOut(false);
+    setAvatarFailed(false);
+  }, [user?.id]);
   const rawName = user?.user_metadata?.full_name || user?.user_metadata?.display_name;
   const name = typeof rawName === "string" && rawName.trim() ? rawName : "Your account";
   const avatar =
@@ -109,28 +129,29 @@ function ProfilePage() {
     }
   };
   return (
-    <AppShell title="Your profile" subtitle="Account">
+    <Shell title="Your profile" subtitle="Account">
       <div className="mx-auto max-w-5xl space-y-5">
-        <GitHubAccounts />
         <section className="overflow-hidden rounded-lg border border-border bg-card">
-          <div className="relative h-28 bg-secondary sm:h-36">
-            {!imageFailed && (
-              <img
-                src={`/covers/cover-${cover}.jpg`}
-                alt=""
-                className="h-full w-full object-cover"
-                onError={() => setImageFailed(true)}
-              />
-            )}
-            <div className="absolute inset-0 bg-black/40" />
-            <button
-              type="button"
-              onClick={() => setPicker(true)}
-              className="absolute bottom-3 right-3 inline-flex min-h-10 items-center gap-2 rounded border border-white/50 bg-black/80 px-3 text-xs font-medium text-white"
-            >
-              <ImagesSquare size={16} /> Change cover
-            </button>
-          </div>
+          {!embedded && (
+            <div className="relative h-28 bg-secondary sm:h-36">
+              {!imageFailed && (
+                <img
+                  src={`/covers/cover-${cover}.jpg`}
+                  alt=""
+                  className="h-full w-full object-cover"
+                  onError={() => setImageFailed(true)}
+                />
+              )}
+              <div className="absolute inset-0 bg-black/40" />
+              <button
+                type="button"
+                onClick={() => setPicker(true)}
+                className="absolute bottom-3 right-3 inline-flex min-h-10 items-center gap-2 rounded border border-white/50 bg-black/80 px-3 text-xs font-medium text-white"
+              >
+                <ImagesSquare size={16} /> Change cover
+              </button>
+            </div>
+          )}
           <div className="flex items-center gap-4 p-5">
             {avatar && !avatarFailed ? (
               <img
@@ -156,8 +177,9 @@ function ProfilePage() {
             </div>
           </div>
         </section>
-        <div className="grid gap-5 md:grid-cols-2">
-          <section className="rounded-lg border border-border bg-card p-5">
+        {accountForm}
+        <div className={embedded ? "grid min-w-0 gap-5" : "grid min-w-0 gap-5 md:grid-cols-2"}>
+          <section className="min-w-0 rounded-lg border border-border bg-card p-5 sm:p-6">
             <h2 className="text-base font-semibold">Account details</h2>
             <dl className="mt-3 space-y-3 text-sm">
               <div>
@@ -174,25 +196,27 @@ function ProfilePage() {
               </div>
             </dl>
           </section>
-          <section className="rounded-lg border border-border bg-card p-5">
-            <h2 className="text-base font-semibold">Workspace access</h2>
-            {workspace ? (
-              <>
-                <p className="mt-3 break-words font-medium">{workspace.name}</p>
-                <p className="mt-1 text-sm capitalize text-muted-foreground">
-                  Your role: {workspace.role}
-                </p>
+          {!embedded && (
+            <section className="min-w-0 rounded-lg border border-border bg-card p-5 sm:p-6">
+              <h2 className="text-base font-semibold">Workspace access</h2>
+              {workspace ? (
+                <>
+                  <p className="mt-3 break-words font-medium">{workspace.name}</p>
+                  <p className="mt-1 text-sm capitalize text-muted-foreground">
+                    Your role: {workspace.role}
+                  </p>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    Your role determines which workspace actions and records you can access.
+                  </p>
+                </>
+              ) : (
                 <p className="mt-3 text-sm text-muted-foreground">
-                  Your role determines which workspace actions and records you can access.
+                  No active workspace selected. Choose a workspace from navigation.
                 </p>
-              </>
-            ) : (
-              <p className="mt-3 text-sm text-muted-foreground">
-                No active workspace selected. Choose a workspace from navigation.
-              </p>
-            )}
-          </section>
-          <section className="rounded-lg border border-border bg-card p-5">
+              )}
+            </section>
+          )}
+          <section className="min-w-0 rounded-lg border border-border bg-card p-5 sm:p-6">
             <h2 className="text-base font-semibold">Password recovery</h2>
             <p className="my-3 text-sm leading-6 text-muted-foreground">
               Send a reset link to your account email, then follow the link to choose a new
@@ -225,13 +249,13 @@ function ProfilePage() {
                     : "Send reset link"}
             </BrutalButton>
           </section>
-          <section className="rounded-lg border border-border bg-card p-5">
+          <section className="min-w-0 rounded-lg border border-border bg-card p-5 sm:p-6">
             <h2 className="text-base font-semibold">Your sessions</h2>
             <p className="my-3 text-sm leading-6 text-muted-foreground">
               Sign out of this browser and its open tabs. Your saved audits remain available when
               you return.
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap">
               <BrutalButton size="sm" onClick={() => void logout("local")} disabled={signingOut}>
                 <SignOut size={16} />
                 {signingOut ? "Signing out…" : "Sign out of this browser"}
@@ -256,6 +280,7 @@ function ProfilePage() {
             </p>
           </section>
         </div>
+        <GitHubAccounts />
         {canReadActivity && (
           <section className="rounded-lg border border-border bg-card p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
@@ -354,6 +379,6 @@ function ProfilePage() {
           ))}
         </div>
       </dialog>
-    </AppShell>
+    </Shell>
   );
 }

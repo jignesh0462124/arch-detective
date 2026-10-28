@@ -93,6 +93,11 @@ export function useActiveWorkspace() {
   }, []);
 
   const setActive = useCallback((id: string) => {
+    if (
+      typeof window !== "undefined" &&
+      !window.dispatchEvent(new Event("archon-before-workspace-change", { cancelable: true }))
+    )
+      return;
     setActiveId(id);
     if (typeof window !== "undefined") {
       accountStorage.setItem(ACTIVE_WS_KEY, id);

@@ -1,8 +1,5 @@
 import { accountStorage } from "@/lib/authState";
-import {
-  dbFetchFindings,
-  dbUpdateFindingState,
-} from "./database";
+import { dbFetchFindings, dbUpdateFindingState } from "./database";
 import type { Finding, FindingDetail } from "./types";
 
 export interface FindingListResponse {
@@ -24,7 +21,28 @@ export interface FindingFilters {
 const OVERRIDES_STORAGE_KEY = "archon_findings_state_overrides_v1";
 const DATABASE_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-function getLocalFindingStateOverrides(): Record<string, "open" | "accepted_risk" | "resolved" | "false_positive"> {
+function isFindingSource(value: unknown): value is Finding["source"] {
+  return (
+    typeof value === "string" &&
+    [
+      "static-rule",
+      "semgrep",
+      "bandit",
+      "trufflehog",
+      "pip-audit",
+      "npm-audit",
+      "log-anomaly",
+      "llm-review",
+      "architecture",
+      "code",
+    ].includes(value)
+  );
+}
+
+function getLocalFindingStateOverrides(): Record<
+  string,
+  "open" | "accepted_risk" | "resolved" | "false_positive"
+> {
   if (typeof window === "undefined") return {};
   try {
     const raw = accountStorage.getItem(OVERRIDES_STORAGE_KEY);
@@ -39,10 +57,12 @@ export async function fetchFindings(
   filters: FindingFilters = {},
 ): Promise<FindingListResponse> {
   const persisted = DATABASE_ID.test(scanId) || scanId === "latest";
-  let items = persisted ? await dbFetchFindings(scanId, {
-    severity: filters.severity,
-    state: filters.state,
-  }) : [];
+  let items = persisted
+    ? await dbFetchFindings(scanId, {
+        severity: filters.severity,
+        state: filters.state,
+      })
+    : [];
 
   // Never resurrect deleted/empty server scans from browser history or mask server state.
   if (persisted) {
@@ -138,10 +158,10 @@ export async function fetchFindings(
                   file_path: f.file_path ?? null,
                   line_number: f.line_number ?? null,
                   code_snippet: f.code_snippet ?? null,
-                  source: (f.source as any) || "code",
+                  source: isFindingSource(f.source) ? f.source : "code",
                   remediation: Array.isArray(f.remediation_steps)
                     ? f.remediation_steps.join("\n")
-                    : f.remediation ?? null,
+                    : (f.remediation ?? null),
                   fingerprint: f.fingerprint ?? null,
                   state: currentState,
                   violations: Array.isArray(f.violations) ? f.violations : undefined,
@@ -217,7 +237,7 @@ export async function fetchFinding(scanId: string, findingId: string): Promise<F
 
   return {
     ...finding,
-    violations: (finding.violations as any) || [],
+    violations: finding.violations || [],
     remediation_steps: finding.remediation ? [finding.remediation] : [],
     remediation_priority: finding.severity === "critical" ? "immediate" : "short-term",
   };
@@ -232,7 +252,8 @@ export async function updateFindingState(
   // Persist server findings first. A denied write must not appear successful locally.
   const isDatabaseId = DATABASE_ID.test(findingId);
   if (isDatabaseId) {
-    if (!DATABASE_ID.test(scanId)) throw new Error("A saved scan is required to update this finding.");
+    if (!DATABASE_ID.test(scanId))
+      throw new Error("A saved scan is required to update this finding.");
     await dbUpdateFindingState(findingId, state, scanId);
     return { finding_id: findingId, state, previous_state: null };
   }
@@ -263,9 +284,11 @@ export async function updateFindingState(
             const parsed = JSON.parse(raw);
             let modified = false;
 
-            const checkAndModifyFindings = (findingsList: any[]) => {
+            const checkAndModifyFindings = (findingsList: unknown[]) => {
               for (let idx = 0; idx < findingsList.length; idx++) {
-                const f = findingsList[idx];
+                const value = findingsList[idx];
+                if (!value || typeof value !== "object" || Array.isArray(value)) continue;
+                const f = value as Record<string, unknown>;
                 const generatedId = `${scanId || "scan"}-${idx}`;
                 if (f.id === findingId || f.title === findingId || generatedId === findingId) {
                   f.state = state;
@@ -281,7 +304,13 @@ export async function updateFindingState(
                 if (item.result?.findings) checkAndModifyFindings(item.result.findings);
                 if (item.findings) checkAndModifyFindings(item.findings);
               }
-            } else if (parsed && typeof parsed === "object" && (parsed.id === scanId || parsed.scanId === scanId || parsed.result?.scan_id === scanId)) {
+            } else if (
+              parsed &&
+              typeof parsed === "object" &&
+              (parsed.id === scanId ||
+                parsed.scanId === scanId ||
+                parsed.result?.scan_id === scanId)
+            ) {
               if (parsed.result?.findings) checkAndModifyFindings(parsed.result.findings);
               if (parsed.findings) checkAndModifyFindings(parsed.findings);
             }

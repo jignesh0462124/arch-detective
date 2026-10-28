@@ -235,14 +235,10 @@ def _render_via_browser(browser_path: str, html_content: str) -> bytes:
             "--disable-component-update",
             "--disable-domain-reliability",
             "--disable-features=Translate,OptimizationHints,MediaRouter,CalculateNativeWinOcclusion",
-            "--disable-hang-monitor",
-            "--disable-ipc-flooding-protection",
-            "--disable-popup-blocking",
             "--disable-prompt-on-repost",
             "--disable-renderer-backgrounding",
             "--metrics-recording-only",
             "--mute-audio",
-            "--no-sandbox",
             "--disable-dev-shm-usage",
             "--hide-scrollbars",
             f"--print-to-pdf={pdf_file.resolve()}",
@@ -252,7 +248,7 @@ def _render_via_browser(browser_path: str, html_content: str) -> bytes:
         # 1. Primary: modern Blink headless pipeline (--headless=new)
         cmd_new = [browser_path, "--headless=new"] + base_flags
         try:
-            res = subprocess.run(cmd_new, capture_output=True, timeout=25)
+            res = subprocess.run(cmd_new, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=25)
             if pdf_file.exists() and pdf_file.stat().st_size > 0:
                 return pdf_file.read_bytes()
         except subprocess.TimeoutExpired:
@@ -262,14 +258,17 @@ def _render_via_browser(browser_path: str, html_content: str) -> bytes:
 
         # 2. Fallback: legacy headless flag (--headless)
         cmd_legacy = [browser_path, "--headless"] + base_flags
-        res = subprocess.run(cmd_legacy, capture_output=True, timeout=25)
+        res = subprocess.run(cmd_legacy, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=25)
         if pdf_file.exists() and pdf_file.stat().st_size > 0:
             return pdf_file.read_bytes()
 
-        raise RuntimeError(
-            f"Browser PDF generation failed (code {res.returncode}): "
-            f"{res.stderr.decode('utf-8', errors='replace')}"
-        )
+        raise RuntimeError(f"Browser PDF generation failed (code {res.returncode})")
+
+
+def _deny_report_resource(_url: str, **_kwargs):
+    # The report template is self-contained: inline styles, text and system fonts.
+    # WeasyPrint does not enforce browser CSP, so block all external/file fetches here.
+    raise ValueError("External report resources are disabled")
 
 
 _PDF_CACHE: OrderedDict[str, tuple[float, bytes]] = OrderedDict()
@@ -278,7 +277,7 @@ _RENDER_SLOTS = threading.BoundedSemaphore(2)
 _ADMISSION = threading.BoundedSemaphore(6)
 _CACHE_BYTES = 50 * 1024 * 1024
 _CACHE_TTL = 600
-_TEMPLATE_VERSION = "reports-v3.0"
+_TEMPLATE_VERSION = "reports-v3.1-resource-restricted"
 
 
 class PdfBusy(RuntimeError):
@@ -366,10 +365,6 @@ def _render_pdf_report(scan_data: dict[str, Any]) -> bytes:
         findings.append(finding)
     framework_scores = scan_data.get("framework_scores", {})
 
-    # The modern editorial template renders high-fidelity progress bars and metrics via pure CSS/HTML.
-    # We omit matplotlib figure rendering to shave off 1.5+ seconds of blocking CPU time.
-    chart_b64 = ""
-
     template_ctx = {
         "scan": scan_data.get("scan", {}),
         "findings": findings,
@@ -381,7 +376,6 @@ def _render_pdf_report(scan_data: dict[str, Any]) -> bytes:
         "report_id": scan_data.get("report_id", ""),
         "generated_at": scan_data.get("generated_at", datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")),
         "severity_counts": _severity_counts(findings),
-        "compliance_chart_b64": chart_b64,
         "framework_breakdown": _build_framework_breakdown(findings, framework_scores, scan_data.get("scan", {}).get("selected_frameworks")),
         "top_violated_controls": _build_top_violated_controls(findings),
     }
@@ -405,7 +399,7 @@ def _render_pdf_report(scan_data: dict[str, Any]) -> bytes:
         try:
             from weasyprint import HTML
 
-            pdf_bytes = HTML(string=html_content, base_url=str(_TEMPLATES_DIR)).write_pdf(
+            pdf_bytes = HTML(string=html_content, url_fetcher=_deny_report_resource).write_pdf(
                 optimize_images=True,
                 presentational_hints=True,
             )

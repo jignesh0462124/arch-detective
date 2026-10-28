@@ -83,7 +83,7 @@ function AuditHistoryPanel({
   const close = useRef<HTMLButtonElement>(null);
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState({ q: "", status: "all" as AuditHistoryStatus, offset: 0 });
-  const [visible, setVisible] = useState(document.visibilityState === "visible");
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     const timeout = setTimeout(
       () =>
@@ -134,6 +134,7 @@ function AuditHistoryPanel({
       setVisible(active);
       if (active) void refetch();
     };
+    setVisible(document.visibilityState === "visible");
     document.addEventListener("visibilitychange", changed);
     return () => document.removeEventListener("visibilitychange", changed);
   }, [refetch]);

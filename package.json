@@ -18,6 +18,7 @@
     "test:findings": "node --experimental-strip-types --test tests/findings.test.mjs tests/findings-api.test.mjs",
     "test:reports": "node --experimental-strip-types --test tests/reports.test.mjs",
     "test:auth": "node --test tests/auth.test.mjs tests/auth-api.test.mjs tests/auth-bridge.test.mjs",
+    "test:ssr": "node --experimental-strip-types --test tests/browser-visibility.test.mjs tests/ssr-pages.test.mjs",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
@@ -31,8 +32,6 @@
     "@tanstack/router-plugin": "^1.167.28",
     "clsx": "^2.1.1",
     "fflate": "0.8.3",
-    "groq-sdk": "^1.6.0",
-    "lucide-react": "^0.575.0",
     "monaco-editor": "0.55.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -40,6 +39,10 @@
     "tailwindcss": "^4.2.1",
     "tw-animate-css": "^1.3.4",
     "vite-tsconfig-paths": "^6.0.2"
+  },
+  "overrides": {
+    "dompurify": "3.4.17",
+    "postcss-selector-parser": "7.1.7"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.5.10",

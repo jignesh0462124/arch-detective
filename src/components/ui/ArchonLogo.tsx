@@ -41,13 +41,7 @@ export function ArchonLogo({
         fill={ink}
         fillRule="evenodd"
       />
-      <rect
-        x="28"
-        y="48"
-        width="8"
-        height="8"
-        fill={variant === "mono" ? ink : "#FF5600"}
-      />
+      <rect x="28" y="48" width="8" height="8" fill={variant === "mono" ? ink : "#FF5600"} />
     </svg>
   );
 }

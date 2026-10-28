@@ -1,13 +1,5 @@
-import {
-  dbFetchScans,
-  dbFetchScan,
-  dbCreateScan,
-  dbDeleteScan,
-} from "./database";
-import type {
-  Scan,
-  ScanStatusResponse,
-} from "./types";
+import { dbFetchScans, dbFetchScan, dbCreateScan, dbDeleteScan } from "./database";
+import type { Scan, ScanStatusResponse } from "./types";
 
 export interface CreateScanPayload {
   workspace_id: string;

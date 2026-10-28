@@ -11,12 +11,14 @@ const bundle = await build({
       import { AiModelSelector } from "./src/components/ai-assistant/AiModelSelector";
       import { AiMessage } from "./src/components/ai-assistant/AiMessage";
       import { SaaSHeroMotionGraphic } from "./src/components/marketing/SaaSHeroMotionGraphic";
+      import { PrivacyContent } from "./src/components/settings/LegalContent";
       export { advisorErrorMessage } from "./src/lib/advisorPresentation";
       export const selector = () => renderToStaticMarkup(createElement(AiModelSelector, {
         selectedModel: "glm-5-3-flash", onSelectModel: () => {}
       }));
       export const message = (message) => renderToStaticMarkup(createElement(AiMessage, {message}));
       export const workflow = () => renderToStaticMarkup(createElement(SaaSHeroMotionGraphic));
+      export const privacy = () => renderToStaticMarkup(createElement(PrivacyContent));
     `,
     resolveDir: process.cwd(),
   },
@@ -55,6 +57,19 @@ test("responses retain their content without repeated model badges", () => {
   assert.match(html, /Security Advisor/);
   assert.match(html, /Review and test this proposed change\. CWE-89\./);
   assert.doesNotMatch(html, /GLM|Neural|ANALYST QUERY/);
+});
+
+test("response formatting preserves literal hashes and escapes untrusted code", () => {
+  const html = ui.message({
+    id: "literal-code",
+    role: "assistant",
+    content:
+      "Use `url#section` and `a##b`.\nC#\n**C#**\n- `# comment #`\nhttps://example.test/#section\n```html\n<script>alert(1)</script>\n```",
+  });
+  for (const value of ["url#section", "a##b", "C#", "# comment #", "https://example.test/#section"])
+    assert.ok(html.includes(value), value);
+  assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
+  assert.doesNotMatch(html, /<script>/);
 });
 
 test("pending response has honest loading text", () => {
@@ -113,8 +128,8 @@ test("removed branding does not return in navigation, metadata or public marketi
     "src/components/brutal/AppShell.tsx",
   ])
     assert.doesNotMatch(await readFile(path, "utf8"), /<Sparkle\b|>AI Advisor<|Open in AI Advisor/);
-  const privacy = await readFile("src/routes/privacy.tsx", "utf8");
-  assert.match(privacy, /external AI providers/);
+  assert.match(await readFile("src/routes/privacy.tsx", "utf8"), /<PrivacyContent\s*\/>/);
+  assert.match(ui.privacy(), /external AI providers/);
   const reports = await readFile("src/components/reports/ReportUi.tsx", "utf8");
   assert.match(reports, /Static checks and AI review/);
 });

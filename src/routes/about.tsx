@@ -132,7 +132,7 @@ function AboutPage() {
               <section
                 key={stage.step}
                 id={isFirst ? "how-it-works" : undefined}
-                className="scroll-mt-24 overflow-hidden rounded-sm border border-border bg-card"
+                className="scroll-mt-24 overflow-hidden rounded-lg border border-border bg-card text-card-foreground"
               >
                 <div className="grid lg:min-h-[520px] lg:grid-cols-2">
                   <div
@@ -217,7 +217,7 @@ function AboutPage() {
                       loading={isFirst ? "eager" : "lazy"}
                       fetchPriority={isFirst ? "high" : "auto"}
                     />
-                    <figcaption className="absolute bottom-4 left-4 rounded-md border border-white/15 bg-black/85 px-2.5 py-1.5 font-mono text-[10px] text-white">
+                    <figcaption className="absolute bottom-4 left-4 rounded-md border border-white/30 bg-black/90 px-3 py-2 font-mono text-xs text-white">
                       {stage.step} / {stage.label.toLowerCase()}
                     </figcaption>
                   </figure>
@@ -269,12 +269,6 @@ function AboutPage() {
                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/85"
               >
                 Launch console <ArrowRight size={14} strokeWidth={2.5} />
-              </Link>
-              <Link
-                to="/reports"
-                className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-card px-5 py-2.5 text-sm font-medium transition-colors hover:bg-secondary"
-              >
-                View reports
               </Link>
             </div>
           </section>

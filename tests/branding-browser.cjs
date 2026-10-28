@@ -1,5 +1,7 @@
 // Run with playwright-cli run-code --filename tests/branding-browser.cjs.
 // Uses the isolated fixture only: no account, provider or real audit requests.
+// Playwright CLI requires a function expression without a trailing semicolon.
+// prettier-ignore
 async (page) => {
   const fixture = "http://127.0.0.1:5175/tests/workbench-preview/index.html";
   const metrics = async () =>
@@ -41,7 +43,8 @@ async (page) => {
       if (width === 390) {
         await page.getByRole("button", { name: "Select model", exact: true }).click();
         const bounds = await page.getByRole("listbox", { name: "Available models" }).boundingBox();
-        if (!bounds || bounds.x < 0 || bounds.x + bounds.width > width) throw new Error("Mobile model menu is clipped");
+        if (!bounds || bounds.x < 0 || bounds.x + bounds.width > width)
+          throw new Error("Mobile model menu is clipped");
         await page.keyboard.press("Escape");
       }
       await page.screenshot({

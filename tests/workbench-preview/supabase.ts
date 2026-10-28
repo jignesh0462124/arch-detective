@@ -140,6 +140,10 @@ export const supabase = {
     return query;
   },
   auth: {
+    updateUser: async ({ data }: { data: Record<string, string> }) =>
+      state === "name-error"
+        ? { data: { user: null }, error: new Error("Fixture rejected write") }
+        : { data: { user: { id: "fixture-user", user_metadata: data } }, error: null },
     getSession: async () => ({
       data: { session: { access_token: "isolated-ui-fixture-not-a-real-token" } },
       error: null,

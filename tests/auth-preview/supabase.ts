@@ -1,5 +1,15 @@
 import type { Session } from "@supabase/supabase-js";
 type Callback = (event: string, session: Session | null) => void;
+declare global {
+  interface Window {
+    lastScope?: string;
+    authFixture: {
+      emit: (event: string, next: Session | null) => void;
+      fake: (id?: string) => Session;
+      stats: () => { calls: number; updates: number; signouts: number; subscribes: number };
+    };
+  }
+}
 let callback: Callback | null = null;
 let session: Session | null = null;
 let signouts = 0;
@@ -62,7 +72,7 @@ export const supabase = {
     },
     signOut: async ({ scope }: { scope: string }) => {
       signouts++;
-      (window as any).lastScope = scope;
+      window.lastScope = scope;
       if ((scenario === "logout-failure" || scenario === "recovery") && signouts === 1)
         return { error: new Error("offline") };
       emit("SIGNED_OUT", null);
@@ -75,7 +85,7 @@ export const supabase = {
     },
   },
 };
-(window as any).authFixture = {
+window.authFixture = {
   emit,
   fake,
   stats: () => ({ calls, updates, signouts, subscribes }),

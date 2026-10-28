@@ -31,8 +31,10 @@ async function authFailureMessage() {
   return "Could not check your session. Check your connection and retry.";
 }
 
-export async function advisorCapabilities(signal?: AbortSignal): Promise<{ available: boolean }> {
-  return apiClient<{ available: boolean }>("/api/v1/ai/capabilities", {
+export async function advisorCapabilities(
+  signal?: AbortSignal,
+): Promise<{ available: boolean; history_available?: boolean }> {
+  return apiClient<{ available: boolean; history_available?: boolean }>("/api/v1/ai/capabilities", {
     signal,
     cache: "no-store",
   });
@@ -43,6 +45,12 @@ export async function* streamChat(
   modelOverride?: string,
   signal?: AbortSignal,
   context?: FindingContextIds,
+  options?: {
+    conversationId?: string;
+    submissionId?: string;
+    codeSolution?: boolean;
+    onAccepted?: () => void;
+  },
 ): AsyncGenerator<string> {
   if (signal?.aborted) return;
   const token = await accessToken();
@@ -51,7 +59,14 @@ export async function* streamChat(
     method: "POST",
     signal,
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ messages, model: modelOverride || getStoredModelId(), context }),
+    body: JSON.stringify({
+      messages,
+      model: modelOverride || getStoredModelId(),
+      context,
+      conversation_id: options?.conversationId,
+      submission_id: options?.submissionId,
+      code_solution: options?.codeSolution || false,
+    }),
   });
   if (!response.ok) {
     if (response.status === 401) throw new Error(await authFailureMessage());
@@ -64,6 +79,7 @@ export async function* streamChat(
     );
   }
   if (!response.body) throw new Error("Advisor returned an empty response.");
+  options?.onAccepted?.();
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
   let pending = "";
@@ -91,7 +107,12 @@ export async function* streamChat(
         } catch {
           continue;
         }
-        if (event.error) throw new Error("Advisor stream was interrupted. Please retry.");
+        if (event.error)
+          throw new Error(
+            event.error === "conversation_save_failed"
+              ? "The response could not be saved. Copy any visible suggestion before retrying."
+              : "Advisor stream was interrupted. Please retry.",
+          );
         const content = event.choices?.[0]?.delta?.content;
         if (typeof content === "string" && content) {
           received = true;
@@ -100,7 +121,9 @@ export async function* streamChat(
       }
       if (done) break;
     }
-    if (!received) throw new Error("Advisor returned no content.");
+    throw new Error(
+      received ? "Advisor stream was interrupted. Please retry." : "Advisor returned no content.",
+    );
   } finally {
     await reader.cancel().catch(() => {});
     reader.releaseLock();

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useUnsavedSettings } from "@/hooks/useUnsavedSettings";
+import { SettingsFrame } from "@/components/ui/SettingsFrame";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Copy, Check, FloppyDisk, Trash, UserPlus } from "@phosphor-icons/react";
 import { AppShell } from "@/components/brutal/AppShell";
@@ -65,7 +67,14 @@ function Failure({ children, retry }: { children: ReactNode; retry: () => void }
     </div>
   );
 }
-export function WorkspaceSettingsPage({ workspaceId }: { workspaceId: string }) {
+export function WorkspaceSettingsPage({
+  workspaceId,
+  embedded = false,
+}: {
+  workspaceId: string;
+  embedded?: boolean;
+}) {
+  const Shell = embedded ? SettingsFrame : AppShell;
   const workspace = useWorkspace(workspaceId);
   const { active, workspaces, setActive } = useActiveWorkspace();
   useEffect(() => {
@@ -78,24 +87,25 @@ export function WorkspaceSettingsPage({ workspaceId }: { workspaceId: string }) 
   }, [workspace.data, workspaceId, active?.id, workspaces, setActive]);
   if (workspace.isPending)
     return (
-      <AppShell title="Workspace settings">
+      <Shell title="Workspace settings">
         <p role="status" className="p-5 text-sm">
           Loading workspace settings…
         </p>
-      </AppShell>
+      </Shell>
     );
   if (workspace.isError || !workspace.data)
     return (
-      <AppShell title="Workspace settings">
+      <Shell title="Workspace settings">
         <Failure retry={() => void workspace.refetch()}>
           This workspace could not be loaded. It may be unavailable, access may have changed, or the
           service may be temporarily unreachable.
         </Failure>
-      </AppShell>
+      </Shell>
     );
-  return <SettingsForm workspace={workspace.data} />;
+  return <SettingsForm key={workspaceId} workspace={workspace.data} embedded={embedded} />;
 }
-function SettingsForm({ workspace }: { workspace: Workspace }) {
+function SettingsForm({ workspace, embedded }: { workspace: Workspace; embedded: boolean }) {
+  const Shell = embedded ? SettingsFrame : AppShell;
   const { user } = useAuth();
   const id = workspace.id;
   const navigate = useNavigate();
@@ -266,10 +276,16 @@ function SettingsForm({ workspace }: { workspace: Workspace }) {
     name.trim() !== workspace.name || slug.trim().toLowerCase() !== workspace.slug;
   const defaultsChanged =
     [...selected].sort().join(",") !== auditDefaults(workspace.settings).sort().join(",");
+  useUnsavedSettings(
+    allowed && (generalChanged || defaultsChanged || !!email.trim()),
+    "Leave without saving your workspace edits?",
+  );
   return (
-    <AppShell title="Workspace settings" subtitle={`Workspace · ${workspace.name}`}>
+    <Shell title="Workspace settings" subtitle={`Workspace · ${workspace.name}`}>
       <div className="mx-auto w-full max-w-5xl space-y-5 pb-8">
-        <GitHubRepositories key={workspace.id} workspaceId={workspace.id} role={workspace.role} />
+        {!embedded && (
+          <GitHubRepositories key={workspace.id} workspaceId={workspace.id} role={workspace.role} />
+        )}
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border bg-card p-4">
           <p className="text-sm text-muted-foreground">
             Manage details, audit defaults and team access. Your role:{" "}
@@ -744,6 +760,6 @@ function SettingsForm({ workspace }: { workspace: Workspace }) {
           </SectionCard>
         )}
       </div>
-    </AppShell>
+    </Shell>
   );
 }

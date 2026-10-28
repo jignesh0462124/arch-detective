@@ -6,7 +6,7 @@ import asyncio
 from contextlib import asynccontextmanager
 import time
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 try:
@@ -26,6 +26,7 @@ except ImportError:
 
 from app.api import api_router
 from app.api.local_scan import router as local_scan_router
+from app.api.local_access import local_api_enabled
 from app.config import settings
 from app.middleware.request_logging import RequestLoggingMiddleware
 
@@ -98,7 +99,8 @@ app.add_middleware(
 app.add_middleware(RequestLoggingMiddleware)
 
 app.include_router(api_router)
-app.include_router(local_scan_router)
+if local_api_enabled():
+    app.include_router(local_scan_router)
 
 
 # ── Health ────────────────────────────────────────────────────────────────────
@@ -107,7 +109,7 @@ async def health_check() -> dict:
     """Fast health check: reports readiness of API and local in-process scanner."""
     components: dict[str, str] = {
         "api": "ok",
-        "local_scanner": "ready",
+        "local_scanner": "ready" if local_api_enabled() else "disabled",
     }
 
     from fastapi.responses import JSONResponse
@@ -124,7 +126,3 @@ async def health_check() -> dict:
     )
 
 
-# ── Sentry smoke-test ─────────────────────────────────────────────────────────
-@app.get("/debug/sentry-test", include_in_schema=False)
-async def sentry_test(request: Request) -> dict:
-    raise RuntimeError("Sentry test error — ignore")
