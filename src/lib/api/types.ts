@@ -56,6 +56,7 @@ export interface BootstrapResponse {
 }
 
 export interface Scan {
+  source_config?: { review_kind?: string };
   id: string;
   workspace_id: string;
   created_by: string;

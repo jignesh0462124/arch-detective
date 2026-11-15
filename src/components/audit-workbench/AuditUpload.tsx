@@ -32,6 +32,11 @@ const GitHubRepositories = lazy(() =>
     default: module.GitHubRepositories,
   })),
 );
+const ExtensionUpload = lazy(() =>
+  import("@/components/extension-review/ExtensionUpload").then((module) => ({
+    default: module.ExtensionUpload,
+  })),
+);
 import { AUDIT_FRAMEWORKS, auditDefaults } from "@/lib/workspaceSettings";
 import type { WorkspaceSettings } from "@/lib/api/workspaces";
 
@@ -65,7 +70,7 @@ export function AuditUpload({
   const mounted = useRef(true);
   const accepted = useRef(false);
   const [file, setFile] = useState<File | null>(null);
-  const [source, setSource] = useState<"zip" | "github">("zip");
+  const [source, setSource] = useState<"zip" | "github" | "extension">("zip");
   const [name, setName] = useState("");
   const [selected, setSelected] = useState(() => auditDefaults(settings));
   const touchedDefaults = useRef(false);
@@ -305,6 +310,14 @@ export function AuditUpload({
                 >
                   GitHub repository
                 </BrutalButton>
+                <BrutalButton
+                  size="sm"
+                  variant={source === "extension" ? "primary" : "secondary"}
+                  aria-pressed={source === "extension"}
+                  onClick={() => setSource("extension")}
+                >
+                  Browser extension
+                </BrutalButton>
               </div>
             )}
             {error ? (
@@ -345,6 +358,14 @@ export function AuditUpload({
                   </div>
                 ) : null}
               </>
+            ) : source === "extension" ? (
+              <Suspense fallback={<p role="status">Opening extension review…</p>}>
+                <ExtensionUpload
+                  key={`${user?.id}/${workspaceId}`}
+                  workspaceId={workspaceId}
+                  role={role}
+                />
+              </Suspense>
             ) : source === "github" ? (
               <Suspense fallback={<p role="status">Opening repository selection…</p>}>
                 <GitHubRepositories

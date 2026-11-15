@@ -8,6 +8,7 @@ import {
   createRouter,
   Outlet,
   RouterProvider,
+  useSearch,
 } from "@tanstack/react-router";
 import { AuditWorkbench } from "../../src/components/audit-workbench/AuditWorkbench";
 import { AuditUpload } from "../../src/components/audit-workbench/AuditUpload";
@@ -17,6 +18,7 @@ import { Route as GraphRoute } from "../../src/routes/_app/attack-graph";
 import { Route as AdvisorRoute } from "../../src/routes/_app/advisor";
 import { Route as LandingRoute } from "../../src/routes/index";
 import { Route as AboutRoute } from "../../src/routes/about";
+import { Route as WorkbenchRoute } from "../../src/routes/workspace/$workspaceId/scans/$scanId/workbench";
 import { Route as FixRoute } from "../../src/routes/_app/fix-verification";
 import { Route as SettingsRoute } from "../../src/routes/_app/settings";
 import { Route as ProtectedRoute } from "../../src/routes/_app";
@@ -217,6 +219,7 @@ const finding = {
 };
 const result = {
   scan: {
+    source_config: options.get("extension") === "1" ? { review_kind: "extension" } : {},
     id: scanId,
     workspace_id: workspace.id,
     status: "completed",
@@ -234,7 +237,7 @@ const result = {
           id: "snapshot-fixture",
           scan_id: scanId,
           revision: 1,
-          state,
+          state: state.startsWith("solution-") ? "ready" : state,
           file_count: files.length,
           expires_at: new Date(Date.now() + 30 * 86400000).toISOString(),
           exclusions: [],
@@ -279,6 +282,7 @@ if (state === "empty" && result.snapshot) result.snapshot.state = "ready";
 
 // Block all API calls outside this fixture. No real credentials or cloud requests.
 const nativeFetch = window.fetch.bind(window);
+const extensionNotes = new Map<string, string>();
 window.fetch = async (input, init) => {
   const url = new URL(
     typeof input === "string" ? input : input instanceof URL ? input.href : input.url,
@@ -316,6 +320,137 @@ window.fetch = async (input, init) => {
   };
   const json = (value: unknown) =>
     new Response(JSON.stringify(value), { headers: { "Content-Type": "application/json" } });
+  if (url.pathname.includes("extension-reviews")) {
+    const policy = {
+      id: "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+      store: "chrome",
+      rule_id: "chrome.remote-code.script",
+      category: "security",
+      title: "Remote script reference",
+      outcome: "violation",
+      finding_id: null,
+    };
+    if (url.pathname.endsWith("/capabilities"))
+      return json({
+        enabled: state !== "extension-disabled",
+        policy_version: "fixture",
+        reason: "Extension review is awaiting setup. Project ZIP audits remain available.",
+      });
+    if (url.pathname.endsWith("extension-reviews") && init?.method === "POST")
+      return json({ scan_id: scanId, status: "running" });
+    if (url.pathname.endsWith("/annotation")) {
+      const id = url.pathname.split("/").at(-2)!;
+      extensionNotes.set(id, JSON.parse(String(init?.body)).note);
+      return json({ note: extensionNotes.get(id) });
+    }
+    if (url.pathname.endsWith("/assets")) return json({ items: [] });
+    if (url.pathname.includes("/compare/"))
+      return json({
+        items: [
+          { category: "still_present", title: "Remote script reference", path: "src/server.ts" },
+        ],
+        total: 1,
+        compatible: true,
+        counts: { still_present: 1 },
+        limitation: "This synthetic comparison has not changed any triage status.",
+      });
+    if (url.pathname.includes("/results/"))
+      return json({
+        ...policy,
+        source_available: true,
+        details: {
+          path: "src/server.ts",
+          line: 2,
+          explanation: "An extension entrypoint references code outside the submitted package.",
+          remedy: "Package the executable script locally and update the reference.",
+          verification: "Test the feature and recheck the corrected ZIP.",
+          evidence: '<script src="https://example.invalid/code.js"></script>',
+          policy_url:
+            "https://developer.chrome.com/docs/webstore/program-policies/mv3-requirements",
+          policy_version: "fixture",
+          reviewed_at: "2026-11-05",
+          method: "static",
+          exceptions: "Isolated sandbox contexts need separate review.",
+        },
+        notice: {
+          label: "Illustrative example — not a notice sent by Google or Microsoft",
+          message: "A store review may request changes. This is not an actual rejection.",
+          remedy: "Package executable logic locally.",
+          notification_id: "Blue Argon",
+          help_url: "https://developer.chrome.com/docs/webstore/troubleshooting",
+          reference_available: true,
+        },
+        annotation: extensionNotes.has(url.pathname.split("/").at(-1)!)
+          ? { note: extensionNotes.get(url.pathname.split("/").at(-1)!) }
+          : null,
+      });
+    if (url.pathname.endsWith("/results")) {
+      let rows = [
+        policy,
+        ...Array.from({ length: 64 }, (_, index) => ({
+          ...policy,
+          id: `cccccccc-cccc-4ccc-8ccc-${String(index).padStart(12, "0")}`,
+          title: `Manual policy requirement ${index + 1}`,
+          rule_id: `chrome.manual.${index}`,
+          category: index % 2 ? "permissions" : "listing",
+          outcome: "not_assessed",
+        })),
+      ];
+      if (url.searchParams.get("area") === "permissions")
+        rows = rows.filter((row) => row.category === "permissions");
+      if (url.searchParams.has("outcome"))
+        rows = rows.filter((row) => row.outcome === url.searchParams.get("outcome"));
+      if (url.searchParams.get("store_filter") === "edge")
+        rows = rows.map((row) => ({ ...row, store: "edge" }));
+      const offset = Number(url.searchParams.get("offset") || 0);
+      return json({ items: rows.slice(offset, offset + 50), total: rows.length });
+    }
+    if (url.pathname.endsWith("extension-reviews"))
+      return json({
+        items: [
+          {
+            scan_id: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+            package_name: "Fixture extension",
+            package_version: "0.9",
+          },
+        ],
+        total: 1,
+      });
+    return json({
+      scan_id: scanId,
+      status: "completed",
+      package_name: "Fixture extension",
+      package_version: "1.0",
+      manifest_version: 3,
+      stores: ["chrome", "edge"],
+      policy_version: "fixture",
+      declarations: {
+        purpose: "Read documents",
+        permissions: "Access only the active tab",
+        browser_settings: "No changes",
+        data_use: "No data collected",
+        advertising: "None",
+        paid_features: "None",
+        chrome: {
+          description: "Review documents locally",
+          privacy_text: "Data stays on the device",
+          privacy_url: "https://example.invalid/privacy",
+          screenshots_description: "Manual review required",
+        },
+        edge: {
+          description: "Review documents locally",
+          privacy_text: "Data stays on the device",
+          privacy_url: "https://example.invalid/privacy",
+          screenshots_description: "Manual review required",
+        },
+      },
+      coverage: {
+        total: 90,
+        outcomes: { violation: 1, needs_review: 4, not_assessed: 83, passed: 2 },
+        limitations: ["Static inspection only; store approval is not guaranteed."],
+      },
+    });
+  }
   if (url.pathname === "/api/v1/github/capabilities")
     return json({
       enabled: state !== "github-disabled",
@@ -394,6 +529,7 @@ window.fetch = async (input, init) => {
         title: payload.title,
         scan_id: payload.context?.scan_id || null,
         finding_id: payload.context?.finding_id || null,
+        policy_result_id: payload.context?.policy_result_id || null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         expires_at: new Date(Date.now() + 30 * 86400000).toISOString(),
@@ -428,11 +564,17 @@ window.fetch = async (input, init) => {
   if (url.pathname === "/api/v1/ai/chat") {
     const payload = JSON.parse(String(init?.body));
     metrics.advisorRequests++;
+    if (state === "solution-reject" && metrics.advisorRequests > 1)
+      return Response.json({}, { status: 503 });
     metrics.advisorModel = payload.model;
     metrics.advisorContext = payload.context || null;
     const question = payload.messages[payload.messages.length - 1].content;
     const answer =
-      "Bind the request value separately from SQL.\n\n```ts\nconst rows = database.query('SELECT id FROM users WHERE id = ?', [id]);\n```\n\nAssumption: the database client supports placeholders.\n\nVerify normal lookups and confirm quotes are treated as data.";
+      payload.code_solution && payload.context?.policy_result_id
+        ? '## Assessment\nThe recorded entrypoint references a remote script; review the extension context and policy exceptions.\n## Suggested code\n```html\n<script src="./dist/local.js"></script>\n```\n## How to verify\n- Bundle the dependency in the package.\n- Load the rebuilt extension in an isolated browser.\n- Recheck the corrected ZIP.\n## Explanation and assumptions\nThis is a review suggestion; confirm the local bundle preserves the feature.'
+        : payload.code_solution
+          ? "## Assessment\nBind the request value separately from SQL.\n## Suggested code\n```ts\nconst rows = database.query('SELECT id FROM users WHERE id = ?', [id]);\n```\n## How to verify\n- Verify normal lookups.\n- Confirm quotes are treated as data.\n## Explanation and assumptions\nThe database client must support placeholders. This suggestion has not been tested."
+          : "Bind the request value separately from SQL.\n\n```ts\nconst rows = database.query('SELECT id FROM users WHERE id = ?', [id]);\n```\n\nAssumption: the database client supports placeholders.\n\nVerify normal lookups and confirm quotes are treated as data.";
     if (payload.conversation_id)
       chatMessages[payload.conversation_id] = [
         ...(chatMessages[payload.conversation_id] || []),
@@ -475,12 +617,12 @@ window.fetch = async (input, init) => {
               signal?.removeEventListener("abort", abort);
               controller.enqueue(
                 encoder.encode(
-                  `data: ${JSON.stringify({ choices: [{ delta: { content: answer } }] })}\n\ndata: [DONE]\n\n`,
+                  `data: ${JSON.stringify({ choices: [{ delta: { content: state === "solution-truncated" ? "## Assessment\nPartial response.\n```js\nconst value =" : answer } }] })}\n\n${state === "solution-truncated" ? 'data: {"error":"response_truncated"}' : "data: [DONE]"}\n\n`,
                 ),
               );
               controller.close();
             },
-            state === "slow" ? 10000 : 800,
+            state === "slow" || state === "solution-slow" ? 10000 : 800,
           );
         },
         cancel() {
@@ -622,7 +764,10 @@ function Upload() {
   );
 }
 function Workbench() {
-  return <AuditWorkbench workspaceId={workspace.id} scanId={scanId} />;
+  const search = useSearch({ strict: false }) as { policyId?: string };
+  return (
+    <AuditWorkbench workspaceId={workspace.id} scanId={scanId} initialPolicyId={search.policyId} />
+  );
 }
 function Preview() {
   if (view === "settings") return <WorkspaceSettingsPage workspaceId={workspace.id} />;
@@ -687,6 +832,7 @@ const upload = createRoute({ getParentRoute: () => root, path: "/workspace", com
 const workbench = createRoute({
   getParentRoute: () => root,
   path: "/workspace/$workspaceId/scans/$scanId/workbench",
+  validateSearch: WorkbenchRoute.options.validateSearch,
   component: Workbench,
 });
 const app = createRoute({

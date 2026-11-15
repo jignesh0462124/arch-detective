@@ -121,7 +121,7 @@ class MemoryStore:
         for field in reversed(filters.get("order", "id.asc").split(",")):
             key, direction = field.split(".")
             ranks = {"critical": 0, "high": 1, "medium": 2, "low": 3}
-            entries.sort(key=lambda f: ranks.get(f.get(key), f.get(key) or ""), reverse=direction == "desc")
+            entries.sort(key=lambda f: ranks.get(f.get(key), f.get(key) if f.get(key) is not None else ""), reverse=direction == "desc")
         return {"items": entries[offset:offset + limit], "total": len(entries), "offset": offset, "limit": limit}
 
     async def role(self, workspace_id, token):
@@ -548,7 +548,7 @@ async def test_expiry_cleanup_and_stale_job_recovery():
     repository = MemoryStore()
     repository.tables["audit_workbench_jobs"] = [{"scan_id": "old", "status": "running", "heartbeat_at": (api.now() - timedelta(minutes=10)).isoformat()}]
     repository.tables["scans"] = [{"id": "old", "status": "running"}]
-    repository.tables["source_snapshots"] = [{"id": "snapshot", "state": "ready", "expires_at": (api.now() - timedelta(days=1)).isoformat()}]
+    repository.tables["source_snapshots"] = [{"id": "snapshot", "scan_id": "old", "state": "ready", "expires_at": (api.now() - timedelta(days=1)).isoformat()}]
     repository.tables["snapshot_files"] = [{"id": "file", "snapshot_id": "snapshot", "object_path": "workspace/scan/snapshot/file.txt"}]
     repository.objects["workspace/scan/snapshot/file.txt"] = "sanitized text"
     await api.maintenance_once(repository)

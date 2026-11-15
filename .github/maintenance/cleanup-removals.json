@@ -754,5 +754,40 @@
     "reason": "Reproducible pytest temporary artifact; source fixture retained",
     "recovery": "Git commit e901d5ff3c04f8283563362ee00e4afeea42c6cb",
     "verification": "Full tests, documentation references, build"
+  },
+  {
+    "path": "src/hooks/useScanProgress.ts",
+    "sha256": "11533c0852bdc9a4f9b092e5b44fd79183c480d3593f134513050e0ea35354f6",
+    "reason": "No executable consumers after checking source, tests, dynamic imports, routes and build configuration; historical design references retained and labelled.",
+    "recovery": "Git commit e901d5ff3c04f8283563362ee00e4afeea42c6cb",
+    "verification": "Frontend tests, TypeScript, lint and production build"
+  },
+  {
+    "path": "src/hooks/useFrameworks.ts",
+    "sha256": "5b155fe107c0f7d5acf99704be771927c0095de95d05f37e9bc0613b8c97ab30",
+    "reason": "No executable consumers after checking source, tests, dynamic imports, routes and build configuration; historical design references retained and labelled.",
+    "recovery": "Git commit e901d5ff3c04f8283563362ee00e4afeea42c6cb",
+    "verification": "Frontend tests, TypeScript, lint and production build"
+  },
+  {
+    "path": "src/hooks/useFindings.ts",
+    "sha256": "448e46e8053f76a31624bcf81257c29b272a1ce7481d47af7e157f1fb0a50c5e",
+    "reason": "No executable consumers after checking source, tests, dynamic imports, routes and build configuration; historical design references retained and labelled.",
+    "recovery": "Git commit e901d5ff3c04f8283563362ee00e4afeea42c6cb",
+    "verification": "Frontend tests, TypeScript, lint and production build"
+  },
+  {
+    "path": "src/components/ui/data-table.tsx",
+    "sha256": "507dd9f945501253ecc394cf8d23445e48151b3635b4ce44b595c27ef0d205e4",
+    "reason": "No executable consumers after checking source, tests, dynamic imports, routes and build configuration; historical design references retained and labelled.",
+    "recovery": "Git commit e901d5ff3c04f8283563362ee00e4afeea42c6cb",
+    "verification": "Frontend tests, TypeScript, lint and production build"
+  },
+  {
+    "path": "src/components/ui/pipeline-step.tsx",
+    "sha256": "dd7df5b586766d9ad86f1bc978782b1926ed4eb4b72e5cfeeac0f4e80519be61",
+    "reason": "No executable consumers after checking source, tests, dynamic imports, routes and build configuration; historical design references retained and labelled.",
+    "recovery": "Git commit e901d5ff3c04f8283563362ee00e4afeea42c6cb",
+    "verification": "Frontend tests, TypeScript, lint and production build"
   }
 ]

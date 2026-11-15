@@ -720,23 +720,29 @@
 input::placeholder, textarea::placeholder { color: var(--muted-foreground); opacity: 1; }
 select { color: var(--foreground); }
 option { color: var(--foreground); background: var(--card); }
+/* Size the editor from the remaining viewport, not a fixed source-text height.
+   Short screens scroll the main area instead of clipping controls or evidence. */
+.workbench-shell > div:first-child { height: 100dvh; min-height: 0; }
+.workbench-shell main { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: auto; }
+.workbench-shell main > header { flex-shrink: 0; }
+.workbench-shell main > div { flex: 1; min-height: 0; }
+.workbench-layout { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.workbench-layout > * { flex-shrink: 0; }
+.workbench-layout > .audit-workbench-grid { flex: 1 0 320px; margin-block-end: 0; }
+.workbench-layout > .workbench-status-bar { margin-block: 0; padding-top: 8px; }
+.audit-workbench-grid > section[aria-label="Source viewer"] > :not(.workbench-code-height) { flex-shrink: 0; }
+.audit-workbench-grid > aside { min-height: 0; overflow-y: auto; }
 .workbench-shell-expanded { position: fixed; inset: 0; z-index: 60; height: 100dvh; }
+.app-navigation-drawer { position: fixed; inset: 0 auto 0 0; margin: 0; padding: 0; width: min(320px, calc(100vw - 32px)); max-width: none; height: 100dvh; max-height: 100dvh; overflow-y: auto; overscroll-behavior: contain; border: 0; border-right: 1px solid var(--border); background: var(--sidebar); color: var(--foreground); }
+.app-navigation-drawer::backdrop { background: rgb(0 0 0 / 45%); }
 .workbench-shell-expanded > div { height: 100%; min-height: 0; max-width: none; }
 .workbench-shell-expanded > div > aside,
 .workbench-shell-expanded > nav,
 .workbench-shell-expanded main > header { display: none; }
-.workbench-shell-expanded main { height: 100%; padding: 12px; overflow: auto; }
+.workbench-shell-expanded main { height: 100%; padding: 12px 12px 0; overflow: auto; }
 .workbench-shell-expanded main > div { margin-top: 0; height: 100%; }
-.workbench-full { display: flex; flex-direction: column; height: 100%; }
-.workbench-full > * { flex-shrink: 0; }
-.workbench-full > .audit-workbench-grid { flex: 1 0 400px; }
 @media (min-width: 1024px) {
-  .workbench-full > .audit-workbench-grid { flex: 1 1 400px; min-height: 300px; grid-template-rows: minmax(180px, 1fr) minmax(120px, 25%); }
-  .workbench-full .audit-workbench-grid > section[aria-label="Source viewer"] { display: flex; flex-direction: column; min-height: 0; }
-  .workbench-full .workbench-code-height { flex: 1; min-height: 0; height: auto; }
-  .workbench-full .workbench-code-height > div { min-height: 0; }
-  .workbench-full .audit-workbench-grid > aside,
-  .workbench-full .audit-workbench-grid > section[aria-label="Audit problems and activity"] { overflow: auto; min-height: 0; }
+  .workbench-layout > .audit-workbench-grid { min-height: 388px; grid-template-rows: minmax(220px, 1fr) minmax(168px, 25%); }
   .workbench-full .audit-workbench-grid[data-hide-files="true"] { grid-template-columns: minmax(0,1fr); }
   .workbench-full [data-hide-files="true"] > aside[aria-label="Source files"] { display: none; }
 }

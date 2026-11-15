@@ -383,6 +383,11 @@ export function AdvisorWorkspace({ search }: { search: AdvisorSearch }) {
                   workspaceId: chat.findingContext.workspace_id,
                   scanId: chat.findingContext.scan_id,
                 }}
+                search={
+                  chat.findingContext.policy_result_id
+                    ? { policyId: chat.findingContext.policy_result_id }
+                    : {}
+                }
                 className="inline-flex min-h-10 shrink-0 items-center gap-1 text-xs text-accent"
               >
                 <FileCode size={15} />

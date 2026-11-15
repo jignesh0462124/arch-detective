@@ -2,7 +2,7 @@
 PDF report generator.
 
 - generate_compliance_chart()   → base64 PNG via matplotlib
-- generate_pdf_report()         → bytes via WeasyPrint + Jinja2
+- generate_pdf_report()         → bytes via Chromium (WeasyPrint fallback) + Jinja2
 """
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ import io
 import logging
 import os
 import json
+import re
 import threading
 import time
 from collections import Counter, OrderedDict
@@ -277,7 +278,7 @@ _RENDER_SLOTS = threading.BoundedSemaphore(2)
 _ADMISSION = threading.BoundedSemaphore(6)
 _CACHE_BYTES = 50 * 1024 * 1024
 _CACHE_TTL = 600
-_TEMPLATE_VERSION = "reports-v3.1-resource-restricted"
+_TEMPLATE_VERSION = "reports-v4.1-extension-review"
 
 
 class PdfBusy(RuntimeError):
@@ -327,6 +328,66 @@ def generate_pdf_report(scan_data: dict[str, Any]) -> bytes:
         _ADMISSION.release()
 
 
+def _remediation_blocks(finding: dict[str, Any]) -> list[dict[str, Any]]:
+    """Split saved fenced remedies without interpreting HTML or generating code.
+
+    Fences follow Markdown's matching-character/minimum-length closing rule.
+    An unterminated fence is kept, explicitly incomplete, rather than discarded.
+    """
+    steps = finding.get("remediation_steps")
+    if isinstance(steps, list) and steps:
+        text = "\n\n".join(str(step) for step in steps if step is not None)
+    else:
+        text = str(finding.get("remediation") or "")
+    blocks: list[dict[str, Any]] = []
+    prose: list[str] = []
+    code: list[str] | None = None
+    fence = ""
+    language = ""
+
+    def flush_prose():
+        if prose:
+            content = "\n".join(prose).strip()
+            if content:
+                blocks.append({"kind": "text", "text": content})
+            prose.clear()
+
+    for line in text.splitlines():
+        if code is not None:
+            if re.fullmatch(r" {0,3}" + re.escape(fence[0]) + "{" + str(len(fence)) + r",}\s*", line):
+                blocks.append({"kind": "code", "lines": code, "language": language, "complete": True})
+                code = None
+            else:
+                code.append(line)
+            continue
+        match = re.fullmatch(r" {0,3}(`{3,}|~{3,})([^`\n]*)", line)
+        if match:
+            flush_prose()
+            fence = match[1]
+            # The label is escaped like all finding data, never used as markup.
+            language = match[2].strip() or "Code"
+            code = []
+        else:
+            prose.append(line)
+    if code is not None:
+        blocks.append({"kind": "code", "lines": code, "language": language, "complete": False})
+    flush_prose()
+    return blocks
+
+
+def _report_timestamp(value: Any) -> str:
+    """Present saved timestamps in UTC; retain unparseable legacy labels."""
+    if not value:
+        return "Not recorded"
+    try:
+        date = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        if date.tzinfo is None:
+            return str(value)  # Do not assume a timezone for legacy dates.
+        return date.astimezone(timezone.utc).strftime("%d %b %Y, %H:%M UTC")
+    except ValueError:
+        return str(value)
+
+
 def _render_pdf_report(scan_data: dict[str, Any]) -> bytes:
     """
     Generate a PDF audit report from scan_data with caching and high-speed execution.
@@ -359,11 +420,28 @@ def _render_pdf_report(scan_data: dict[str, Any]) -> bytes:
         }.get(Path(str(finding.get("file_path") or "")).suffix.lower(), "Source")
         # Saved findings do not establish a separate excerpt start line.
         # Keep excerpt numbering distinct from the reported source location.
-        finding["remedy_steps"] = finding.get("remediation_steps") or [
-            line.strip() for line in str(finding.get("remediation") or "").splitlines() if line.strip()
-        ]
+        finding["remedy_blocks"] = _remediation_blocks(finding)
+        severity = str(finding.get("severity") or "").lower()
+        finding["report_severity"] = severity if severity in ("critical", "high", "medium", "low") else "other"
+        score = finding.get("cvss_score")
+        finding["report_cvss"] = score if (
+            isinstance(score, (int, float)) and not isinstance(score, bool) and 0 <= score <= 10
+        ) else None
+        finding["continuation_title"] = str(finding.get("title") or "Untitled finding")
+        if len(finding["continuation_title"]) > 100:
+            finding["continuation_title"] = finding["continuation_title"][:97] + "..."
         findings.append(finding)
+    order = {severity: index for index, severity in enumerate(("critical", "high", "medium", "low", "other"))}
+    findings.sort(key=lambda finding: order[finding["report_severity"]])
+    for index, finding in enumerate(findings, 1):
+        finding["report_ref"] = f"F-{index:03d}"
     framework_scores = scan_data.get("framework_scores", {})
+    scan = scan_data.get("scan", {})
+    # CSS generated content must never interpolate arbitrary report strings.
+    # The full unmodified reference remains visible in the cover's escaped HTML.
+    footer_reference = re.sub(r"[^A-Za-z0-9 ./_-]", "?", str(scan_data.get("report_id") or "Saved assessment"))
+    if len(footer_reference) > 42:
+        footer_reference = footer_reference[:39] + "..."
 
     template_ctx = {
         "scan": scan_data.get("scan", {}),
@@ -371,10 +449,15 @@ def _render_pdf_report(scan_data: dict[str, Any]) -> bytes:
         "framework_scores": framework_scores,
         "summary": scan_data.get("summary", {}),
         "analysis": scan_data.get("analysis", {}),
-        "coverage": scan_data.get("coverage", {}),
+          "coverage": scan_data.get("coverage", {}),
+          "extension_review": scan_data.get("extension_review"),
         "exclusions": scan_data.get("exclusions", []),
         "report_id": scan_data.get("report_id", ""),
         "generated_at": scan_data.get("generated_at", datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")),
+        "completed_label": _report_timestamp(scan.get("completed_at")),
+        "footer_reference": footer_reference,
+        "generated_label": _report_timestamp(scan_data.get("generated_at") or datetime.now(timezone.utc).isoformat()),
+        "other_severity_count": sum(f["report_severity"] == "other" for f in findings),
         "severity_counts": _severity_counts(findings),
         "framework_breakdown": _build_framework_breakdown(findings, framework_scores, scan_data.get("scan", {}).get("selected_frameworks")),
         "top_violated_controls": _build_top_violated_controls(findings),

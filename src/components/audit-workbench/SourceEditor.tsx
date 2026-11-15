@@ -224,7 +224,7 @@ export default function SourceEditor({
     }
   }, [ready, line, source, fileKey, focusKey]);
   return (
-    <div className="relative h-full min-h-[340px] w-full overflow-hidden">
+    <div className="relative h-full min-h-0 w-full overflow-hidden">
       <div
         ref={container}
         className={"h-full w-full " + (!ready || !source || failed ? "invisible" : "")}

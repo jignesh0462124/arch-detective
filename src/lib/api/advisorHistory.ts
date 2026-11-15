@@ -7,6 +7,7 @@ export type AdvisorConversation = {
   title: string;
   scan_id: string | null;
   finding_id: string | null;
+  policy_result_id?: string | null;
   created_at: string;
   updated_at: string;
   expires_at: string;

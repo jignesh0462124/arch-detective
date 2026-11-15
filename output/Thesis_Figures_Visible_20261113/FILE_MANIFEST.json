@@ -1,0 +1,92 @@
+[
+  {
+    "file": "01-research-workflow.png",
+    "bytes": 241482,
+    "sha256": "9f6cc7fba35588a01e6b1f13610c37d16683a13d4b7ac5d584e48f9827ff1131"
+  },
+  {
+    "file": "01-research-workflow.svg",
+    "bytes": 7920,
+    "sha256": "3d61472e17a7dac521ec0b10cbc04974c43a76749f7bf45ce09ff208d4ef51c2"
+  },
+  {
+    "file": "02-system-architecture.png",
+    "bytes": 412393,
+    "sha256": "edfbdeea4c8783b142798e2e879b5f949cfe3340b6f430c42a51c983200eb5ef"
+  },
+  {
+    "file": "02-system-architecture.svg",
+    "bytes": 10830,
+    "sha256": "836f15821b74e8d385b7e7106990930735f17761e33a07dc922cafe40dca9ee9"
+  },
+  {
+    "file": "03-dashboard.png",
+    "bytes": 370513,
+    "sha256": "7b225065984a3084161cd6dec58aeadc8fd49402c847c9ce59cf95e6c4b082be"
+  },
+  {
+    "file": "04-upload-and-scan-activity.png",
+    "bytes": 963430,
+    "sha256": "5205fa72470b9255839afe51a623d86aa84272ac09f75b8f22a1f4830ded3428"
+  },
+  {
+    "file": "05-findings.png",
+    "bytes": 614886,
+    "sha256": "765247075660581ecc24922a95fa9df47b2215ac0e0e5cfeab2cd1794d0ac8c9"
+  },
+  {
+    "file": "06-security-advisor.png",
+    "bytes": 442977,
+    "sha256": "3b7819f6bbbefc46db01fcc7fb034442a0b3ed33d9de586e01da0969745923b5"
+  },
+  {
+    "file": "07-audit-workbench.png",
+    "bytes": 567770,
+    "sha256": "79889ab0bbaa4b0d444d87e6ffbb4bd40f5293f71d9c1dc3765043fc28ac65c1"
+  },
+  {
+    "file": "08-attack-graph.png",
+    "bytes": 355072,
+    "sha256": "95dabfca02bc17bf66f6884f468915aae6a2c2219f884a6aefa2215929d1f2f0"
+  },
+  {
+    "file": "09-generated-report.png",
+    "bytes": 548875,
+    "sha256": "8b986795a099e01ee187c68e717a6e8a24ebeab2cf1a08129d10320e4f4b7ca0"
+  },
+  {
+    "file": "10-database-relationships.png",
+    "bytes": 330211,
+    "sha256": "7abc504b7c3050bd14b1722ff5d7fdf4753e73357123549e1f85ae0c3120558d"
+  },
+  {
+    "file": "10-database-relationships.svg",
+    "bytes": 14804,
+    "sha256": "a1d00aa27552e93a453ff7ec300e39a1500e557729c2cc0dfd91e59b5b46926c"
+  },
+  {
+    "file": "04a-upload.png",
+    "bytes": 368234,
+    "sha256": "b67791549d3ecce6dd3f3e1e3547eb1c4461114f74a7690b2f7e70ad6bfb329d"
+  },
+  {
+    "file": "04b-recorded-activity.png",
+    "bytes": 577363,
+    "sha256": "dc56e6cd8c0b9e0b50f25b7ae3f786a1d9aa7a85177720caf3eb7c0b4956d8f6"
+  },
+  {
+    "file": "09a-report-cover.png",
+    "bytes": 202172,
+    "sha256": "091a8e65e919caa6f40d8d61149dd120a54e78b6933ed7df77a827929edc86ab"
+  },
+  {
+    "file": "09b-report-evidence.png",
+    "bytes": 326550,
+    "sha256": "a212657428dfaaab6d063b97e69499d703d9c2f80e5160b5a878c93cdb6a2dd6"
+  },
+  {
+    "file": "CAPTIONS_AND_PLACEMENT.md",
+    "bytes": 8272,
+    "sha256": "9741357fcc742d14b73f8402e65753469982b1cc10e79ae619b9b1d3883e41e4"
+  }
+]

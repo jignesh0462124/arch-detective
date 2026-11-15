@@ -1,751 +1,149 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'none'; connect-src 'none'; img-src 'none'; font-src 'none'; base-uri 'none'; form-action 'none'">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Archon Security Audit Report — {{ scan.target_name }}</title>
+<title>Archon Security Audit Report - {{ scan.target_name | default('Untitled project', true) }}</title>
 <style>
-  /* ── Typography & Font Stacks (High-speed system fonts, zero external network delay) ── */
-
-  /* ── Archon Editorial Design Tokens (src/styles.css) ────────────── */
   :root {
-    --cream:            #f5f1ec;
-    --cream-deep:       #ebe7e1;
-    --card:             #ffffff;
-    --card-surface:     #fcfbf9;
-    --card-muted:       #f7f5f2;
-
-    --ink:              #111111;
-    --foreground:       #111111;
-    --text-primary:     #111111;
-    --text-secondary:   #3d3d3a;
-    --text-muted:       #626260;
-    --text-faint:       #8a8a86;
-
-    --accent:           #ff5600; /* Restrained Fin-orange accent */
-    --accent-subtle:    rgba(255, 86, 0, 0.08);
-    --accent-border:    rgba(255, 86, 0, 0.28);
-
-    --border:           #d3cec6;
-    --border-subtle:    #e3dfd7;
-    --border-strong:    #b8b2a8;
-
-    --severity-critical:    #c41c1c;
-    --severity-critical-bg: rgba(196, 28, 28, 0.08);
-    --severity-critical-border: rgba(196, 28, 28, 0.28);
-
-    --severity-high:        #fe4c02;
-    --severity-high-bg:    rgba(254, 76, 2, 0.08);
-    --severity-high-border:rgba(254, 76, 2, 0.28);
-
-    --severity-medium:      #9a6a00;
-    --severity-medium-bg:  rgba(179, 126, 0, 0.10);
-    --severity-medium-border:rgba(179, 126, 0, 0.28);
-
-    --severity-low:         #0007cb;
-    --severity-low-bg:     rgba(0, 7, 203, 0.07);
-    --severity-low-border: rgba(0, 7, 203, 0.24);
-
-    --success:              #0b8f3c;
-    --success-bg:           rgba(11, 143, 60, 0.08);
-    --success-border:       rgba(11, 143, 60, 0.28);
-
-    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --ink: #111111; --muted: #50504d; --cream: #f5f1ec; --border: #d3cec6;
+    --accent: #ff5600; --critical: #ad1818; --high: #a43800;
+    --medium: #785400; --low: #183ea5;
+    --sans: 'Segoe UI', Arial, sans-serif;
+    --mono: Consolas, 'Liberation Mono', monospace;
   }
-
-  /* ── Global Reset ───────────────────────────────────────────────── */
-  *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  html {
-    font-size: 9.5pt;
-    background: var(--cream);
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  body {
-    font-family: var(--font-sans);
-    background: var(--cream);
-    color: var(--text-primary);
-    line-height: 1.55;
-    font-feature-settings: "ss01", "cv11", "tnum";
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  /* ── A4 Page Layout & Running Headers ───────────────────────────── */
+  * { box-sizing: border-box; }
+  html { font: 10.5pt/1.45 var(--sans); color: var(--ink); background: white; }
+  body { margin: 0; }
   @page {
-    size: A4;
-    margin: 18mm 14mm 18mm 14mm;
-    background: #f5f1ec;
-
-    @top-left {
-      content: "Archon · Automated Security Report · Human Review Required";
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 7.5pt;
-      font-weight: 600;
-      color: #626260;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    @top-right {
-      content: "{{ scan.target_name }} · Audit Report";
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 7.5pt;
-      font-weight: 500;
-      color: #8a8a86;
-    }
-
-    @bottom-left {
-      content: "Report ID: {{ report_id }} · Confidential";
-      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-      font-size: 7pt;
-      color: #8a8a86;
-    }
-
-    @bottom-right {
-      content: "Page " counter(page) " of " counter(pages);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 7.5pt;
-      font-weight: 600;
-      color: #626260;
-    }
+    size: A4; margin: 19mm 16mm 19mm;
+    @top-left { content: 'ARCHON / SECURITY AUDIT'; font: 8pt 'Segoe UI', Arial, sans-serif; color: #50504d; }
+    @top-right { content: 'Saved assessment'; font: 8pt 'Segoe UI', Arial, sans-serif; color: #50504d; }
+    @bottom-left { content: 'ARCHON / {{ footer_reference }}'; font: 8pt 'Segoe UI', Arial, sans-serif; color: #50504d; }
+    @bottom-right { content: 'Page ' counter(page) ' of ' counter(pages); font: 8pt 'Segoe UI', Arial, sans-serif; color: #50504d; }
   }
-
-  @page :first {
-    margin: 0;
-    @top-left { content: normal; }
-    @top-right { content: normal; }
-    @bottom-left { content: normal; }
-    @bottom-right { content: normal; }
-  }
-
-  /* ── Cover Page Layout ──────────────────────────────────────────── */
-  .cover-sheet {
-    width: 210mm;
-    min-height: 297mm;
-    background: var(--cream);
-    display: flex;
-    flex-direction: column;
-    padding: 24mm 20mm 20mm 20mm;
-    page-break-after: always;
-    position: relative;
-    box-sizing: border-box;
-  }
-
-  /* Subtle editorial accent line at the very top */
-  .cover-top-line {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--accent);
-  }
-
-  /* Brand Lockup */
-  .cover-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 16px;
-    margin-bottom: 32px;
-  }
-
-  .brand-lockup {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .brand-icon {
-    width: 36px;
-    height: 36px;
-    background: var(--ink);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-  }
-
-  .brand-title-wrap {
-    line-height: 1.15;
-  }
-
-  .brand-title {
-    font-size: 15pt;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--ink);
-  }
-
-  .brand-title span {
-    color: var(--accent);
-  }
-
-  .brand-tagline {
-    font-size: 7.5pt;
-    font-weight: 500;
-    color: var(--text-muted);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
-
-  .confidential-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 10px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--card);
-    font-size: 7.5pt;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink);
-  }
-
-  .confidential-badge .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-  }
-
-  /* Cover Main Headline */
-  .cover-eyebrow {
-    font-size: 8.5pt;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .cover-title {
-    font-size: 30pt;
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    color: var(--ink);
-    margin-bottom: 14px;
-  }
-
-  .cover-description {
-    font-size: 10pt;
-    color: var(--text-secondary);
-    max-width: 620px;
-    line-height: 1.6;
-    margin-bottom: 28px;
-  }
-
-  /* 4-Metric Horizontal Strip */
-  .metric-strip {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    margin-bottom: 24px;
-    overflow: hidden;
-    width: 100%;
-  }
-
-  .metric-cell {
-    padding: 14px 14px;
-    border-right: 1px solid var(--border);
-    min-width: 0;
-    overflow: hidden;
-  }
-
-  .metric-cell:last-child {
-    border-right: none;
-  }
-
-  .metric-label {
-    font-size: 7pt;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-    margin-bottom: 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .metric-value {
-    font-size: 16pt;
-    font-weight: 800;
-    color: var(--ink);
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .metric-value.mono {
-    font-family: var(--font-mono);
-  }
-
-  .metric-sub {
-    font-size: 7.5pt;
-    color: var(--text-muted);
-    margin-top: 4px;
-    font-weight: 500;
-  }
-
-  /* Agent Verdict Callout (Archon signature: border-l-2 border-accent bg-secondary/40) */
-  .verdict-callout {
-    border: 1px solid var(--border);
-    border-left: 3.5px solid var(--accent);
-    background: var(--card);
-    border-radius: 8px;
-    padding: 18px 22px;
-    margin-bottom: 26px;
-  }
-
-  .verdict-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
-  }
-
-  .verdict-title {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 8.5pt;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--ink);
-  }
-
-  .verdict-text {
-    font-size: 10pt;
-    color: var(--text-secondary);
-    line-height: 1.6;
-    font-weight: 500;
-  }
-
-  /* Document Metadata Table */
-  .cover-meta-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: auto;
-    font-size: 8.5pt;
-  }
-
-  .cover-meta-table td {
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--border-subtle);
-    vertical-align: middle;
-  }
-
-  .cover-meta-table tr:last-child td {
-    border-bottom: none;
-  }
-
-  .meta-td-label {
-    width: 32%;
-    color: var(--text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-size: 7.5pt;
-    background: var(--card-surface);
-    border-right: 1px solid var(--border-subtle);
-  }
-
-  .meta-td-val {
-    color: var(--ink);
-    font-weight: 600;
-  }
-
-  .meta-td-val.mono {
-    font-family: var(--font-mono);
-    font-size: 8pt;
-    color: var(--text-primary);
-  }
-
-  /* Cover Footer */
-  .cover-bottom {
-    margin-top: 18px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 7.5pt;
-    color: var(--text-muted);
-  }
-
-  .cover-bottom-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .cover-bottom-right {
-    font-family: var(--font-mono);
-    color: var(--text-faint);
-  }
-
-  /* ── Content Layout & Section Titles ────────────────────────────── */
-  .report-content {
-    padding: 0;
-  }
-
-  .report-section {
-    margin-bottom: 24px;
-    page-break-inside: auto;
-  }
-
-  .section-header {
-    border-bottom: 1.5px solid var(--border);
-    padding-bottom: 10px;
-    margin-bottom: 18px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-  }
-
-  .section-eyebrow {
-    font-size: 7.5pt;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-    margin-bottom: 2px;
-  }
-
-  .section-heading {
-    font-size: 16pt;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--ink);
-    line-height: 1.15;
-  }
-
-  .section-heading-sub {
-    font-size: 8.5pt;
-    color: var(--text-muted);
-    margin-top: 3px;
-    font-weight: 400;
-  }
-
-  /* Lifted White Card (Archon style) */
-  .card-lifted {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 16px;
-  }
-
-  /* Brutal Badges */
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4.5px;
-    padding: 2.5px 7px;
-    border-radius: 5px;
-    font-size: 7.5pt;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    line-height: 1.2;
-    white-space: nowrap;
-    border: 1px solid transparent;
-  }
-
-  .badge-ink {
-    background: var(--ink);
-    color: #ffffff;
-  }
-
-  .badge-accent {
-    background: var(--accent);
-    color: #ffffff;
-  }
-
-  .badge-ghost {
-    background: var(--card);
-    color: var(--text-muted);
-    border-color: var(--border);
-  }
-
-  .badge-critical {
-    background: var(--severity-critical-bg);
-    color: var(--severity-critical);
-    border-color: var(--severity-critical-border);
-  }
-
-  .badge-high {
-    background: var(--severity-high-bg);
-    color: var(--severity-high);
-    border-color: var(--severity-high-border);
-  }
-
-  .badge-medium {
-    background: var(--severity-medium-bg);
-    color: var(--severity-medium);
-    border-color: var(--severity-medium-border);
-  }
-
-  .badge-low {
-    background: var(--severity-low-bg);
-    color: var(--severity-low);
-    border-color: var(--severity-low-border);
-  }
-
-  .badge-success {
-    background: var(--success-bg);
-    color: var(--success);
-    border-color: var(--success-border);
-  }
-
-  /* Table styling */
-  .editorial-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 8.5pt;
-  }
-
-  .editorial-table thead {
-    background: var(--card-surface);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .editorial-table th {
-    padding: 9px 14px;
-    text-align: left;
-    font-size: 7.5pt;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-  }
-
-  .editorial-table td {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border-subtle);
-    color: var(--text-secondary);
-    vertical-align: middle;
-  }
-
-  .editorial-table tr:last-child td {
-    border-bottom: none;
-  }
-
-  .editorial-table tr:nth-child(even) {
-    background: rgba(0,0,0,0.015);
-  }
-
-  /* Utilities */
-  .pb-always { page-break-after: always; }
-  .no-break { page-break-inside: avoid; }
-  .mono { font-family: var(--font-mono); }
-  .bold { font-weight: 700; }
-  .text-ink { color: var(--ink); }
-  .text-muted { color: var(--text-muted); }
-  .text-accent { color: var(--accent); }
-  .finding-card { break-inside: auto; }
-  .finding-card > div:first-child { break-after: avoid; }
-  .evidence-code { width: 100%; table-layout: fixed; border-collapse: collapse; margin: 10px 0; background: #191918; color: #eeeeeb; border-left: 3px solid #ff914d; }
+  @page :first { margin: 0; @top-left { content: none; } @top-right { content: none; } @bottom-left { content: none; } @bottom-right { content: none; } }
+  p { margin: 0 0 9pt; }
+  h1, h2, h3, h4 { margin: 0; line-height: 1.25; font-weight: 700; }
+  h2 { font-size: 18pt; }
+  h3 { font-size: 12pt; margin-bottom: 7pt; break-after: avoid; }
+  h4 { font-size: 10.5pt; margin: 10pt 0 5pt; break-after: avoid; }
+  ul, ol { padding-left: 19pt; margin: 5pt 0 10pt; }
+  li { margin-bottom: 5pt; }
+  .mono { font-family: var(--mono); }
+  .muted, .note { color: var(--muted); }
+  .note { font-size: 9pt; }
+  .pre-line { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .cover { min-height: 297mm; width: 210mm; padding: 20mm 18mm 16mm; background: var(--cream); border-top: 2mm solid var(--accent); display: flex; flex-direction: column; break-after: page; }
+  .cover-brand { display: flex; align-items: center; gap: 10pt; padding-bottom: 16pt; border-bottom: 1px solid var(--border); }
+  .brand-name { font-size: 19pt; font-weight: 800; letter-spacing: .035em; }
+  .brand-sub { font-size: 9pt; color: var(--muted); }
+  .cover-classification { margin-left: auto; font-size: 9pt; color: var(--muted); }
+  .eyebrow { color: #a43800; font-size: 9pt; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 7pt; }
+  .cover-heading { margin-top: 30pt; }
+  .cover h1 { font-size: 32pt; letter-spacing: -.025em; }
+  .project-name { font-size: 20pt; font-weight: 600; margin: 12pt 0; overflow-wrap: anywhere; }
+  .project-name.long { font-size: 14pt; }
+  .cover-description { max-width: 150mm; color: var(--muted); }
+  .cover-summary { margin: 19pt 0; padding: 13pt 15pt; background: white; border-left: 3pt solid var(--accent); }
+  .cover-summary h3 { font-size: 11pt; }
+  .cover-summary p:last-child { margin-bottom: 0; }
+  .cover-meta { margin-top: 4pt; }
+  .cover-meta th { width: 33%; }
+  .cover-bottom { margin-top: auto; padding-top: 17pt; }
+  .cover-bottom p { margin: 0; padding-top: 10pt; border-top: 1px solid var(--border); font-size: 9pt; color: var(--muted); }
+  .section { margin: 0 0 12pt; }
+  .section-heading { padding: 9pt 12pt; border-top: 2pt solid var(--ink); background: var(--cream); margin-bottom: 10pt; break-inside: avoid; break-after: avoid; }
+  .section-heading .eyebrow { margin-bottom: 4pt; font-size: 8pt; }
+  .section-heading p { margin: 5pt 0 0; font-size: 9pt; color: var(--muted); }
+  .metrics { width: 100%; border-collapse: collapse; margin-bottom: 15pt; table-layout: fixed; }
+  .metrics td { padding: 10pt; border: 1px solid var(--border); vertical-align: top; }
+  .metrics .count { display: block; font-size: 24pt; font-weight: 700; line-height: 1.3; }
+  .metrics .critical { border-top: 3pt solid var(--critical); }
+  .metrics .high { border-top: 3pt solid var(--high); }
+  .metrics .medium { border-top: 3pt solid var(--medium); }
+  .metrics .low { border-top: 3pt solid var(--low); }
+  .callout { padding: 11pt 13pt; background: var(--cream); border-left: 2pt solid var(--border); margin: 12pt 0; }
+  .callout p:last-child { margin-bottom: 0; }
+  table.editorial { width: 100%; border-collapse: collapse; font-size: 10pt; margin: 9pt 0 13pt; table-layout: fixed; }
+  .editorial th, .editorial td { text-align: left; padding: 8pt 9pt; border-bottom: 1px solid var(--border); vertical-align: top; overflow-wrap: anywhere; }
+  .editorial th { background: var(--cream); font-size: 9pt; font-weight: 700; }
+  .editorial thead { display: table-header-group; }
+  .editorial tr { break-inside: avoid; }
+  .cover-meta th, .cover-meta td { background: transparent; font-size: 9.5pt; }
+  .severity-heading { font-size: 12pt; margin: 19pt 0 10pt; break-after: avoid; }
+  .finding { margin-bottom: 23pt; border-top: 1pt solid var(--border); padding-top: 11pt; break-inside: auto; }
+  .finding.compact { break-inside: avoid; margin-bottom: 16pt; }
+  .finding.compact p { margin-bottom: 5pt; }
+  .finding.compact h4 { margin-top: 7pt; margin-bottom: 4pt; }
+  .finding.compact .verification-block { margin: 8pt 0; }
+  .finding.compact .verification-block li { margin-bottom: 3pt; }
+  .finding-heading { break-inside: avoid; break-after: avoid; }
+  .finding-title { font-size: 14pt; margin: 7pt 0 6pt; overflow-wrap: anywhere; }
+  .finding-ref { font: 9pt var(--mono); margin-right: 9pt; }
+  .severity { display: inline-block; border: 1px solid currentColor; padding: 2pt 6pt; font-size: 8.5pt; font-weight: 700; text-transform: uppercase; }
+  .severity.critical { color: var(--critical); } .severity.high { color: var(--high); }
+  .severity.medium { color: var(--medium); } .severity.low { color: var(--low); }
+  .severity.other { color: var(--muted); }
+  .finding-meta { font-size: 9pt; color: var(--muted); overflow-wrap: anywhere; margin-bottom: 7pt; }
+  .source-location { font: 9.5pt/1.5 var(--mono); overflow-wrap: anywhere; margin: 7pt 0; }
+  .evidence-code { width: 100%; table-layout: fixed; border-collapse: collapse; margin: 9pt 0 12pt; background: #191918; color: #f4f4f1; border-left: 2pt solid var(--accent); }
   .evidence-code thead { display: table-header-group; }
-  .evidence-code th { padding: 8px 10px; text-align: left; font: 8pt/1.5 var(--font-mono); color: #ffffff; background: #292928; overflow-wrap: anywhere; word-break: break-all; }
-  .evidence-code th span { color: #c5c5c0; font: 7pt/1.5 var(--font-sans); }
-  .evidence-code tr { break-inside: avoid; }
-  .evidence-code td { vertical-align: top; font: 8pt/1.6 var(--font-mono); padding: 2px 8px; }
-  .evidence-code .code-gutter { width: 34px; color: #c5c5c0; background: #242423; text-align: right; user-select: none; }
+  .evidence-code th { padding: 7pt 10pt; text-align: left; font: 9pt/1.4 var(--sans); color: white; background: #292928; overflow-wrap: anywhere; }
+  .evidence-code th span { color: #d6d6d1; font-size: 9pt; }
+  .evidence-code tr { break-inside: auto; }
+  .evidence-code td { vertical-align: top; font: 9pt/1.4 var(--mono); padding: 1.5pt 7pt; }
+  .evidence-code .code-gutter { width: 36pt; color: #d6d6d1; background: #242423; text-align: right; }
   .evidence-code .code-text { white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-all; }
+  .evidence-code code { font: inherit; }
   .evidence-code .finding-code-line td { background: #493226; color: #ffffff; border-top: 1px solid #ff914d; border-bottom: 1px solid #ff914d; }
-  .verification-block { margin-top: 12px; padding: 10px 12px; border-top: 1px solid var(--border); font-size: 8pt; }
-  .verification-block h4 { font-size: 8.5pt; margin-bottom: 5px; break-after: avoid; }
-  .verification-block ol { padding-left: 16px; }
-  .verification-block li { margin-bottom: 4px; }
-
+  .incomplete { border-left: 2pt solid var(--high); padding-left: 9pt; font-size: 9.5pt; }
+  .remedy-text { white-space: pre-wrap; overflow-wrap: anywhere; margin-bottom: 9pt; }
+  .verification-block { margin: 10pt 0; break-inside: avoid; }
+  .verification-block h4 { margin-top: 0; }
+  dt { font-weight: 600; break-after: avoid; margin-top: 7pt; }
+  dd { margin: 2pt 0 9pt; overflow-wrap: anywhere; }
+  .detail-list { margin: 0; padding-left: 17pt; }
+  a { color: var(--ink); }
 </style>
 </head>
 <body>
-
-<!-- ══════════════════════════════════════════════════
-     COVER PAGE: ATTESTATION CERTIFICATE (ARCHON)
-══════════════════════════════════════════════════ -->
-<div class="cover-sheet">
-  <div class="cover-top-line"></div>
-
-  <!-- Header & Brand Lockup -->
-  <div class="cover-header">
-    <div class="brand-lockup">
-      <div class="brand-icon">
-        <!-- Phosphor ShieldCheck icon -->
-        <svg width="22" height="22" viewBox="0 0 256 256" fill="currentColor">
-          <path d="M208,40H48A16,16,0,0,0,32,56v58.78c0,89.61,75.82,119.34,91,124.39a15.53,15.53,0,0,0,10,0c15.2-5.05,91-34.78,91-124.39V56A16,16,0,0,0,208,40Zm0,74.79c0,78.42-66.35,105.8-80,110.84-13.65-5-80-32.41-80-110.84V56H208ZM173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z"/>
-        </svg>
-      </div>
-      <div class="brand-title-wrap">
-        <div class="brand-title">ARCH<span>ON</span></div>
-        <div class="brand-tagline">Security audit engine</div>
-      </div>
-    </div>
-
-    <div class="confidential-badge">
-      <span class="dot"></span>
-      Confidential Automated Audit
-    </div>
+<div class="cover">
+  <div class="cover-brand">
+    <!-- Trusted local Archon mark; geometry matches public/brand/archon-mark.svg. -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 64 64" role="img" aria-label="Archon logo"><path d="M8 56V30C8 16.7452 18.7452 6 32 6S56 16.7452 56 30V56H44V44H20V56Z M20 34H44V30C44 23.3726 38.6274 18 32 18S20 23.3726 20 30Z" fill="#111111" fill-rule="evenodd"/><rect x="28" y="48" width="8" height="8" fill="#FF5600"/></svg>
+    <div><div class="brand-name">ARCHON</div><div class="brand-sub">Security audits &amp; threat modeling</div></div>
+    <div class="cover-classification">Security assessment</div>
   </div>
-
-  <!-- Title & Scope -->
-  <div class="cover-eyebrow">
-    <!-- Phosphor Sparkle -->
-    <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor">
-      <path d="M213.66,122.34l-48-48a8,8,0,0,0-11.32,0l-48,48a8,8,0,0,0,11.32,11.32L144,107.31V208a8,8,0,0,0,16,0V107.31l26.34,26.35a8,8,0,0,0,11.32-11.32ZM85.66,133.66l26.34-26.35V208a8,8,0,0,1-16,0V107.31L69.66,133.66a8,8,0,0,1-11.32-11.32l48-48a8,8,0,0,1,11.32,0l48,48a8,8,0,0,1-11.32,11.32Z" opacity="0.2"/>
-      <path d="M128,16a8,8,0,0,0-8,8V48a8,8,0,0,0,16,0V24A8,8,0,0,0,128,16ZM58.34,58.34a8,8,0,0,0-11.31,0l-16,16a8,8,0,0,0,11.31,11.32l16-16A8,8,0,0,0,58.34,58.34ZM24,120H48a8,8,0,0,0,0-16H24a8,8,0,0,0,0,16ZM58.34,181.66a8,8,0,0,0,0,11.31l16,16a8,8,0,0,0,11.32-11.31l-16-16A8,8,0,0,0,58.34,181.66ZM128,208a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208ZM208,120h24a8,8,0,0,0,0-16H208a8,8,0,0,0,0,16ZM197.66,58.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM197.66,181.66l-16,16a8,8,0,0,0,11.32,11.31l16-16a8,8,0,0,0-11.32-11.31Z"/>
-    </svg>
-    Security &amp; Compliance Audit Report
+  <div class="cover-heading">
+    <div class="eyebrow">Saved assessment / Engineering review</div>
+    <h1>Security Audit Report</h1>
+    {% set project_name = scan.target_name | default('Untitled project', true) %}
+    <div class="project-name{% if project_name | length > 100 %} long{% endif %}">{{ project_name }}</div>
+    <p class="cover-description">Recorded findings, source evidence and remediation guidance for your project. Prepared from the saved audit; generating this report does not rerun analysis.</p>
   </div>
-  <div class="cover-title">
-    Automated Threat Modeling &amp;<br>
-    Framework Mapping
+  <div class="cover-summary">
+    <h3>{{ findings | length }} recorded {% if extension_review %}security {% endif %}finding{{ 's' if findings | length != 1 else '' }}</h3>
+    {% if extension_review %}<p><strong>Extension policy review:</strong> {{ extension_review.coverage.outcomes.get('violation', 0) }} violations detected / {{ extension_review.coverage.outcomes.get('needs_review', 0) }} need review / {{ extension_review.coverage.outcomes.get('not_assessed', 0) }} not assessed.</p>{% endif %}
+    <p>{{ severity_counts.critical }} Critical / {{ severity_counts.high }} High / {{ severity_counts.medium }} Medium / {{ severity_counts.low }} Low{% if other_severity_count %} / {{ other_severity_count }} Other{% endif %}</p>
+    <p class="note">Human review required. Zero findings does not guarantee security.</p>
   </div>
-  <div class="cover-description">
-    Saved automated assessment of <strong>{{ scan.target_name }}</strong>.
-    This report does not rerun analysis. Findings and framework mappings require human review;
-    this is not a compliance certificate or proof that the project is secure.
-  </div>
-
-  <!-- 4-Metric Strip -->
-  <div class="metric-strip">
-    <div class="metric-cell">
-      <div class="metric-label">Target System</div>
-      <div class="metric-value" style="font-size: 12pt; white-space: normal; overflow-wrap: anywhere;">
-        {{ scan.target_name }}
-      </div>
-      <div class="metric-sub">{{ scan.scan_type | title | replace('_', ' ') }}</div>
-    </div>
-    <div class="metric-cell">
-      <div class="metric-label">Recorded Findings</div>
-      <div class="metric-value mono">{{ findings | length }}</div>
-      <div class="metric-sub">{{ severity_counts.critical }} Critical · {{ severity_counts.high }} High</div>
-    </div>
-    <div class="metric-cell">
-      <div class="metric-label">Frameworks</div>
-      <div class="metric-value mono">{{ scan.selected_frameworks | length }}</div>
-      <div class="metric-sub">{{ scan.selected_frameworks | join(' · ') | upper }}</div>
-    </div>
-    <div class="metric-cell">
-      <div class="metric-label">Overall Risk Posture</div>
-      {% set posture = summary.overall_posture | lower | default('medium') %}
-      <div class="metric-value" style="font-size: 15pt; color: {% if posture == 'critical' %}var(--severity-critical){% elif posture == 'high' %}var(--severity-high){% elif posture == 'medium' %}var(--severity-medium){% elif posture in ['low', 'minimal'] %}var(--success){% else %}var(--text-primary){% endif %};">
-        {{ summary.overall_posture | default('Not available', true) }}
-      </div>
-      <div class="metric-sub">Recorded automated assessment</div>
-    </div>
-  </div>
-
-  <!-- Agent Verdict Callout (Archon Signature) -->
-  <div class="verdict-callout">
-    <div class="verdict-header">
-      <div class="verdict-title">
-        <!-- Sparkle Icon -->
-        <svg width="14" height="14" viewBox="0 0 256 256" fill="var(--accent)">
-          <path d="M213.66,122.34l-48-48a8,8,0,0,0-11.32,0l-48,48a8,8,0,0,0,11.32,11.32L144,107.31V208a8,8,0,0,0,16,0V107.31l26.34,26.35a8,8,0,0,0,11.32-11.32Z"/>
-        </svg>
-        Audit summary
-      </div>
-      {% set _crit = severity_counts.critical if (severity_counts and severity_counts.critical is defined) else 0 %}
-      {% set _high = severity_counts.high if (severity_counts and severity_counts.high is defined) else 0 %}
-      <span class="badge {% if _crit > 0 %}badge-critical{% elif _high > 0 %}badge-high{% else %}badge-success{% endif %}">
-        {% if _crit > 0 %}ACTION REQUIRED{% else %}READY FOR REVIEW{% endif %}
-      </span>
-    </div>
-    <div class="verdict-text">
-      {% if summary.risk_headline %}
-        <strong>{{ summary.risk_headline }}</strong>
-      {% else %}
-        {{ findings | length }} findings recorded for {{ scan.target_name }}. Review the evidence, current triage states and coverage limitations. Zero findings does not guarantee security.
-      {% endif %}
-    </div>
-  </div>
-
-  <!-- Metadata Table -->
-  <table class="cover-meta-table">
-    <tr>
-      <td class="meta-td-label">Report ID</td>
-      <td class="meta-td-val mono">{{ report_id }}</td>
-    </tr>
-    <tr>
-      <td class="meta-td-label">Scan ID</td>
-      <td class="meta-td-val mono">{{ scan.id }}</td>
-    </tr>
-    <tr>
-      <td class="meta-td-label">Generation Date</td>
-      <td class="meta-td-val">{{ generated_at }}</td>
-    </tr>
-    <tr>
-      <td class="meta-td-label">Evaluated Standards</td>
-      <td class="meta-td-val">{{ scan.selected_frameworks | join(', ') | upper }}</td>
-    </tr>
-    <tr>
-      <td class="meta-td-label">Audit Engine</td>
-      <td class="meta-td-val">Archon automated assessment · human review required</td>
-    </tr>
+  <table class="editorial cover-meta">
+    <tbody>
+      <tr><th>Audit completed</th><td>{{ completed_label }}</td></tr>
+      <tr><th>Report generated</th><td>{{ generated_label }}</td></tr>
+      <tr><th>Assessed frameworks</th><td>{{ framework_breakdown | map(attribute='name') | join(', ') or 'None selected' }}</td></tr>
+      <tr><th>Report reference</th><td class="mono">{{ report_id or 'Not recorded' }}</td></tr>
+      <tr><th>Scan reference</th><td class="mono">{{ scan.id | default('Not recorded', true) }}</td></tr>
+    </tbody>
   </table>
-
-  <!-- Cover Bottom / Signatures bar -->
-  <div class="cover-bottom">
-    <div class="cover-bottom-left">
-      <!-- Shield checkmark -->
-      <svg width="14" height="14" viewBox="0 0 256 256" fill="var(--success)">
-        <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/>
-      </svg>
-      <span>Automatically prepared from saved evidence · not digitally signed</span>
-    </div>
-    <div class="cover-bottom-right">
-      Scan reference: {{ scan.id[:8] }}
-    </div>
-  </div>
-
+  <div class="cover-bottom"><p>Automated assessment - not a compliance certificate, a digital signature or proof that the project is secure. Review findings and validate proposed changes before use.</p></div>
 </div>
-
-<!-- ══════════════════════════════════════════════════
-     BODY CONTENT PAGES
-══════════════════════════════════════════════════ -->
-<div class="report-content">
-
-  {% include "executive_summary.html" %}
-
-  {% include "compliance_section.html" %}
-
-  <div class="pb-always"></div>
-  {% include "findings.html" %}
-
-</div>
-
+<main>
+  {% include 'executive_summary.html' %}
+  {% include 'compliance_section.html' %}
+  {% if extension_review %}{% include 'extension_review.html' %}{% endif %}
+  {% include 'findings.html' %}
+</main>
 </body>
 </html>

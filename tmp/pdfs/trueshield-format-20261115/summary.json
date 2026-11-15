@@ -1,0 +1,1067 @@
+{
+  "page_count": 93,
+  "fonts": [
+    {
+      "font": "BCDGEE+Calibri",
+      "size": 12.0,
+      "characters": 58811
+    },
+    {
+      "font": "BCDIEE+Calibri",
+      "size": 12.0,
+      "characters": 12095
+    },
+    {
+      "font": "BCDIEE+Calibri",
+      "size": 10.0,
+      "characters": 4034
+    },
+    {
+      "font": "BCDFEE+Calibri-Bold",
+      "size": 12.0,
+      "characters": 3415
+    },
+    {
+      "font": "BCDGEE+Calibri",
+      "size": 10.0,
+      "characters": 2757
+    },
+    {
+      "font": "BCDJEE+Calibri-Bold",
+      "size": 12.0,
+      "characters": 1131
+    },
+    {
+      "font": "BCDNEE+Calibri-Italic",
+      "size": 10.0,
+      "characters": 718
+    },
+    {
+      "font": "BCDJEE+Calibri-Bold",
+      "size": 14.0,
+      "characters": 644
+    },
+    {
+      "font": "BCDFEE+Calibri-Bold",
+      "size": 14.0,
+      "characters": 564
+    },
+    {
+      "font": "BCDFEE+Calibri-Bold",
+      "size": 16.0,
+      "characters": 460
+    },
+    {
+      "font": "BCDFEE+Calibri-Bold",
+      "size": 10.0,
+      "characters": 458
+    },
+    {
+      "font": "BCDNEE+Calibri-Italic",
+      "size": 12.0,
+      "characters": 449
+    }
+  ],
+  "page_outline": [
+    {
+      "page": 1,
+      "first_lines": [
+        "TrueShield AI: Autonomous Real-Time Scam Call",
+        "Detection and Response System",
+        "Project Report submitted",
+        "in"
+      ],
+      "footer": "",
+      "images": 2
+    },
+    {
+      "page": 2,
+      "first_lines": [
+        "Declaration",
+        "We, hereby declare that the project report titled \u201cTrueShield AI: An Explainable",
+        "AI-Driven Autonomous Real-Time Scam Call Detection and Response System\u201d submitted",
+        "herein has been carried out by us towards partial fulfillment of requirement for the"
+      ],
+      "footer": "",
+      "images": 2
+    },
+    {
+      "page": 3,
+      "first_lines": [
+        "Certificate",
+        "The project report entitled as \u201cTrueShield AI: An Explainable AI-Driven Autonomous",
+        "Real-Time Scam Call Detection and Response System\u201d submitted by Ms. Vaishnavi",
+        "Trivedi and Mr. Aniket Tiwari for the award of Degree of Bachelor of Technology in"
+      ],
+      "footer": "",
+      "images": 2
+    },
+    {
+      "page": 4,
+      "first_lines": [
+        "ACKNOWLEDGEMENT",
+        "It is a pleasure for us to show our deep gratitude to the project guide Prof. Komal",
+        "Kumbhare (Assistant Professor) and the project in-charge Prof. Nitinkumar",
+        "Chaudhary (Assistant Professor) from the Department of Data Science, CSE (IoT) and"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 5,
+      "first_lines": [
+        "ABSTRACT",
+        "I have been using TrueShield AI for a few months. It feels like a real guardian for my",
+        "phone. TrueShield AI is a on\u2011device system that uses two engines to spot and stop",
+        "scam calls while they happen. It is built to keep phone users safe from voice"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 6,
+      "first_lines": [
+        "LIST OF FIGURES",
+        "Figure No. Figure Name Page No.",
+        "Fig 3.1 Overall Architecture of TrueShield AI 14",
+        "Fig 3.2 Speech-to-Text Conversion Pipeline 16"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 7,
+      "first_lines": [
+        "INDEX",
+        "Sr. No. Chapter / Section Page No.",
+        "1 Abstract i",
+        "2 List of Figures ii"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 8,
+      "first_lines": [
+        "Chapter 4 - Data Collection/ Tool/ Platform Used",
+        "4.1 Introduction",
+        "7 4.2 Data Collection 24 - 32",
+        "4.3 Dataset Categories"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 9,
+      "first_lines": [
+        "6.11 Comparative Performance Analysis",
+        "6.12 Statistical Analysis",
+        "6.13 Advantages Observed During Testing",
+        "6.14 Limitation Observed During Testing"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 10,
+      "first_lines": [
+        "CHAPTER 1",
+        "INTRODUCTION",
+        "10"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 11,
+      "first_lines": [
+        "1.1 Background and Motivation",
+        "Nowadays smartphones and digital platforms are essential for communication. People",
+        "use their phones to talk do banking and make online payments. With this growing use",
+        "of technology there has also been a rise in cybercrimes. One of the common forms is"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 12,
+      "first_lines": [
+        "Current solutions for blocking scam calls rely on lists of known spam numbers or user",
+        "reports. These systems are not fast enough. Cannot adapt to new attack patterns.",
+        "They are also limited because they only look at numbers not at the actual",
+        "conversation content."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 13,
+      "first_lines": [
+        "3. To create a risk assessment system using maximum-pooling and a 6-second",
+        "watchdog circuit breaker. This ensures detection and avoids delays caused by",
+        "cloud processing.",
+        "4. To build an AI (XAI) interface that gives clear plain-language alerts. It will explain"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 14,
+      "first_lines": [
+        "CHAPTER 2",
+        "LITERATURE SURVEY",
+        "14"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 15,
+      "first_lines": [
+        "2.1 Introduction",
+        "Fast growth in communication technology has changed how people talk, do business",
+        "and use online services.",
+        "Advances in smartphones, VoIP, digital banking and cloud communication have made"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 16,
+      "first_lines": [
+        "mainly used pre-recorded messages or people reading scripts. Now bad people use",
+        "intelligence changing scripts and automated phone systems to have real",
+        "conversations with people they are targeting.",
+        "Recent security data shows that voice phishing, also known as vishing has become"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 17,
+      "first_lines": [
+        "how long calls last on average, call origin, and cumulative complaint counts to decide",
+        "whether an incoming call is spam. When machine learning entered the scene,",
+        "automated classifiers appeared using algorithms like Na\u00efve Bayes, Support Vector",
+        "Machines, Decision Trees, Random Forests, and Logistic Regression. Although these"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 18,
+      "first_lines": [
+        "\u2022 User complaints",
+        "\u2022 Calling again",
+        "\u2022 Location",
+        "Limitations of Traditional Spam Detection Systems"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 19,
+      "first_lines": [
+        "\u2022 OTP",
+        "\u2022 Verification",
+        "\u2022 Refund",
+        "\u2022 Account suspension"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 20,
+      "first_lines": [
+        "In the study \u201cCan You Tell Its AI? Human Perception of Synthetic Voices in Vishing",
+        "Scenarios,\u201d the test participants were able to determine whether a call was generated",
+        "by an AI with an accuracy rate of just 37.5%.",
+        "The study \u201cScam Agents\u201d presented autonomous AI scam agents that generate in-"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 21,
+      "first_lines": [
+        "2.8 Research Gap Analysis",
+        "In recent times, innovations in voice-based AI and deepfakes have made scammers",
+        "more efficient in their activities. The new generation of voice cloning software can",
+        "impersonate trusted people by relying on just a couple of seconds of recorded audio."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 22,
+      "first_lines": [
+        "Furthermore, use of LLM enhanced the capabilities of scam call filters by enabling",
+        "them to detect emotional manipulations, urgency and impersonation in social",
+        "engineering attacks. Current systems continue to face problems of latency, cloud",
+        "dependency, privacy violations and low efficiency in combating AI-generated scam"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 23,
+      "first_lines": [
+        "Sr. Research Technology Key Features Accuracy / Limitations",
+        "No Paper / Used Performance",
+        ". Approach",
+        "1 Spam Call NLP, Na\u00efve Text-based Moderate Weak"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 24,
+      "first_lines": [
+        "CHAPTER 3",
+        "METHODOLOGY",
+        "24"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 25,
+      "first_lines": [
+        "3.1 Introduction",
+        "Mobile banking apps, digital wallets, and fast online payments have made everyday",
+        "transactions effortless, but they have also created new openings for cyber criminals.",
+        "Telephone fraud, particularly voice phishing (vishing), has become much harder to stop"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 26,
+      "first_lines": [
+        "Benefits of this Modular Approach:",
+        "\u2022 Independent Scalability: Each component\u2014from speech transcription to LLM",
+        "reasoning\u2014can be upgraded or optimized without breaking the rest of the",
+        "application."
+      ],
+      "footer": "",
+      "images": 1
+    },
+    {
+      "page": 27,
+      "first_lines": [
+        "3.3 Audio Monitoring and Speech Acquisition",
+        "The Audio Monitoring module is the first entry point of the TrueShield AI pipeline. Its",
+        "primary job is to capture incoming telephonic audio in real time, clean up the sound",
+        "stream, and deliver continuous audio chunks to the transcription engine. Because"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 28,
+      "first_lines": [
+        "Table 3.1: Audio Monitoring Module Specifications",
+        "Parameter Specification",
+        "Audio Input Source Live telephonic call audio (via user permission)",
+        "Operating Mode Real-time streaming buffer"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 29,
+      "first_lines": [
+        "Figure 3.2: Speech-to-Text Conversion Pipeline",
+        "Figure 3.2 : Overal Internal Architecture of TrueShield AI",
+        "3.5 Text Preprocessing and Cleaning",
+        "Raw transcripts produced by speech recognition engines often contain conversational"
+      ],
+      "footer": "",
+      "images": 1
+    },
+    {
+      "page": 30,
+      "first_lines": [
+        "\u2022 Stop-Word Filtering (Selective): Filters out non-informative words while carefully",
+        "preserving negative qualifiers (\"not\", \"never\", \"no\") and urgent adverbs",
+        "(\"immediately\", \"now\") that directly indicate coercive tone.",
+        "\u2022 Lemmatization: Reduces inflected word variations down to their base"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 31,
+      "first_lines": [
+        "\u2022 Fear-Based Coercion: \"Your bank account will be permanently blocked within two",
+        "hours if KYC is not verified.\"",
+        "\u2022 Remote Access Scam: \"Support verify karne ke liye AnyDesk app download kijiye.\"",
+        "\u2022 Impersonation Attack: \"Main Reserve Bank of India ke head office se baat kar"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 32,
+      "first_lines": [
+        "4 Real-Time ASR, Large Real-time Improved Computationay",
+        "Phone Language fraud analysis contextual expensive,",
+        "Fraud Models using speech understanding privacy",
+        "Detection recognition & concerns"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 33,
+      "first_lines": [
+        "because scammers rarely speak pure English; they frequently mix languages and",
+        "use everyday vernacular threats. To solve this, TrueShield AI tracks more than 95",
+        "targeted terms across English, Hindi, and code-mixed Hinglish. Common real-",
+        "world examples include: \"Aapka account block ho chuka hai\", \"Turant OTP share"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 34,
+      "first_lines": [
+        "emotional persuasion, and false trust to trick the victim. Because simple keyword",
+        "matching cannot understand the full context of a talk, TrueShield AI pairs this local",
+        "pattern matcher with deep semantic analysis powered by Google Gemini 1.5",
+        "Flash."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 35,
+      "first_lines": [
+        "Unlike older systems that rely on a rigid linear weighted sum\u2014which can dangerously",
+        "dilute severe threats\u2014TrueShield AI uses a Hybrid Maximum-Pooling Arbitration",
+        "Model supported by a watchdog circuit breaker:",
+        "Risk Score (R_final) = max( R_lexical , R_semantic )"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 36,
+      "first_lines": [
+        "caller sounds convincing. To build genuine trust, TrueShield AI incorporates an",
+        "Explainable AI (XAI) module that explains the system's reasoning in plain,",
+        "understandable language.",
+        "Core Functions of the XAI Module:"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 37,
+      "first_lines": [
+        "4. Model Training and Fine-Tuning: Training lightweight local classifiers and fine-",
+        "tuning prompt structures for the LLM.",
+        "5. Cross-Validation: Testing models against unseen dialogue scripts across multiple",
+        "fraud categories."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 38,
+      "first_lines": [
+        "Figure 3.4: Machine Learning Training Workflow",
+        "38"
+      ],
+      "footer": "",
+      "images": 1
+    },
+    {
+      "page": 39,
+      "first_lines": [
+        "3.11 Model Evaluation Metrics",
+        "To rigorously measure how well TrueShield AI detects fraudulent calls while ignoring",
+        "legitimate conversations, the system is evaluated against standard machine learning",
+        "and telecommunication security metrics. Because a scam detection tool operates in"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 40,
+      "first_lines": [
+        "Table 3.4: Performance Evaluation Metrics",
+        "Sr. Metric Focus Area Practical",
+        "No. Goal",
+        "1 Accuracy Overall prediction correctness across all > 90%"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 41,
+      "first_lines": [
+        "CHAPTER 4",
+        "DATA COLLECTION, TOOLS, AND PLATFORM USED",
+        "41"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 42,
+      "first_lines": [
+        "4.1 Introduction",
+        "Building an accurate, real-time scam detection system requires the right combination of",
+        "conversational training data, speech-processing pipelines, modern web frameworks,",
+        "and low-latency cloud intelligence. This chapter details the resources and software"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 43,
+      "first_lines": [
+        "\u2022 Public Phishing and Scam Datasets: Open research corpora containing transcribed",
+        "telecommunication fraud dialogues.",
+        "\u2022 Online Threat Repositories: Real-world scam audio transcripts documented by cyber",
+        "safety forums and victim reporting portals."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 44,
+      "first_lines": [
+        "4 Technical Support Attempts to convince users to download remote",
+        "Scam access tools or harmful mobile application packages",
+        "(APKs).",
+        "5 Authority Threatening calls posing as police officers, customs"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 45,
+      "first_lines": [
+        "4.5 Tools and Technologies Used",
+        "Developing TrueShield AI required selecting tools that could handle real-time",
+        "streaming speech while maintaining low memory consumption and strict data privacy",
+        "on mobile hardware."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 46,
+      "first_lines": [
+        "9 Google Gemini 1.5 Deep semantic reasoning, social engineering",
+        "Flash API detection, and Explainable AI alert generation.",
+        "10 Scikit-learn Building and calibrating baseline machine learning",
+        "models and evaluating classification metrics."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 47,
+      "first_lines": [
+        "\u2022 Real-Time Processing Speed: Low latency across transcription and threat",
+        "classification so alerts show up before damage occurs.",
+        "\u2022 Scalability and Portability: Modular architecture that functions smoothly as a",
+        "Progressive Web Application (PWA) across varied operating systems."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 48,
+      "first_lines": [
+        "users while they are in the middle of a phone call, the frontend interface must be",
+        "clean, responsive, and lightweight. The dashboard provides immediate visual",
+        "feedback, including a live scam risk gauge, real-time speech transcription, plain-",
+        "language Explainable AI notifications, past call logs, and secure user profile controls."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 49,
+      "first_lines": [
+        "\u2022 Clear Color-Coded Alerts: Provides distinct visual cues (green for safe, amber for",
+        "suspicious, and red for critical danger) so users understand threats at a single glance.",
+        "Figure 4.1: Frontend Dashboard Architecture",
+        "4.7 Backend Development Platform"
+      ],
+      "footer": "",
+      "images": 1
+    },
+    {
+      "page": 50,
+      "first_lines": [
+        "\u2022 Fast API management processes",
+        "\u2022 Efficiency in real-time request handling",
+        "\u2022 Scalable server-side applications",
+        "Benefits of Express.js"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 51,
+      "first_lines": [
+        "Scam Logs Maintain scam detection history",
+        "Alert Records Store generated warnings",
+        "Risk Reports Store risk analysis results",
+        "Authentication Data Manage secure login"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 52,
+      "first_lines": [
+        "TensorFlow Deep learning model training",
+        "Scikit-learn Traditional ML algorithms",
+        "Transformers Semantic understanding",
+        "NLP Libraries Text preprocessing and tokenization"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 53,
+      "first_lines": [
+        "\u2022 Ephemeral Text Pipeline: Transcribed text is analyzed solely for threat scoring",
+        "during the active call session. No permanent call transcripts or recordings are",
+        "archived.",
+        "\u2022 Content-Aware vs. Identity-Tracking: The system protects users based strictly"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 54,
+      "first_lines": [
+        "CHAPTER 5",
+        "DESIGN/IMPLEMENTATION/MODELLING",
+        "54"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 55,
+      "first_lines": [
+        "5.1 Introduction",
+        "This chapter covers the design, implementation, and modelling of TrueShield AI: An",
+        "AIPowered Scam Call Guardian. The design aims at developing an AI-based scam call",
+        "protection system by analysing scams in real-time using Artificial Intelligence, NLP and"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 56,
+      "first_lines": [
+        "Design Objectives",
+        "The system is designed with the following objectives:",
+        "\u2022 Low response latency",
+        "\u2022 Real-time processing capability"
+      ],
+      "footer": "",
+      "images": 1
+    },
+    {
+      "page": 57,
+      "first_lines": [
+        "This chapter covers the architecture, user interface design, and software",
+        "implementation of TrueShield AI. The system is engineered to catch telephonic fraud in",
+        "real time using a modular, client-side approach. It explains how incoming speech",
+        "moves through the audio buffer, speech-to-text transcription, dual-engine threat"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 58,
+      "first_lines": [
+        "\u2022 Dual-Engine Threat Layer: Evaluates text through fast keyword matching and",
+        "deep LLM intent analysis simultaneously.",
+        "\u2022 Risk Arbitration Layer: Uses maximum-pooling logic and a 6-second watchdog",
+        "timer to compute a single 0\u2013100 score."
+      ],
+      "footer": "",
+      "images": 1
+    },
+    {
+      "page": 59,
+      "first_lines": [
+        "\u2022 Tailwind CSS: Ensures clean, lightweight styling optimized for both",
+        "mobile and desktop screens.",
+        "\u2022 Vite PWA: Packages the application so users can install it directly onto",
+        "their mobile home screen."
+      ],
+      "footer": "",
+      "images": 1
+    },
+    {
+      "page": 60,
+      "first_lines": [
+        "5.7 Risk Assessment Modelling",
+        "A Weighted Risk Assessment model, for dynamically measuring the probability of",
+        "fraud, is adopted in this system. Risk score will be determined from several",
+        "parameters, such as:"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 61,
+      "first_lines": [
+        "\u2022 (E) \u2013 Emotional manipulation score",
+        "\u2022 (C) \u2013 Conversation pattern score",
+        "Table 5.2: Risk Classification Levels",
+        "Risk Score Threat Level System Action"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 62,
+      "first_lines": [
+        "5.9 Security and Privacy Implementation",
+        "Privacy-Preserving Architecture vs. Traditional Caller-ID Services:",
+        "A critical design principle of TrueShield AI is its privacy-first, on-device data handling",
+        "model, which directly resolves the privacy vulnerabilities of existing tools such as"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 63,
+      "first_lines": [
+        "5.10 System Workflow Implementation",
+        "The process flow involved in implementing the suggested system includes the",
+        "following steps:",
+        "The user receives a phone call."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 64,
+      "first_lines": [
+        "64"
+      ],
+      "footer": "",
+      "images": 1
+    },
+    {
+      "page": 65,
+      "first_lines": [
+        "CHAPTER 6",
+        "TESTING AND SUMMARY OF RESULTS",
+        "65"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 66,
+      "first_lines": [
+        "6.1 Introduction",
+        "Testing and evaluation are critical steps in any cycle of development of the AI and cyber-security",
+        "systems. The reason for conducting the testing is the assessment of efficiency and effectiveness of",
+        "operation in different conversation scenarios. Since TrueShield AI is created to detect scams in real"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 67,
+      "first_lines": [
+        "6.3 Testing Methodology",
+        "The system was tested using both scam and legitimate conversational datasets.",
+        "Multiple conversational scenarios were created to evaluate how effectively the",
+        "system identifies scam-related behaviour."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 68,
+      "first_lines": [
+        "6.4 Evaluation Metrics",
+        "The System performance is evaluated and calculated using a standard machine",
+        "learning approach with cybersecurity based key metrics.",
+        "Table 6.1: Evaluation Metrics Used"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 69,
+      "first_lines": [
+        "The test improves the classification ability of the overall system and increases the",
+        "chances of accuracy over the period of time.",
+        "Figure 6.1: Scam Detection Accuracy Graph",
+        "6.6 Precision, Recall and F1-Score Analysis"
+      ],
+      "footer": "",
+      "images": 1
+    },
+    {
+      "page": 70,
+      "first_lines": [
+        "Figure 6.2: Precision vs Recall vs F1-Score",
+        "6.7 Latency and Real-Time Performance Analysis",
+        "The speed if the reaction of the system determines the efficiency of the overall",
+        "system and which can be proven effective over the scam damages over the period."
+      ],
+      "footer": "",
+      "images": 1
+    },
+    {
+      "page": 71,
+      "first_lines": [
+        "The system successfully maintained response latency below 2 seconds, making it",
+        "suitable for real-time deployment.",
+        "Confusion Matrix Analysis",
+        "6.8 Confusion Matrix Analysis"
+      ],
+      "footer": "",
+      "images": 2
+    },
+    {
+      "page": 72,
+      "first_lines": [
+        "Risk Score Evaluation",
+        "The model WRA (Weighted Risk Assessment) evaluates the chances of a conversation",
+        "being fraudulent or legitimate.",
+        "The Risk Score Shows the Following:"
+      ],
+      "footer": "",
+      "images": 1
+    },
+    {
+      "page": 73,
+      "first_lines": [
+        "Figure 6.5: Risk Score Distribution Graph",
+        "6.10 Explainable AI Evaluation",
+        "The Explainable AI module was assessed through the following parameters:",
+        "\u2022 User comprehension"
+      ],
+      "footer": "",
+      "images": 1
+    },
+    {
+      "page": 74,
+      "first_lines": [
+        "74"
+      ],
+      "footer": "",
+      "images": 1
+    },
+    {
+      "page": 75,
+      "first_lines": [
+        "6.12 Statistical Analysis",
+        "The algorithmic analysis of the solution shows about the system which functions",
+        "under various types of conversation.",
+        "Statistical Analysis:"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 76,
+      "first_lines": [
+        "6.14 Limitations Observed During Testing",
+        "With some pros we also faces some cons respectfully and the system lacks this during",
+        "the testing phase.",
+        "Constraints Identified"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 77,
+      "first_lines": [
+        "CHAPTER 7",
+        "CONCLUSION",
+        "77"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 78,
+      "first_lines": [
+        "7.1 Conclusion",
+        "Rapid advancements of digital communication technologies and financial services over",
+        "the Internet have made cyber-enabled frauds and phone scams more dangerous.",
+        "Fraudsters use increasingly sophisticated approaches including ID spoofing, VoIP"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 79,
+      "first_lines": [
+        "Speech API, and ML tools proves that there is an opportunity to develop scalable and",
+        "lightweight systems for scam detection based on the use of contemporary web",
+        "technologies. In addition, the PWA design pattern ensures good accessibility and",
+        "enables cross-platform deployment without complex setup."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 80,
+      "first_lines": [
+        "CHAPTER 8",
+        "FUTURE SCOPE",
+        "80"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 81,
+      "first_lines": [
+        "8.1 Introduction",
+        "As the complexities associated with cyber crimes and scams increase, so does the",
+        "need to continually improve upon scam detection technology. Though TrueShield AI",
+        "proves to be an effective way to deploy the use of Artificial Intelligence, semantic"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 82,
+      "first_lines": [
+        "8.3 Deepfake Voice Detection",
+        "The development of AI-enabled fake speech technology is one of the new challenges",
+        "that cybersecurity must contend with. Hackers require just a few seconds of an audio",
+        "clip to replicate human voices in their scamming activities via telephone."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 83,
+      "first_lines": [
+        "8.5 Telecom-Level Integration",
+        "Currently, the framework operates as an application to detect scams at the user level.",
+        "In the coming days, however, the framework can easily integrate itself into the",
+        "telecom infrastructure and network communications."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 84,
+      "first_lines": [
+        "8.7 Advanced Behavioural Analysis",
+        "Presently, scam detection is done by analysing the language of speech and making",
+        "sense of it. However, future systems can incorporate techniques that enable",
+        "behavioural analysis to enhance accuracy in detecting fraud cases."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 85,
+      "first_lines": [
+        "In the future, it will be possible to add such features to the program as follows:",
+        "\u2022 Simulations of scams for educational purposes",
+        "\u2022 Cybersecurity education powered by AI",
+        "\u2022 Suggestions for preventing scams"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 86,
+      "first_lines": [
+        "These include:",
+        "\u2022 Federated learning",
+        "\u2022 Homomorphic encryption",
+        "\u2022 Differential privacy"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 87,
+      "first_lines": [
+        "CHAPTER 9",
+        "REFERENCES",
+        "87"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 88,
+      "first_lines": [
+        "[1] A. Vaswani, N. Shazeer, N. Parmar et al., \u201cAttention Is All You Need,\u201d Advances in Neural",
+        "Information Processing Systems (NeurIPS), vol. 30, pp. 5998\u20136008, 2017.",
+        "[2] J. Devlin, M. Chang, K. Lee and K. Toutanova, \u201cBERT: Pre-training of Deep Bidirectional",
+        "Transformers for Language Understanding,\u201d in Proc. NAACL-HLT, 2019, pp. 4171\u20134186."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 89,
+      "first_lines": [
+        "[19] Node.js Documentation, \u201cNode.js Runtime Environment.\u201d [Online]. Available:",
+        "https://nodejs.org/",
+        "[20] Express.js Documentation, \u201cExpress Web Framework for Node.js.\u201d [Online]. Available:",
+        "https://expressjs.com/"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 90,
+      "first_lines": [
+        "[34] Microsoft Security Blog, \u201cAI-Driven Cybersecurity and Fraud Detection Systems.\u201d Microsoft",
+        "Research, 2024.",
+        "[35] Palo Alto Networks, \u201cModern Voice Phishing Attack Trends and Prevention.\u201d Unit 42 Threat",
+        "Intelligence Report, 2025."
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 91,
+      "first_lines": [
+        "APPENDICES",
+        "91"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 92,
+      "first_lines": [
+        "Plagiarism Report",
+        "92"
+      ],
+      "footer": "",
+      "images": 0
+    },
+    {
+      "page": 93,
+      "first_lines": [
+        "Photo With Guide",
+        "93"
+      ],
+      "footer": "",
+      "images": 0
+    }
+  ]
+}

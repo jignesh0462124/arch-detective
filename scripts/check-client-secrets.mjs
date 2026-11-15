@@ -70,7 +70,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     )
   ).join("\n");
   const count = await checkClientAssets(
-    process.argv[2] || ".vercel/output/static",
+    process.argv[2] || ".output/public",
     configuredSecrets(env, process.env),
   );
   console.log(

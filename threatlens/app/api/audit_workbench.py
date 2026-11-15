@@ -133,7 +133,7 @@ async def start_audit(workspace_id: uuid.UUID, file: UploadFile = File(...), tar
     return {"scan_id": scan_id, "status": "running"}
 
 
-async def run_audit(repository, scan_id, snapshot_id, workspace_id, actor_id, target_name, frameworks, files, analysis, exclusions, validation_seconds=0):
+async def run_audit(repository, scan_id, snapshot_id, workspace_id, actor_id, target_name, frameworks, files, analysis, exclusions, validation_seconds=0, *, extension_input=None):
     events = []
     done = asyncio.Event()
     timings = {"archive_validation": round(validation_seconds, 4)}
@@ -225,7 +225,20 @@ async def run_audit(repository, scan_id, snapshot_id, workspace_id, actor_id, ta
         event({"step": "extracting", "label": f"Validated {len(files)} archive entries", "progress": 10})
         source_task = asyncio.create_task(prepare_source())
         analysis_started = perf_counter()
-        result = await _scan_pipeline(scan_id, analysis, redact_text(_build_code_context(analysis)), target_name, frameworks, persist_local=False, on_event=event, suggest_all_frameworks=False)
+        extension_options = {"security_only": True} if extension_input is not None else {}
+        result = await _scan_pipeline(scan_id, analysis, redact_text(_build_code_context(analysis)), target_name, frameworks, persist_local=False, on_event=event, suggest_all_frameworks=False, **extension_options)
+        extension_rows = []
+        if extension_input is not None:
+            from app.scanners.extension_review import assess
+            extension_rows, extension_coverage = await asyncio.to_thread(assess, files, *extension_input)
+            extension_coverage["security_analysis_files"] = len(analysis)
+            extension_coverage["analysis_exclusions"] = exclusions
+            extension_coverage["security_analysis_limitations"] = (result.get("analysis") or {}).get("limitations", [])
+            # Store policies are not GDPR/SOC2 scores. The ordinary audit pipeline
+            # remains unchanged; extension audits do not imply those frameworks.
+            result["framework_scores"] = {}
+            for finding in result["findings"]:
+                finding["violations"] = []
         timings["analysis"] = round(perf_counter() - analysis_started, 4)
         source_ready = await source_task
         persistence_started = perf_counter()
@@ -247,6 +260,16 @@ async def run_audit(repository, scan_id, snapshot_id, workspace_id, actor_id, ta
         for table, rows in [("findings", finding_rows), ("compliance_violations", control_rows), ("finding_locations", location_rows)]:
             for offset in range(0, len(rows), 100):
                 await repository.rest("POST", table, body=rows[offset:offset + 100], prefer="return=minimal")
+        if extension_input is not None:
+            # Link only a unique exact recorded source location; do not synthesize
+            # duplicate security findings or guess ambiguous source associations.
+            for policy in extension_rows:
+                details = policy["details"]
+                matches = [f for f in finding_rows if details.get("path") and details.get("line") and f.get("file_path") == details["path"] and f.get("line_number") == details["line"]]
+                policy.update(scan_id=scan_id, finding_id=matches[0]["id"] if len(matches) == 1 else None)
+            for offset in range(0, len(extension_rows), 100):
+                await repository.rest("POST", "extension_policy_results", body=extension_rows[offset:offset + 100], prefer="return=minimal")
+            await repository.rest("PATCH", "extension_reviews", params={"scan_id": f"eq.{scan_id}"}, body={"coverage": extension_coverage})
         metadata = {k: v for k, v in result.items() if k != "findings"}
         completed_scan = await repository.rest("PATCH", "scans", params={"id": f"eq.{scan_id}", "status": "eq.running"}, body={"status": "completed", "progress": 100, "finding_count": len(persisted), "critical_count": result["severity_counts"]["critical"], "high_count": result["severity_counts"]["high"], "framework_scores": result["framework_scores"], "summary": {**result["summary"], "analysis": result["analysis"]}, "completed_at": now().isoformat()})
         if completed_scan:
@@ -586,6 +609,9 @@ async def report(scan_id: uuid.UUID, workspace_id: uuid.UUID | None = None, fram
 
 
 async def maintenance_once(repository):
+    if settings.EXTENSION_REVIEW_ENABLED:
+        await repository.rest("DELETE", "extension_declarations", params={"expires_at": f"lte.{now().isoformat()}"}, prefer="return=minimal")
+        await repository.rest("DELETE", "extension_review_assets", params={"expires_at": f"lte.{now().isoformat()}"}, prefer="return=minimal")
     stale = await repository.rows("audit_workbench_jobs", status="eq.running", heartbeat_at=f"lt.{(now() - timedelta(minutes=3)).isoformat()}")
     for job in stale:
         # Conditional lease update prevents a heartbeat race from failing an active job.
@@ -602,6 +628,9 @@ async def maintenance_once(repository):
         for offset in range(0, len(ids), 100):
             await repository.rest("PATCH", "snapshot_files", params={"snapshot_id": f"eq.{snapshot['id']}", "id": f"in.({','.join(ids[offset:offset + 100])})"}, body={"object_path": None, "preview_state": "expired"})
         if snapshot in expired:
+            if settings.EXTENSION_REVIEW_ENABLED:
+                await repository.rest("DELETE", "extension_declarations", params={"scan_id": f"eq.{snapshot['scan_id']}"}, prefer="return=minimal")
+                await repository.rest("DELETE", "extension_review_assets", params={"scan_id": f"eq.{snapshot['scan_id']}"}, prefer="return=minimal")
             await repository.rest("PATCH", "source_snapshots", params={"id": f"eq.{snapshot['id']}"}, body={"state": "expired"})
     for entry in await repository.rows("source_cleanup_queue", order="enqueued_at.asc", limit=100):
         try:

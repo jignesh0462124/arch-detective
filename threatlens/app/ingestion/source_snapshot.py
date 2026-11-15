@@ -51,7 +51,7 @@ def normalize_source_path(path: str) -> str | None:
     return str(PurePosixPath(path))
 
 
-def read_zip_snapshot(content: bytes, snapshot_id: str):
+def read_zip_snapshot(content: bytes, snapshot_id: str, *, extension_package: bool = False):
     """Return metadata/previews and the exact bounded source input used by analysis."""
     files, analysis, exclusions, seen = [], [], [], set()
     total = preview_total = 0
@@ -74,10 +74,13 @@ def read_zip_snapshot(content: bytes, snapshot_id: str):
             seen.add(path)
             suffix = PurePosixPath(path).suffix.lower()
             language = LANGUAGES.get(suffix, "plaintext")
+            extension_script = extension_package and suffix in {".mjs", ".cjs"}
+            if extension_script:
+                language = "javascript"
             record = {"id": str(uuid.uuid5(uuid.UUID(snapshot_id), path)), "snapshot_id": snapshot_id, "path": path, "language": language, "byte_size": entry.file_size, "line_count": 0, "preview_state": "ready", "redacted": False, "reason": None}
-            if any(part in SKIP for part in PurePosixPath(path).parts):
+            if any(part in (SKIP - {"dist", "build", "vendor", "node_modules"} if extension_package else SKIP) for part in PurePosixPath(path).parts):
                 record.update(preview_state="excluded", reason="Generated output or dependency directory")
-            elif suffix not in LANGUAGES and PurePosixPath(path).name.lower() not in {"dockerfile", "makefile", ".gitignore", ".env", "requirements.txt"}:
+            elif not extension_script and suffix not in LANGUAGES and PurePosixPath(path).name.lower() not in {"dockerfile", "makefile", ".gitignore", ".env", "requirements.txt"}:
                 record.update(preview_state="unsupported", reason="No text preview for this file type")
             elif entry.file_size > min(settings.MAX_SOURCE_FILE_SIZE_MB, 2) * 1024 * 1024 or preview_total + entry.file_size > 32 * 1024 * 1024:
                 record.update(preview_state="oversized", reason="Source preview byte budget exceeded")
@@ -90,8 +93,12 @@ def read_zip_snapshot(content: bytes, snapshot_id: str):
                     sanitized = redact_text(original)
                     record.update(content=sanitized, byte_size=len(sanitized.encode()), line_count=len(sanitized.split("\n")), redacted=sanitized != original, content_hash=hashlib.sha256(sanitized.encode()).hexdigest())
                     preview_total += len(raw)
-                    if len(analysis) < 500 and (suffix in SUPPORTED_EXTENSIONS or PurePosixPath(path).name.lower() in {"dockerfile", "makefile", ".env"}):
+                    if len(analysis) < 500 and (extension_script or suffix in SUPPORTED_EXTENSIONS or PurePosixPath(path).name.lower() in {"dockerfile", "makefile", ".env"}):
                         analysis.append({"path": path, "content": original[:200000]})
+                        if extension_package and len(original) > 200000:
+                            exclusions.append({"path": path, "reason": "Security analysis uses the first 200,000 characters; source preview and policy inspection have separate limits"})
+                    elif extension_package:
+                        exclusions.append({"path": path, "reason": "Not included in model/static security input because of analysis limits or unsupported file type"})
                 except UnicodeError:
                     record.update(preview_state="binary", reason="Binary or non-UTF-8 content")
             files.append(record)

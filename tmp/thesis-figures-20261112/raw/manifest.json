@@ -1,0 +1,211 @@
+[
+  {
+    "name": "figure-5-2-dashboard",
+    "url": "http://127.0.0.1:5173/dashboard",
+    "masks": [
+      {
+        "height": 47.60000228881836,
+        "width": 223.1999969482422,
+        "x": 12,
+        "y": 936.4000244140624
+      },
+      {
+        "height": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "capturedAt": "2026-11-12T03:47:39.736Z"
+  },
+  {
+    "name": "figure-5-3a-project-upload",
+    "url": "http://127.0.0.1:5173/workspace",
+    "masks": [
+      {
+        "height": 47.60000228881836,
+        "width": 223.1999969482422,
+        "x": 12,
+        "y": 936.4000244140624
+      },
+      {
+        "height": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "capturedAt": "2026-11-12T03:48:10.365Z"
+  },
+  {
+    "name": "figure-5-4-findings",
+    "url": "http://127.0.0.1:5173/findings",
+    "masks": [
+      {
+        "height": 47.60000228881836,
+        "width": 223.1999969482422,
+        "x": 12,
+        "y": 936.4000244140624
+      },
+      {
+        "height": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "capturedAt": "2026-11-12T03:50:50.927Z"
+  },
+  {
+    "name": "figure-5-6-audit-workbench",
+    "url": "http://127.0.0.1:5173/workspace/add752e4-4ab2-453f-ac2e-b861c27160b6/scans/33de4813-3200-58d9-9788-c45201ef971e/workbench",
+    "masks": [
+      {
+        "height": 47.60000228881836,
+        "width": 223.1999969482422,
+        "x": 12,
+        "y": 936.4000244140624
+      },
+      {
+        "height": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "capturedAt": "2026-11-12T03:53:11.845Z"
+  },
+  {
+    "name": "figure-5-3b-recorded-scan-activity",
+    "url": "http://127.0.0.1:5173/workspace/add752e4-4ab2-453f-ac2e-b861c27160b6/scans/33de4813-3200-58d9-9788-c45201ef971e/workbench",
+    "masks": [
+      {
+        "height": 47.60000228881836,
+        "width": 223.1999969482422,
+        "x": 12,
+        "y": 936.4000244140624
+      },
+      {
+        "height": 40,
+        "width": 230.40000915527344,
+        "x": 1304.800048828125,
+        "y": 133.40000915527344
+      }
+    ],
+    "capturedAt": "2026-11-12T03:53:31.345Z"
+  },
+  {
+    "name": "figure-5-5-security-advisor",
+    "url": "http://127.0.0.1:5173/advisor?conversation=99c19ed6-4826-4948-9d6d-97022bf93c52",
+    "masks": [
+      {
+        "height": 45.60000228881836,
+        "width": 47.20000076293945,
+        "x": 12,
+        "y": 938.4000244140624
+      },
+      {
+        "height": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "capturedAt": "2026-11-12T03:56:24.296Z"
+  },
+  {
+    "name": "figure-5-7-attack-graph",
+    "url": "http://127.0.0.1:5173/attack-graph",
+    "masks": [
+      {
+        "height": 47.60000228881836,
+        "width": 223.1999969482422,
+        "x": 12,
+        "y": 936.4000244140624
+      },
+      {
+        "height": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "capturedAt": "2026-11-12T03:56:45.038Z"
+  },
+  {
+    "name": "supplement-report-preview",
+    "url": "http://127.0.0.1:5173/reports/33de4813-3200-58d9-9788-c45201ef971e",
+    "masks": [
+      {
+        "height": 47.60000228881836,
+        "width": 223.1999969482422,
+        "x": 12,
+        "y": 936.4000244140624
+      },
+      {
+        "height": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "capturedAt": "2026-11-12T04:13:53.589Z"
+  },
+  {
+    "name": "figure-5-2-dashboard",
+    "url": "http://127.0.0.1:5173/dashboard",
+    "masks": [
+      {
+        "height": 47.60000228881836,
+        "width": 223.1999969482422,
+        "x": 12,
+        "y": 936.4000244140624
+      },
+      {
+        "height": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "capturedAt": "2026-11-12T04:15:34.620Z"
+  },
+  {
+    "name": "figure-5-7-attack-graph",
+    "url": "http://127.0.0.1:5173/attack-graph",
+    "masks": [
+      {
+        "height": 47.60000228881836,
+        "width": 223.1999969482422,
+        "x": 12,
+        "y": 936.4000244140624
+      },
+      {
+        "height": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "capturedAt": "2026-11-12T04:16:59.040Z"
+  },
+  {
+    "name": "figure-5-2-dashboard",
+    "url": "http://127.0.0.1:5173/dashboard",
+    "masks": [
+      {
+        "height": 47.60000228881836,
+        "width": 223.1999969482422,
+        "x": 12,
+        "y": 936.4000244140624
+      },
+      {
+        "height": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "capturedAt": "2026-11-12T04:17:19.298Z"
+  }
+]

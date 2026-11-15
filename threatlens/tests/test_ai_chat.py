@@ -118,3 +118,51 @@ def test_incomplete_provider_stream_never_appears_completed(client, monkeypatch)
     response = client.post('/api/v1/ai/chat', json={'messages':[{'role':'user','content':'Question'}]})
     assert 'Partial suggestion' in response.text
     assert 'stream_interrupted' in response.text and '[DONE]' not in response.text
+
+
+@pytest.mark.parametrize('reason', ['length', 'content_filter', 'tool_calls'])
+def test_provider_finish_reason_never_becomes_success(client, monkeypatch, reason):
+    import json
+    monkeypatch.setattr(ai_chat.settings, 'OMEGAPLUS_API_KEY', 'fixture')
+    monkeypatch.setattr(ai_chat.settings, 'GROQ_API_KEY', '')
+    original = httpx.AsyncClient
+    frames = [
+        {'choices': [{'delta': {'content': 'Partial code'}, 'finish_reason': None}]},
+        {'choices': [{'delta': {}, 'finish_reason': reason}]},
+    ]
+    body = ''.join('data: ' + json.dumps(frame) + '\n\n' for frame in frames) + 'data: [DONE]\n\n'
+    monkeypatch.setattr(ai_chat.httpx, 'AsyncClient', lambda **kw: original(transport=httpx.MockTransport(lambda req: httpx.Response(200, text=body)), **kw))
+    response = client.post('/api/v1/ai/chat', json={'messages': [{'role': 'user', 'content': 'hello'}]})
+    assert 'Partial code' in response.text
+    assert 'response_truncated' in response.text and '[DONE]' not in response.text
+
+
+@pytest.mark.parametrize('solution,content', [(False, 'Hello'), (True, '```js\nconst x = 1;\n```'), (True, '```js\nconst x = 1;')])
+def test_code_solution_budget_prompt_and_fence_completion(client, monkeypatch, solution, content):
+    import json
+    monkeypatch.setattr(ai_chat.settings, 'OMEGAPLUS_API_KEY', 'fixture')
+    monkeypatch.setattr(ai_chat.settings, 'GROQ_API_KEY', '')
+    async def evidence(*args):
+        return ai_chat.ChatMessage(role='user', content='Static trusted SVG strings; exploit not established.')
+    monkeypatch.setattr(ai_chat, 'verified_finding_context', evidence)
+    original = httpx.AsyncClient
+    def handle(request):
+        data = json.loads(request.content)
+        assert data['max_tokens'] == (2048 if solution else 1024)
+        assert data['messages'][-1]['content'] == 'Review finding'
+        if solution:
+            instruction = data['messages'][0]['content']
+            assert 'do not demonstrate' not in instruction  # instruction must distinguish, not pre-judge evidence
+            assert 'Static trusted SVG' in instruction and 'DOMParser is not a sanitizer' in instruction
+            assert 'How to verify' in instruction
+        return httpx.Response(200, text='data: ' + json.dumps({'choices': [{'delta': {'content': content}, 'finish_reason': 'stop'}]}) + '\n\ndata: [DONE]\n\n')
+    monkeypatch.setattr(ai_chat.httpx, 'AsyncClient', lambda **kw: original(transport=httpx.MockTransport(handle), **kw))
+    payload = {'messages': [{'role': 'user', 'content': 'Review finding'}], 'code_solution': solution}
+    if solution:
+        payload['context'] = {'workspace_id': str(uuid4()), 'scan_id': str(uuid4()), 'finding_id': str(uuid4())}
+    response = client.post('/api/v1/ai/chat', json=payload, headers={'Authorization': 'Bearer isolated-fixture-token'})
+    assert response.status_code == 200
+    if solution and ai_chat.has_unclosed_code_fence(content):
+        assert 'response_truncated' in response.text and '[DONE]' not in response.text
+    else:
+        assert '[DONE]' in response.text

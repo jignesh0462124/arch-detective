@@ -47,6 +47,8 @@ async (page) => {
   await page.getByRole("link", { name: "View pull request on GitHub", exact: true }).waitFor();
   await page.getByRole("button", { name: "Rescan PR branch", exact: true }).waitFor();
   await page.goto(`${base}?view=upload`);
+  if (!(await page.getByRole("button", { name: "GitHub repository", exact: true }).count()))
+    await page.getByRole("button", { name: "New audit", exact: true }).click();
   await page.getByRole("button", { name: "GitHub repository", exact: true }).click();
   await page
     .getByRole("combobox", { name: "Shared repository", exact: true })

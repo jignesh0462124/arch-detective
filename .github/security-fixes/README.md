@@ -54,7 +54,7 @@ For future deployments:
 - Registration reuses the current signup page. Usage/data notices replace dead links and explicitly identify the research-prototype limitations; they are not finalized legal policies.
 - User-facing branding, workspace slug validation/back navigation, false audit integrity claims and invented dashboard timing metrics are corrected.
 - Advisor calls use the existing authenticated backend with server-side credentials, bounded inputs, streaming and provider failover. Unavailable providers produce errors, not generic text presented as AI output.
-- Backend CORS uses the explicit `CORS_ORIGINS` allowlist; configure the exact deployed frontend origin. Arbitrary Vercel deployments are no longer trusted.
+- Backend CORS uses the explicit `CORS_ORIGINS` allowlist; configure the exact deployed frontend origin. Arbitrary deployment origins are not trusted.
 
 ## Credentials and configuration
 

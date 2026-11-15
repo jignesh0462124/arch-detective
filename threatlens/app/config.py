@@ -45,6 +45,7 @@ class Settings(BaseSettings):
     SIGNED_URL_TTL_SECONDS: int = Field(default=300, ge=30, le=3600)
     SOURCE_RETENTION_HOURS: int = Field(default=24, ge=0, le=720)
     AUDIT_WORKBENCH_ENABLED: bool = True
+    EXTENSION_REVIEW_ENABLED: bool = False
     ADVISOR_HISTORY_ENABLED: bool = False
     AUDIT_WORKBENCH_PROGRESSIVE_ENABLED: bool = False
     SNAPSHOT_RETENTION_HOURS: int = Field(default=720, ge=1, le=720)

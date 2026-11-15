@@ -39,6 +39,8 @@ export async function deleteAuditHistoryScan(
 }
 
 const privateKinds = new Set([
+  "extension-review",
+  "extension-screenshot",
   "source-window",
   "workbench",
   "workbench-bootstrap",
@@ -61,6 +63,7 @@ const privateKinds = new Set([
   "fix-comparison",
 ]);
 const workspaceKinds = new Set([
+  "extension-review",
   "advisor-history",
   "audit-history",
   "dashboard-scans",

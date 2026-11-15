@@ -1,0 +1,17 @@
+{
+  "source": "C:\\Users\\jigne\\OneDrive\\Desktop\\College Project\\arch-detective\\output\\docx\\ThreatLens_Thesis_Logo_Inside_Border.docx",
+  "source_sha256": "c437609720136a531351d0be77b2cf4e4d3322b21be45292a16cb35da8405800",
+  "output": "C:\\Users\\jigne\\OneDrive\\Desktop\\College Project\\arch-detective\\output\\docx\\ThreatLens_Thesis_Corrected.docx",
+  "changed_parts": [
+    "word/footer1.xml",
+    "word/footer2.xml",
+    "word/footer3.xml",
+    "word/document.xml"
+  ],
+  "every_text_node_unchanged": true,
+  "all_other_parts_byte_identical": true,
+  "source_images_unchanged": true,
+  "footer_raise_pt": 28.8,
+  "banner_width_inches": 5.78,
+  "horizontal_inset_pt": 6
+}

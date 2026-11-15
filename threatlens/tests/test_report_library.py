@@ -1,4 +1,5 @@
 import copy
+import os
 import re
 import uuid
 
@@ -208,4 +209,31 @@ def test_pdf_cache_byte_limit_and_busy_admission(monkeypatch):
     monkeypatch.setattr(generator, "_ADMISSION", threading.BoundedSemaphore(0))
     with pytest.raises(generator.PdfBusy):
         generator.generate_pdf_report({"report_id": "no-slot"})
+    generator._PDF_CACHE.clear()
+
+
+@pytest.mark.skipif(os.environ.get("ARCHON_TEST_RENDER_PDF") != "1", reason="Opt-in installed-browser PDF smoke test")
+def test_authenticated_real_pdf_download_for_reports_and_workbench(reports):
+    """Exercise real rendering through the shared authorized download endpoint.
+
+    The isolated repository fixture is not a hosted Supabase verification.
+    """
+    pymupdf = pytest.importorskip("pymupdf")
+    browser, repository = reports
+    identifier = seed(repository, findings=12)
+    generator._PDF_CACHE.clear()
+    for scope in ["", f"?workspace_id={WORKSPACE}&frameworks=soc2"]:
+        response = browser.get(f"/api/v1/scans/{identifier}/workbench/report{scope}")
+        assert response.status_code == 200
+        assert response.headers["content-type"] == "application/pdf"
+        assert response.headers["cache-control"] == "no-store"
+        assert "attachment" in response.headers["content-disposition"]
+        assert response.content.startswith(b"%PDF-")
+        with pymupdf.open(stream=response.content, filetype="pdf") as document:
+            text = "\n".join(page.get_text() for page in document)
+        assert "Security Audit Report" in text and "12 recorded findings" in text
+        assert "report_fixture_secret" not in text
+        assert "F-012" in text
+    repository.member = False
+    assert browser.get(f"/api/v1/scans/{identifier}/workbench/report").status_code == 404
     generator._PDF_CACHE.clear()

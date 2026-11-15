@@ -1,160 +1,47 @@
-<!-- ══════════════════════════════════════════════════
-     03 · TECHNICAL FINDINGS & REMEDIATION PLAYBOOKS
-══════════════════════════════════════════════════ -->
-<div class="report-section">
-
-  <!-- Section Header -->
-  <div class="section-header">
-    <div>
-      <div class="section-eyebrow">03 · Technical Audit</div>
-      <div class="section-heading">Security Findings &amp; Remediations</div>
-      <div class="section-heading-sub">{{ findings | length }} recorded findings · ordered by recorded severity. Validate evidence before remediation.</div>
-    </div>
-    <div>
-      <span class="badge badge-ghost">
-        <!-- Phosphor Bug -->
-        <svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor">
-          <path d="M224,120H198.54A88.19,88.19,0,0,0,188,88l21.66-21.66a8,8,0,0,0-11.32-11.31L174.58,78.78A87.64,87.64,0,0,0,136,64.77V40h16a8,8,0,0,0,0-16H104a8,8,0,0,0,0,16h16V64.77A87.64,87.64,0,0,0,81.42,78.78L57.66,55A8,8,0,0,0,46.34,66.34L68,88a88.19,88.19,0,0,0-10.54,32H32a8,8,0,0,0,0,16H56.09A88.4,88.4,0,0,0,56,144a88,88,0,0,0,144,0,88.4,88.4,0,0,0-.09-8H224a8,8,0,0,0,0-16Zm-40,24a72,72,0,0,1-112,0c0-2.65.17-5.3.46-7.89l39.2,39.21a8,8,0,0,0,11.32,0L136,162.34l13,13a8,8,0,0,0,11.32-11.32L147.31,151l13-13a8,8,0,0,0-11.32-11.32L136,139.69l-13-13a8,8,0,0,0-11.32,11.32L124.69,151,107,133.34a71.86,71.86,0,0,1,76.54,2.77C183.83,138.7,184,141.35,184,144Z"/>
-        </svg>
-        {{ findings | length }} Findings
-      </span>
-    </div>
-  </div>
-
-  {% set severity_order = ['critical', 'high', 'medium', 'low'] %}
-
-  {% for sev in severity_order %}
-    {% set sev_findings = findings | selectattr('severity', 'equalto', sev) | list %}
-    {% if sev_findings %}
-
-    <!-- Severity Group Heading -->
-    <div class="no-break" style="display: flex; align-items: center; justify-content: space-between; margin: 20px 0 10px; padding: 6px 12px; background: var(--card-surface); border: 1px solid var(--border-subtle); border-radius: 6px; break-after: avoid; page-break-after: avoid;">
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <span class="badge badge-{{ sev }}" style="font-size: 8pt; font-weight: 700;">
-          {{ sev | upper }}
-        </span>
-        <span style="font-size: 9pt; font-weight: 700; color: var(--ink);">
-          {{ sev | capitalize }} Severity Issues
-        </span>
+{% macro code_panel(finding, lines, language, label, source=False) %}
+<table class="evidence-code">
+  <colgroup><col style="width:36pt"><col></colgroup>
+  <thead><tr><th colspan="2"><strong>{{ finding.report_ref }} / {{ finding.continuation_title }}</strong><br>{{ language }} / {{ label }}<br><span>{{ finding.file_path or 'Source location not recorded' }}{% if source and finding.line_number %}<br>Reported source line: {{ finding.line_number }}{% endif %}<br>{% if source and finding.excerpt_start_line %}Source-grounded excerpt. The marked line identifies the recorded finding.{% elif source %}Gutter numbers identify excerpt lines. Source position is not inferred.{% else %}Suggested replacement - review and test. Gutter numbers are suggestion lines.{% endif %}</span></th></tr></thead>
+  <tbody>{% for line in lines %}<tr{% if source and finding.excerpt_start_line and loop.first %} class="finding-code-line"{% endif %}><td class="code-gutter">{{ finding.excerpt_start_line + loop.index0 if source and finding.excerpt_start_line else loop.index }}</td><td class="code-text"><code>{{ line or ' ' }}</code></td></tr>{% endfor %}</tbody>
+</table>
+{% endmacro %}
+<section class="section">
+  <div class="section-heading"><div class="eyebrow">04 / Technical review</div><h2>Findings &amp; remediation</h2>{% if findings %}<p>{{ findings | length }} recorded findings, ordered by recorded severity. Validate evidence before remediation.</p>{% endif %}</div>
+  {% if not findings %}<p>{% if extension_review %}No security findings were recorded. Extension policy results appear in the preceding section. Review all coverage limitations before submission.{% else %}No findings were recorded for this audit. Review coverage and limitations; this is not a guarantee that the project is secure.{% endif %}</p>{% endif %}
+  {% for severity in ['critical', 'high', 'medium', 'low', 'other'] %}
+    {% set group = findings | selectattr('report_severity', 'equalto', severity) | list %}
+    {% if group %}
+    <h3 class="severity-heading">{{ severity | title }}{% if severity == 'other' %} / Unclassified{% endif %} severity / {{ group | length }} finding{{ 's' if group | length != 1 else '' }}</h3>
+    {% for finding in group %}
+    <article class="finding{% if not finding.code_snippet and not finding.remedy_blocks and finding.description | default('', true) | length < 400 and finding.title | default('', true) | length < 120 %} compact{% endif %}" id="{{ finding.report_ref }}">
+      <div class="finding-heading">
+        <span class="finding-ref">{{ finding.report_ref }}</span><span class="severity {{ severity }}">{{ finding.severity | default('Not recorded', true) }}</span>
+        <h3 class="finding-title">{{ finding.title | default('Untitled finding', true) }}</h3>
+        <p class="finding-meta">Triage: {{ finding.state | default('Not recorded', true) | replace('_', ' ') }} / CVSS: {% if finding.report_cvss is not none %}{{ '%.1f' | format(finding.report_cvss) }}{% else %}Not recorded{% endif %}{% if finding.cwe_id %} / {{ finding.cwe_id }}{% endif %}{% if finding.cve_id %} / {{ finding.cve_id }}{% endif %}</p>
+        <p class="source-location">{{ finding.file_path or 'Source location not recorded' }}{% if finding.line_number %}:{{ finding.line_number }}{% endif %}</p>
       </div>
-      <span style="font-size: 7.5pt; color: var(--text-muted); font-weight: 600;">
-        {{ sev_findings | length }} finding{{ 's' if sev_findings | length != 1 else '' }}
-      </span>
-    </div>
-
-    {% for finding in sev_findings %}
-    <div class="card-lifted finding-card" style="border-left: 3.5px solid {% if finding.severity == 'critical' %}var(--severity-critical){% elif finding.severity == 'high' %}var(--severity-high){% elif finding.severity == 'medium' %}var(--severity-medium){% else %}var(--severity-low){% endif %}; margin-bottom: 14px;">
-
-      <!-- Card Header -->
-      <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--card-surface); border-bottom: 1px solid var(--border-subtle);">
-        <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
-          <span class="badge badge-{{ finding.severity }}" style="font-size: 7pt; text-transform: uppercase;">
-            {{ finding.severity }}
-          </span>
-          <span style="font-size: 9.5pt; font-weight: 700; color: var(--ink); line-height: 1.2;">
-            {{ finding.title }}
-          </span>
-        </div>
-
-        {% if finding.cvss_score is number and finding.cvss_score >= 0 and finding.cvss_score <= 10 %}
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="badge badge-ghost mono" style="font-size: 7.5pt; font-weight: 700; color: var(--ink); background: var(--cream-deep);">
-            CVSS {{ "%.1f" | format(finding.cvss_score) }}
-          </span>
-        </div>
-        {% endif %}
+      <h4>Issue</h4>
+      <p class="pre-line">{{ finding.description | default('No issue description was recorded.', true) }}</p>
+      {% if finding.source %}<p class="note">Recorded finding source: {{ finding.source | replace('_', ' ') }}</p>{% endif %}
+      <h4>Recorded evidence</h4>
+      {% if finding.code_snippet %}{{ code_panel(finding, finding.excerpt_lines, finding.evidence_language, 'Recorded evidence', True) }}
+      {% else %}<p>No source evidence was recorded for this finding.</p>{% endif %}
+      <h4>Remediation steps</h4>
+      {% if finding.remedy_blocks %}
+        {% for block in finding.remedy_blocks %}
+          {% if block.kind == 'code' %}
+            {% if not block.complete %}<p class="incomplete">Incomplete saved suggestion: the code fence was not closed. Do not treat this as a complete replacement.</p>{% endif %}
+            {{ code_panel(finding, block.lines, block.language, 'Saved remediation suggestion') }}
+          {% else %}<p class="remedy-text">{{ block.text }}</p>{% endif %}
+        {% endfor %}
+      {% else %}<p>No remediation guidance was recorded. Review with your security team.</p>{% endif %}
+      <div class="verification-block"><h4>Suggested verification checks</h4><ol><li>Review the affected code path and confirm the recorded issue applies.</li><li>Test the changed path with valid and invalid inputs; check expected behavior and access controls.</li><li>Run a new audit and compare the recorded evidence.</li></ol><p class="note">These are suggested checks; they have not been executed by this report.</p>
+      {% if not finding.violations %}<p class="note"><strong>Framework mappings:</strong> No control mapping was recorded for the selected frameworks.</p>{% endif %}
       </div>
-
-      <!-- Card Body -->
-      <div style="padding: 12px 14px;">
-
-        <!-- Meta strip -->
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; font-size: 7.5pt; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border-subtle);">
-          {% if finding.file_path %}
-          <div style="display: flex; align-items: center; gap: 4px; color: var(--text-muted);">
-            <!-- File icon -->
-            <svg width="11" height="11" viewBox="0 0 256 256" fill="currentColor">
-              <path d="M216,88V208a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V48A16,16,0,0,1,56,32h96a8,8,0,0,1,5.66,2.34l56,56A8,8,0,0,1,216,88Zm-64-8h44.69L160,43.31ZM200,208V96H152a8,8,0,0,1-8-8V48H56V208H200Z"/>
-            </svg>
-            <span style="font-weight: 600; color: var(--text-primary);">Path:</span>
-            <span class="mono" style="color: var(--ink);">{{ finding.file_path }}{% if finding.line_number %}:{{ finding.line_number }}{% endif %}</span>
-          </div>
-          {% endif %}
-
-          {% if finding.cwe_id %}
-          <div style="display: flex; align-items: center; gap: 4px; color: var(--text-muted);">
-            <span style="font-weight: 600; color: var(--text-primary);">CWE:</span>
-            <span class="badge badge-ghost mono" style="font-size: 6.5pt; padding: 1px 4px;">{{ finding.cwe_id }}</span>
-          </div>
-          {% endif %}
-
-          {% if finding.source %}
-          <div style="display: flex; align-items: center; gap: 4px; color: var(--text-muted);">
-            <span style="font-weight: 600; color: var(--text-primary);">Engine:</span>
-            <span>{{ finding.source }}</span>
-          </div>
-          {% endif %}
-
-          {% if finding.violations %}
-          <div style="display: flex; align-items: center; gap: 4px; color: var(--text-muted);">
-            <span style="font-weight: 600; color: var(--text-primary);">Controls:</span>
-            {% for v in finding.violations %}
-            <span class="badge badge-ghost mono" style="font-size: 6.5pt; padding: 1px 4px; color: var(--ink);">
-              {{ v.framework | upper }} {{ v.control_id }}
-            </span>
-            {% endfor %}
-          </div>
-          {% endif %}
-        </div>
-
-        <!-- Description -->
-        <div style="font-size: 8.5pt; color: var(--text-secondary); line-height: 1.55; margin-bottom: 10px;">
-          {{ finding.description }}
-        </div>
-
-        <!-- Code Snippet -->
-        {% if finding.code_snippet %}
-        <table class="evidence-code">
-          <colgroup><col style="width:34px"><col></colgroup>
-          <thead><tr><th colspan="2">{{ finding.evidence_language }} · Recorded evidence · {{ finding.file_path or 'source excerpt' }}{% if finding.line_number %}<br>Reported source line: {{ finding.line_number }}{% endif %}<br><span>{% if finding.excerpt_start_line %}Source-grounded excerpt. The marked line identifies the recorded finding.{% else %}Gutter numbers identify excerpt lines. Source position is not inferred.{% endif %}</span></th></tr></thead>
-          <tbody>{% for line in finding.excerpt_lines %}<tr{% if finding.excerpt_start_line and loop.first %} class="finding-code-line"{% endif %}><td class="code-gutter">{{ finding.excerpt_start_line + loop.index0 if finding.excerpt_start_line else loop.index }}</td><td class="code-text"><code>{{ line or ' ' }}</code></td></tr>{% endfor %}</tbody>
-        </table>
-        {% else %}<p>No source evidence was recorded for this finding.</p>{% endif %}
-        <p style="font-size: 8pt;">Triage: {{ finding.state | default('Not recorded', true) | replace('_', ' ') }} · CVE: {{ finding.cve_id | default('Not recorded', true) }}</p>
-        {% if not finding.violations %}<p>No control mapping was recorded for the selected frameworks.</p>{% endif %}
-
-        <!-- Remediation Steps -->
-        {% if finding.remedy_steps %}
-        <div style="background: var(--card-surface); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 10px 12px;">
-          <div style="font-size: 7.5pt; font-weight: 700; text-transform: uppercase; color: var(--accent); letter-spacing: 0.06em; margin-bottom: 6px;">
-            Remediation Steps
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 4px;">
-            {% for step in finding.remedy_steps %}
-            <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 8pt; color: var(--text-primary); line-height: 1.45;">
-              <span style="width: 14px; height: 14px; border-radius: 50%; background: var(--cream-deep); border: 1px solid var(--border-subtle); font-size: 6.5pt; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;">{{ loop.index }}</span>
-              <span>{{ step }}</span>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-        {% elif finding.remediation %}
-        <div style="background: var(--card-surface); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 10px 12px; font-size: 8pt; color: var(--text-primary); line-height: 1.5;">
-          <strong style="color: var(--accent); text-transform: uppercase; font-size: 7.5pt; letter-spacing: 0.05em; display: block; margin-bottom: 4px;">Remediation</strong>
-          {{ finding.remediation }}
-        </div>
-        {% else %}<p>No remediation guidance was recorded. Review with your security team.</p>{% endif %}
-
-        <div class="verification-block">
-          <h4>Suggested verification checks</h4>
-          <ol><li>Review the affected code path and confirm the recorded issue applies.</li><li>Test the changed path with valid and invalid inputs; check expected behavior and access controls.</li><li>Run a new audit and compare the recorded evidence. These checks have not been executed by this report.</li></ol>
-        </div>
-
-      </div>
-    </div>
+      {% if finding.violations %}<h4>Framework mappings</h4><table class="editorial"><thead><tr><th>Framework</th><th>Control</th><th>Recorded mapping</th></tr></thead><tbody>{% for violation in finding.violations %}<tr><td>{{ violation.framework | upper }}</td><td>{{ violation.control_id or 'Not recorded' }}</td><td>{{ violation.control_title or 'Title not recorded' }}</td></tr>{% endfor %}</tbody></table>
+      {% endif %}
+    </article>
     {% endfor %}
-
     {% endif %}
   {% endfor %}
-
-</div>
+</section>

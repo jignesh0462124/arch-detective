@@ -1,0 +1,78 @@
+{
+  "pdf": "C:\\Users\\jigne\\OneDrive\\Desktop\\College Project\\arch-detective\\tmp\\pdfs\\threatlens_revision\\build\\ThreatLens_Revised.pdf",
+  "page_count": 4,
+  "authors_and_emails": "passed",
+  "affiliations": "passed",
+  "placeholder_removed": "passed",
+  "page_bounds": "passed",
+  "metadata": {
+    "Producer": "MiKTeX pdfTeX-1.40.28",
+    "Author": "Jignesh Sonewane; Soham Pashine; Bhargav Bawane; Professor Pankaj Sonewane",
+    "Title": "ThreatLens: An LLM-Agentic Multi-Scanner Architecture for Automated Compliance Mapping and Threat Modeling",
+    "Subject": "Multi-scanner security review and retrieval-grounded compliance mapping",
+    "Creator": "LaTeX with hyperref",
+    "Keywords": "ThreatLens, security review, compliance mapping, vulnerability detection, RAG",
+    "CreationDate": "D:20261112124838+05'30'",
+    "ModDate": "D:20261112124838+05'30'",
+    "Trapped": "False",
+    "PTEX.Fullbanner": "This is MiKTeX-pdfTeX 4.23.0 (1.40.28)"
+  },
+  "pages": [
+    {
+      "page": 1,
+      "size_pt": [
+        612,
+        792
+      ],
+      "characters": 3876,
+      "text_bounds": [
+        48.96,
+        52.39,
+        563.04,
+        718.6
+      ]
+    },
+    {
+      "page": 2,
+      "size_pt": [
+        612,
+        792
+      ],
+      "characters": 4440,
+      "text_bounds": [
+        48.96,
+        51.1,
+        563.03,
+        718.6
+      ]
+    },
+    {
+      "page": 3,
+      "size_pt": [
+        612,
+        792
+      ],
+      "characters": 4356,
+      "text_bounds": [
+        48.96,
+        51.1,
+        563.04,
+        718.6
+      ]
+    },
+    {
+      "page": 4,
+      "size_pt": [
+        612,
+        792
+      ],
+      "characters": 2834,
+      "text_bounds": [
+        48.96,
+        51.1,
+        563.04,
+        441.7
+      ]
+    }
+  ]
+}

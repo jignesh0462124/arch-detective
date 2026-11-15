@@ -180,7 +180,23 @@ async def report_payload(repository, scan, token, frameworks=None):
     for finding in findings:
         finding["violations"] = by_finding.get(finding["id"], [])
         finding["remediation_steps"] = (finding.get("remediation") or "").splitlines()
-    return redact_evidence({**saved, "workspace_id": scan["workspace_id"], "target_name": scan["target_name"],
+    extension = None
+    if (scan.get("source_config") or {}).get("review_kind") == "extension":
+        reviews = await repository.rest("GET", "extension_reviews", token=token, params={"scan_id": f"eq.{scan['id']}", "limit": 1})
+        if not reviews:
+            raise HTTPException(409, "Extension policy results are unavailable; retry the report")
+        policies = []
+        for start in range(0, 2000, 500):
+            page = await repository.page("extension_policy_results", token=token, offset=start, limit=500,
+                scan_id=f"eq.{scan['id']}", order="store.asc,rule_id.asc,id.asc")
+            if page["total"] > 2000:
+                raise HTTPException(413, "Extension policy report exceeds the result limit")
+            policies.extend(page["items"])
+            if len(policies) >= page["total"]:
+                break
+        declarations = await repository.rest("GET", "extension_declarations", token=token, params={"scan_id": f"eq.{scan['id']}", "limit": 1})
+        extension = {**reviews[0], "results": policies, "declarations": declarations[0]["content"] if declarations else None}
+    return redact_evidence({**saved, "extension_review": extension, "workspace_id": scan["workspace_id"], "target_name": scan["target_name"],
         "scan_type": scan.get("scan_type"), "frameworks": scope,
         "framework_scores": {k: v for k, v in (scan.get("framework_scores") or {}).items() if k in scope},
         "audit_completed_at": scan.get("completed_at") or scan.get("created_at"), "findings": findings})

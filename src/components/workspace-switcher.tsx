@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useId } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import {
   Plus,
@@ -28,6 +28,7 @@ function toSlug(value: string): string {
  * Styled with Archon's brutalist/editorial aesthetic and Phosphor icons.
  */
 export function WorkspaceSwitcher() {
+  const triggerId = useId();
   const navigate = useNavigate();
   const { active, workspaces, isLoading, setActive } = useActiveWorkspace();
   const { data: allWorkspaces } = useWorkspaces();
@@ -56,13 +57,14 @@ export function WorkspaceSwitcher() {
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       if (e.key === "Escape") {
+        if (open || showQuickModal) e.preventDefault();
         setOpen(false);
         setShowQuickModal(false);
       }
     }
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
-  }, []);
+  }, [open, showQuickModal]);
 
   function handleSwitch(id: string) {
     setActive(id);
@@ -119,7 +121,7 @@ export function WorkspaceSwitcher() {
         {/* Trigger button */}
         <button
           type="button"
-          id="workspace-switcher-trigger"
+          id={triggerId}
           aria-haspopup="listbox"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}

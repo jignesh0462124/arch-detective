@@ -47,9 +47,6 @@ threatlens/data/
 celerybeat-schedule
 celerybeat.pid
 
-# Vercel
-.vercel
-
 backend-deploy/
 
 # Reproducible test output; curated documentation screenshots remain tracked.
@@ -59,3 +56,7 @@ output/pytest-*/
 output/reports-test-temp/
 output/cleanup-*/
 output/cleanup-*.json
+
+# Disposable extension-review verification and scoped migration deployment.
+tmp/extension-review/
+tmp/extension-deploy-20261105/

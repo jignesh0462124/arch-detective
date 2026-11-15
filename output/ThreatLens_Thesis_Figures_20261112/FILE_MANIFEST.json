@@ -1,0 +1,157 @@
+[
+  {
+    "file": "CAPTIONS_AND_PLACEMENT.md",
+    "bytes": 8272,
+    "sha256": "9741357fcc742d14b73f8402e65753469982b1cc10e79ae619b9b1d3883e41e4"
+  },
+  {
+    "file": "figure-3-1-research-workflow.png",
+    "bytes": 241482,
+    "sha256": "9f6cc7fba35588a01e6b1f13610c37d16683a13d4b7ac5d584e48f9827ff1131",
+    "dimensions": [
+      3600,
+      2220
+    ]
+  },
+  {
+    "file": "figure-3-1-research-workflow.svg",
+    "bytes": 7920,
+    "sha256": "3d61472e17a7dac521ec0b10cbc04974c43a76749f7bf45ce09ff208d4ef51c2"
+  },
+  {
+    "file": "figure-5-1-system-architecture.png",
+    "bytes": 412393,
+    "sha256": "edfbdeea4c8783b142798e2e879b5f949cfe3340b6f430c42a51c983200eb5ef",
+    "dimensions": [
+      3800,
+      3140
+    ]
+  },
+  {
+    "file": "figure-5-1-system-architecture.svg",
+    "bytes": 10830,
+    "sha256": "836f15821b74e8d385b7e7106990930735f17761e33a07dc922cafe40dca9ee9"
+  },
+  {
+    "file": "figure-5-2-dashboard.png",
+    "bytes": 370513,
+    "sha256": "7b225065984a3084161cd6dec58aeadc8fd49402c847c9ce59cf95e6c4b082be",
+    "dimensions": [
+      1585,
+      850
+    ]
+  },
+  {
+    "file": "figure-5-3-upload-and-recorded-activity.png",
+    "bytes": 963430,
+    "sha256": "5205fa72470b9255839afe51a623d86aa84272ac09f75b8f22a1f4830ded3428",
+    "dimensions": [
+      1648,
+      2160
+    ]
+  },
+  {
+    "file": "figure-5-4-findings.png",
+    "bytes": 614886,
+    "sha256": "765247075660581ecc24922a95fa9df47b2215ac0e0e5cfeab2cd1794d0ac8c9",
+    "dimensions": [
+      1585,
+      991
+    ]
+  },
+  {
+    "file": "figure-5-5-security-advisor.png",
+    "bytes": 442977,
+    "sha256": "3b7819f6bbbefc46db01fcc7fb034442a0b3ed33d9de586e01da0969745923b5",
+    "dimensions": [
+      1600,
+      1000
+    ]
+  },
+  {
+    "file": "figure-5-6-audit-workbench.png",
+    "bytes": 567770,
+    "sha256": "79889ab0bbaa4b0d444d87e6ffbb4bd40f5293f71d9c1dc3765043fc28ac65c1",
+    "dimensions": [
+      1600,
+      1000
+    ]
+  },
+  {
+    "file": "figure-5-7-attack-graph.png",
+    "bytes": 355072,
+    "sha256": "95dabfca02bc17bf66f6884f468915aae6a2c2219f884a6aefa2215929d1f2f0",
+    "dimensions": [
+      1585,
+      991
+    ]
+  },
+  {
+    "file": "figure-5-8-generated-report.png",
+    "bytes": 548875,
+    "sha256": "8b986795a099e01ee187c68e717a6e8a24ebeab2cf1a08129d10320e4f4b7ca0",
+    "dimensions": [
+      3048,
+      2195
+    ]
+  },
+  {
+    "file": "figure-5-9-database-erd.png",
+    "bytes": 330211,
+    "sha256": "7abc504b7c3050bd14b1722ff5d7fdf4753e73357123549e1f85ae0c3120558d",
+    "dimensions": [
+      3600,
+      3480
+    ]
+  },
+  {
+    "file": "figure-5-9-database-erd.svg",
+    "bytes": 14804,
+    "sha256": "a1d00aa27552e93a453ff7ec300e39a1500e557729c2cc0dfd91e59b5b46926c"
+  },
+  {
+    "file": "FIGURE_OVERVIEW.png",
+    "bytes": 1477143,
+    "sha256": "39e22ff58b94b60ba692c054f49087b5c8091f3d2d9dfc2f30a08bbe8f738207",
+    "dimensions": [
+      1800,
+      2840
+    ]
+  },
+  {
+    "file": "individual-panels/figure-5-3a-project-upload.png",
+    "bytes": 368234,
+    "sha256": "b67791549d3ecce6dd3f3e1e3547eb1c4461114f74a7690b2f7e70ad6bfb329d",
+    "dimensions": [
+      1600,
+      1000
+    ]
+  },
+  {
+    "file": "individual-panels/figure-5-3b-recorded-scan-activity.png",
+    "bytes": 577363,
+    "sha256": "dc56e6cd8c0b9e0b50f25b7ae3f786a1d9aa7a85177720caf3eb7c0b4956d8f6",
+    "dimensions": [
+      1600,
+      1000
+    ]
+  },
+  {
+    "file": "individual-panels/figure-5-8a-report-cover.png",
+    "bytes": 202172,
+    "sha256": "091a8e65e919caa6f40d8d61149dd120a54e78b6933ed7df77a827929edc86ab",
+    "dimensions": [
+      1488,
+      2105
+    ]
+  },
+  {
+    "file": "individual-panels/figure-5-8b-report-evidence-and-remedies.png",
+    "bytes": 326550,
+    "sha256": "a212657428dfaaab6d063b97e69499d703d9c2f80e5160b5a878c93cdb6a2dd6",
+    "dimensions": [
+      1488,
+      2105
+    ]
+  }
+]

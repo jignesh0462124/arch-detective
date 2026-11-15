@@ -735,6 +735,7 @@ async def _scan_pipeline(
     persist_local: bool = True,
     on_event=None,
     suggest_all_frameworks: bool = True,
+    security_only: bool = False,
 ) -> dict[str, Any] | None:
     """Full AI pipeline: findings → CVSS → compliance → remediation → summary."""
     try:
@@ -747,7 +748,7 @@ async def _scan_pipeline(
                 _emit(scan_id, event)
             if on_event:
                 on_event(event)
-        target_fws = frameworks or ["gdpr", "soc2", "iso27001", "pci_dss", "nist_csf"]
+        target_fws = [] if security_only else frameworks or ["gdpr", "soc2", "iso27001", "pci_dss", "nist_csf"]
 
         # ── Step 1: Find vulnerabilities ──────────────────────────────────────
         emit({"step": "finding", "label": "Scanning supported source files for security findings", "progress": 15})
@@ -911,7 +912,7 @@ async def _scan_pipeline(
                 "files_scanned": len(code_files),
                 "files_truncated": sum(len(f["content"]) >= MAX_FILE_CHARS for f in code_files),
                 "limitations": [
-                    f"At most {MAX_FILES} supported source files, {MAX_FILE_CHARS} characters per file; dependencies/build outputs excluded.",
+                    f"At most {MAX_FILES} supported source files, {MAX_FILE_CHARS} characters per file; " + ("packaged build and dependency directories are included for extension review." if security_only else "dependencies/build outputs excluded."),
                     "Pattern matching and source-backed AI suggestions can have false positives and false negatives; validate manually.",
                     "AI inspects a sampled context, not the full archive. Rule CVSS scores and compliance mappings are estimates, not certification.",
                 ],
@@ -1112,6 +1113,7 @@ def _generate_pdf_stream(scan_id: str, result: dict[str, Any], *, cache: bool = 
         "summary": result.get("summary") or {},
         "analysis": result.get("analysis") or {},
         "coverage": result.get("coverage") or {},
+        "extension_review": result.get("extension_review"),
         "exclusions": result.get("exclusions") or [],
         "report_id": f"TL-{'AUDIT' if result.get('workspace_id') else 'LOCAL'}-{scan_id}",
         "generated_at": result.get("generated_at") or datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),

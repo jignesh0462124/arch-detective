@@ -451,6 +451,71 @@ try {
   await count("SELECT * FROM advisor_messages", 0);
   await count("SELECT * FROM github_private_records", 0);
   await count(`SELECT * FROM fix_proposals WHERE id='${proposalId}' AND snapshot_id IS NULL`, 1);
+  // Extension policy writes stay server-only; reads follow the parent scan RLS.
+  const policyId = "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee";
+  await q(`UPDATE scans SET source_config='{"review_kind":"extension"}' WHERE id='${ids.scan}'`);
+  await q(
+    `INSERT INTO extension_reviews(scan_id, workspace_id, package_hash, package_name, package_version, manifest_version, stores, policy_version) VALUES ('${ids.scan}','${ids.workspace}','fixture','Fixture','1',3,ARRAY['chrome'],'fixture')`,
+  );
+  await q(`INSERT INTO extension_declarations(scan_id,content) VALUES ('${ids.scan}','{}')`);
+  await q(
+    `INSERT INTO extension_policy_results(id,scan_id,store,rule_id,category,outcome,title,details) VALUES ('${policyId}','${ids.scan}','chrome','fixture','security','needs_review','Fixture','{}')`,
+  );
+  await q(
+    `INSERT INTO extension_review_annotations(result_id,scan_id,actor_id,note) VALUES ('${policyId}','${ids.scan}','${ids.owner}','Manual note')`,
+  );
+  const assetId = "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee";
+  const assetPath = `${ids.workspace}/${ids.scan}/listing/${assetId}.txt`;
+  await q(
+    `INSERT INTO extension_review_assets(id,scan_id,store,object_path,media_type,byte_size,width,height,expires_at) VALUES ('${assetId}','${ids.scan}','chrome','${assetPath}','image/png',100,100,100,now()+interval '30 days')`,
+  );
+  const policyConversation = "bbbbbbbb-cccc-4ddd-8eee-ffffffffffff";
+  await q(
+    `INSERT INTO advisor_conversations(id,owner_user_id,workspace_id,scan_id,policy_result_id,title) VALUES ('${policyConversation}','${ids.owner}','${ids.workspace}','${ids.scan}','${policyId}','Policy discussion')`,
+  );
+  const extensionTables = [
+    "extension_reviews",
+    "extension_declarations",
+    "extension_policy_results",
+    "extension_review_annotations",
+  ];
+  for (const role of ["owner", "admin", "analyst", "viewer"]) {
+    await as("authenticated", ids[role]);
+    // The existing GitHub isolation fixture revoked this viewer above.
+    for (const table of extensionTables)
+      await count(`SELECT * FROM ${table}`, role === "viewer" ? 0 : 1);
+    await count("SELECT id FROM extension_review_assets", role === "viewer" ? 0 : 1);
+    await denied("SELECT object_path FROM extension_review_assets");
+    await denied(`UPDATE extension_review_assets SET expires_at=now()+interval '1 year'`);
+    await count(
+      `SELECT * FROM advisor_conversations WHERE id='${policyConversation}'`,
+      role === "owner" ? 1 : 0,
+    );
+    await denied(`UPDATE extension_policy_results SET outcome='passed' WHERE id='${policyId}'`);
+    await denied(
+      `UPDATE scans SET source_config='{"review_kind":"project"}' WHERE id='${ids.scan}'`,
+    );
+    await denied(`DELETE FROM extension_reviews WHERE scan_id='${ids.scan}'`);
+  }
+  await as("authenticated", ids.outsider);
+  for (const table of extensionTables) await count(`SELECT * FROM ${table}`, 0);
+  await count("SELECT id FROM extension_review_assets", 0);
+  await as("anon");
+  for (const table of extensionTables) await denied(`SELECT * FROM ${table}`);
+  await denied("SELECT id FROM extension_review_assets");
+  await db.exec("RESET ROLE");
+  await q(
+    `INSERT INTO workspace_members(workspace_id,user_id,role) VALUES ('${ids.workspace}','${ids.viewer}','viewer')`,
+  );
+  await as("authenticated", ids.viewer);
+  for (const table of extensionTables) await count(`SELECT * FROM ${table}`, 1);
+  await count("SELECT id FROM extension_review_assets", 1);
+  await db.exec("RESET ROLE");
+  await q(`UPDATE extension_declarations SET expires_at=now()-interval '1 second'`);
+  await q(`UPDATE extension_review_assets SET expires_at=now()-interval '1 second'`);
+  await as("authenticated", ids.owner);
+  await count("SELECT * FROM extension_declarations", 0);
+  await count("SELECT id FROM extension_review_assets", 0);
   await as("authenticated", ids.owner);
   await count(
     `DELETE FROM scans WHERE id='${ids.scan}' AND workspace_id='${ids.workspace}' AND status IN ('completed','failed') RETURNING id`,
@@ -468,7 +533,11 @@ try {
   await db.exec("RESET ROLE");
   await count("SELECT * FROM github_private_records", 0);
   await count("SELECT * FROM fix_proposals", 0);
-  await count("SELECT * FROM source_cleanup_queue", 1);
+  for (const table of extensionTables) await count(`SELECT * FROM ${table}`, 0);
+  await count("SELECT * FROM extension_review_assets", 0);
+  await count(`SELECT * FROM advisor_conversations WHERE id='${policyConversation}'`, 0);
+  await count("SELECT * FROM source_cleanup_queue", 2);
+  await count(`SELECT * FROM source_cleanup_queue WHERE object_path='${assetPath}'`, 1);
   for (const table of sourceTables) await count(`SELECT * FROM ${table}`, 0);
   await as("authenticated", ids.outsider);
   await count("SELECT * FROM workspaces", 1);

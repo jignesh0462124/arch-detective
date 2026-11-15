@@ -5,6 +5,7 @@ import { useActiveWorkspace } from "@/hooks/useWorkspace";
 import { authScope, isCurrentScope, privateStorage } from "@/lib/authState";
 import { ApiError } from "@/lib/api/client";
 import { visiblePageInterval } from "@/lib/browserVisibility";
+import { solutionKey, textBatcher } from "@/lib/codeSolution";
 import {
   streamChat,
   isAiConfigured,
@@ -35,14 +36,20 @@ export type UiMessage = {
   status?: AdvisorMessage["status"];
 };
 export type AdvisorFindingContext = FindingContextIds & { title: string };
+export type CodeSolutionResult = {
+  message: UiMessage;
+  conversationId: string | null;
+  error?: string;
+};
 export type SendMessageOptions = {
   modelOverride?: string;
   interrupt?: boolean;
   context?: AdvisorFindingContext;
   codeSolution?: boolean;
+  responseId?: string;
   newConversation?: boolean;
   handoffKey?: string;
-  onAccepted?: (conversationId: string | null) => void;
+  onAccepted?: (conversationId: string | null, messageId?: string) => void;
 };
 const fromSaved = (m: AdvisorMessage): UiMessage => ({
   id: m.id,
@@ -53,6 +60,7 @@ const fromSaved = (m: AdvisorMessage): UiMessage => ({
 });
 const sameContext = (a: AdvisorFindingContext | null, b: AdvisorFindingContext | null) =>
   a?.finding_id === b?.finding_id &&
+  a?.policy_result_id === b?.policy_result_id &&
   a?.scan_id === b?.scan_id &&
   a?.workspace_id === b?.workspace_id;
 const systemPrompt =
@@ -63,6 +71,9 @@ export function useGroqChatState() {
   const { active: workspace } = useActiveWorkspace();
   const client = useQueryClient();
   const [messages, setMessages] = useState<UiMessage[]>([]);
+  const [codeSolutions, setCodeSolutions] = useState<Record<string, CodeSolutionResult>>({});
+  const activeSolution = useRef<{ key: string; id: string } | null>(null);
+  const flushActive = useRef<(() => void) | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [isStreaming, setIsStreaming] = useState(false);
   const [loadingConversation, setLoadingConversation] = useState(false);
@@ -87,21 +98,40 @@ export function useGroqChatState() {
   const generation = useRef(0);
   const state = useRef({ messages, conversationId, findingContext, workspaceId: workspace?.id });
   state.current = { messages, conversationId, findingContext, workspaceId: workspace?.id };
-  const reset = useCallback((context: AdvisorFindingContext | null = null) => {
-    generation.current++;
-    controller.current?.abort();
-    controller.current = null;
-    locked.current = false;
-    setIsStreaming(false);
-    setLoadingConversation(false);
-    setMessages([]);
-    setConversationId(null);
-    setFindingContextState(context);
-    setOlderCursor(null);
-    setError(null);
-  }, []);
+  const reset = useCallback(
+    (context: AdvisorFindingContext | null = null, clearSolutions = false) => {
+      flushActive.current?.();
+      const active = activeSolution.current;
+      setCodeSolutions((previous) => {
+        if (clearSolutions) return {};
+        const record = active && previous[active.key];
+        if (!active || !record || record.message.id !== active.id || !record.message.streaming)
+          return previous;
+        return {
+          ...previous,
+          [active.key]: {
+            ...record,
+            message: { ...record.message, streaming: false, status: "interrupted" },
+          },
+        };
+      });
+      generation.current++;
+      controller.current?.abort();
+      controller.current = null;
+      locked.current = false;
+      setIsStreaming(false);
+      setLoadingConversation(false);
+      setMessages([]);
+      setConversationId(null);
+      setFindingContextState(context);
+      setOlderCursor(null);
+      setError(null);
+      activeSolution.current = null;
+    },
+    [],
+  );
   useEffect(() => {
-    reset();
+    reset(null, true);
     const lifetime = generation;
     return () => {
       lifetime.current++;
@@ -145,11 +175,13 @@ export function useGroqChatState() {
         setMessages([...page.items].reverse().map(fromSaved));
         setOlderCursor(page.next_cursor);
         setFindingContextState(
-          item.scan_id && item.finding_id
+          item.scan_id && (item.finding_id || item.policy_result_id)
             ? {
                 workspace_id: item.workspace_id,
                 scan_id: item.scan_id,
-                finding_id: item.finding_id,
+                ...(item.finding_id
+                  ? { finding_id: item.finding_id }
+                  : { policy_result_id: item.policy_result_id! }),
                 title: item.finding_title || "Saved finding",
               }
             : null,
@@ -195,7 +227,7 @@ export function useGroqChatState() {
   });
   useEffect(() => {
     if (access.error instanceof ApiError && [403, 404, 410].includes(access.error.status)) {
-      reset();
+      reset(null, true);
       setError("This conversation expired, was deleted, or is no longer accessible.");
     }
   }, [access.error, reset]);
@@ -206,7 +238,7 @@ export function useGroqChatState() {
         state.current.findingContext?.workspace_id === detail?.workspace &&
         state.current.findingContext.scan_id === detail?.scan
       )
-        reset();
+        reset(null, true);
     };
     window.addEventListener("archon-audit-deleted", removed);
     return () => window.removeEventListener("archon-audit-deleted", removed);
@@ -246,7 +278,35 @@ export function useGroqChatState() {
       let handoffStorageKey: string | null = null;
       const storage = privateStorage(scope);
       let submissionId: string = crypto.randomUUID();
-      const assistantId = crypto.randomUUID();
+      const assistantId = options.responseId || crypto.randomUUID();
+      const key =
+        options.codeSolution && context
+          ? solutionKey(
+              context.workspace_id,
+              context.scan_id,
+              (context.finding_id || context.policy_result_id)!,
+            )
+          : null;
+      activeSolution.current = key ? { key, id: assistantId } : null;
+      const updateSolution = (patch: Partial<UiMessage>, error?: string) => {
+        if (!key || !accepted || !current()) return;
+        setCodeSolutions((previous) => {
+          const record = previous[key];
+          if (!record || record.message.id !== assistantId) return previous;
+          return {
+            ...previous,
+            [key]: { ...record, error, message: { ...record.message, ...patch } },
+          };
+        });
+      };
+      const batch = textBatcher((content) => {
+        if (!current()) return;
+        setMessages((previous) =>
+          previous.map((m) => (m.id === assistantId ? { ...m, content } : m)),
+        );
+        updateSolution({ content });
+      });
+      flushActive.current = batch.flush;
       setError(null);
       try {
         const status = availability.data?.available
@@ -329,22 +389,38 @@ export function useGroqChatState() {
           ...history,
           { role: "user", content: text.trim() },
         ];
-        let received = "";
         for await (const chunk of streamChat(payload, model, abort.signal, context || undefined, {
           conversationId: id || undefined,
           submissionId: id ? submissionId : undefined,
           codeSolution: options.codeSolution,
           onAccepted: () => {
             accepted = true;
-            options.onAccepted?.(id);
+            if (key && current())
+              setCodeSolutions((previous) => ({
+                ...Object.fromEntries(
+                  Object.entries(previous)
+                    .filter(([k]) => k !== key)
+                    .slice(-7),
+                ),
+                [key]: {
+                  conversationId: id,
+                  message: {
+                    id: assistantId,
+                    role: "assistant",
+                    content: "",
+                    streaming: true,
+                    modelId: model,
+                  },
+                },
+              }));
+            options.onAccepted?.(id, assistantId);
           },
         })) {
           if (!current()) return false;
-          received += chunk;
-          setMessages((previous) =>
-            previous.map((m) => (m.id === assistantId ? { ...m, content: received } : m)),
-          );
+          batch.append(chunk);
         }
+        batch.flush();
+        updateSolution({ streaming: false, status: "completed" });
         if (current())
           setMessages((previous) =>
             previous.map((m) =>
@@ -353,6 +429,11 @@ export function useGroqChatState() {
           );
         return accepted;
       } catch (failure) {
+        batch.flush();
+        updateSolution(
+          { streaming: false, status: "interrupted" },
+          failure instanceof Error ? failure.message : "Advisor request failed. Please try again.",
+        );
         if (current()) {
           setError(
             failure instanceof Error
@@ -367,6 +448,8 @@ export function useGroqChatState() {
         }
         return accepted;
       } finally {
+        batch.dispose();
+        if (flushActive.current === batch.flush) flushActive.current = null;
         if (version === generation.current && isCurrentScope(scope)) {
           locked.current = false;
           setIsStreaming(false);
@@ -391,6 +474,20 @@ export function useGroqChatState() {
     ],
   );
   const stopStreaming = useCallback(() => {
+    flushActive.current?.();
+    const active = activeSolution.current;
+    if (active)
+      setCodeSolutions((previous) => {
+        const record = previous[active.key];
+        if (!record || record.message.id !== active.id) return previous;
+        return {
+          ...previous,
+          [active.key]: {
+            ...record,
+            message: { ...record.message, streaming: false, status: "interrupted" },
+          },
+        };
+      });
     generation.current++;
     controller.current?.abort();
     locked.current = false;
@@ -399,8 +496,34 @@ export function useGroqChatState() {
       previous.map((m) => (m.streaming ? { ...m, streaming: false, status: "interrupted" } : m)),
     );
   }, []);
+  const stopCodeSolution = useCallback(
+    (key: string, messageId?: string) => {
+      if (
+        activeSolution.current?.key === key &&
+        (!messageId || activeSolution.current.id === messageId) &&
+        locked.current
+      )
+        stopStreaming();
+    },
+    [stopStreaming],
+  );
+  const clearCodeSolution = useCallback(
+    (key: string) => {
+      stopCodeSolution(key);
+      setCodeSolutions((previous) => {
+        if (!previous[key]) return previous;
+        const next = { ...previous };
+        delete next[key];
+        return next;
+      });
+    },
+    [stopCodeSolution],
+  );
   return {
     messages,
+    codeSolutions,
+    stopCodeSolution,
+    clearCodeSolution,
     conversationId,
     isStreaming,
     loadingConversation,

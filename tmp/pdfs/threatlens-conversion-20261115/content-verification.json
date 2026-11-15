@@ -1,0 +1,173 @@
+{
+  "front_content_character_inventory_exact_excluding_whitespace_and_dot_leaders": true,
+  "chapter_body_text_exact_excluding_whitespace": true,
+  "all_ten_body_image_bytes_exact": true,
+  "references_appendices_ordered_text_exact_excluding_whitespace": true,
+  "body_pdf_vs_editable_differences": [
+    {
+      "kind": "replace",
+      "pdf": [
+        "introduction",
+        "1"
+      ],
+      "editable": [
+        "introduction1"
+      ]
+    },
+    {
+      "kind": "replace",
+      "pdf": [
+        "review",
+        "2"
+      ],
+      "editable": [
+        "review2"
+      ]
+    },
+    {
+      "kind": "replace",
+      "pdf": [
+        "platform",
+        "4"
+      ],
+      "editable": [
+        "platform4"
+      ]
+    },
+    {
+      "kind": "replace",
+      "pdf": [
+        "implementation",
+        "5"
+      ],
+      "editable": [
+        "implementation5"
+      ]
+    },
+    {
+      "kind": "insert",
+      "pdf": [],
+      "editable": [
+        "navigation",
+        "to",
+        "another",
+        "page"
+      ]
+    },
+    {
+      "kind": "delete",
+      "pdf": [
+        "author",
+        "navigation",
+        "to",
+        "another",
+        "page"
+      ],
+      "editable": []
+    },
+    {
+      "kind": "insert",
+      "pdf": [],
+      "editable": [
+        "author"
+      ]
+    },
+    {
+      "kind": "insert",
+      "pdf": [],
+      "editable": [
+        "workbench"
+      ]
+    },
+    {
+      "kind": "delete",
+      "pdf": [
+        "author",
+        "workbench"
+      ],
+      "editable": []
+    },
+    {
+      "kind": "insert",
+      "pdf": [],
+      "editable": [
+        "author"
+      ]
+    },
+    {
+      "kind": "insert",
+      "pdf": [],
+      "editable": [
+        "failure"
+      ]
+    },
+    {
+      "kind": "delete",
+      "pdf": [
+        "author",
+        "failure"
+      ],
+      "editable": []
+    },
+    {
+      "kind": "insert",
+      "pdf": [],
+      "editable": [
+        "author"
+      ]
+    },
+    {
+      "kind": "delete",
+      "pdf": [
+        "author"
+      ],
+      "editable": []
+    },
+    {
+      "kind": "insert",
+      "pdf": [],
+      "editable": [
+        "author"
+      ]
+    },
+    {
+      "kind": "delete",
+      "pdf": [
+        "author"
+      ],
+      "editable": []
+    },
+    {
+      "kind": "insert",
+      "pdf": [],
+      "editable": [
+        "author"
+      ]
+    },
+    {
+      "kind": "replace",
+      "pdf": [
+        "conclusion",
+        "7"
+      ],
+      "editable": [
+        "conclusion7"
+      ]
+    },
+    {
+      "kind": "replace",
+      "pdf": [
+        "scope",
+        "8"
+      ],
+      "editable": [
+        "scope8"
+      ]
+    }
+  ],
+  "reference_hyperlinks_preserved": true,
+  "table_count": 8,
+  "body_figure_count": 10,
+  "output_bytes": 1872360,
+  "review_comments_parts": []
+}

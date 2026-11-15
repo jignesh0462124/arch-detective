@@ -15,6 +15,7 @@ export default defineConfig({
     server: { entry: "server" },
   },
   nitro: {
-    preset: "vercel",
+    // Standalone SSR server; no hosting-provider deployment adapter required.
+    preset: "node-server",
   },
 });

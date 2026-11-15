@@ -26,6 +26,7 @@ import { useActiveWorkspace } from "@/hooks/useWorkspace";
 import { useAuth } from "@/hooks/useAuth";
 import {
   getSourceWindow,
+  getSnapshotFilePage,
   exportWorkbenchReport,
   workbenchError,
   type SnapshotFile,
@@ -40,6 +41,11 @@ import { rememberAudit } from "@/lib/auditResume";
 import { CodeSolution } from "./CodeSolution";
 
 const SourceEditor = lazy(loadSourceEditor);
+const ExtensionReviewPanel = lazy(() =>
+  import("@/components/extension-review/ExtensionReviewPanel").then((module) => ({
+    default: module.ExtensionReviewPanel,
+  })),
+);
 const rank = { critical: 0, high: 1, medium: 2, low: 3 };
 type InspectorTab = "Evidence" | "Compliance" | "Remediation";
 type TreeNode = { name: string; path: string; file?: SnapshotFile; children: TreeNode[] };
@@ -229,7 +235,10 @@ function FindingInspector({
           </span>
         </div>
         <h2 className="text-lg font-semibold leading-snug">{finding.title}</h2>
-        <p className="break-all font-mono text-[10px] text-muted-foreground">
+        <p
+          hidden={tab === "Remediation"}
+          className="break-all font-mono text-[10px] text-muted-foreground"
+        >
           {finding.file_path || "Location unavailable"}
           {finding.line_number ? `:${finding.line_number}` : ""}
         </p>
@@ -302,31 +311,49 @@ function FindingInspector({
               </p>
             )}
           </>
-        ) : (
-          <>
-            <CodeSolution
-              key={finding.id}
-              workspaceId={workspaceId}
-              scanId={scanId}
-              finding={finding}
-              available={sourceAvailable}
-            />
-          </>
-        )}
+        ) : null}
+        <div hidden={tab !== "Remediation"}>
+          <CodeSolution
+            key={finding.id}
+            workspaceId={workspaceId}
+            scanId={scanId}
+            finding={finding}
+            available={sourceAvailable}
+          />
+        </div>
       </div>
     </>
   );
 }
 
-export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; scanId: string }) {
+export function AuditWorkbench({
+  workspaceId,
+  scanId,
+  initialPolicyId,
+}: {
+  workspaceId: string;
+  scanId: string;
+  initialPolicyId?: string;
+}) {
   const navigate = useNavigate();
+  const policySourceScope = useRef("");
   const { user, isLoading: authLoading } = useAuth();
   const { active, setActive, workspaces, isLoading: workspaceLoading } = useActiveWorkspace();
   const allowed = !!user && active?.id === workspaceId;
+  policySourceScope.current = `${active?.id}/${workspaceId}/${scanId}/${user?.id}`;
+  useEffect(
+    () => () => {
+      policySourceScope.current = "";
+    },
+    [],
+  );
   const client = useQueryClient();
   const measuredSource = useRef("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [fileId, setFileId] = useState<string | null>(null);
+  const [policyFocus, setPolicyFocus] = useState<{ fileId: string; line: number | null } | null>(
+    null,
+  );
   const [tabs, setTabs] = useState<string[]>([]);
   const [openedFiles, setOpenedFiles] = useState<SnapshotFile[]>([]);
   const [fileSearch, setFileSearch] = useState("");
@@ -412,7 +439,12 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
     : selectedSummary;
   const selectedFile =
     files.data?.find((f) => f.id === fileId) || openedFiles.find((f) => f.id === fileId);
-  const line = finding?.location?.file_id === fileId ? finding.location.line_number : null;
+  const line =
+    policyFocus?.fileId === fileId
+      ? policyFocus.line
+      : finding?.location?.file_id === fileId
+        ? finding.location.line_number
+        : null;
   const source = useQuery({
     queryKey: [
       "source-window",
@@ -523,6 +555,7 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
         )
         .sort((a, b) => rank[a.severity] - rank[b.severity]);
   const openFile = (file: SnapshotFile, lineNumber: number | null = null) => {
+    setPolicyFocus(null);
     setOpenedFiles((previous) => [...previous.filter((f) => f.id !== file.id), file].slice(-8));
     setFileId(file.id);
     const cached = client
@@ -539,6 +572,7 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
     setMobile("Code");
   };
   const selectFinding = (value: WorkbenchFinding) => {
+    setPolicyFocus(null);
     setSelectedId(value.id);
     const file = files.data?.find((f) => f.id === value.location?.file_id);
     if (file) openFile(file, value.location?.line_number || null);
@@ -697,9 +731,10 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
     <AppShell
       title="Audit Workbench"
       immersive={expanded}
+      layout="workbench"
       subtitle={`${active?.name} / Codebase Audit / ${data.scan.target_name}`}
     >
-      <div className={cn("min-w-0 space-y-4", expanded && "workbench-full")}>
+      <div className={cn("workbench-layout min-w-0 space-y-4", expanded && "workbench-full")}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
             <h2 className="truncate text-lg font-semibold">{data.scan.target_name}</h2>
@@ -781,6 +816,49 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
             {error}
           </p>
         ) : null}
+        {data.scan.source_config?.review_kind === "extension" && (
+          <Suspense fallback={<p role="status">Opening extension policy review…</p>}>
+            <ExtensionReviewPanel
+              key={`${user?.id}/${workspaceId}/${scanId}`}
+              workspaceId={workspaceId}
+              scanId={scanId}
+              initialPolicyId={initialPolicyId}
+              role={active?.role || "viewer"}
+              status={data.scan.status}
+              sourceAvailable={sourceAllowed}
+              onOpenSource={async (path, number) => {
+                const requestedScope = policySourceScope.current;
+                const file = files.data?.find((item) => item.path === path);
+                if (file) {
+                  openFile(file, number);
+                  setPolicyFocus({ fileId: file.id, line: number });
+                } else {
+                  const scope = policySourceScope.current;
+                  try {
+                    const page = await getSnapshotFilePage(scanId, path, 0);
+                    const matched = page.items.find((item) => item.path === path);
+                    if (scope !== policySourceScope.current) return;
+                    if (matched) {
+                      openFile(matched, number);
+                      setPolicyFocus({ fileId: matched.id, line: number });
+                    } else setError("The recorded file is unavailable in this source snapshot.");
+                  } catch (failure) {
+                    if (scope === policySourceScope.current) setError(workbenchError(failure));
+                  }
+                }
+                requestAnimationFrame(() => {
+                  if (requestedScope !== policySourceScope.current) return;
+                  document.querySelector('[data-testid="source-panel"]')?.scrollIntoView({
+                    block: "center",
+                    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                      ? "auto"
+                      : "smooth",
+                  });
+                });
+              }}
+            />
+          </Suspense>
+        )}
         <div className="flex flex-wrap items-center gap-x-5 gap-y-3 rounded-md border border-border bg-card px-4 py-3 text-xs">
           <span className="flex items-center gap-2">
             {complete ? (
@@ -979,8 +1057,12 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
             />
           </aside>
           <section
-            className={cn("min-w-0", mobile === "Code" ? "block" : "hidden lg:block")}
+            className={cn(
+              "min-h-0 min-w-0 flex-col",
+              mobile === "Code" ? "flex" : "hidden lg:flex",
+            )}
             aria-label="Source viewer"
+            data-testid="source-panel"
           >
             <div
               role="tablist"
@@ -1049,7 +1131,7 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
                 <List size={14} />
               </button>
             </div>
-            <div className="workbench-code-height h-[420px] min-w-0 sm:h-[480px]">
+            <div className="workbench-code-height min-h-0 min-w-0 flex-1">
               {!sourceAllowed ? (
                 <div className="flex h-full flex-col items-center justify-center gap-3 p-6 text-center text-sm text-muted-foreground">
                   <Code size={28} />
@@ -1085,7 +1167,9 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
                     source={selectedFile?.preview_state === "ready" ? source.data || null : null}
                     path={selectedFile?.path || ""}
                     line={line}
-                    focusKey={finding?.id}
+                    focusKey={
+                      policyFocus ? `policy:${policyFocus.fileId}:${policyFocus.line}` : finding?.id
+                    }
                     fileKey={`${workspaceId}/${scanId}/${snapshot?.id}/${snapshot?.revision}/${fileId}`}
                     message={
                       selectedFile?.preview_state === "pending"
@@ -1136,12 +1220,16 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
           </aside>
           <section
             className={cn(
-              "min-w-0 border-t border-border",
-              mobile === "Findings" ? "block" : "hidden lg:block",
+              "min-h-0 min-w-0 flex-col overflow-hidden border-t border-border",
+              mobile === "Findings" ? "flex" : "hidden lg:flex",
             )}
             aria-label="Audit problems and activity"
           >
-            <div role="tablist" aria-label="Audit dock" className="flex border-b border-border">
+            <div
+              role="tablist"
+              aria-label="Audit dock"
+              className="flex shrink-0 border-b border-border"
+            >
               {["Problems", "Scan activity", "Summary"].map((value) => (
                 <button
                   type="button"
@@ -1163,7 +1251,7 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
             </div>
             {dock === "Problems" ? (
               <>
-                <div className="flex flex-wrap gap-2 border-b border-border p-2">
+                <div className="flex shrink-0 flex-wrap gap-2 border-b border-border p-2">
                   <input
                     aria-label="Search security findings"
                     placeholder="Search findings or CWE…"
@@ -1184,7 +1272,7 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
                     ))}
                   </select>
                 </div>
-                <div className="max-h-64 overflow-auto">
+                <div className="min-h-0 flex-1 overflow-auto">
                   <table className="w-full text-left text-[11px]">
                     <thead className="sticky top-0 bg-card">
                       <tr className="border-b border-border text-muted-foreground">
@@ -1254,7 +1342,7 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
                 </div>
               </>
             ) : dock === "Scan activity" ? (
-              <ol className="max-h-64 space-y-2 overflow-auto p-4 font-mono text-[10px] text-muted-foreground">
+              <ol className="min-h-0 flex-1 space-y-2 overflow-auto p-4 font-mono text-[10px] text-muted-foreground">
                 {data.events.length ? (
                   data.events.map((event) => <li key={event.sequence}>{event.label}</li>)
                 ) : (
@@ -1262,7 +1350,7 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
                 )}
               </ol>
             ) : (
-              <div className="max-h-64 overflow-auto p-4 text-xs leading-6 text-muted-foreground">
+              <div className="min-h-0 flex-1 overflow-auto p-4 text-xs leading-6 text-muted-foreground">
                 <p>
                   {data.metadata.summary?.summary ||
                     "Review the recorded findings, file locations and available control evidence."}
@@ -1276,15 +1364,17 @@ export function AuditWorkbench({ workspaceId, scanId }: { workspaceId: string; s
             )}
           </section>
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] text-muted-foreground">
-          <span className="flex items-center gap-1">
-            <LockSimple size={12} /> Read only ·{" "}
-            {snapshot?.state === "ready" ? "Snapshot retained" : "Findings retained"}
-          </span>
-          <span>
-            {selectedFile?.language || "Source review"} {line ? `· Line ${line}` : ""}
-          </span>
-        </div>
+        {!expanded && (
+          <div className="workbench-status-bar flex flex-wrap items-center justify-between gap-2 text-[10px] text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <LockSimple size={12} /> Read only ·{" "}
+              {snapshot?.state === "ready" ? "Snapshot retained" : "Findings retained"}
+            </span>
+            <span>
+              {selectedFile?.language || "Source review"} {line ? `· Line ${line}` : ""}
+            </span>
+          </div>
+        )}
         <dialog
           ref={dialog}
           onClose={() => setInspectorOpen(false)}

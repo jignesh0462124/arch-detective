@@ -4,7 +4,10 @@ import { DEFAULT_MODEL_ID, getStoredModelId } from "./ai-models";
 import { apiClient, validateSessionAfter401 } from "./client";
 
 export type ChatMessage = { role: "user" | "assistant" | "system"; content: string };
-export type FindingContextIds = { workspace_id: string; scan_id: string; finding_id: string };
+export type FindingContextIds = { workspace_id: string; scan_id: string } & (
+  | { finding_id: string; policy_result_id?: never }
+  | { finding_id?: never; policy_result_id: string }
+);
 export const isAiConfigured = () => isSupabaseConfigured;
 export const isGroqConfigured = isAiConfigured;
 export const GROQ_MODEL = DEFAULT_MODEL_ID;
@@ -109,9 +112,11 @@ export async function* streamChat(
         }
         if (event.error)
           throw new Error(
-            event.error === "conversation_save_failed"
-              ? "The response could not be saved. Copy any visible suggestion before retrying."
-              : "Advisor stream was interrupted. Please retry.",
+            event.error === "response_truncated"
+              ? "The suggestion is incomplete. Regenerate before using the code."
+              : event.error === "conversation_save_failed"
+                ? "The response could not be saved. Copy any visible suggestion before retrying."
+                : "Advisor stream was interrupted. Please retry.",
           );
         const content = event.choices?.[0]?.delta?.content;
         if (typeof content === "string" && content) {

@@ -1,0 +1,330 @@
+PAGE 1
+ARCHON
+Security audits & threat modeling
+Security assessment
+SAVED ASSESSMENT / ENGINEERING REVIEW
+Security Audit Report
+MERN E Commerce Store main
+Recorded findings, source evidence and remediation guidance for your project. Prepared
+from the saved audit; generating this report does not rerun analysis.
+6 recorded findings
+1 Critical / 2 High / 3 Medium / 0 Low
+Human review required. Zero findings does not guarantee security.
+Audit completed 06 Nov 2026, 05:38 UTC
+Report generated 2026-11-12 04:13 UTC
+Assessed frameworks SOC 2, ISO 27001, GDPR, PCI DSS v4, NIST CSF 2.0
+Report reference TL-AUDIT-33de4813-3200-58d9-9788-c45201ef971e
+Scan reference 33de4813-3200-58d9-9788-c45201ef971e
+Automated assessment - not a compliance certificate, a digital signature or proof that the project is secure. Review findings
+and validate proposed changes before use.
+
+PAGE 2
+ARCHON / SECURITY AUDIT Saved assessment
+ARCHON / TL-AUDIT-33de4813-3200-58d9-9788-c45201... Page 2 of 10
+01 / OVERVIEW
+Executive summary
+Saved findings and recorded priorities - human review required.
+Critical
+1
+High
+2
+Medium
+3
+Low
+0
+6 recorded findings. Counts include all saved triage states.
+Recorded headline: Critical recorded risk in MERN E Commerce Store main
+Automated analysis of MERN E Commerce Store main recorded 6 potential security findings (1 critical, 2
+high, 3 medium, 0 low). These are static-analysis candidates, not confirmed exploits or a compliance
+certification. No findings does not prove the project is secure; review scan coverage and validate manually.
+Recorded risk posture: Critical
+Recorded priorities
+1. SQL Injection via Unsanitized Input
+2. Insecure JWT Cookie Configuration
+3. Unvalidated File Uploads
+4. Insertion of Sensitive Information into Log File
+02 / ASSESSMENT SCOPE
+Coverage & limitations
+What the saved assessment establishes - and what it does not.
+Static checks and model review have different coverage and input limits. Unreported issues may still exist.
+This report reflects saved evidence and current triage states; it does not rerun analysis.
+Mode
+Static checks and model review
+Limitations
+At most 500 supported source files, 200000 characters per file; dependencies/build outputs excluded.
+Pattern matching and source-backed AI suggestions can have false positives and false negatives; validate
+manually.
+AI inspects a sampled context, not the full archive. Rule CVSS scores and compliance mappings are
+estimates, not certification.
+Files scanned
+81
+
+PAGE 3
+ARCHON / SECURITY AUDIT Saved assessment
+ARCHON / TL-AUDIT-33de4813-3200-58d9-9788-c45201... Page 3 of 10
+Files truncated
+0
+Automated assessment, not a compliance certificate or proof that the project is secure. Source
+previews expire separately; saved findings and reports remain available.
+03 / FRAMEWORK ASSESSMENT
+Framework mappings
+Recorded automated assessment signals, not proof of compliance or certification.
+Framework Recorded score Mapping occurrences Most frequent control
+SOC 2 80% 2 CC6.1
+ISO 27001 80% 2 A.14.2.5
+GDPR 80% 2 Art.32
+PCI DSS v4 80% 2 Req. 6.2.4
+NIST CSF 2.0 80% 2 PR.DS-5
+Missing scores are not treated as zero. Mapping occurrences count recorded associations, not unique controls passed or failed.
+Most frequently mapped controls
+Up to 15 controls by recorded occurrence. Per-finding mappings appear in the findings section.
+Framework Control Recorded title Occurrences
+GDPR Art.32 Security of Processing 2
+PCI_DSS Req. 6.2.4 Mitigation of SQL
+Injection and Query
+Manipulation
+1
+ISO27001 A.14.2.5 Secure System
+Engineering Principles
+1
+SOC2 CC6.1 Logical and Physical
+Access Controls
+1
+NIST_CSF PR.DS-5 Protections Against
+Data Leaks and Query
+Tampering
+1
+
+PAGE 4
+ARCHON / SECURITY AUDIT Saved assessment
+ARCHON / TL-AUDIT-33de4813-3200-58d9-9788-c45201... Page 4 of 10
+Framework Control Recorded title Occurrences
+ISO27001 A.12.4.1 Event Logging and
+Sensitive Data
+Redaction
+1
+SOC2 CC7.2 System Monitoring and
+Audit Log Safeguards
+1
+NIST_CSF DE.CM-1 Monitoring Network
+and System Logs
+Securely
+1
+PCI_DSS Req. 10.2 Prevent Recording of
+Sensitive Authentication
+Data in Logs
+1
+04 / TECHNICAL REVIEW
+Findings & remediation
+6 recorded findings, ordered by recorded severity. Validate evidence before remediation.
+Critical severity / 1 finding
+F-001 CRITICAL
+SQL Injection via Unsanitized Input
+Triage: open / CVSS: 9.8 / CWE-89
+MERN-E-Commerce-Store-main/frontend/src/pages/Admin/AllProducts.jsx:29
+Issue
+User input is concatenated directly into a SQL query without parameterization, allowing an attacker to
+execute arbitrary SQL commands to extract data or bypass authentication.
+Recorded finding source: static-rule
+Recorded evidence
+F-001 / SQL Injection via Unsanitized Input
+JSX / Recorded evidence
+MERN-E-Commerce-Store-main/frontend/src/pages/Admin/AllProducts.jsx
+Reported source line: 29
+Gutter numbers identify excerpt lines. Source position is not inferred.
+1 update/${
+
+PAGE 5
+ARCHON / SECURITY AUDIT Saved assessment
+ARCHON / TL-AUDIT-33de4813-3200-58d9-9788-c45201... Page 5 of 10
+Remediation steps
+Use parameterized queries (prepared statements) for all database operations.
+Adopt an ORM such as SQLAlchemy, Django ORM, or Prisma to abstract SQL construction.
+Implement strict input validation and type checking before database execution.
+Suggested verification checks
+1. Review the affected code path and confirm the recorded issue applies.
+2. Test the changed path with valid and invalid inputs; check expected behavior and access controls.
+3. Run a new audit and compare the recorded evidence.
+These are suggested checks; they have not been executed by this report.
+Framework mappings
+Framework Control Recorded mapping
+GDPR Art.32 Security of Processing
+PCI_DSS Req. 6.2.4 Mitigation of SQL Injection and
+Query Manipulation
+ISO27001 A.14.2.5 Secure System Engineering
+Principles
+SOC2 CC6.1 Logical and Physical Access
+Controls
+NIST_CSF PR.DS-5 Protections Against Data Leaks
+and Query Tampering
+High severity / 2 findings
+F-002 HIGH
+Insecure JWT Cookie Configuration
+Triage: open / CVSS: Not recorded / CWE-319
+MERN-E-Commerce-Store-main/backend/utils/createToken.js:11
+Issue
+The JWT cookie is set with `secure: false` in development environments. This allows the token to be
+transmitted over unencrypted HTTP connections, making it vulnerable to interception via Man-in-the-Middle
+attacks.
+Recorded finding source: llm-review
+
+PAGE 6
+ARCHON / SECURITY AUDIT Saved assessment
+ARCHON / TL-AUDIT-33de4813-3200-58d9-9788-c45201... Page 6 of 10
+Recorded evidence
+F-002 / Insecure JWT Cookie Configuration
+JavaScript / Recorded evidence
+MERN-E-Commerce-Store-main/backend/utils/createToken.js
+Reported source line: 11
+Gutter numbers identify excerpt lines. Source position is not inferred.
+1 secure: process.env.NODE_ENV !== "develop
+Remediation steps
+Review and patch Insecure JWT Cookie Configuration immediately.
+Validate all input and sanitize parameters before processing.
+Add regression tests in CI to ensure the issue does not reoccur.
+Suggested verification checks
+1. Review the affected code path and confirm the recorded issue applies.
+2. Test the changed path with valid and invalid inputs; check expected behavior and access controls.
+3. Run a new audit and compare the recorded evidence.
+These are suggested checks; they have not been executed by this report.
+Framework mappings: No control mapping was recorded for the selected frameworks.
+F-003 HIGH
+Unvalidated File Uploads
+Triage: open / CVSS: Not recorded / CWE-434
+MERN-E-Commerce-Store-main/backend/routes/uploadRoutes.js:7
+Issue
+The upload route uses multer without explicit file type or size validation in the provided snippet. This could
+allow the upload of malicious files (e.g., .exe, .sh) or large files leading to Denial of Service.
+Recorded finding source: llm-review
+Recorded evidence
+F-003 / Unvalidated File Uploads
+JavaScript / Recorded evidence
+MERN-E-Commerce-Store-main/backend/routes/uploadRoutes.js
+Reported source line: 7
+Gutter numbers identify excerpt lines. Source position is not inferred.
+1 const storage = multer.diskStorage({
+2 destination: (req, file, cb) => {
+3 cb(null, "uploads/");
+4 },
+
+PAGE 7
+ARCHON / SECURITY AUDIT Saved assessment
+ARCHON / TL-AUDIT-33de4813-3200-58d9-9788-c45201... Page 7 of 10
+Remediation steps
+Review and patch Unvalidated File Uploads immediately.
+Validate all input and sanitize parameters before processing.
+Add regression tests in CI to ensure the issue does not reoccur.
+Suggested verification checks
+1. Review the affected code path and confirm the recorded issue applies.
+2. Test the changed path with valid and invalid inputs; check expected behavior and access controls.
+3. Run a new audit and compare the recorded evidence.
+These are suggested checks; they have not been executed by this report.
+Framework mappings: No control mapping was recorded for the selected frameworks.
+Medium severity / 3 findings
+F-004 MEDIUM
+Insertion of Sensitive Information into Log File
+Triage: open / CVSS: 6.2 / CWE-532
+MERN-E-Commerce-Store-main/backend/controllers/userController.js:40
+Issue
+Logging authentication tokens, credentials, or customer sensitive data introduces exposure in monitoring
+aggregators.
+Recorded finding source: static-rule
+Recorded evidence
+F-004 / Insertion of Sensitive Information into Log File
+JavaScript / Recorded evidence
+MERN-E-Commerce-Store-main/backend/controllers/userController.js
+Reported source line: 40
+Gutter numbers identify excerpt lines. Source position is not inferred.
+1 console.log(password)
+Remediation steps
+Implement structured logging with automatic redaction filters for sensitive fields.
+Audit logging calls to ensure tokens and passwords are not serialized.
+
+PAGE 8
+ARCHON / SECURITY AUDIT Saved assessment
+ARCHON / TL-AUDIT-33de4813-3200-58d9-9788-c45201... Page 8 of 10
+Suggested verification checks
+1. Review the affected code path and confirm the recorded issue applies.
+2. Test the changed path with valid and invalid inputs; check expected behavior and access controls.
+3. Run a new audit and compare the recorded evidence.
+These are suggested checks; they have not been executed by this report.
+Framework mappings
+Framework Control Recorded mapping
+ISO27001 A.12.4.1 Event Logging and Sensitive Data
+Redaction
+SOC2 CC7.2 System Monitoring and Audit Log
+Safeguards
+NIST_CSF DE.CM-1 Monitoring Network and System
+Logs Securely
+GDPR Art.32 Confidentiality and Integrity of
+Logs
+PCI_DSS Req. 10.2 Prevent Recording of Sensitive
+Authentication Data in Logs
+F-005 MEDIUM
+Missing Input Validation in Category Creation
+Triage: open / CVSS: Not recorded / CWE-20
+MERN-E-Commerce-Store-main/backend/controllers/categoryController.js:6
+Issue
+The category creation controller does not validate the length or format of the `name` field before passing it
+to the database. While the schema has a maxLength, relying solely on the database for validation can lead to
+unexpected errors or potential injection issues if not handled correctly.
+Recorded finding source: llm-review
+Recorded evidence
+F-005 / Missing Input Validation in Category Creation
+JavaScript / Recorded evidence
+MERN-E-Commerce-Store-main/backend/controllers/categoryController.js
+Reported source line: 6
+Gutter numbers identify excerpt lines. Source position is not inferred.
+1 const { name } = req.body;
+
+PAGE 9
+ARCHON / SECURITY AUDIT Saved assessment
+ARCHON / TL-AUDIT-33de4813-3200-58d9-9788-c45201... Page 9 of 10
+F-005 / Missing Input Validation in Category Creation
+JavaScript / Recorded evidence
+MERN-E-Commerce-Store-main/backend/controllers/categoryController.js
+Reported source line: 6
+Gutter numbers identify excerpt lines. Source position is not inferred.
+2
+3 if (!name) {
+4 return res.json({ error: "Name is required" });
+5 }
+Remediation steps
+Review and patch Missing Input Validation in Category Creation immediately.
+Validate all input and sanitize parameters before processing.
+Add regression tests in CI to ensure the issue does not reoccur.
+Suggested verification checks
+1. Review the affected code path and confirm the recorded issue applies.
+2. Test the changed path with valid and invalid inputs; check expected behavior and access controls.
+3. Run a new audit and compare the recorded evidence.
+These are suggested checks; they have not been executed by this report.
+Framework mappings: No control mapping was recorded for the selected frameworks.
+F-006 MEDIUM
+Potential Information Disclosure in Error Handling
+Triage: open / CVSS: Not recorded / CWE-209
+MERN-E-Commerce-Store-main/backend/middlewares/asyncHandler.js:3
+Issue
+The asyncHandler middleware returns the raw error message in the response body. This can expose internal
+system details, stack traces, or database errors to the client, aiding attackers in reconnaissance.
+Recorded finding source: llm-review
+Recorded evidence
+F-006 / Potential Information Disclosure in Error Handling
+JavaScript / Recorded evidence
+MERN-E-Commerce-Store-main/backend/middlewares/asyncHandler.js
+Reported source line: 3
+Gutter numbers identify excerpt lines. Source position is not inferred.
+1 res.status(500).json({ message: error.message });
+
+PAGE 10
+ARCHON / SECURITY AUDIT Saved assessment
+ARCHON / TL-AUDIT-33de4813-3200-58d9-9788-c45201... Page 10 of 10
+Remediation steps
+Review and patch Potential Information Disclosure in Error Handling immediately.
+Validate all input and sanitize parameters before processing.
+Add regression tests in CI to ensure the issue does not reoccur.
+Suggested verification checks
+1. Review the affected code path and confirm the recorded issue applies.
+2. Test the changed path with valid and invalid inputs; check expected behavior and access controls.
+3. Run a new audit and compare the recorded evidence.
+These are suggested checks; they have not been executed by this report.
+Framework mappings: No control mapping was recorded for the selected frameworks.

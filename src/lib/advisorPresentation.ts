@@ -1,5 +1,6 @@
 /** Only controlled interface messages may be displayed as Advisor errors. */
 const messages = new Set([
+  "The suggestion is incomplete. Regenerate before using the code.",
   "Security Advisor is unavailable. Retry its availability check.",
   "The response could not be saved. Copy any visible suggestion before retrying.",
   "This conversation expired, was deleted, or is no longer accessible.",

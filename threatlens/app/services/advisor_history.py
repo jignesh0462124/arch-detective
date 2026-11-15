@@ -44,7 +44,9 @@ async def create(workspace, context, title, user, token):
         if str(context.workspace_id) != str(workspace):
             raise HTTPException(404, "Finding does not belong to this workspace")
         await store.authorize(str(context.scan_id), token, str(workspace))
-        rows = await store.rest("GET", "findings", params={"id": f"eq.{context.finding_id}", "scan_id": f"eq.{context.scan_id}", "select": "id", "limit": 1}, token=token)
+        table = "extension_policy_results" if getattr(context, "policy_result_id", None) else "findings"
+        identifier = context.policy_result_id if table == "extension_policy_results" else context.finding_id
+        rows = await store.rest("GET", table, params={"id": f"eq.{identifier}", "scan_id": f"eq.{context.scan_id}", "select": "id", "limit": 1}, token=token)
         if not rows:
             raise HTTPException(404, "Finding not found")
         snapshot = await store.snapshot(str(context.scan_id))
@@ -54,7 +56,8 @@ async def create(workspace, context, title, user, token):
         if expiry <= clock():
             raise HTTPException(410, "Source preview expired. Rescan before starting a code conversation.")
     now = clock().isoformat()
-    rows = await store.rest("POST", "advisor_conversations", body={"id": str(uuid4()), "owner_user_id": str(user.id), "workspace_id": str(workspace), "scan_id": str(context.scan_id) if context else None, "finding_id": str(context.finding_id) if context else None, "snapshot_id": snapshot["id"] if snapshot else None, "title": redact_text(title.strip())[:120] or "New conversation", "created_at": now, "updated_at": now, "expires_at": expiry.isoformat()})
+    policy_context = {"policy_result_id": str(context.policy_result_id)} if context and getattr(context, "policy_result_id", None) else {}
+    rows = await store.rest("POST", "advisor_conversations", body={"id": str(uuid4()), "owner_user_id": str(user.id), "workspace_id": str(workspace), "scan_id": str(context.scan_id) if context else None, "finding_id": str(context.finding_id) if context and context.finding_id else None, **policy_context, "snapshot_id": snapshot["id"] if snapshot else None, "title": redact_text(title.strip())[:120] or "New conversation", "created_at": now, "updated_at": now, "expires_at": expiry.isoformat()})
     return rows[0]
 
 

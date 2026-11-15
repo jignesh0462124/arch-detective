@@ -1,0 +1,45 @@
+<section class="section">
+  <div class="section-heading"><div class="eyebrow">Extension assessment</div><h2>Browser extension policy review</h2><p>Store-specific evidence, remedies and remaining review checks.</p></div>
+  <p>{{ extension_review.package_name }} · {{ extension_review.package_version }} · Manifest V{{ extension_review.manifest_version }}</p>
+  <p>Stores: {{ extension_review.stores | join(', ') }}. Policy pack: {{ extension_review.policy_version }}.</p>
+  <p class="note">Static package review, not a store decision or approval certificate. Suggested verification has not been executed. Policy outcomes are separate from security severity and triage.</p>
+  <h3>Coverage and limitations</h3>
+  <ul>{% for limitation in extension_review.coverage.limitations %}<li>{{ limitation }}</li>{% endfor %}</ul>
+  {% if extension_review.coverage.security_analysis_limitations %}<ul>{% for limitation in extension_review.coverage.security_analysis_limitations %}<li>{{ limitation }}</li>{% endfor %}</ul>{% endif %}
+  <p>Security analysis input: {{ extension_review.coverage.security_analysis_files | default('Not recorded') }} files. Source preparation and policy inspection have separate limits.</p>
+  {% if extension_review.coverage.analysis_exclusions %}<h4>Recorded analysis limitations</h4><ul>{% for item in extension_review.coverage.analysis_exclusions %}<li style="overflow-wrap:anywhere">{{ item.path or '' }}: {{ item.reason }}</li>{% endfor %}</ul>{% endif %}
+  <table class="editorial"><thead><tr><th>Outcome</th><th>Check results</th></tr></thead><tbody>
+    {% for outcome, count in extension_review.coverage.outcomes.items() %}<tr><td>{{ outcome | replace('_', ' ') }}</td><td>{{ count }}</td></tr>{% endfor %}
+  </tbody></table>
+  <h3>Supplied declarations</h3>
+  {% if extension_review.declarations %}
+    {% for key, value in extension_review.declarations.items() %}
+      <h4>{{ key | replace('_', ' ') | title }}</h4>
+      {% if value is mapping %}{% for label, text in value.items() %}<p><strong>{{ label | replace('_', ' ') }}:</strong> {{ text or 'Not supplied' }}</p>{% endfor %}
+      {% else %}<p>{{ value or 'Not supplied' }}</p>{% endif %}
+    {% endfor %}
+  {% else %}<p>Supporting declarations expired or unavailable. Upload a fresh package to reassess.</p>{% endif %}
+  <h3>Policy checks and remedies</h3>
+  {% for result in extension_review.results %}
+  {% if result.outcome in ['violation', 'needs_review'] or result.details.evidence %}
+  <article class="finding{% if not result.details.evidence or result.details.evidence | length < 1000 %} compact{% endif %}">
+    <h4>P-{{ '%03d' | format(loop.index) }} · {{ result.store | title }} · {{ result.title }}</h4>
+    <p><strong>{{ result.outcome | replace('_', ' ') | title }}</strong> · {{ result.details.method }} assessment</p>
+    <p class="mono">{{ result.details.path or 'Declaration / manual checklist' }}{% if result.details.line %}:{{ result.details.line }}{% endif %}</p>
+    <p>{{ result.details.explanation }}</p>
+    {% if result.details.evidence %}<pre style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:9pt">{{ result.details.evidence }}</pre>{% endif %}
+    <p><strong>Remedy:</strong> {{ result.details.remedy }}</p>
+    <p><strong>Suggested verification:</strong> {{ result.details.verification }}</p>
+    <p><strong>Exceptions and scope:</strong> {{ result.details.exceptions }}</p>
+    <p class="note" style="overflow-wrap:anywhere">{{ result.details.policy_url }} · Reviewed {{ result.details.reviewed_at }}</p>
+  </article>
+  {% endif %}
+  {% endfor %}
+  <h3>Remaining policy checklist</h3>
+  <p class="note">Unassessed items require review of the linked official section and supporting evidence. Record assumptions and outstanding runtime or account checks before submission. A passed check covers only the stated inspection; it does not approve the extension.</p>
+  <table class="editorial" style="table-layout:fixed"><colgroup><col style="width:13%"><col style="width:65%"><col style="width:22%"></colgroup><thead><tr><th style="width:13%">Reference</th><th>Store / policy check</th><th>Outcome</th></tr></thead><tbody>
+  {% for result in extension_review.results %}{% if result.outcome not in ['violation', 'needs_review'] and not result.details.evidence %}
+    <tr><td class="mono">P-{{ '%03d' | format(loop.index) }}</td><td>{{ result.store | title }}<br><a href="{{ result.details.policy_url }}">{{ result.title }}</a></td><td>{{ result.outcome | replace('_', ' ') | title }}</td></tr>
+  {% endif %}{% endfor %}
+  </tbody></table>
+</section>

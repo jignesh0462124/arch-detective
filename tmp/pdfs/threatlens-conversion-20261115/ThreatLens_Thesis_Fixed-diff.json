@@ -1,0 +1,1552 @@
+[
+  {
+    "tag": "replace",
+    "pdf": "the requirements",
+    "docx": "requirement"
+  },
+  {
+    "tag": "delete",
+    "pdf": "the",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "jignesh sonewane",
+    "docx": "ms student 1 name"
+  },
+  {
+    "tag": "replace",
+    "pdf": "soham pashine",
+    "docx": "ms student 2 name"
+  },
+  {
+    "tag": "replace",
+    "pdf": "bhargave bawane under",
+    "docx": "ms student 3 name mr ms student 4 name guide dr prof guide full name designation department november 2026 threatlens an ai assisted framework for automated source code security assessment vulnerability prioritization and compliance analysis project report submitted in partial fulfillment of requirement for"
+  },
+  {
+    "tag": "replace",
+    "pdf": "guidance",
+    "docx": "award"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "degree of bachelor of technology in computer science and engineering by mr ms student 1 name mr ms student 2 name mr ms student 3 name mr ms student 4 name guide dr"
+  },
+  {
+    "tag": "replace",
+    "pdf": "pankaj sonewane head of",
+    "docx": "guide full name designation"
+  },
+  {
+    "tag": "delete",
+    "pdf": "data science iot and cyber security",
+    "docx": ""
+  },
+  {
+    "tag": "delete",
+    "pdf": "department of computer science and engineering g h raisoni college of engineering an empowered autonomous institute affiliated to rashtrasant tukadoji maharaj nagpur university nagpur accredited by naac with a grade 3rd cycle crpf gate no 3 hingna road digdoh hills nagpur 440 016 india",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "information obtained",
+    "docx": "work drawn"
+  },
+  {
+    "tag": "delete",
+    "pdf": "other",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "materials technical",
+    "docx": "and"
+  },
+  {
+    "tag": "replace",
+    "pdf": "has been appropriately cited throughout the thesis",
+    "docx": "is acknowledged through citations"
+  },
+  {
+    "tag": "replace",
+    "pdf": "jignesh sonewane cyb ghrce rai mr jignesh sonewane 7499325646 soni net mr soham pashine 8956330692 sohampashine0 gmail com bhargav bawane cyb ghrce rais mr bhargav bawane oni net",
+    "docx": "fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "dd mm yyyy"
+  },
+  {
+    "tag": "delete",
+    "pdf": "department of computer science and engineering g h raisoni college of engineering an empowered autonomous institute affiliated to rashtrasant tukadoji maharaj nagpur university nagpur accredited by naac with a grade 3rd cycle crpf gate no 3 hingna road digdoh hills nagpur 440 016 india",
+    "docx": ""
+  },
+  {
+    "tag": "delete",
+    "pdf": "the",
+    "docx": ""
+  },
+  {
+    "tag": "delete",
+    "pdf": "pankaj sonewane",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "signature signature",
+    "docx": "fill"
+  },
+  {
+    "tag": "delete",
+    "pdf": "signature signature",
+    "docx": ""
+  },
+  {
+    "tag": "delete",
+    "pdf": "and",
+    "docx": ""
+  },
+  {
+    "tag": "delete",
+    "pdf": "verify the declaration",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "department of computer science and engineering g h raisoni college of engineering an empowered autonomous institute affiliated to rashtrasant tukadoji maharaj nagpur university nagpur accredited by naac with a grade 3rd cycle crpf gate no 3 hingna road digdoh hills nagpur 440 016 india",
+    "docx": "after verification"
+  },
+  {
+    "tag": "replace",
+    "pdf": "we would like to thank our",
+    "docx": "write acknowledgement thanking your"
+  },
+  {
+    "tag": "replace",
+    "pdf": "pankaj sonewane for his guidance and direction to support during the development of threatlens software his feedback during",
+    "docx": "department institution"
+  },
+  {
+    "tag": "delete",
+    "pdf": "to discussions helped us to improve our and address the technical challenges and present our work more efficiently we are also thankful to the faculty and staff of g h raisoni college of engineering nagpur for providing the facilities and academic environment computational resources and administration we also acknowledge the researchers open source",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "standards organizations whose published research technical documentation and security frameworks compliance supported the development of threatlens archon software their contributions provided valuable insights into vulnerability detection code analysis rag cvss based risk assessment and remediation recommendations responsibility for the system architecture database security implementation experim",
+    "docx": "supporters use your own wording abstract write a 1 2 page abstract after"
+  },
+  {
+    "tag": "replace",
+    "pdf": "work collaboratively abstract security assessment is often treated as a separate activity from software development developers may receive vulnerability reports that identify a",
+    "docx": "thesis"
+  },
+  {
+    "tag": "replace",
+    "pdf": "but provide little context about the affected code its potential impact or the steps needed to address it compliance requirements add another challenge particularly when",
+    "docx": "gap purpose"
+  },
+  {
+    "tag": "replace",
+    "pdf": "findings must be connected to documented controls or browser extension store policies these gaps make security review difficult to interpret and act upon especially for small development teams this thesis presents threatlens a web based platform that brings codebase auditing threat modeling compliance assessment and remediation guidance into a single workflow users can submit project archives for ",
+    "docx": "approach evaluation setup actual"
+  },
+  {
+    "tag": "replace",
+    "pdf": "through a read only editor style workbench the platform combines static security checks with language model assisted analysis to identify potential weaknesses and provide explanations grounded in available source evidence findings include severity recorded file locations relevant code excerpts and remediation guidance the workbench connects source files with findings control mappings and suggested",
+    "docx": "contributions limitations"
+  },
+  {
+    "tag": "replace",
+    "pdf": "codebase security auditing static analysis threat modeling compliance assessment large language models secure software development i",
+    "docx": "keyword 1 keyword 2 keyword 3 keyword 4 keyword 5"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "insert the automatic list of figures in microsoft word after adding figure captions references insert table of figures figure index replace with generated list"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "title of"
+  },
+  {
+    "tag": "delete",
+    "pdf": "name",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "no fig 3 1 research and development workflow fig 5 1 overall architecture of threatlens fig 5 2 threatlens dashboard interface fig 5 3 project upload and scanning progress security findings with severity and fig 5 4 source locations fig 5 5 security advisor with suggested fixes audit workbench with source code fig 5 6 and finding details ii",
+    "docx": "fill fill fill fill fill fill fill fill fill fill fill fill"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "insert the automatic list of tables after finalizing all table captions and pagination table index replace with generated list"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "title of"
+  },
+  {
+    "tag": "delete",
+    "pdf": "name",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "no table 2 1 comparative review of related work 2 table 4 1 verified tools and platform 4 table 5 1 key api endpoints 6 table 6 1 functional test matrix 7 table 6 2 detection evaluation 8 iii",
+    "docx": "fill fill fill fill fill fill fill fill fill fill fill fill"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "technical symbols and abbreviations"
+  },
+  {
+    "tag": "replace",
+    "pdf": "description",
+    "docx": "abbreviation meaning"
+  },
+  {
+    "tag": "replace",
+    "pdf": "true positives correctly detected tp independently confirmed count vulnerabilities false positives reported findings not fp count confirmed as vulnerabilities false negatives confirmed fn count vulnerabilities missed by the analysis p precision tp tp fp dimensionless r recall tp tp fn dimensionless f1 score harmonic mean of precision f\u2081 dimensionless and recall n\u2091 number of files eligible for anal",
+    "docx": "note fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill"
+  },
+  {
+    "tag": "replace",
+    "pdf": "sr no category details",
+    "docx": "list only verifiable publications competitions awards or patent filings related to the project if none write"
+  },
+  {
+    "tag": "replace",
+    "pdf": "no research paper 1 publications related",
+    "docx": "according"
+  },
+  {
+    "tag": "replace",
+    "pdf": "this project has been published to date awarded first prize for the project threatlens at official seminar 2 project competition award name organised by department and institution on date not applicable if no 3 patent filings patent application has been filed v",
+    "docx": "guide instructions"
+  },
+  {
+    "tag": "replace",
+    "pdf": "abstract i list",
+    "docx": "update the table"
+  },
+  {
+    "tag": "replace",
+    "pdf": "figures ii list of tables iii list of symbols and abbreviations iv list of publications project competitions and patents v chapter 1 introduction 1 1 1 background and motivation 1 1 2 problem statement 1 1 3 existing approaches and challenges 1 1 4 research gap 1 1 5 aim and objectives 1 1 6 research questions 1 1 7 project scope and limitations 1 1 8 main contributions 1 1 9 thesis organization 1",
+    "docx": "contents"
+  },
+  {
+    "tag": "replace",
+    "pdf": "security analysis 2 2 6 vulnerability taxonomies and cvss prioritization 2 2 7 compliance mapping and remediation guidance 2 2 8 comparison with existing security assessment tools 2 2 9 comparative literature synthesis 2 2 10 consolidated research gap 2 chapter 3 methodology 3 3 1 research design and workflow 3 3 2 functional and non functional requirements 3 3 3 test project and input selection 3",
+    "docx": "microsoft word after filling sections right click update field update entire table or ctrl"
+  },
+  {
+    "tag": "replace",
+    "pdf": "project and group photographs 12 appendix b industry photographs and certificates 12 appendix c project competition and award certificates 12 appendix d publications and patents 12 appendix e additional technical evidence 12 viii",
+    "docx": "f9"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "describe modern"
+  },
+  {
+    "tag": "replace",
+    "pdf": "applications manage personal information business transactions communication",
+    "docx": "security challenges"
+  },
+  {
+    "tag": "replace",
+    "pdf": "access to essential services their security depends partly on decisions made during development including how inputs are validated database queries are constructed permissions are enforced and sensitive information is stored a weakness in these areas can expose information or allow unintended operations security assessment must therefore form part of software development rather than being treated ",
+    "docx": "why automated"
+  },
+  {
+    "tag": "replace",
+    "pdf": "becomes more demanding as projects grow across multiple files frameworks and dependencies a developer investigating a warning may need to locate the affected statement understand the surrounding code and determine whether the reported condition",
+    "docx": "assessment"
+  },
+  {
+    "tag": "replace",
+    "pdf": "relevant to the application finding a potentially unsafe operation is only one part of this process the reviewer must also decide what evidence supports the finding and how a proposed correction can be checked without changing the intended behaviour static application security testing helps identify suspicious code patterns without running the application it provides a useful starting point for re",
+    "docx": "important"
+  },
+  {
+    "tag": "replace",
+    "pdf": "an automated",
+    "docx": "state the precise"
+  },
+  {
+    "tag": "replace",
+    "pdf": "finding is useful only when the developer can relate it",
+    "docx": "assessment problem threatlens aims"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the application being reviewed a warning that names a vulnerability category without showing its source location or supporting evidence leaves important questions unanswered the developer still needs to establish whether the affected code receives untrusted input whether relevant safeguards exist",
+    "docx": "address specify users inputs"
+  },
+  {
+    "tag": "replace",
+    "pdf": "whether the reported operation can be reached under realistic conditions for example the presence of a potentially dangerous html operation does not by itself demonstrate cross site scripting the interpretation changes depending on whether the assigned content is a fixed trusted value or contains attacker controlled data a useful assessment should distinguish the observed operation from assumption",
+    "docx": "expected outputs"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "describe limitations of current"
+  },
+  {
+    "tag": "delete",
+    "pdf": "code",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "allows a reviewer to consider application purpose expected behaviour",
+    "docx": "traditional scanners"
+  },
+  {
+    "tag": "replace",
+    "pdf": "business rules it is valuable where security depends on context that is difficult to express through a general rule its effectiveness however depends on reviewer knowledge available time and familiarity with the project maintaining consistent review coverage across a growing codebase can be difficult rule based scanners provide repeatable checks for defined patterns their output can help reviewers",
+    "docx": "ai assisted techniques cite"
+  },
+  {
+    "tag": "replace",
+    "pdf": "files but different tools may describe similar issues using different categories or evidence formats bringing those results together requires more than displaying them in one list the system must preserve distinct findings handle genuine duplicates and retain the information needed to understand where each result originated conversational assistants can help explain a finding but a general convers",
+    "docx": "work"
+  },
+  {
+    "tag": "replace",
+    "pdf": "this study addresses an integration and evaluation",
+    "docx": "identify a"
+  },
+  {
+    "tag": "replace",
+    "pdf": "how to connect automated security results with a",
+    "docx": "supported by the literature"
+  },
+  {
+    "tag": "delete",
+    "pdf": "process that remains understandable traceable and appropriately bounded the work does not assume that existing scanners or development platforms lack all such capabilities instead it examines how these requirements can be implemented together within threatlens and verified against the project s intended workflows 3 the first area concerns evidence continuity a finding should remain connected to it",
+    "docx": ""
+  },
+  {
+    "tag": "delete",
+    "pdf": "demonstrate universal detection accuracy threatlens therefore needs explicit coverage information and an evaluation approach that separates workflow correctness access control evidence consistency and detection quality the research gap addressed by the thesis is consequently the practical design and verification of an integrated assessment workflow with these distinctions intact its contribution i",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "that combining existing tools automatically produces superior security results",
+    "docx": "novelty without sources"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the",
+    "docx": "write one overall"
+  },
+  {
+    "tag": "delete",
+    "pdf": "of this project is to develop",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "evaluate threatlens as an ai assisted framework for automated source code security assessment vulnerability prioritisation and compliance analysis",
+    "docx": "4 7 measurable objectives aligned"
+  },
+  {
+    "tag": "replace",
+    "pdf": "source based evidence and human review at the centre of the workflow the project objectives are 1 to provide an authenticated project submission workflow that validates supported inputs and prepares source material for assessment 2 to combine static security checks with language model assisted analysis while retaining finding provenance and relevant source evidence 3 to organise findings into a co",
+    "docx": "implemented capabilities"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the study is guided by the following research",
+    "docx": "frame 2 4"
+  },
+  {
+    "tag": "delete",
+    "pdf": "rq1 how can static security checks and language model assisted analysis be combined while preserving the source location provenance and supporting evidence of each finding rq2 how can an editor style workbench present findings severity information and remediation guidance so",
+    "docx": ""
+  },
+  {
+    "tag": "delete",
+    "pdf": "users can distinguish recorded facts from assumptions and generated suggestions rq3 how can security findings and compliance assessments be presented together without confusing vulnerability severity policy outcomes and unassessed requirements rq4 how reliably does the implemented workflow handle authorised access incomplete scans unavailable services source expiry and the reopening of saved resul",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "examined through repeatable tests claims about detection precision or recall require independently labelled examples and a defined assessment procedure interface usability also requires suitable evaluation the presence of a feature alone does not establish that users find it understandable",
+    "docx": "answered by chapter 6 results"
+  },
+  {
+    "tag": "replace",
+    "pdf": "threatlens focuses on the assessment of submitted source projects",
+    "docx": "clearly define supported languages scanning modes repository sizes security boundaries"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the review of saved results the main workflow accepts project zip archives prepares available source previews and presents recorded findings through a read only workbench supporting pages provide finding filters triage evidence relationships contextual guidance and 5 report downloads repository related capabilities depend on the required github configuration and the acting user s permissions the p",
+    "docx": "non goals"
+  },
+  {
+    "tag": "replace",
+    "pdf": "6 the principal",
+    "docx": "list demonstrable implemented"
+  },
+  {
+    "tag": "delete",
+    "pdf": "of the project are as follows figure 1 1 overall architecture of threatlens showing the application interface authenticated api source preparation security analysis",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "private persistence contribution 1 integrated audit workflow threatlens connects project submission analysis progress source review finding management and reporting within one application saved audit references allow users to reopen results rather than depending only on the page",
+    "docx": "distinguish them"
+  },
+  {
+    "tag": "replace",
+    "pdf": "which a scan was started contribution 2 source oriented review environment the audit workbench places a file explorer read only code viewer and finding details within the same workspace this arrangement supports investigation of the recorded location alongside the explanation and available evidence contribution 3 controlled remediation presentation written remediation and code suggestions are pres",
+    "docx": "existing third party tools"
+  },
+  {
+    "tag": "replace",
+    "pdf": "chapter 1 introduces the motivation for threatlens defines the assessment problem and identifies the aim objectives research questions and scope",
+    "docx": "provide a short overview"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the project chapter",
+    "docx": "chapters"
+  },
+  {
+    "tag": "delete",
+    "pdf": "reviews existing work on source code security assessment static analysis language model assistance vulnerability classification compliance mapping and remediation it compares relevant approaches and develops the literature based justification for the study chapter 3 describes the methodology including input selection source preparation analysis stages finding normalisation remediation guidance and",
+    "docx": ""
+  },
+  {
+    "tag": "delete",
+    "pdf": "chapter 5 explains the system architecture and implementation it covers application navigation authentication scan processing findings source review security advisor compliance assessment data relationships and report generation chapter 6 presents the testing procedure observed results and discussion it distinguishes functional verification from detection quality evaluation and examines failures l",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "vulnerability detection attempts to identify conditions that may allow software to behave insecurely a useful assessment distinguishes a suspicious construct from a demonstrated vulnerability",
+    "docx": "review secure sdlc concepts and"
+  },
+  {
+    "tag": "replace",
+    "pdf": "meaning",
+    "docx": "importance"
+  },
+  {
+    "tag": "replace",
+    "pdf": "an alert depends on data flow validation configuration and runtime conditions different analysis methods provide different forms of evidence some recognise known patterns while others reason about dependencies source relationships or likely behaviour human review remains important because an automated tool may not have enough information to determine whether a reported condition is reachable or ex",
+    "docx": "detecting vulnerabilities early"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "review rule based"
+  },
+  {
+    "tag": "replace",
+    "pdf": "examines code without running the target application depending on the tool it may use pattern matching syntax trees control flow analysis or data flow reasoning owasp describes taint analysis as following untrusted data from a source towards a potentially dangerous sink 1 this helps reviewers understand whether external input can reach a sensitive operation without appropriate handling the usefuln",
+    "docx": "key capabilities accuracy"
+  },
+  {
+    "tag": "replace",
+    "pdf": "available context framework specific behaviour dynamic execution and incomplete source information can limit the analysis a reported pattern should therefore lead to investigation rather than an automatic claim that exploitation is possible",
+    "docx": "false positive tradeoffs"
+  },
+  {
+    "tag": "replace",
+    "pdf": "dependency",
+    "docx": "discuss software composition"
+  },
+  {
+    "tag": "replace",
+    "pdf": "examines the packages used by an application",
+    "docx": "hard coded secrets"
+  },
+  {
+    "tag": "delete",
+    "pdf": "their recorded versions secret detection looks for credentials or similar sensitive values",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "analysis examines settings that influence deployment and application behaviour 10 these tasks require different evidence a package finding needs reliable version information whereas a suspected secret requires contextual interpretation a token shaped string may be a placeholder a test value or a genuine credential secretbench provides a labelled dataset intended to support research on software sec",
+    "docx": "related risks"
+  },
+  {
+    "tag": "replace",
+    "pdf": "language models can relate a",
+    "docx": "critically compare published approaches for llm supported"
+  },
+  {
+    "tag": "replace",
+    "pdf": "fragment to a natural language explanation",
+    "docx": "auditing"
+  },
+  {
+    "tag": "replace",
+    "pdf": "suggest possible changes zhou and colleagues review research on their use in vulnerability detection and repair 3 this literature provides a foundation for exploring model assisted review but it does not establish the accuracy of the provider model or prompts selected for threatlens generated explanations must be checked against the submitted source the need for review becomes particularly importa",
+    "docx": "limitations"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "review security knowledge"
+  },
+  {
+    "tag": "replace",
+    "pdf": "augmented generation combines generated responses with retrieved reference material lewis",
+    "docx": "grounding staleness"
+  },
+  {
+    "tag": "replace",
+    "pdf": "colleagues describe an approach that incorporates an external retrieval mechanism into knowledge intensive language tasks 4 in security review reference material may include weakness descriptions secure development guidance or control clauses retrieved passages can help explain why a finding may relate to a particular requirement however finding a relevant passage and interpreting it correctly are",
+    "docx": "hallucination risks"
+  },
+  {
+    "tag": "replace",
+    "pdf": "mitre s common weakness enumeration provides a vocabulary for describing categories of software",
+    "docx": "review cwe cve cvss 3 1"
+  },
+  {
+    "tag": "delete",
+    "pdf": "hardware weaknesses 5 it helps organise findings using consistent terminology",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "common vulnerability scoring system serves a different purpose cvss characterises vulnerability",
+    "docx": "distinction between base"
+  },
+  {
+    "tag": "delete",
+    "pdf": "through defined metrics 6 a weakness identifier is not a severity score",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "neither is a triage decision keeping these concepts separate prevents misleading interpretations a critical severity label describes potential seriousness under stated assumptions an open status describes the current review state a control mapping describes a possible relationship to a requirement these fields should not be treated as interchangeable",
+    "docx": "operational risk"
+  },
+  {
+    "tag": "replace",
+    "pdf": "compliance",
+    "docx": "examine literature on"
+  },
+  {
+    "tag": "replace",
+    "pdf": "links an observation",
+    "docx": "findings"
+  },
+  {
+    "tag": "replace",
+    "pdf": "a potentially relevant requirement a useful mapping explains why the requirement applies",
+    "docx": "controls"
+  },
+  {
+    "tag": "replace",
+    "pdf": "identifies any supporting evidence that is still missing many obligations concern organisational procedures staff responsibilities or operational controls that cannot be established from a repository alone source inspection can support part of an assessment but it cannot demonstrate every aspect of compliance",
+    "docx": "on actionable"
+  },
+  {
+    "tag": "delete",
+    "pdf": "guidance has a similar limitation a recommendation should identify its assumptions expected behavioural effects and suggested verification steps threatlens treats both mapping and remediation as assistance for a reviewer rather than a substitute for professional assessment",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "the comparison in this study is organised",
+    "docx": "compare published commercial or open source systems"
+  },
+  {
+    "tag": "replace",
+    "pdf": "method rather than unsupported product rankings static analysis contributes repeatable rule based checks dependency",
+    "docx": "capabilities data requirements"
+  },
+  {
+    "tag": "replace",
+    "pdf": "secret tools provide specialised inspection model assisted review contributes explanations and contextual reasoning manual review contributes application knowledge and judgement these roles overlap but they are not interchangeable threatlens is considered as a workflow that combines and presents evidence claims of better precision recall or performance require controlled baseline experiments rathe",
+    "docx": "reported evaluation"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the selected sources address different levels of the problem owasp explains analysis practices",
+    "docx": "complete table 2"
+  },
+  {
+    "tag": "replace",
+    "pdf": "secretbench concerns evaluation data for a specialised detection task 2 zhou and colleagues synthesise research on model based detection and repair 3 lewis and colleagues establish the retrieval generation approach 4 while cwe and cvss provide classification and severity terminology 5 6 together these sources support an evidence oriented review design however none directly validates the combined t",
+    "docx": "using actual papers with citation numbers discuss gaps rather than merely describing each paper"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "synthesize"
+  },
+  {
+    "tag": "replace",
+    "pdf": "resulting research focus is a traceable connection among source material",
+    "docx": "specific gap your prototype and tests address cite supporting evidence table 2 1 comparative review of related work study year approach strength limitation gap fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill college requirement expand chapter 2 to at least 10 14 pages of cited original literature"
+  },
+  {
+    "tag": "delete",
+    "pdf": "outputs control references and reviewer actions 13 the study must also separate technical integration from demonstrated benefit a platform may successfully combine tools while still producing unnecessary alerts or incomplete recommendations the research gap is therefore addressed through both implementation and an evaluation protocol coverage detection quality usability and operational behaviour m",
+    "docx": ""
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "describe"
+  },
+  {
+    "tag": "replace",
+    "pdf": "study follows an engineering development approach requirements are identified from the review tasks a developer must perform translated into architecture",
+    "docx": "research type hypotheses or evaluation aims methodology stages"
+  },
+  {
+    "tag": "replace",
+    "pdf": "data contracts and implemented through successive application components verification examines both successful workflows and failure conditions the final discussion relates the available evidence to the original objectives this approach allows implementation progress to be documented without presenting every completed feature as a validated research result",
+    "docx": "acceptance criteria"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "proposed"
+  },
+  {
+    "tag": "replace",
+    "pdf": "from problem definition",
+    "docx": "replace with a numbered flowchart of methodology"
+  },
+  {
+    "tag": "replace",
+    "pdf": "requirements to architecture implementation verification and discussion of limitations",
+    "docx": "experimental stages"
+  },
+  {
+    "tag": "replace",
+    "pdf": "functional",
+    "docx": "specify user roles use cases security"
+  },
+  {
+    "tag": "replace",
+    "pdf": "include sign in workspace selection project intake progress display finding inspection source navigation remediation guidance",
+    "docx": "performance goals"
+  },
+  {
+    "tag": "replace",
+    "pdf": "report access non functional requirements include controlled resource use readable interfaces explicit failure states and protection of private material 15 requirements should be assigned identifiers and connected to test cases reopening a completed audit for example concerns persistence denying an outsider s source request concerns authorisation these behaviours require different verification pro",
+    "docx": "constraints"
+  },
+  {
+    "tag": "replace",
+    "pdf": "test inputs should include deliberately",
+    "docx": "explain how representative"
+  },
+  {
+    "tag": "delete",
+    "pdf": "fixtures corrected versions of those fixtures",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "permitted real world projects inputs should vary in language size directory structure dependencies",
+    "docx": "safe code samples or repositories will be selected"
+  },
+  {
+    "tag": "replace",
+    "pdf": "supported file types benign examples are necessary to examine false alarms selection must also avoid exposing live credentials or private code author input list the exact test projects licences or permissions versions checksums and reasons for selection the dataset description should identify whether each input is a synthetic fixture an open source project or a private project used with permission",
+    "docx": "labelled"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the intake process validates the submitted archive before preparing files for inspection paths archive expansion",
+    "docx": "describe zip repository input handling filters file size limits language selection"
+  },
+  {
+    "tag": "replace",
+    "pdf": "supported content require",
+    "docx": "safety"
+  },
+  {
+    "tag": "delete",
+    "pdf": "because uploads are untrusted a manifest records files available for preview while analysis may use a smaller eligible subset preprocessing must preserve the relationship between a saved finding and its original source coordinates excluded or truncated material belongs in the coverage record it should not disappear from the explanation of what the system analysed",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "analysis outputs",
+    "docx": "define scanner execution and how heterogeneous findings"
+  },
+  {
+    "tag": "replace",
+    "pdf": "normalised into records that can be displayed consistently a useful record includes an identifier severity description source location provenance and any available weakness or remediation information normalisation must preserve distinctions in the original evidence two alerts with the same title are not necessarily duplicates similarly an empty result after scanner failure is not equivalent",
+    "docx": "converted"
+  },
+  {
+    "tag": "replace",
+    "pdf": "successful check with no findings duplicate handling and error interpretation therefore require explicit test cases 16",
+    "docx": "common schema"
+  },
+  {
+    "tag": "replace",
+    "pdf": "model assisted analysis receives bounded context",
+    "docx": "state the ai pipeline retrieval sources prompt controls provider fallbacks"
+  },
+  {
+    "tag": "replace",
+    "pdf": "returns information for review repository text",
+    "docx": "what"
+  },
+  {
+    "tag": "replace",
+    "pdf": "treated as data not as instructions that can redefine the task for a configured retrieval experiment relevant reference passages are supplied alongside the finding with identifiers retained for inspection the study should record the provider model prompt version context limits and reference corpus version the local api profile alone does not establish that the separate retrieval stack was installe",
+    "docx": "actually"
+  },
+  {
+    "tag": "replace",
+    "pdf": "severity weakness",
+    "docx": "define rules for cvss and cwe"
+  },
+  {
+    "tag": "replace",
+    "pdf": "and",
+    "docx": "compliance"
+  },
+  {
+    "tag": "delete",
+    "pdf": "are evaluated separately a score needs a defensible metric vector while a control mapping needs an identifiable source",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "a reason for applicability missing values remain unavailable rather than being converted into harmless scores reviewers should record disagreements and the reasoning used to resolve them framework assessment signals are presented as automated interpretations of available evidence not as statements that an organisation satisfies every requirement",
+    "docx": "review procedures"
+  },
+  {
+    "tag": "replace",
+    "pdf": "written",
+    "docx": "describe summary construction"
+  },
+  {
+    "tag": "replace",
+    "pdf": "is retained alongside the finding a code solution where requested is presented as a proposed replacement",
+    "docx": "recommendations output formats"
+  },
+  {
+    "tag": "replace",
+    "pdf": "must not be confused with uploaded source reports are assembled from saved assessment data so that exporting a document does not silently trigger a new analysis evaluation should compare displayed findings with exported content including source locations limitations and missing fields private advisor conversations should not be introduced into shared audit output during report preparation",
+    "docx": "evidence traceability"
+  },
+  {
+    "tag": "replace",
+    "pdf": "each run should record the application revision input checksum configuration active engines",
+    "docx": "specify ground truth baselines test splits repeatability failure handling"
+  },
+  {
+    "tag": "replace",
+    "pdf": "timestamps functional tests examine workflow behaviour access control tests examine permitted and denied actions labelled detection tests examine correctness 17 repeated timing runs should use the same machine and comparable network",
+    "docx": "controlled test"
+  },
+  {
+    "tag": "delete",
+    "pdf": "where practical model and baseline settings should be fixed before the final evaluation failures and skipped integrations must remain in the record rather than being excluded to improve the apparent outcome",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "detection quality is",
+    "docx": "define precision recall f1 false positives execution time and additional"
+  },
+  {
+    "tag": "replace",
+    "pdf": "using independently labelled reference cases let tp represent correctly identified labelled defects fp represent incorrectly reported defects fn represent labelled defects that were missed the metrics are precision tp tp fp recall tp tp fn f1 score 2tp 2tp fp fn a zero denominator should be handled using a stated convention rather than silently treated as a perfect result timing metrics should dis",
+    "docx": "outcomes"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "document authorized scanning"
+  },
+  {
+    "tag": "replace",
+    "pdf": "authorised projects should be uploaded source code credentials",
+    "docx": "secrets handling input isolation privacy"
+  },
+  {
+    "tag": "replace",
+    "pdf": "conversations require controlled access any",
+    "docx": "responsible"
+  },
+  {
+    "tag": "delete",
+    "pdf": "of an external provider should be disclosed to the project owner public thesis figures should remove identifying account details without altering the assessment results tests involving deletion or publishing must use isolated resources the study should distinguish actual observations from illustrative diagrams test fixtures and proposed future work relevant writing or analytical assistance should ",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "hardware information is necessary",
+    "docx": "insert specifications"
+  },
+  {
+    "tag": "delete",
+    "pdf": "interpreting performance the",
+    "docx": ""
+  },
+  {
+    "tag": "delete",
+    "pdf": "workspace is on windows and the installation guide describes a python 3 12 local profile the final experiment must record its own machine and software configuration author input processor memory operating system build browser version network conditions python version node js version",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "date when a remote model service is used its computation must not be described as running on the development machine s gpu",
+    "docx": "machines without inventing values"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the application uses typescript",
+    "docx": "verify actual language"
+  },
+  {
+    "tag": "replace",
+    "pdf": "react for the interface",
+    "docx": "framework versions from dependency"
+  },
+  {
+    "tag": "replace",
+    "pdf": "python with fastapi for the api sql migrations describe persistent data structures and access policies these technologies serve different responsibilities browser interaction request handling and data integrity version information should come from the dependency",
+    "docx": "lock"
+  },
+  {
+    "tag": "delete",
+    "pdf": "and lockfiles associated with the evaluated commit older prototype documents should not be used as substitutes for the installed configuration",
+    "docx": ""
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "document react typescript vite and ui packages actually used in"
+  },
+  {
+    "tag": "replace",
+    "pdf": "documented frontend uses react 19 tanstack router and query tailwind css and monaco routing connects application pages query management coordinates server data and monaco provides source inspection the workbench remains read only responsive controls support navigation and source review at different viewport sizes frontend evaluation should include keyboard access loading and error states long file",
+    "docx": "target build"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "document"
+  },
+  {
+    "tag": "replace",
+    "pdf": "provides the request layer for intake scan status source reads findings guidance",
+    "docx": "python runtime api schemas"
+  },
+  {
+    "tag": "replace",
+    "pdf": "reports the backend coordinates private storage and database persistence while retaining request specific identity it also mediates optional provider and repository operations a reachable api is not the same as a correctly configured integration a successful health response does not demonstrate that a model provider private storage bucket or repository permission is working",
+    "docx": "relevant implementation versions"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the documented platform uses",
+    "docx": "document actual persistence and auth adapters including"
+  },
+  {
+    "tag": "replace",
+    "pdf": "auth",
+    "docx": "or"
+  },
+  {
+    "tag": "replace",
+    "pdf": "and private storage application authorisation is scoped to workspaces while database policies constrain access to rows supabase documents row level security as a mechanism for applying policies to database access 7 source previews and saved assessment metadata have different retention behaviour the current project documentation specifies a 30 day source preview window this must not be interpreted ",
+    "docx": "where used distinguish configurations"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "document hosted queue worker setup separately from"
+  },
+  {
+    "tag": "replace",
+    "pdf": "installation guide provides separate api testing and full scanner worker profiles the api profile supports the",
+    "docx": "in process"
+  },
+  {
+    "tag": "replace",
+    "pdf": "progressive workbench and direct provider clients the full profile includes additional worker embedding and research dependencies installing the api profile does not prove that celery redis qdrant or specialist scanner executables are operating the thesis must identify which mode produced each set of results and keep optional deployment descriptions separate from observed local behaviour 21 figure",
+    "docx": "scan route"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the full deployment supports specialist analysis components in addition to model assisted review",
+    "docx": "list verified"
+  },
+  {
+    "tag": "replace",
+    "pdf": "availability executable versions",
+    "docx": "libraries llm services qdrant"
+  },
+  {
+    "tag": "replace",
+    "pdf": "successful invocation require confirmation from run records provider selection and fallback should be documented without claiming that every available model was evaluated retrieval experiments require an identified corpus and embedding configuration dependency declarations describe installation requirements but they do not prove that every service contributed to a particular scan",
+    "docx": "supporting data sources only where enabled"
+  },
+  {
+    "tag": "replace",
+    "pdf": "evidence sources include authorised input projects saved findings source snapshots generated reports application logs",
+    "docx": "identify code samples scanner rules vulnerability advisories"
+  },
+  {
+    "tag": "replace",
+    "pdf": "public technical references 22 the existing figure notes identify captures from saved mern and ghrce project audits these captures help explain the interface but they are not independently labelled vulnerability datasets research papers provide background while official terminology and specifications support classification each source should be",
+    "docx": "security frameworks"
+  },
+  {
+    "tag": "replace",
+    "pdf": "only for the type of claim it can establish",
+    "docx": "in evaluation"
+  },
+  {
+    "tag": "replace",
+    "pdf": "a reproducible record connects each input to a repository",
+    "docx": "explain git"
+  },
+  {
+    "tag": "replace",
+    "pdf": "dependency configuration active feature flags model selection",
+    "docx": "environment variables package versions test commands"
+  },
+  {
+    "tag": "replace",
+    "pdf": "output set useful artefacts include sanitised configuration summaries input checksums commands timestamps",
+    "docx": "reproducibility steps table 4 1 verified tools"
+  },
+  {
+    "tag": "replace",
+    "pdf": "structured test results public records must exclude secrets and private source material screenshots should carry a capture date and identify demonstration data where applicable repeating a run under changed provider behaviour or reference material should be treated as a new experimental condition 23",
+    "docx": "platform component technology version role evidence config fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "explain"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "end to end"
+  },
+  {
+    "tag": "replace",
+    "pdf": "separates user interaction request authorisation analysis source preparation",
+    "docx": "differentiate the local"
+  },
+  {
+    "tag": "replace",
+    "pdf": "persistent results the browser requests operations through the api while saved audit records allow users to revisit results source preparation and analysis have independent progress because uploading a readable preview is not the same as completing security checks",
+    "docx": "hosted scan variants"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "5"
+  },
+  {
+    "tag": "replace",
+    "pdf": "1 provides the",
+    "docx": "overall threatlens"
+  },
+  {
+    "tag": "replace",
+    "pdf": "overview it is referenced here rather than repeated keeping this chapter focused on implementation decisions and two essential interface figures",
+    "docx": "architecture insert architecture figure generated from actual running modules"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the",
+    "docx": "describe implemented dashboard routes"
+  },
+  {
+    "tag": "delete",
+    "pdf": "follows the review workflow through dashboard codebase audit findings workbench attack graph reports",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "security advisor history and resume controls help users return to saved work settings and profile controls are separate from the assessment itself the interface should explain whether a view shows the latest completed audit a selected historical scan or an example scenario this distinction prevents users from interpreting an empty or still running scan as a clean assessment",
+    "docx": "main user actions"
+  },
+  {
+    "tag": "replace",
+    "pdf": "authentication identifies the user while authorisation determines which",
+    "docx": "explain role checks"
+  },
+  {
+    "tag": "replace",
+    "pdf": "resources that user may",
+    "docx": "membership and api"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the application must check resource relationships rather than trusting identifiers supplied by the browser database policies provide an additional boundary while privileged server credentials remain outside client bundles a viewer s ability to read shared findings does not imply permission to delete scans or publish repository changes these distinctions require verification through actual permitte",
+    "docx": "control"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the saved",
+    "docx": "document"
+  },
+  {
+    "tag": "delete",
+    "pdf": "path accepts an authorised",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "prepares scan state",
+    "docx": "progress stream detection workflow"
+  },
+  {
+    "tag": "replace",
+    "pdf": "starts source handling and analysis available previews can be published while remaining files are still being prepared findings should become final only after persistence succeeds a source preparation failure must not erase otherwise saved findings returning to the intake page uses an account and workspace scoped reference to reopen the audit the lifetime of an accepted scan is therefore separate ",
+    "docx": "result report endpoints"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the repository also documents a separate scanner worker deployment with additional dependencies",
+    "docx": "document persistence queue workers artifact storage task lifecycle"
+  },
+  {
+    "tag": "replace",
+    "pdf": "services a worker architecture can move long running tasks away from api processes but requires explicit job ownership recovery and service configuration it is a deployment option not proof that the current saved zip path uses the same orchestration author input identify whether the worker deployment was exercised including broker worker and service versions otherwise state that it was not evaluat",
+    "docx": "error handling"
+  },
+  {
+    "tag": "replace",
+    "pdf": "normalised findings allow",
+    "docx": "describe semgrep bandit other adapters verified to be present in"
+  },
+  {
+    "tag": "replace",
+    "pdf": "interface to present severity location origin and remediation consistently across supported inputs stable finding identifiers remain important when titles or source locations are similar counts and pagination must refer to saved records not only to the rows currently displayed an engine failure should contribute a limitation to the scan an unsupported language should remain outside any claim of co",
+    "docx": "target deployment"
+  },
+  {
+    "tag": "replace",
+    "pdf": "model assistance is used to interpret findings",
+    "docx": "document ai review classification remediation planning fallback logic"
+  },
+  {
+    "tag": "replace",
+    "pdf": "prepare guidance from bounded context 25 a finding specific request must preserve the authorised workspace scan and finding relationship it should not silently become a general conversation after losing its context prompts should separate observations assumptions suggested changes and verification steps the interface also needs explicit handling for interrupted responses a truncated code suggestio",
+    "docx": "data redaction"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the interface preserves recorded weakness identifiers",
+    "docx": "describe computation method validation"
+  },
+  {
+    "tag": "replace",
+    "pdf": "available scores cvss 3 1 defines severity through a metric vector 6 a valid zero score is therefore different from a missing score a model generated score should be checked for consistency with its vector and supporting evidence triage decisions such as accepting risk or marking a false positive remain separate from severity creating a fix proposal or downloading a report must not automatically c",
+    "docx": "confidence limits"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the repository contains",
+    "docx": "document knowledge ingestion"
+  },
+  {
+    "tag": "replace",
+    "pdf": "components including embedding vector client",
+    "docx": "framework controls"
+  },
+  {
+    "tag": "replace",
+    "pdf": "corpus preparation modules their presence establishes implementation material not successful execution in the current local mode a retrieval enabled assessment should preserve the corpus version retrieved control identifiers and",
+    "docx": "citation"
+  },
+  {
+    "tag": "replace",
+    "pdf": "supporting each proposed relationship when a required service is unavailable that limitation should be reported a saved framework percentage must not be presented as legal compliance or certification",
+    "docx": "handling"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the workbench places the file explorer source viewer and finding details within one page a reviewer can inspect the reported location while retaining access to evidence and remediation the graph provides a complementary view of relationships between findings and source components in the saved evidence view connectors represent associations rather than verified network routes or successful exploita",
+    "docx": "describe implemented"
+  },
+  {
+    "tag": "replace",
+    "pdf": "interface using isolated test fixture",
+    "docx": "workbench or visualization views and the underlying"
+  },
+  {
+    "tag": "delete",
+    "pdf": "a source associations and graph controls b selected finding evidence and remediation guidance connections do not establish confirmed exploitability use clear screenshots from the actual application these are the only two figures required in chapter 5",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "reports organise completed saved audits",
+    "docx": "explain pdf csv"
+  },
+  {
+    "tag": "replace",
+    "pdf": "prepare pdfs on demand the exported document should preserve the same finding identities evidence",
+    "docx": "json generation report history"
+  },
+  {
+    "tag": "delete",
+    "pdf": "limitations shown in the interface",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "events record actions and state transitions whereas scan history records saved assessments they should not be described as interchangeable 29 export verification must examine all selected or filtered results rather than assuming that one visible page contains the entire dataset a report communicates assessment evidence it is not an approval certificate",
+    "docx": "trail"
+  },
+  {
+    "tag": "replace",
+    "pdf": "workspaces connect members to scans",
+    "docx": "insert verified er diagram"
+  },
+  {
+    "tag": "replace",
+    "pdf": "scans connect findings with source snapshots",
+    "docx": "describe key tables entities"
+  },
+  {
+    "tag": "replace",
+    "pdf": "related assessment information optional conversation",
+    "docx": "referential relationships figure 5 2 entity relationship diagram insert an er diagram from the real database models"
+  },
+  {
+    "tag": "replace",
+    "pdf": "repository features add relationships without changing the meaning of the core audit records foreign keys and access policies serve different purposes a valid database relationship does not by itself authorise the requesting user to read or modify the linked record both structural integrity and access enforcement are necessary",
+    "docx": "migrations"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "add the major endpoints request response contracts and scan sequence figure 5 3 scan sequence diagram insert sequence diagram showing frontend"
+  },
+  {
+    "tag": "replace",
+    "pdf": "requests need a clear scope",
+    "docx": "scanner ai storage"
+  },
+  {
+    "tag": "replace",
+    "pdf": "a response appropriate to the operation list endpoints return bounded summaries while detailed evidence is loaded when selected upload acceptance scan completion and source availability require distinct states request failures should distinguish unavailable services invalid credentials and denied access safe read recovery must not become automatic replay of uploads or publishing operations api doc",
+    "docx": "result delivery"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the documented design includes archive validation private storage source redaction workspace checks bounded processing",
+    "docx": "discuss validated controls scope authorization input limits zip extraction sanitization service failure"
+  },
+  {
+    "tag": "replace",
+    "pdf": "explicit error states uploaded dependency files must not cause arbitrary package installation on the api host report generation restricts resource access and code suggestions remain read only until handled through a separately authorised workflow these controls require dedicated verification including malformed inputs and revoked access no single scanner run unit test suite or successful deploymen",
+    "docx": "authorization"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the frontend builds as a standalone node js server while the",
+    "docx": "document verified infrastructure and deployment steps without conflating dev and production environments table 5 1 key"
+  },
+  {
+    "tag": "replace",
+    "pdf": "runs separately both services must refer to the intended identity project and browser origins must match the api s permitted configuration optional integrations are enabled only when their services and credentials are configured installation profiles should be reproduced in isolated environments public frontend configuration and server only secrets must remain distinct actual environment file valu",
+    "docx": "endpoints method endpoint purpose auth role fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill"
+  },
+  {
+    "tag": "replace",
+    "pdf": "this chapter distinguishes documented interface observations from quantitative experiments the available figure notes describe captures made on 12 november 2026 but those captures do not constitute a complete regression report a defensible experimental record must identify the evaluated application revision",
+    "docx": "document tested build system resources versions"
+  },
+  {
+    "tag": "replace",
+    "pdf": "active deployment mode author input insert the environment from section 4 1 run identifiers provider model enabled engines corpus version where relevant and commands used for the final evaluation the environment description should make it possible to distinguish local processing from externally hosted services",
+    "docx": "test execution conditions"
+  },
+  {
+    "tag": "replace",
+    "pdf": "ground truth is the reference against which detection claims are judged it should identify each intentionally introduced or independently confirmed weakness its location expected behaviour",
+    "docx": "describe benchmark sample counts vulnerability families safe samples"
+  },
+  {
+    "tag": "replace",
+    "pdf": "corrected counterpart saved alerts cannot independently supply this reference because they are the outputs being evaluated author input provide the labelled test inventory reviewer procedure and policy for ambiguous cases real project names may be anonymised where necessary however the selection method and limitations of the dataset must remain clear",
+    "docx": "independent verification"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "report actual"
+  },
+  {
+    "tag": "replace",
+    "pdf": "verification should cover sign in workspace selection upload acceptance progressive source access history reopening finding selection remediation guidance and report export 32 negative cases include malformed archives unavailable providers expired previews and denied workspace access a screenshot can demonstrate a visible state but it does not show every transition that led to that state actual",
+    "docx": "tests with expected vs observed"
+  },
+  {
+    "tag": "delete",
+    "pdf": "should be recorded with supporting evidence test case expected behaviour observed result and evidence accepted zip followed by reopen the same server side scan author navigation to another page without duplicate submission input finding selected in the correct evidence and source author workbench location remain associated input provider or source preview explicit limitation without a false author",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "the existing capture notes describe a saved mern project audit with six reported findings they also distinguish 90 preview entries from 81 scanned files these figures describe saved",
+    "docx": "show detected vulnerabilities by class and scanner backed by reproducible"
+  },
+  {
+    "tag": "delete",
+    "pdf": "they do not establish six independently confirmed vulnerabilities or provide an accuracy measure the difference between preview count and analysed file count illustrates why coverage must be reported separately from source availability author input insert verified detection counts from the labelled evaluation if unavailable retain this section as an explicitly limited review of saved output 33 fig",
+    "docx": ""
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "calculate"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "f1"
+  },
+  {
+    "tag": "replace",
+    "pdf": "f1 should be calculated",
+    "docx": "false positive rate"
+  },
+  {
+    "tag": "replace",
+    "pdf": "after comparing findings with the",
+    "docx": "if"
+  },
+  {
+    "tag": "replace",
+    "pdf": "reference duplicate alerts need a documented matching rule so that repeated reports do not inflate true positives historical manuscript totals should not be reused without their underlying evaluation records and matching procedure author input supply tp fp fn matching rules and per language or per category results 34 if these records are unavailable the thesis should state that detection quality h",
+    "docx": "ground truth exists"
+  },
+  {
+    "tag": "replace",
+    "pdf": "useful timing separates waiting for acceptance obtaining a readable source preview analysing content",
+    "docx": "report measured scan time resource use file counts"
+  },
+  {
+    "tag": "replace",
+    "pdf": "saving the final result repeated runs should report the number of observations and a suitable summary such as the median and range concurrent stages can overlap their durations must not simply be added and presented as elapsed completion time differences between phase timings and total duration require recorded timing boundaries rather than assumed overhead author input insert traceable run measur",
+    "docx": "conditions"
+  },
+  {
+    "tag": "replace",
+    "pdf": "explanations should be reviewed for groundedness uncertainty correct source references",
+    "docx": "specify a rubric or objective checks"
+  },
+  {
+    "tag": "replace",
+    "pdf": "whether the proposed change preserves behaviour the saved svg related example is useful because static trusted markup must not automatically be equated with attacker controlled html a suggestion that overstates the evidence is a review",
+    "docx": "report observed quality and"
+  },
+  {
+    "tag": "replace",
+    "pdf": "even if its wording appears polished retrieval evaluation requires labelled relevant controls repair evaluation requires applicable changes and appropriate tests author input supply reviewer ratings disagreements relevance judgements and verified remediation examples",
+    "docx": "cases"
+  },
+  {
+    "tag": "replace",
+    "pdf": "robustness testing should deliberately interrupt the normal workflow",
+    "docx": "test invalid zip oversized inputs unauthorized requests disconnected services and other"
+  },
+  {
+    "tag": "replace",
+    "pdf": "cases include unsafe archives removed membership expired source access interrupted responses and unavailable services each case requires an expected outcome and observed evidence a backend outage must not be mistaken for an invalid user session similarly a scanner failure must not be counted as a successful clean scan 35 the final assessment of these controls must refer to recorded tests applicati",
+    "docx": "failures"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "compare against"
+  },
+  {
+    "tag": "replace",
+    "pdf": "useful",
+    "docx": "defined"
+  },
+  {
+    "tag": "replace",
+    "pdf": "comparison would evaluate static only analysis and the combined workflow on",
+    "docx": "using"
+  },
+  {
+    "tag": "replace",
+    "pdf": "labelled inputs where retrieval is studied retrieval enabled and non retrieval conditions should use matched model settings and clearly defined relevance labels timing conditions should also remain comparable author input insert actual baseline results or state that no",
+    "docx": "dataset do not claim superiority without"
+  },
+  {
+    "tag": "replace",
+    "pdf": "baseline experiment was completed a feature comparison or literature survey cannot establish that threatlens is faster or more accurate than another system",
+    "docx": "evidence"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the available material supports",
+    "docx": "interpret results false positives missed findings external dependencies and threats to validity table 6 1 functional test matrix test id scenario expected result actual result status fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill fill table 6 2 detection evaluation category tp fp fn precision recall f"
+  },
+  {
+    "tag": "replace",
+    "pdf": "discussion of workflow design",
+    "docx": "legible chart based on measured test data with source"
+  },
+  {
+    "tag": "replace",
+    "pdf": "saved output presentation it does not establish universal vulnerability detection compliance correctness or superiority over other tools important limitations include incomplete runtime context partial file coverage dependence on external services and the need for reviewer judgement the final thesis should identify which research questions have direct experimental answers and which remain open a l",
+    "docx": "caption"
+  },
+  {
+    "tag": "replace",
+    "pdf": "the documented",
+    "docx": "use bullet points match each claim to"
+  },
+  {
+    "tag": "replace",
+    "pdf": "brings project intake source review findings guidance and reporting into one workspace oriented application existing captures illustrate several of these interfaces with saved output the distinction between source availability and analysis completion is particularly important it allows progress to be communicated without claiming that an unfinished assessment is clean completion of each objective ",
+    "docx": "or"
+  },
+  {
+    "tag": "replace",
+    "pdf": "in",
+    "docx": "from"
+  },
+  {
+    "tag": "delete",
+    "pdf": "rather than inferred from the presence of an application page",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "the main engineering contribution is a traceable review workflow recorded evidence remains distinct from proposed changes while the graph",
+    "docx": "use bullet points to summarize measured outcomes"
+  },
+  {
+    "tag": "replace",
+    "pdf": "reports offer complementary ways to inspect saved results the study also identifies an important evaluation distinction preview coverage analysed file coverage finding counts and detection accuracy are different quantities treating these separately makes both the interface and the research discussion easier to understand quantitative improvements remain conditional on a completed and reproducible ",
+    "docx": "meaningful system achievements"
+  },
+  {
+    "tag": "replace",
+    "pdf": "threatlens should be understood as assistance for developers and reviewers not an automatic security authority its usefulness depends on the quality of inputs active analysis components and the care with which findings are interpreted a repository cannot demonstrate every organisational control and generated guidance cannot replace testing the project provides a basis for further evaluation while ",
+    "docx": "state important"
+  },
+  {
+    "tag": "replace",
+    "pdf": "visible its strongest supported contribution is the integration of review tasks not a guarantee that uploaded software is secure 38",
+    "docx": "honestly in short bullet points"
+  },
+  {
+    "tag": "replace",
+    "pdf": "future work should broaden language and framework coverage through explicit parser support and documented rules cross file reasoning and runtime aware validation may address cases that isolated snippets cannot explain new capabilities should include benign examples vulnerable fixtures and clear exclusion rules packaged",
+    "docx": "bullet points for prospective"
+  },
+  {
+    "tag": "replace",
+    "pdf": "and infrastructure configurations require their own assessment profiles they should",
+    "docx": "only do"
+  },
+  {
+    "tag": "replace",
+    "pdf": "be described",
+    "docx": "mislabel"
+  },
+  {
+    "tag": "replace",
+    "pdf": "fully covered merely because their files can be uploaded",
+    "docx": "implemented"
+  },
+  {
+    "tag": "replace",
+    "pdf": "model",
+    "docx": "bullet points about potential validation grounding"
+  },
+  {
+    "tag": "replace",
+    "pdf": "retrieval",
+    "docx": "evaluation"
+  },
+  {
+    "tag": "delete",
+    "pdf": "should begin with evaluation data rather than an assumption that a larger model will perform better useful directions include versioned control corpora relevance judgements prompt comparisons and checks for unsupported explanations context selection should preserve the evidence needed to investigate a finding while respecting privacy and input limits claims of reduced hallucination or improved rem",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "repository scanning",
+    "docx": "bullet points about ci cd pull request review"
+  },
+  {
+    "tag": "replace",
+    "pdf": "reviewed publishing are already described as configurable capabilities future work should therefore focus on extending and validating them rather than presenting them as entirely absent potential directions include policy controlled continuous integration initiation clearer review checkpoints and reliable comparison after changes publishing must retain explicit approval passing external checks mus",
+    "docx": "scheduling improvements"
+  },
+  {
+    "tag": "replace",
+    "pdf": "further deployment work should evaluate queueing worker isolation concurrent uploads storage cleanup",
+    "docx": "bullet points for scaling performance hardening"
+  },
+  {
+    "tag": "replace",
+    "pdf": "recovery under load performance improvements must not weaken authorisation or omit checks without disclosure operational evaluation should include provider outages rate limits and membership changes during active work browser extension policy packs will also require version maintenance as store requirements change the objective is controlled and observable behaviour under realistic conditions not ",
+    "docx": "observability"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "bullet points identifying larger benchmarks external datasets and practitioner feedback references use"
+  },
+  {
+    "tag": "replace",
+    "pdf": "next research stage should use diverse independently labelled projects",
+    "docx": "approved ieee asme asce referencing style insert only real verified papers standards"
+  },
+  {
+    "tag": "replace",
+    "pdf": "participants with different levels of security experience a user study could measure",
+    "docx": "publications cite sources consistently in"
+  },
+  {
+    "tag": "replace",
+    "pdf": "time required to locate evidence the ability to distinguish suggestions from confirmed results and the correctness of remediation decisions participant consent and source confidentiality are necessary these studies would provide evidence about whether the integrated interface improves review work rather than relying only on screenshots",
+    "docx": "thesis 1 author s article"
+  },
+  {
+    "tag": "replace",
+    "pdf": "developer impressions figure 8 1 proposed progression from reproducible benchmarks and broader coverage to controlled automation deployment evaluation and user studies 40 the roadmap can contain four stages 1 reconcile evidence and datasets",
+    "docx": "paper title publication venue vol no pp year doi"
+  },
+  {
+    "tag": "replace",
+    "pdf": "extend and evaluate analysis",
+    "docx": "author s article or paper title publication venue vol no pp year doi"
+  },
+  {
+    "tag": "replace",
+    "pdf": "validate deployment and automation",
+    "docx": "author s article or paper title publication venue vol no pp year doi"
+  },
+  {
+    "tag": "replace",
+    "pdf": "study developer outcomes label the diagram proposed future work do not include invented completion dates",
+    "docx": "author s article"
+  },
+  {
+    "tag": "replace",
+    "pdf": "percentage improvements 41 references 1 owasp foundation static analysis owasp developer guide available owasp static analysis 2",
+    "docx": "paper title publication venue vol no pp year doi 5 author"
+  },
+  {
+    "tag": "replace",
+    "pdf": "k basak l neil b reaves and l williams secretbench a dataset of software secrets 2023 arxiv 2303 06729 available secretbench 3 x zhou",
+    "docx": "article or paper title publication venue vol no pp year doi 6 author"
+  },
+  {
+    "tag": "replace",
+    "pdf": "cao x sun and d lo large language model for vulnerability detection and repair literature review and the road ahead 2024 arxiv 2404 02525 available vulnerability detection and repair review 4 p lewis et al retrieval augmented generation for knowledge intensive nlp tasks advances in neural information processing systems",
+    "docx": "article or paper title publication venue"
+  },
+  {
+    "tag": "replace",
+    "pdf": "33 2020 available retrieval augmented generation 5 mitre about cwe available common weakness enumeration 6 first org common vulnerability scoring system v3 1 specification document 2019 available cvss v3 1 specification 7 supabase row level security supabase documentation available row level security 42",
+    "docx": "no pp year doi"
+  },
+  {
+    "tag": "replace",
+    "pdf": "genuine",
+    "docx": "actual"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "screenshots"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "any required"
+  },
+  {
+    "tag": "replace",
+    "pdf": "photographs here add a short caption identifying the activity location and date where known obtain permission from identifiable participants these photographs document project activity rather than detection accuracy",
+    "docx": "photograph with guide or co guide"
+  },
+  {
+    "tag": "replace",
+    "pdf": "relevant",
+    "docx": "applicable"
+  },
+  {
+    "tag": "replace",
+    "pdf": "visit photographs and authentic",
+    "docx": "evidence supervisor details or"
+  },
+  {
+    "tag": "replace",
+    "pdf": "here if applicable if no industry visit or certificate applies to the project remove this appendix or state",
+    "docx": "otherwise mark"
+  },
+  {
+    "tag": "delete",
+    "pdf": "according to the institution s format",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "verified",
+    "docx": "proof of competition"
+  },
+  {
+    "tag": "insert",
+    "pdf": "",
+    "docx": "placements"
+  },
+  {
+    "tag": "replace",
+    "pdf": "award certificates here identify the event and date clearly distinguish participation from an award the front matter list of",
+    "docx": "innovation awards if any appendix d"
+  },
+  {
+    "tag": "delete",
+    "pdf": "competitions",
+    "docx": ""
+  },
+  {
+    "tag": "replace",
+    "pdf": "should use",
+    "docx": "insert published paper s or patent documentation relevant to"
+  },
+  {
+    "tag": "replace",
+    "pdf": "same verified records 43",
+    "docx": "project if any appendix e additional technical evidence insert test logs sample normalized findings additional tables architecture diagrams and repository details follow the college submission instructions for report ppt and video"
+  }
+]

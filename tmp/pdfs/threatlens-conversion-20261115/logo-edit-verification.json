@@ -1,0 +1,29 @@
+{
+  "source_sha256": "a5b0481b7e3bfa58132633ea2c75664707022b15eb9f4582d90e038f23262578",
+  "output": "C:\\Users\\jigne\\OneDrive\\Desktop\\College Project\\arch-detective\\output\\docx\\ThreatLens_Thesis_Logo_Inside_Border.docx",
+  "changed_parts": [
+    "word/header1.xml",
+    "word/header2.xml",
+    "word/header3.xml",
+    "word/document.xml",
+    "word/_rels/document.xml.rels"
+  ],
+  "text_nodes_exact": true,
+  "moves": [
+    {
+      "page": 1,
+      "former_header": "word/header1.xml",
+      "placement": "inline body at left content margin plus 6 pt"
+    },
+    {
+      "page": 2,
+      "former_header": "word/header2.xml",
+      "placement": "inline body at left content margin plus 6 pt"
+    },
+    {
+      "page": 3,
+      "former_header": "word/header3.xml",
+      "placement": "inline body at left content margin plus 6 pt"
+    }
+  ]
+}

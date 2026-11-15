@@ -21,6 +21,8 @@ The landing page introduces the workflow and opens the console. Sign in with ema
 
 Codebase Audit accepts ZIP projects. If the GitHub App is configured, a user can connect GitHub, choose an authorized repository and branch, and start a repository scan. Returning to Codebase Audit shows a resume card for the last opened audit. The History button reopens saved scans. Owners and admins can delete completed or failed scans there.
 
+**Browser extension** reviews the built ZIP intended for Chrome Web Store, Microsoft Edge Add-ons, or both. Supply listing/privacy declarations and optional screenshots, inspect policy evidence and remedies in the workbench, open clearly labelled notice examples, and recheck a corrected package. Policy coverage includes explicit manual and unassessed checks; store approval remains with Google or Microsoft. Setup and verification are documented in [Extension Review](.github/implementation-notes/EXTENSION_REVIEW.md).
+
 ![Codebase Audit upload and settings, isolated fixture](docs/screenshots/codebase-audit.png)
 
 ![Scan progress, isolated fixture](docs/screenshots/scan-progress.png)
@@ -123,6 +125,21 @@ The frontend and API must point to the same Supabase project. Set a frontend ori
 Use the signed-in Codebase Audit workflow normally. The unauthenticated legacy `/api/local` compatibility routes are disabled by default and in production. Local development requires all three settings: `LOCAL_SCAN_ENABLED=true`, `DEBUG=true`, and `ENVIRONMENT=development`, plus a loopback connection, loopback Host and an allowed loopback Origin. Do not expose this compatibility mode through a reverse proxy. No saved history is deleted by disabling it.
 
 ## Development checks
+
+### Standalone production frontend
+
+The frontend builds as a standalone Node SSR server, independent of a hosting provider. Use Node.js 22.12 or newer supported by Vite (Node.js 24 LTS recommended).
+
+```text
+npm ci
+npm run build
+node scripts/check-client-secrets.mjs
+npm start
+```
+
+Build output is `.output/server/index.mjs` with public assets in `.output/public`. The production server defaults to port 3000; set `HOST` and `PORT` for your environment. Keep the FastAPI service running separately and configure the frontend API URL and backend's exact CORS origin for the deployment. Build-time `VITE_*` values are public and require rebuilding when changed; never place server secrets in them. The development commands and Supabase configuration are unchanged.
+
+The local hosting adapter/link metadata has been removed. No remote hosting account, deployment, domain or environment setting is deleted by this repository change.
 
 ```text
 npm run typecheck       TypeScript

@@ -1,5 +1,5 @@
 import { AccountMenu } from "@/components/auth/AccountMenu";
-import { lazy, Suspense, useState, useEffect } from "react";
+import { lazy, Suspense, useState, useEffect, useRef, useId } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
@@ -15,18 +15,23 @@ import {
   User,
   DotsThreeCircle,
   Gear,
+  List,
+  X,
+  SidebarSimple,
+  Buildings,
 } from "@phosphor-icons/react";
 import { ThemeToggle } from "@/components/brutal/ThemeToggle";
 import { ArchonWordmark } from "@/components/ui/ArchonWordmark";
 import { ArchonLogo } from "@/components/ui/ArchonLogo";
 import { WorkspaceSwitcher } from "@/components/workspace-switcher";
 import { AiModelSelector } from "@/components/ai-assistant/AiModelSelector";
-import type { ReactNode } from "react";
+import type { ReactNode, RefObject } from "react";
 import { api } from "@/lib/api/client";
 import type { HealthResponse } from "@/lib/api/types";
 import { cn } from "@/lib/utils";
 import { getStoredModelId, setStoredModelId } from "@/lib/api/ai-models";
 import { useAuth } from "@/hooks/useAuth";
+import { useSidebarPreference } from "@/lib/sidebar";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: SquaresFour },
@@ -55,12 +60,158 @@ const MOBILE_MORE_NAV = [
   { to: "/profile", label: "Profile", icon: UserCircle },
 ] as const;
 
+type SidebarContentsProps = {
+  compact: boolean;
+  pathname: string;
+  backendPending: boolean;
+  backendOnline: boolean;
+  backendStatus: string;
+  displayName: string | null;
+  email: string | null;
+  avatarUrl: string | null;
+  initials: string;
+  workspaceRef?: RefObject<HTMLDivElement | null>;
+  expandWorkspace?: () => void;
+  onCurrentNavigate?: () => void;
+};
+function SidebarContents({
+  compact,
+  pathname,
+  backendPending,
+  backendOnline,
+  backendStatus,
+  displayName,
+  email,
+  avatarUrl,
+  initials,
+  workspaceRef,
+  expandWorkspace,
+  onCurrentNavigate,
+}: SidebarContentsProps) {
+  return (
+    <>
+      <Link
+        to="/"
+        aria-label="Archon home"
+        className="group flex min-h-11 items-center px-2 py-1.5 transition-colors hover:bg-sidebar-active"
+      >
+        {compact ? <ArchonLogo size={28} /> : <ArchonWordmark />}
+      </Link>
+      {compact && (
+        <button
+          type="button"
+          onClick={expandWorkspace}
+          aria-label="Expand sidebar to choose workspace"
+          title="Choose workspace"
+          className="mt-3.5 flex min-h-11 w-full items-center justify-center rounded-md hover:bg-sidebar-active focus-visible:outline focus-visible:outline-accent"
+        >
+          <Buildings size={20} />
+        </button>
+      )}
+      {/* Workspace switcher */}
+      <div ref={workspaceRef} className={compact ? "hidden" : "mt-3.5 w-full"}>
+        <WorkspaceSwitcher />
+      </div>
+      <nav className="mt-5 flex flex-col gap-1" aria-label="Workspace navigation">
+        <div className={compact ? "hidden" : "mb-2 flex items-center justify-between px-2"}>
+          <p className="text-xs font-medium text-muted-foreground">Navigation</p>
+          {(backendPending || backendOnline) && (
+            <span
+              className={cn(
+                "inline-flex items-center gap-1.5 text-[11px] font-medium",
+                backendPending ? "text-muted-foreground" : "text-success",
+              )}
+              title={`ThreatLens backend: ${backendStatus.toLowerCase()}`}
+            >
+              <span
+                className={cn(
+                  "h-1.5 w-1.5 rounded-full",
+                  backendPending ? "bg-muted-foreground" : "bg-success animate-pulse-dot",
+                )}
+              />
+              {backendStatus}
+            </span>
+          )}
+        </div>
+        {NAV.map((item) => {
+          const active = pathname.startsWith(item.to);
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.to}
+              to={item.to}
+              aria-current={active ? "page" : undefined}
+              onClick={() => {
+                if (pathname === item.to) onCurrentNavigate?.();
+              }}
+              title={compact ? item.label : undefined}
+              aria-label={compact ? item.label : undefined}
+              className={cn(
+                "group relative flex min-h-11 items-center gap-3 border-l-2 text-[13px] font-medium transition-colors focus-visible:outline focus-visible:outline-accent",
+                compact ? "justify-center px-0" : "px-3",
+                active
+                  ? "border-l-accent bg-sidebar-active text-foreground"
+                  : "border-l-transparent text-muted-foreground hover:bg-sidebar-active hover:text-foreground",
+              )}
+            >
+              <Icon
+                size={17}
+                weight={active ? "fill" : "regular"}
+                className="flex shrink-0 items-center gap-2"
+              />
+              <span className={compact ? "sr-only" : undefined}>{item.label}</span>
+              {active && !compact ? (
+                <CaretRight size={14} weight="bold" className="ml-auto" />
+              ) : null}
+            </Link>
+          );
+        })}
+      </nav>
+      {/* Profile chip — sticks to bottom */}
+      <Link
+        to="/profile"
+        aria-label="Profile"
+        onClick={() => {
+          if (pathname === "/profile") onCurrentNavigate?.();
+        }}
+        title={compact ? "Profile" : undefined}
+        aria-current={pathname.startsWith("/profile") ? "page" : undefined}
+        className={cn(
+          "mt-auto flex items-center gap-2.5 rounded-md border border-transparent px-2 py-2 transition-colors hover:border-border hover:bg-sidebar-active",
+          pathname.startsWith("/profile") && "border-border bg-sidebar-active",
+        )}
+      >
+        <div className="relative shrink-0">
+          {avatarUrl ? (
+            <img src={avatarUrl} alt="" className="h-7 w-7 rounded-full object-cover" />
+          ) : (
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">
+              {initials}
+            </div>
+          )}
+          <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border border-sidebar bg-success" />
+        </div>
+        <div className={compact ? "hidden" : "min-w-0 flex-1"}>
+          <p className="truncate text-[12px] font-semibold leading-tight">
+            {displayName ?? email ?? "Profile"}
+          </p>
+          {email && displayName && (
+            <p className="truncate text-[10px] text-muted-foreground">{email}</p>
+          )}
+        </div>
+        {!compact && <User size={13} className="shrink-0 text-muted-foreground" />}
+      </Link>
+    </>
+  );
+}
+
 export function AppShell({
   title,
   subtitle,
   actions,
   children,
   immersive = false,
+  layout = "default",
   tools,
 }: {
   title: string;
@@ -68,10 +219,18 @@ export function AppShell({
   actions?: ReactNode;
   children: ReactNode;
   immersive?: boolean;
+  layout?: "default" | "workbench";
   tools?: ReactNode;
 }) {
   const [aiOpen, setAiOpen] = useState(false);
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const drawer = useRef<HTMLDialogElement>(null);
+  const drawerTrigger = useRef<HTMLButtonElement>(null);
+  const workspaceRef = useRef<HTMLDivElement>(null);
+  const focusWorkspace = useRef(false);
+  const drawerId = useId();
+  const sidebarId = useId();
   const [activeModelId, setActiveModelId] = useState<string>(() => getStoredModelId());
 
   // Sync model change events across components
@@ -90,6 +249,46 @@ export function AppShell({
 
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isAdvisorPage = pathname.startsWith("/advisor");
+  const { collapsed, setSidebarPreference } = useSidebarPreference(pathname);
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [pathname]);
+  useEffect(() => {
+    if (!collapsed && focusWorkspace.current) {
+      focusWorkspace.current = false;
+      workspaceRef.current?.querySelector("button")?.focus();
+    }
+  }, [collapsed]);
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const close = () => {
+      if (desktop.matches) setDrawerOpen(false);
+    };
+    desktop.addEventListener("change", close);
+    return () => desktop.removeEventListener("change", close);
+  }, []);
+  useEffect(() => {
+    if (immersive) {
+      setDrawerOpen(false);
+      setMobileMoreOpen(false);
+    }
+  }, [immersive]);
+  useEffect(() => {
+    const dialog = drawer.current;
+    if (!drawerOpen || immersive) {
+      if (dialog?.open) dialog.close();
+      return;
+    }
+    dialog?.showModal();
+    const trigger = drawerTrigger.current;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      if (dialog?.open) dialog.close();
+      if (trigger?.isConnected && window.innerWidth < 1024) trigger.focus({ preventScroll: true });
+    };
+  }, [drawerOpen, immersive]);
   useEffect(() => setMobileMoreOpen(false), [pathname]);
   useEffect(() => {
     if (isAdvisorPage) setAiOpen(false);
@@ -132,118 +331,45 @@ export function AppShell({
       ? "API online"
       : "API offline";
 
+  const sidebarProps = {
+    pathname,
+    backendPending: backendHealth.isPending,
+    backendOnline,
+    backendStatus,
+    displayName,
+    email,
+    avatarUrl,
+    initials,
+  };
   return (
     <div
       className={cn(
         "min-h-screen bg-background text-foreground",
+        layout === "workbench" && "workbench-shell",
         immersive && "workbench-shell-expanded",
       )}
     >
       <div className="mx-auto flex min-h-screen w-full max-w-[1760px]">
         {/* Sidebar */}
         <aside
+          id={sidebarId}
           data-testid="desktop-sidebar"
+          data-collapsed={collapsed}
           className={cn(
             "sticky top-0 hidden h-dvh shrink-0 self-start flex-col overflow-y-auto overflow-x-hidden border-r border-border bg-sidebar px-3 py-4 lg:flex",
-            isAdvisorPage ? "w-[72px]" : "w-[248px]",
+            "transition-[width] duration-150 motion-reduce:transition-none",
+            collapsed ? "w-[72px]" : "w-[248px]",
           )}
         >
-          <Link
-            to="/"
-            aria-label="Archon home"
-            className="group flex min-h-11 items-center px-2 py-1.5 transition-colors hover:bg-sidebar-active"
-          >
-            {isAdvisorPage ? <ArchonLogo size={28} /> : <ArchonWordmark />}
-          </Link>
-
-          {/* Workspace switcher */}
-          <div className={isAdvisorPage ? "hidden" : "mt-3.5 w-full"}>
-            <WorkspaceSwitcher />
-          </div>
-
-          <nav className="mt-5 flex flex-col gap-1" aria-label="Workspace navigation">
-            <div
-              className={isAdvisorPage ? "hidden" : "mb-2 flex items-center justify-between px-2"}
-            >
-              <p className="text-xs font-medium text-muted-foreground">Navigation</p>
-              {(backendHealth.isPending || backendOnline) && (
-                <span
-                  className={cn(
-                    "inline-flex items-center gap-1.5 text-[11px] font-medium",
-                    backendHealth.isPending ? "text-muted-foreground" : "text-success",
-                  )}
-                  title={`ThreatLens backend: ${backendStatus.toLowerCase()}`}
-                >
-                  <span
-                    className={cn(
-                      "h-1.5 w-1.5 rounded-full",
-                      backendHealth.isPending
-                        ? "bg-muted-foreground"
-                        : "bg-success animate-pulse-dot",
-                    )}
-                  />
-                  {backendStatus}
-                </span>
-              )}
-            </div>
-            {NAV.map((item) => {
-              const active = pathname.startsWith(item.to);
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  title={isAdvisorPage ? item.label : undefined}
-                  aria-label={isAdvisorPage ? item.label : undefined}
-                  className={cn(
-                    "group relative flex h-10 items-center gap-3 border-l-2 px-3 text-[13px] font-medium transition-colors",
-                    active
-                      ? "border-l-accent bg-sidebar-active text-foreground"
-                      : "border-l-transparent text-muted-foreground hover:bg-sidebar-active hover:text-foreground",
-                  )}
-                >
-                  <Icon
-                    size={17}
-                    weight={active ? "fill" : "regular"}
-                    className="flex shrink-0 items-center gap-2"
-                  />
-                  <span className={isAdvisorPage ? "sr-only" : undefined}>{item.label}</span>
-                  {active && !isAdvisorPage ? (
-                    <CaretRight size={14} weight="bold" className="ml-auto" />
-                  ) : null}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Profile chip — sticks to bottom */}
-          <Link
-            to="/profile"
-            className={cn(
-              "mt-auto flex items-center gap-2.5 rounded-md border border-transparent px-2 py-2 transition-colors hover:border-border hover:bg-sidebar-active",
-              pathname.startsWith("/profile") && "border-border bg-sidebar-active",
-            )}
-          >
-            <div className="relative shrink-0">
-              {avatarUrl ? (
-                <img src={avatarUrl} alt="" className="h-7 w-7 rounded-full object-cover" />
-              ) : (
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">
-                  {initials}
-                </div>
-              )}
-              <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border border-sidebar bg-success" />
-            </div>
-            <div className={isAdvisorPage ? "hidden" : "min-w-0 flex-1"}>
-              <p className="truncate text-[12px] font-semibold leading-tight">
-                {displayName ?? email ?? "Profile"}
-              </p>
-              {email && displayName && (
-                <p className="truncate text-[10px] text-muted-foreground">{email}</p>
-              )}
-            </div>
-            {!isAdvisorPage && <User size={13} className="shrink-0 text-muted-foreground" />}
-          </Link>
+          <SidebarContents
+            {...sidebarProps}
+            compact={collapsed}
+            workspaceRef={workspaceRef}
+            expandWorkspace={() => {
+              focusWorkspace.current = true;
+              setSidebarPreference("expanded");
+            }}
+          />
         </aside>
 
         {/* Main */}
@@ -256,7 +382,31 @@ export function AppShell({
         >
           {/* Header */}
           <header className="border-b border-border bg-background">
-            <div className="flex items-center justify-between gap-3 px-3 py-3 sm:px-5">
+            <div className="flex items-center justify-between gap-2 px-2 py-3 sm:gap-3 sm:px-5">
+              <button
+                type="button"
+                aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                aria-expanded={!collapsed}
+                aria-controls={sidebarId}
+                className="hidden size-11 shrink-0 items-center justify-center rounded-md border border-border bg-card hover:bg-secondary focus-visible:outline focus-visible:outline-accent lg:flex"
+                onClick={() => setSidebarPreference(collapsed ? "expanded" : "collapsed")}
+              >
+                <SidebarSimple size={20} />
+              </button>
+              <button
+                ref={drawerTrigger}
+                type="button"
+                aria-label="Open navigation"
+                aria-expanded={drawerOpen}
+                aria-controls={drawerId}
+                className="flex size-11 shrink-0 items-center justify-center rounded-md border border-border bg-card hover:bg-secondary focus-visible:outline focus-visible:outline-accent lg:hidden"
+                onClick={() => {
+                  setMobileMoreOpen(false);
+                  setDrawerOpen(true);
+                }}
+              >
+                <List size={20} />
+              </button>
               <div className="min-w-0 flex-1">
                 {subtitle ? <p className="section-title truncate">{subtitle}</p> : null}
                 <h1 className="mt-0.5 text-base font-semibold leading-tight sm:text-lg lg:text-xl truncate text-foreground">
@@ -329,6 +479,64 @@ export function AppShell({
         </main>
       </div>
 
+      <dialog
+        ref={drawer}
+        id={drawerId}
+        aria-label="Application navigation"
+        className="app-navigation-drawer"
+        onKeyDown={(event) => {
+          if (event.key !== "Tab") return;
+          const items = Array.from(
+            event.currentTarget.querySelectorAll<HTMLElement>(
+              'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"]',
+            ),
+          ).filter((item) => item.getClientRects().length > 0);
+          const first = items[0],
+            last = items[items.length - 1];
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last?.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first?.focus();
+          }
+        }}
+        onCancel={() => setDrawerOpen(false)}
+        onClose={() => setDrawerOpen(false)}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) {
+            const bounds = event.currentTarget.getBoundingClientRect();
+            if (
+              event.clientX > bounds.right ||
+              event.clientX < bounds.left ||
+              event.clientY < bounds.top ||
+              event.clientY > bounds.bottom
+            )
+              setDrawerOpen(false);
+          }
+        }}
+      >
+        {drawerOpen && (
+          <div className="flex min-h-full flex-col px-3 pb-5 pt-3">
+            <div className="mb-2 flex justify-end">
+              <button
+                type="button"
+                autoFocus
+                aria-label="Close navigation"
+                className="flex size-11 items-center justify-center rounded-md border border-border hover:bg-secondary focus-visible:outline focus-visible:outline-accent"
+                onClick={() => setDrawerOpen(false)}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <SidebarContents
+              {...sidebarProps}
+              compact={false}
+              onCurrentNavigate={() => setDrawerOpen(false)}
+            />
+          </div>
+        )}
+      </dialog>
       {/* Mobile bottom nav */}
       {mobileMoreOpen ? (
         <div className="fixed bottom-[68px] right-3 z-50 w-56 rounded-lg border border-border bg-card p-1.5 shadow-xl lg:hidden">
@@ -382,7 +590,10 @@ export function AppShell({
           <li className="min-w-0 py-1.5">
             <button
               type="button"
-              onClick={() => setMobileMoreOpen((open) => !open)}
+              onClick={() => {
+                setDrawerOpen(false);
+                setMobileMoreOpen((open) => !open);
+              }}
               aria-expanded={mobileMoreOpen}
               aria-label="More navigation"
               className={cn(

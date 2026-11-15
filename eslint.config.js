@@ -11,7 +11,6 @@ export default tseslint.config(
       "dist",
       ".output",
       ".vinxi",
-      ".vercel",
       ".tanstack",
       ".nitro",
       ".playwright-cli",

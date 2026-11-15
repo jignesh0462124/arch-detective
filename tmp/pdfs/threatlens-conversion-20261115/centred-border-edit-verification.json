@@ -1,0 +1,10 @@
+{
+  "output": "C:\\Users\\jigne\\OneDrive\\Desktop\\College Project\\arch-detective\\output\\docx\\G_14_ThreatLens_Thesis_.docx",
+  "before_sha256": "83433197460e417f7efae34299ac7687608ec38cc34ff2248f7cc11b1bd736ac",
+  "sections_updated": 6,
+  "border_offset_from": "page",
+  "all_four_edge_offsets_pt": 24,
+  "text_tables_images_margins_unchanged": true,
+  "only_changed_package_part": "word/document.xml",
+  "after_sha256": "8d769a8993034c24bdec9135391eeb1531470265c26fd652d7a77b20494000f9"
+}

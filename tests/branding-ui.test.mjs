@@ -10,6 +10,7 @@ const bundle = await build({
       import { renderToStaticMarkup } from "react-dom/server";
       import { AiModelSelector } from "./src/components/ai-assistant/AiModelSelector";
       import { AiMessage } from "./src/components/ai-assistant/AiMessage";
+      import { SolutionPreview } from "./src/components/audit-workbench/SolutionPreview";
       import { SaaSHeroMotionGraphic } from "./src/components/marketing/SaaSHeroMotionGraphic";
       import { PrivacyContent } from "./src/components/settings/LegalContent";
       export { advisorErrorMessage } from "./src/lib/advisorPresentation";
@@ -17,6 +18,7 @@ const bundle = await build({
         selectedModel: "glm-5-3-flash", onSelectModel: () => {}
       }));
       export const message = (message) => renderToStaticMarkup(createElement(AiMessage, {message}));
+      export const solution = (message) => renderToStaticMarkup(createElement(SolutionPreview, {message}));
       export const workflow = () => renderToStaticMarkup(createElement(SaaSHeroMotionGraphic));
       export const privacy = () => renderToStaticMarkup(createElement(PrivacyContent));
     `,
@@ -38,6 +40,33 @@ const code = bundle.outputFiles[0].text.replace(
   (_, name) => `from "${pathToFileURL(require.resolve(name)).href}"`,
 );
 const ui = await import(`data:text/javascript;base64,${Buffer.from(code).toString("base64")}`);
+
+test("solution preview is code-first, escaped, and refuses incomplete copy", () => {
+  const content =
+    '## Assessment\nStatic SVG does not confirm XSS.\n## Suggested code\n```php\n<script>alert("fixture")</script>\n```\n## How to verify\n- Test icon visibility.\n## Explanation and assumptions\nHuman review required.';
+  const html = ui.solution({
+    id: "fixture-solution",
+    role: "assistant",
+    content,
+    status: "completed",
+  });
+  assert.match(html, /Static SVG does not confirm XSS/);
+  assert.match(html, /&lt;script&gt;/);
+  assert.doesNotMatch(html, /<script>|Security Advisor|Fenced Code Solution/);
+  assert.ok(html.indexOf("Assessment") < html.indexOf("Suggested code"));
+  assert.ok(html.indexOf("Suggested code") < html.indexOf("How to verify"));
+  assert.match(html, /<details/);
+  assert.match(html, /html ·/);
+  const partial = ui.solution({
+    id: "partial",
+    role: "assistant",
+    content: "```js\nconst x =",
+    status: "interrupted",
+  });
+  assert.match(partial, /Incomplete suggestion/);
+  assert.match(partial, /disabled=""/);
+  assert.match(partial, /Verification steps were not provided/);
+});
 
 test("collapsed model selector is neutral and remains accessible", () => {
   const html = ui.selector();
