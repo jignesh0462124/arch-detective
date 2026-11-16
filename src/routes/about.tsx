@@ -15,6 +15,7 @@ import {
   MarketingFooter,
   MarketingHeader,
 } from "@/components/marketing/MarketingChrome";
+import { ReviewWorkflow } from "@/components/marketing/ReviewWorkflow";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -23,7 +24,7 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "Learn how Archon turns repositories, architecture files, and logs into prioritized findings, mapped controls, and audit-ready reports.",
+          "Learn how Archon reviews source code, organizes recorded findings, suggests remedies for human review, and prepares audit reports.",
       },
     ],
   }),
@@ -55,22 +56,22 @@ const WORKFLOW: WorkflowStage[] = [
     points: [
       "Upload a ZIP archive of your project",
       "Choose the compliance frameworks to review",
-      "Git, standalone architecture and log uploads are planned",
+      "Use authorized GitHub repositories when the integration is configured",
     ],
   },
   {
     step: "02",
     label: "Model",
-    title: "Extract system topology & assets.",
+    title: "Follow findings back to source.",
     description:
-      "Identifies entry points, dataflows, and services into an interconnected threat model.",
+      "Organizes recorded findings and source associations into a graph you can inspect. Connectors do not establish runtime reachability or a confirmed exploit path.",
     image: "/assets/archon-about-model.webp",
     alt: "System model with servers, database, cloud, and trust boundaries",
     icon: Graph,
     imageFirst: true,
     points: [
       "Static code & dependency analysis",
-      "Asset enumeration and trust transitions",
+      "Source associations shown in the finding graph",
       "Direct code-line evidence tracing",
     ],
   },
@@ -85,7 +86,7 @@ const WORKFLOW: WorkflowStage[] = [
     icon: Scan,
     imageFirst: false,
     points: [
-      "Combined severity and exploitability scoring",
+      "Recorded severity and CVSS where available",
       "Cross-framework compliance mapping",
       "Suggested remediation to review and test",
     ],
@@ -102,17 +103,10 @@ const WORKFLOW: WorkflowStage[] = [
     imageFirst: true,
     points: [
       "Report prepared from saved scan results",
-      "Direct regulatory citations alongside code evidence",
+      "Saved control mappings alongside code evidence",
       "Downloadable PDF ready for security review",
     ],
   },
-];
-
-const OVERVIEW = [
-  { value: "3", label: "input types" },
-  { value: "6", label: "analysis engines" },
-  { value: "5", label: "framework mappings" },
-  { value: "1", label: "evidence trail" },
 ];
 
 function AboutPage() {
@@ -231,22 +225,8 @@ function AboutPage() {
             aria-label="Workflow overview"
             className="scroll-mt-24 overflow-hidden rounded-sm border border-border bg-card"
           >
-            <div className="border-b border-border px-6 py-6 sm:px-8">
-              <p className="section-title text-accent">// One connected review</p>
-              <h2 className="mt-1 text-2xl font-medium sm:text-3xl">
-                Automation with an evidence trail your team can inspect.
-              </h2>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 sm:divide-x sm:divide-border">
-              {OVERVIEW.map((item) => (
-                <div
-                  key={item.label}
-                  className="border-b border-border px-6 py-6 even:border-l sm:border-b-0 sm:border-l-0 sm:px-8"
-                >
-                  <div className="text-3xl font-medium">{item.value}</div>
-                  <div className="mt-1 text-sm text-muted-foreground">{item.label}</div>
-                </div>
-              ))}
+            <div className="px-6 sm:px-8">
+              <ReviewWorkflow />
             </div>
           </section>
 
@@ -256,14 +236,20 @@ function AboutPage() {
                 <ShieldCheck size={17} strokeWidth={2} /> Ready for your first review
               </div>
               <h2 className="mt-3 text-3xl font-medium leading-tight sm:text-4xl">
-                Bring one repository. Leave with a defensible next step.
+                Bring one project. Review what to do next.
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                Connect a repository to scan source code, map statutory compliance, and generate
-                audit reports.
+                Inspect source evidence, review suggested remedies and prepare a report. Findings
+                and framework mappings need human review.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3 border-t border-border px-6 py-7 sm:px-9 lg:col-span-4 lg:justify-end lg:border-l lg:border-t-0 lg:px-10">
+              <Link
+                to="/team"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium hover:bg-secondary"
+              >
+                Meet the team
+              </Link>
               <Link
                 to="/login"
                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/85"
@@ -274,7 +260,7 @@ function AboutPage() {
           </section>
         </main>
 
-        <MarketingFooter />
+        <MarketingFooter current="about" />
       </div>
     </div>
   );

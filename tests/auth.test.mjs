@@ -41,6 +41,7 @@ test("only recognized internal return destinations", () => {
     "/reports/abc?framework=soc2",
   );
   assert.equal(auth.safeAuthDestination("/workspace?reportScan=123"), "/workspace?reportScan=123");
+  assert.equal(auth.safeAuthDestination("/settings?section=privacy"), "/settings?section=privacy");
 });
 test("retained history isolated across users and stale callbacks", () => {
   storage.setItem("threatlens_codebase_audit_v1_global", "unowned private audit");

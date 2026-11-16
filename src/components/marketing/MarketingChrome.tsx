@@ -4,7 +4,17 @@ import { ArrowRight, List } from "@phosphor-icons/react";
 import { ThemeToggle } from "@/components/brutal/ThemeToggle";
 import { ArchonWordmark } from "@/components/ui/ArchonWordmark";
 
-type MarketingPage = "home" | "about";
+type MarketingPage = "home" | "about" | "team" | "privacy" | "terms";
+
+const companyLinks = [
+  { to: "/about", label: "About", page: "about" },
+  { to: "/team", label: "Team", page: "team" },
+] as const;
+const footerLinks = [
+  ...companyLinks,
+  { to: "/privacy", label: "Privacy", page: "privacy" },
+  { to: "/terms", label: "Terms", page: "terms" },
+] as const;
 
 const productLinks = [
   { href: "/#product", label: "Product" },
@@ -52,13 +62,16 @@ export function MarketingHeader({ current }: { current: MarketingPage }) {
               {item.label}
             </a>
           ))}
-          <Link
-            to="/about"
-            aria-current={current === "about" ? "page" : undefined}
-            className="flex h-16 items-center border-b-2 border-transparent px-3 text-foreground/70 transition-colors hover:border-accent hover:bg-secondary/50 hover:text-foreground focus-visible:border-accent focus-visible:text-foreground focus-visible:outline-none aria-[current=page]:border-accent aria-[current=page]:text-foreground lg:px-4"
-          >
-            About
-          </Link>
+          {companyLinks.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              aria-current={current === item.page ? "page" : undefined}
+              className="flex h-16 items-center border-b-2 border-transparent px-3 text-foreground/70 transition-colors hover:border-accent hover:bg-secondary/50 hover:text-foreground focus-visible:border-accent focus-visible:text-foreground focus-visible:outline-none aria-[current=page]:border-accent aria-[current=page]:text-foreground lg:px-4"
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
         <div className="flex shrink-0 items-center gap-2">
@@ -95,15 +108,19 @@ export function MarketingHeader({ current }: { current: MarketingPage }) {
                     {item.label}
                   </a>
                 ))}
-                <Link
-                  to="/about"
-                  onClick={(event) =>
-                    event.currentTarget.closest("details")?.removeAttribute("open")
-                  }
-                  className="flex min-h-10 items-center rounded-sm px-3 text-sm transition-colors hover:bg-secondary focus-visible:bg-secondary focus-visible:outline-none"
-                >
-                  About
-                </Link>
+                {companyLinks.map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    aria-current={current === item.page ? "page" : undefined}
+                    onClick={(event) =>
+                      event.currentTarget.closest("details")?.removeAttribute("open")
+                    }
+                    className="flex min-h-10 items-center rounded-sm px-3 text-sm transition-colors hover:bg-secondary focus-visible:bg-secondary focus-visible:outline-none"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
               </nav>
             </details>
           </div>
@@ -128,7 +145,13 @@ export function MarketingHeader({ current }: { current: MarketingPage }) {
   );
 }
 
-export function MarketingFooter({ compact = false }: { compact?: boolean }) {
+export function MarketingFooter({
+  compact = false,
+  current,
+}: {
+  compact?: boolean;
+  current?: MarketingPage;
+}) {
   if (compact) {
     return (
       <footer className="border-t border-border bg-background">
@@ -146,12 +169,16 @@ export function MarketingFooter({ compact = false }: { compact?: boolean }) {
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
-            <Link
-              to="/about"
-              className="inline-flex min-h-11 items-center hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              About
-            </Link>
+            {footerLinks.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                aria-current={current === item.page ? "page" : undefined}
+                className="inline-flex min-h-11 items-center hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                {item.label}
+              </Link>
+            ))}
             <Link
               to="/login"
               className="inline-flex min-h-11 items-center hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -178,20 +205,15 @@ export function MarketingFooter({ compact = false }: { compact?: boolean }) {
           </span>
         </Link>
         <div className="flex flex-wrap items-center text-muted-foreground">
-          <Link
-            to="/about"
-            className="flex min-h-10 items-center border-b-2 border-transparent px-2 transition-colors hover:border-accent hover:text-foreground focus-visible:border-accent focus-visible:text-foreground focus-visible:outline-none"
-          >
-            About
-          </Link>
-          {["Security", "Docs", "Changelog", "Contact"].map((label) => (
-            <a
-              key={label}
-              href="#"
-              className="flex min-h-10 items-center border-b-2 border-transparent px-2 transition-colors hover:border-accent hover:text-foreground focus-visible:border-accent focus-visible:text-foreground focus-visible:outline-none"
+          {footerLinks.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              aria-current={current === item.page ? "page" : undefined}
+              className="flex min-h-11 items-center border-b-2 border-transparent px-2 transition-colors hover:border-accent hover:text-foreground focus-visible:border-accent focus-visible:text-foreground focus-visible:outline-none aria-[current=page]:border-accent aria-[current=page]:text-accent"
             >
-              {label}
-            </a>
+              {item.label}
+            </Link>
           ))}
         </div>
       </div>

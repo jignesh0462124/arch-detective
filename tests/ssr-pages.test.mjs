@@ -6,6 +6,9 @@ const base = process.env.FRONTEND_TEST_URL || "http://127.0.0.1:5173";
 for (const path of [
   "/",
   "/about",
+  "/team",
+  "/privacy",
+  "/terms",
   "/login",
   "/dashboard",
   "/workspace",

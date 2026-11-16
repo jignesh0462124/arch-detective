@@ -1,95 +1,126 @@
-# Authentication layout verification
+# Team, Privacy and Terms — implementation verification
 
 Date: 2026-11-16
 
-## Scope and selected references
+## Scope
 
-Implemented the selected sign-in (option 1) and create-account (option 2) compositions. Dark mode retains their form-left / illustration-right arrangement; the rejected reversed dark composition was not implemented. Existing artwork and the canonical Archon wordmark were reused, not regenerated.
+Implemented the approved Team, Privacy and Terms compositions as responsive application pages. Team is next to About in desktop/mobile marketing navigation. About and Team reuse a five-stage illustrated review workflow. The privacy and terms documents share their actual disclosure content with Settings.
 
-- Sign-in source: `C:/Users/jigne/.codex/generated_images/01a14884-7256-79b3-83a0-d85a3174c02c/exec-7eef9c1f-2725-4200-a64a-12ae293456a2.png`
-- Signup source: `C:/Users/jigne/.codex/generated_images/01a14884-7256-79b3-83a0-d85a3174c02c/exec-f797366f-db5b-4f53-b46a-160f61612a7b.png`
-- Real application: `http://localhost:5173/login`; signup is `/login?mode=signup`.
-- Isolated interactive fixture: `http://127.0.0.1:5195/tests/auth-preview/index.html`.
-- Evidence directory: `C:/Users/jigne/.codex/visualizations/2026/10/17/01a14884-7256-79b3-83a0-d85a3174c02c/auth-approved/`.
+The preceding authentication-layout QA report is preserved verbatim at `.github/design-assets/auth-design-qa-20261116.md`.
 
-## Comparison evidence and normalization
+## Source visual truth
 
-Both source images are 1487 × 1058 pixels. They were normalized to the 1440 × 1024 CSS comparison viewport; browser captures are 1440 × 1024 pixels at approximately 1× density. Uniformly scaling the references to 1440 pixels wide produces a height of approximately 1024.57 pixels; normalization rounds that subpixel difference. No application screenshot was stretched for the final comparison.
+All three source images are 1003 × 1568 pixels, under `C:/Users/jigne/.codex/generated_images/01a14884-7256-79b3-83a0-d85a3174c02c/`:
 
-- `comparison-final.png`: both approved references alongside the final light sign-in/signup captures.
-- `comparison-form-final.png`: aligned sign-in form crops, x=80–696 and y=135–910, to inspect labels, controls and spacing.
-- `signin-light-native-final.jpg` and `signup-light-native-final.jpg`: final desktop light states.
-- `signin-dark-native-final.jpg`: final dark sign-in with the same panel order.
-- `signup-dark-mobile-native-final.jpg` and `signup-light-mobile-native-final.jpg`: final 390 × 1040 mobile captures, including the footer.
+- Team: `exec-dc46ffd5-fd5b-4e32-9044-78883815645f.png`.
+- Privacy: `exec-e720b1bc-38a2-4935-b850-f7239c4b7f99.png`.
+- Terms: `exec-294e6ec5-6075-4ead-a496-774c7d52dea8.png`.
 
-In-app browser full-page capture became unreliable, with some cropped or failed captures. Those were excluded from final comparisons. Final desktop and mobile captures used the connected Chrome browser's documented native capture API. The real application's hydrated forms were also inspected in the in-app browser.
+The user's later instruction to keep the photograph unedited takes precedence over the generated Team preview. The original JPEG was copied byte-for-byte, never regenerated, retouched or cropped. Its GPS/weather overlay remains visible. SHA256: `447ae6ce5be1e78a39b40243308ac2a6fc5a36134e2ce126337045abd4b87345`. Names are listed separately, not assigned to faces. The award is described only as the user-reported first prize at the project seminar.
 
-## Comparison history
+## Implementation and evidence
 
-| Earlier finding                                                                          | Fix                                                                                                                     | Post-fix evidence                                                                                |
-| ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| P2: initial 14px form type was noticeably smaller than the approved reference.           | Desktop labels, fields, actions and introduction increased to 18px; title increased to 48px; mobile fields remain 16px. | `comparison-form-final.png`; readable hierarchy without losing password requirements.            |
-| P2: gateway appeared too small and too low in its panel.                                 | Original image uses the full available artwork height with contain sizing and bottom alignment.                         | `comparison-final.png`; gateway, key, orange route and report remain visible.                    |
-| P2: integer max-width media query left a gap at fractional CSS widths just below 1024px. | Use the strict range query `width < 1024px`, matching the desktop source-image breakpoint.                              | Rechecked 1023px: artwork hidden and no horizontal overflow; 1024px retains the two-column view. |
-| P2: enlarged signup content introduced a few pixels of avoidable desktop overflow.       | Reduced desktop signup bottom padding while preserving field spacing.                                                   | `signup-light-native-final.jpg`; footer and actions remain within the comparison viewport.       |
+Local routes: `http://127.0.0.1:5173/team`, `/privacy`, `/terms`, `/about`.
 
-## Required visual surfaces
+Evidence directory: `C:/Users/jigne/OneDrive/Desktop/College Project/arch-detective/output/team-legal-qa-20261116/` (disposable QA output, narrowly ignored in Git).
 
-- **Typography:** existing Inter/system stack; strong but restrained headings; visible field labels, password help and loading states. Canonical wordmark retained instead of copying generated logo typography.
-- **Spacing:** shared 48/52 desktop grid, integrated footer, consistent 48px controls, 44px password/navigation targets. Form-first single column below 1024px. Short landscapes can scroll normally.
-- **Colours:** existing cream/charcoal/orange tokens; dark fields, labels, links and primary buttons remain legible. No reversed dark layout, neon, glow, security badges or unsupported claims.
-- **Assets:** original gateway and infrastructure backdrop unchanged in Git. Contain sizing preserves the whole illustration. The media-specific picture selects an inline one-pixel fallback below desktop, avoiding a mobile gateway download; the desktop artwork loads eagerly.
-- **Content:** sign-in/signup/recovery retain their respective purposes. Signup still explains email verification and workspace creation as separate steps. Privacy/Terms remain accessible; no simulated guarantees or extra providers were introduced.
+Desktop comparison viewport: 1440 × 1000 CSS pixels, approximately 1× screenshot density. Full-page screenshots include naturally flowing content beyond the viewport. Native screenshots use 1440 pixels; some full-page captures omit the scrollbar strip and are 1424 pixels wide. Source images are uniformly scaled to each actual capture width, not stretched. Comparisons show the full reference and implementation side by side, with white padding for different content heights.
 
-Intentional adaptations from the generated images: existing logo/font family, an operational theme toggle, longer existing password guidance, non-italic interface copy, Phosphor icons and consistent field heights. These preserve the real product rather than treating generated artwork as a new brand system.
+- `chrome-team-light-full.jpg`: final full Team light page, 1440 × 2268 pixels.
+- `chrome-privacy-light-full.jpg`: final full Privacy light page, 1424 × 2273 pixels.
+- `chrome-terms-light-full.jpg`: Terms light page; corresponding `*-dark-full.jpg` files record dark mode.
+- `comparison-team-full.jpg`, `comparison-privacy-full.jpg`, `comparison-terms-full.jpg`: full-view comparisons.
+- `comparison-team-hero.jpg`, `comparison-privacy-hero.jpg`, `comparison-terms-hero.jpg`: focused hero/header/type/asset comparisons.
+- `chrome-team-final-hero.jpg`: settled native desktop capture, including full original photograph.
+- `chrome-team-dark-mobile-settled.jpg`: settled native dark mobile view confirming readable navigation controls; use this instead of transition frames in early full-page captures.
+- `mobile-theme-review.jpg`: six complete mobile pages, light/dark for each route, at 390 × 844 CSS viewport.
+- `chrome-team-dark-tablet.jpg`: 768 × 1024 CSS viewport.
+- About workflow/illustration captures: `chrome-about-dark-full.jpg`, `chrome-about-dark-workflow.jpg`, `chrome-about-light-workflow.jpg`.
+- `implemented-pages-preview.jpg`: compact three-page preview, not a substitute for the full comparisons.
+
+The in-app browser was used first. Its intermittent failed/cropped/stale captures were not treated as implementation defects or final proof. The user explicitly approved Chrome for final checks. Chrome also had occasional capture timeouts; settled successful captures and DOM/asset checks were used. Early non-Chrome files and mis-timed captures are diagnostic only. A lazy workflow image was initially absent in a full-page capture; scrolling into view confirmed it loaded, followed by a new full-page capture.
+
+## Fidelity review and adaptations
+
+- **Typography:** existing Inter/system stack and canonical Archon wordmark retained. Editorial headings, short purpose statements, readable 17px legal body text (16px mobile), separate captions and technical caveats. Reference layout hierarchy is retained; production type/control scale uses the existing application rather than enlarging every control with the raster reference.
+- **Spacing:** split hero, right-side intact photo, three-column roster, separate guide row and five-stage workflow. Mobile stacks these in order. Privacy uses sticky contents on desktop, normal-flow two-column contents on mobile. Terms uses horizontal desktop contents and a two-column mobile grid. No measured horizontal overflow at 390, 768 or 1440 CSS pixels.
+- **Colour:** canonical cream/charcoal/orange tokens, orange title emphasis, restrained borders, readable dark-mode headings, text and controls. No new gradient, sparkle, robot badge or approval claim.
+- **Assets:** supplied logo unchanged. Separate cream/charcoal/orange illustrations, not flattened page mockups. All artwork uses contain/full intrinsic sizing. An intentional bounded cream workflow panel is used in both themes to eliminate cutout defects. The original team photo remains full-aspect and unchanged.
+- **Content:** exact existing operational disclosures retained, including external-provider processing, source/chat retention limits, browser clearing not deleting server records, authorized use and human review. Shared Settings content remains available. No guarantee of security, certification or legal sufficiency was introduced. Additional factual GitHub/ZIP explanations are conditional on configuration.
+
+Intentional differences from the mockups: original photograph/overlay and full aspect ratio; canonical header, logo and control sizing; fuller existing privacy wording; explicit authorized-use caveats; expanded workflow descriptions; a cream artwork panel for edge quality; no decorative document icon in the final privacy notice. These preserve the product and the user's photograph instruction. This is a design implementation, not a pixel-identical reproduction of generated people or text.
+
+## Issues found and resolved
+
+| Finding | Correction | Verified evidence |
+| --- | --- | --- |
+| P2: transparent workflow asset had white/coloured edge noise on dark backgrounds. | Re-rendered once on an opaque cream panel; retained five objects and the orange route. | Final workflow WebP, Team dark full/mobile captures; no alpha fringes. |
+| P2: first legal implementation missed orange title emphasis and the Terms horizontal contents layout. | Added semantic title spans, horizontal Terms contents and mobile wrapping. | Focused hero comparisons; Terms desktop/mobile captures. |
+| P2: the first privacy-settings CTA lost its intended destination through the existing signed-out guard. | The public CTA now uses the existing login route with an explicit safe `/settings?section=privacy` return destination. No auth implementation changed. | Browser URL `login?next=%2Fsettings%3Fsection%3Dprivacy`; auth destination regression assertion. |
+| New test assertion depended on HTML attribute order. | Matched actual anchor semantics independently of attribute order. | All 43 focused tests pass. |
+
+Final combined full-view and focused comparisons were opened and reviewed after these corrections. No actionable P0/P1/P2 layout or interaction findings remain within these public-page changes.
 
 ## Browser checks
 
-| Check                                                   | Result                                                                                                                                                                                                                                           |
-| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Page identity, meaningful content, no framework overlay | Passed on real `/login` and signup navigation.                                                                                                                                                                                                   |
-| Light/dark and responsive geometry                      | Passed at 320, 390, 768, 1023, 1024 and 1440px; no horizontal overflow. 844 × 390 landscape remains scrollable.                                                                                                                                  |
-| Password visibility and keyboard                        | Show/Hide changes password type; Tab reaches recovery with a visible solid focus outline. Autofill attributes retained.                                                                                                                          |
-| Invalid credentials                                     | Isolated short-password sign-in reaches authentication and renders the neutral credential error.                                                                                                                                                 |
-| Signup                                                  | Isolated mismatch is invalid; matching confirmation renders email instructions and a disabled resend cooldown. No real account was created.                                                                                                      |
-| Recovery                                                | Isolated reset request renders neutral delivery guidance and a disabled 60-second cooldown. No email was sent.                                                                                                                                   |
-| Successful sign-in                                      | Isolated sign-in displays the protected `Private workspace` screen. Busy controls disable during submission.                                                                                                                                     |
-| Console                                                 | Real app has no observed runtime errors; existing TanStack named-export/code-splitting warnings remain. Fixture logged an existing duplicate-createRoot warning during hot reload; no new error appeared after a full reload with edits stopped. |
+- Team beside About in desktop and mobile navigation; active page indication; About → Meet the team works.
+- Mobile menu opens, Escape closes and restores focus; choosing Team closes the menu.
+- Privacy/Terms contents links work with mouse and keyboard. Target section receives focus and sits below the sticky header (observed approximately 112px from the viewport top).
+- About's workflow anchor works; removed report action was not reintroduced.
+- Theme changes and route navigation retain the selected theme. Both themes checked at desktop/mobile, plus tablet Team/About overflow checks.
+- Full original photo aspect ratio verified at approximately 1600/1046; all local image resources load.
+- Privacy settings action opens sign-in with its exact return destination. Terms → account creation opens the actual signup form. No forms were submitted or real accounts modified.
+- New public routes show no browser error logs. Existing development warnings concern named exports in login/reset-password/findings and are unrelated to this change.
 
-## Automated checks
+## Commands and results
 
-- `node --test tests/auth-layout.test.mjs tests/auth.test.mjs tests/auth-api.test.mjs tests/auth-bridge.test.mjs`: **21 passed**.
-- Same auth checks plus `tests/sidebar.test.mjs tests/branding-ui.test.mjs tests/theme-contrast.test.mjs`: **42 passed**.
-- `npm run test:ssr`: **12 passed**, including Login, Dashboard, Workbench intake, Advisor, Settings, Findings, Reports and Fix Verification routes.
-- `npm run typecheck`: passed.
-- Focused ESLint and Prettier checks for the changed route/tests/styles: passed.
-- `npm run build`: passed after the final application edits. Existing bundle-size / mixed-import / library directive warnings remain non-fatal. Log: `output/auth-approved-build.log` (ignored generated output).
-- `git diff --check` on changed tracked task files: passed. Original artwork has no diff.
-- Compared the AuthPage hooks and submit/resend/navigation handlers against HEAD: unchanged.
+- Baseline focused auth/branding/UI tests: **36 passed** outside the filesystem sandbox. Initial sandbox esbuild failure was a parent-directory permission issue, before test assertions.
+- `node --test tests/public-pages.test.mjs tests/branding-ui.test.mjs tests/auth-layout.test.mjs tests/auth.test.mjs tests/auth-api.test.mjs tests/auth-bridge.test.mjs`: **43 passed** on final source.
+- `node --experimental-strip-types --test tests/ssr-pages.test.mjs`: **13 passed** on final source, including all three new/redesigned public routes and existing protected-route shells.
+- `npm run typecheck`: **passed**.
+- Focused ESLint across all modified/new TypeScript/TSX and test files: **passed**.
+- Prettier check across all modified/new maintained source and tests: **passed**.
+- `npm run build`: **passed** on final source. Existing mixed dynamic/static import and dependency `use client` warnings remain non-fatal.
+- Task-source `git diff --check`: **passed**.
+- Whole-worktree diff inspection also encountered existing permission-denied pytest artifacts under `output/`; these unrelated artifacts were not modified. The scoped task-source diff check is the relevant passing result.
+- Original photograph SHA256: **passed**, unchanged bytes.
 
-## Changed files and safety boundaries
+Checks/build used explicit outside-sandbox execution because esbuild could not read parent configuration directories inside the sandbox. No dependency updates were made.
 
-| File                                | Purpose and safety                                                                                                                                                                                              |
-| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/routes/login.tsx`              | Presentation, accessible control attributes and original artwork delivery only. Existing auth hooks, request handlers, duplicate guards, callback handling, destination validation and cooldowns are unchanged. |
-| `src/components/auth/auth-page.css` | New `.auth-*` scoped composition. Does not restyle protected pages or replace shared theme tokens.                                                                                                              |
-| `tests/auth-layout.test.mjs`        | New actual-markup SSR tests using isolated router/auth fixtures. No network or credentials.                                                                                                                     |
-| `tests/auth-api.test.mjs`           | Additional GitHub initiation, destination and failure regression coverage; no production API change.                                                                                                            |
-| `design-qa.md`                      | This verification record.                                                                                                                                                                                       |
+## Task-specific file manifest
 
-No deletions, package changes, migrations, RLS changes, environment changes, credential changes, commits, pushes or deployments. Existing unrelated worktree edits were preserved.
+| File | Reason / safety |
+| --- | --- |
+| `.gitignore` | Narrow exclusion for this reproducible QA output only. |
+| `src/components/marketing/MarketingChrome.tsx` | One shared About/Team definition; real Privacy/Terms footer destinations, existing theme/menu behaviour retained. |
+| `src/components/marketing/TeamPage.tsx` | New public Team view using supplied names, guide, college and intact photo. |
+| `src/components/marketing/ReviewWorkflow.tsx` | Shared factual five-stage explanatory section; no scan calls. |
+| `src/components/marketing/ProjectNotice.tsx` | Shared responsive public legal shell, contents navigation and safe existing-route CTAs. |
+| `src/components/marketing/public-pages.css` | Scoped layouts/theme tokens; no application-shell or editor changes. |
+| `src/components/settings/legalNotices.ts` | One typed source for existing disclosure text and section metadata. |
+| `src/components/settings/LegalContent.tsx` | Same Settings/public disclosures, now accessible named sections. Public-only styling is scoped. |
+| `src/routes/team.tsx` | New typed public route with factual metadata. |
+| `src/routes/privacy.tsx`, `src/routes/terms.tsx` | Approved titles and notice kind; same content components. |
+| `src/routes/about.tsx` | Shared workflow/Team link and accurate wording; existing illustrations retained. |
+| `src/routeTree.gen.ts` | Automatically regenerated by TanStack Router for `/team`; not hand-edited. |
+| `tests/public-pages.test.mjs` | SSR markup, photo checksum, navigation, disclosures and real links. |
+| `tests/auth.test.mjs` | Added privacy-settings return-destination assertion only. |
+| `tests/ssr-pages.test.mjs` | Added Team, Privacy and Terms server-rendering cases. |
+| `public/assets/team/project-seminar-original.jpeg` | Byte-for-byte supplied original, including overlay. |
+| `public/assets/marketing/archon-privacy-hero-v1.webp` | Separate local privacy illustration. |
+| `public/assets/marketing/archon-terms-hero-v1.webp` | Separate local terms illustration. |
+| `public/assets/marketing/archon-review-workflow-v1.webp` | Separate five-stage illustration, final opaque cream version. |
+| `.github/design-assets/archon-privacy-hero-v1.md`, `archon-terms-hero-v1.md`, `archon-review-workflow-v1.md` | Asset provenance and exact generation prompts. |
+| `.github/design-assets/auth-design-qa-20261116.md` | Preserves preceding QA report verbatim. |
+| `design-qa.md` | This current review and verification record. |
 
-## Remaining verification limits
+No project source/data files were deleted. Existing unrelated tracked deletions under `output/` were preserved, not restored or extended. No backend, API, auth logic, database, RLS, scan/model routing, environment, dependency or deployment configuration changes.
 
-Actual GitHub consent/callback completion, hosted signup email delivery and a real user's credential submission were not performed. They require an isolated authorized account and are not implied by fixture tests. Native mobile devices and screen-reader software were not exercised. Existing application-wide bundle optimization warnings are outside this presentation change.
+## Limitations and follow-up
 
-## Implementation checklist
-
-- [x] Implement selected designs 1 and 2 using original assets.
-- [x] Adapt the same composition for dark mode; exclude option 3.
-- [x] Preserve authentication behavior and existing worktree changes.
-- [x] Inspect full-view and focused comparison evidence; correct P2 issues.
-- [x] Verify responsive, keyboard and isolated submission states.
-- [x] Pass focused automated checks and production build.
+- No live authenticated scan, GitHub publication or hosted Settings persistence was performed for this public-page task. Relevant existing auth regressions and protected-route SSR passed; these are not claims of full end-to-end backend verification.
+- Policy wording is still explicitly a research-prototype notice; an operator must supply reviewed legal terms and contact details before production use.
+- The unedited photograph exposes its supplied location overlay. This was the user's explicit choice; deployment/publication is not part of this task.
+- P3: opaque workflow panel is intentionally brighter than the dark canvas. Further art-direction changes can be reviewed separately; no quality blocker remains.
 
 final result: passed
