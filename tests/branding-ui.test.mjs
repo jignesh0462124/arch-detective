@@ -162,3 +162,41 @@ test("removed branding does not return in navigation, metadata or public marketi
   const reports = await readFile("src/components/reports/ReportUi.tsx", "utf8");
   assert.match(reports, /Static checks and AI review/);
 });
+
+test("Advisor panel uses text-only headings and quick actions without removing their behavior", async () => {
+  const source = await readFile("src/components/ai-assistant/AiAssistantPanel.tsx", "utf8");
+  assert.doesNotMatch(source, /ShieldCheck|icon:|action\.icon|<Icon\b/);
+  for (const label of ["Explain", "Suggest a fix", "How to verify"])
+    assert.ok(source.includes(`label: "${label}"`));
+  assert.match(source, /chat\.sendMessage\(/);
+  assert.match(source, /chat\.findingContext/);
+  assert.match(source, /chat\.stopStreaming/);
+  assert.match(source, /Advice needs human review/);
+  assert.match(source, /aria-label="Quick advisor prompts"/);
+});
+
+test("graph uses neutral source presentation while retaining recorded evidence and graph actions", async () => {
+  const source = await readFile("src/routes/_app/attack-graph.tsx", "utf8");
+  assert.doesNotMatch(
+    source,
+    /FOCUS TARGET ASSET|Target focused|Flaw Origin|Review Target|ATTACK CHAIN REASONING/,
+  );
+  const evidence = source.slice(
+    source.indexOf("{/* Recorded source evidence */}"),
+    source.indexOf("{/* Blast Radius Section */}"),
+  );
+  assert.ok(evidence.includes("Saved source excerpt"));
+  assert.doesNotMatch(evidence, /bg-red-950\/30|text-red-300/);
+  for (const label of [
+    "Finding location",
+    "Recenter finding",
+    "Saved source excerpt",
+    "Source location",
+  ])
+    assert.ok(source.includes(label));
+  assert.match(source, /onClick=\{handleFocusTargetAsset\}/);
+  assert.match(source, /activeThreat\.remediationSnippet\.vulnerable/);
+  assert.match(source, /handleCopySnippet\("source"\)/);
+  assert.match(source, /Validate exploitability before remediation/);
+  assert.match(source, /<SeverityBadge severity=\{activeThreat\.severity\}/);
+});

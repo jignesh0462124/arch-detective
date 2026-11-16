@@ -1307,29 +1307,12 @@ function AttackGraphPage() {
             </div>
 
             {/* Focus target asset bar (data-driven) */}
-            <div
-              className={cn(
-                "w-full min-w-0 flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 sm:px-6 border-t hairline transition-all",
-                selectedNodeId === compromisedTargetNode?.id && compromisedTargetNode
-                  ? "bg-destructive/10 border-destructive/30"
-                  : "bg-card hover:bg-secondary/30",
-              )}
-            >
+            <div className="w-full min-w-0 flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 sm:px-6 border-t border-border bg-card">
               <div className="flex items-center gap-3.5 w-full md:w-auto md:flex-1 md:min-w-0">
-                <div
-                  className={cn(
-                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border transition-all",
-                    selectedNodeId === compromisedTargetNode?.id && compromisedTargetNode
-                      ? "bg-destructive text-destructive-foreground border-destructive"
-                      : "bg-destructive/15 text-destructive border-destructive/30",
-                  )}
-                >
-                  <Target size={24} weight="bold" />
-                </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-[10px] tracking-wider font-bold text-destructive uppercase">
-                      // FOCUS TARGET ASSET
+                    <span className="text-xs font-medium text-muted-foreground">
+                      {isLiveScan ? "Finding location" : "Example target"}
                     </span>
                     {activeThreat && (
                       <span className="font-mono text-[11px] font-bold bg-destructive/15 text-destructive px-2 py-0.5 rounded-xs border border-destructive/20">
@@ -1355,24 +1338,18 @@ function AttackGraphPage() {
 
               <div className="flex items-center gap-2 w-full md:w-auto shrink-0 justify-end">
                 <BrutalButton
-                  variant={selectedNodeId === compromisedTargetNode?.id ? "primary" : "secondary"}
+                  variant="secondary"
                   size="md"
                   onClick={handleFocusTargetAsset}
                   disabled={!compromisedTargetNode}
-                  className={cn(
-                    "w-full md:w-auto font-bold px-5 py-2.5 text-xs shadow-xs transition-all",
-                    selectedNodeId === compromisedTargetNode?.id &&
-                      compromisedTargetNode &&
-                      "bg-destructive text-destructive-foreground border-destructive hover:bg-destructive/90",
-                  )}
+                  className="w-full md:w-auto min-h-11 px-4 text-xs"
                 >
-                  <Target size={16} weight="bold" />
                   <span>
                     {selectedNodeId === compromisedTargetNode?.id && compromisedTargetNode
-                      ? "Target focused"
+                      ? "Recenter finding"
                       : compromisedTargetNode
-                        ? "Focus target"
-                        : "No target"}
+                        ? "Show finding in graph"
+                        : "No finding selected"}
                   </span>
                 </BrutalButton>
               </div>
@@ -1520,7 +1497,6 @@ function AttackGraphPage() {
                   )}
 
                   <span className="inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground sm:ml-auto">
-                    <span className="h-1.5 w-1.5 rounded-full bg-destructive animate-pulse-dot" />
                     Inferred threat vector
                   </span>
                 </div>
@@ -1572,7 +1548,6 @@ function AttackGraphPage() {
                           {/* Code Window Header: 1.app/transfer.py Line 42 */}
                           <div className="flex flex-wrap items-center justify-between gap-2 px-3.5 py-2 border-b border-white/10 bg-white/5 text-xs font-mono">
                             <div className="flex items-center gap-2 min-w-0 flex-1 basis-full sm:basis-auto">
-                              <span className="font-mono text-accent font-bold text-xs">1.</span>
                               <span
                                 className="font-semibold text-white/90 truncate"
                                 title={activeThreat.filePath}
@@ -1587,8 +1562,8 @@ function AttackGraphPage() {
                             </div>
 
                             <div className="flex items-center gap-2 shrink-0">
-                              <span className="rounded-sm bg-destructive/20 border border-destructive/30 px-2 py-0.5 text-destructive font-semibold text-[10px] uppercase tracking-wider whitespace-nowrap">
-                                Recorded source
+                              <span className="text-white/70 text-[11px] whitespace-nowrap">
+                                {isLiveScan ? "Saved source excerpt" : "Example code"}
                               </span>
                               {activeThreat.remediationSnippet?.vulnerable && (
                                 <button
@@ -1616,8 +1591,8 @@ function AttackGraphPage() {
                               <div className="select-none py-3 px-3 text-right text-white/70 border-r border-white/10 bg-white/[0.03] shrink-0 font-mono text-xs min-w-[42px]">
                                 {activeThreat.lineNumber ?? 1}
                               </div>
-                              <div className="p-3 font-mono overflow-x-auto whitespace-pre flex-1 bg-red-950/30 border-l border-red-500/20">
-                                <code className="text-red-300 font-mono font-medium">
+                              <div className="p-3 font-mono overflow-x-auto whitespace-pre flex-1">
+                                <code className="text-white/90 font-mono">
                                   {activeThreat.remediationSnippet.vulnerable}
                                 </code>
                               </div>
@@ -1773,10 +1748,10 @@ function AttackGraphPage() {
                         <div className="flex items-center gap-2 min-w-0">
                           <ShareNetwork size={14} weight="bold" className="text-primary shrink-0" />
                           <span className="font-mono text-[10px] uppercase tracking-wider font-semibold text-muted-foreground truncate">
-                            // ATTACK CHAIN REASONING
+                            {isLiveScan ? "Finding context" : "Example context"}
                           </span>
                         </div>
-                        <span className="rounded-sm bg-destructive/10 border border-destructive/20 px-1.5 py-0.5 font-mono text-[10px] font-bold text-destructive whitespace-nowrap shrink-0">
+                        <span className="text-[11px] text-muted-foreground whitespace-nowrap shrink-0">
                           {isLiveScan ? "Source mapping" : "Hypothesis"}
                         </span>
                       </div>
@@ -1784,8 +1759,8 @@ function AttackGraphPage() {
                       <div className="pt-3 space-y-2">
                         {/* Step 1: Ingress */}
                         <div className="flex items-center justify-between gap-3 rounded-sm border border-border/70 bg-secondary/30 px-3 py-2 text-xs">
-                          <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground font-semibold shrink-0">
-                            1. {isLiveScan ? "Context" : "Ingress Edge"}
+                          <span className="text-xs text-muted-foreground shrink-0">
+                            {isLiveScan ? "Context" : "Ingress edge"}
                           </span>
                           <span className="font-mono text-xs font-medium text-foreground truncate text-right">
                             {isLiveScan ? "Saved scan finding" : "Untrusted HTTP client (modeled)"}
@@ -1794,8 +1769,8 @@ function AttackGraphPage() {
 
                         {/* Step 2: Executes in */}
                         <div className="flex items-center justify-between gap-3 rounded-sm border border-border/70 bg-secondary/30 px-3 py-2 text-xs">
-                          <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground font-semibold shrink-0">
-                            2. {isLiveScan ? "Codebase" : "Component"}
+                          <span className="text-xs text-muted-foreground shrink-0">
+                            {isLiveScan ? "Codebase" : "Component"}
                           </span>
                           <span
                             className="font-mono text-xs font-semibold text-foreground truncate text-right"
@@ -1807,12 +1782,12 @@ function AttackGraphPage() {
 
                         {/* Step 3: Flaw origin */}
                         {reasoningFile && (
-                          <div className="flex items-center justify-between gap-3 rounded-sm border border-destructive/20 bg-destructive/5 px-3 py-2 text-xs">
-                            <span className="font-mono text-[10px] uppercase tracking-wider text-destructive font-semibold shrink-0">
-                              3. Flaw Origin
+                          <div className="flex items-center justify-between gap-3 rounded-sm border border-border bg-secondary/30 px-3 py-2 text-xs">
+                            <span className="text-xs text-muted-foreground shrink-0">
+                              Source location
                             </span>
                             <span
-                              className="font-mono text-xs font-semibold text-destructive truncate text-right"
+                              className="font-mono text-xs text-foreground truncate text-right"
                               title={`${activeThreat.filePath}${activeThreat.lineNumber != null ? `:${activeThreat.lineNumber}` : ""}`}
                             >
                               {reasoningFile}
@@ -1822,12 +1797,12 @@ function AttackGraphPage() {
                         )}
 
                         {/* Step 4: Reaches target */}
-                        <div className="flex items-center justify-between gap-3 rounded-sm border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs">
-                          <span className="font-mono text-[10px] uppercase tracking-wider text-destructive font-bold shrink-0">
-                            4. Review Target
+                        <div className="flex items-center justify-between gap-3 rounded-sm border border-border bg-secondary/30 px-3 py-2 text-xs">
+                          <span className="text-xs text-muted-foreground shrink-0">
+                            {isLiveScan ? "Finding file" : "Example target"}
                           </span>
                           <span
-                            className="font-mono text-xs font-bold text-destructive truncate text-right"
+                            className="font-mono text-xs text-foreground truncate text-right"
                             title={reasoningTarget}
                           >
                             {reasoningTarget}

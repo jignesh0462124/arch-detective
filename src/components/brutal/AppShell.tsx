@@ -19,6 +19,7 @@ import {
   X,
   SidebarSimple,
   Buildings,
+  ChatCircleText,
 } from "@phosphor-icons/react";
 import { ThemeToggle } from "@/components/brutal/ThemeToggle";
 import { ArchonWordmark } from "@/components/ui/ArchonWordmark";
@@ -32,6 +33,7 @@ import { cn } from "@/lib/utils";
 import { getStoredModelId, setStoredModelId } from "@/lib/api/ai-models";
 import { useAuth } from "@/hooks/useAuth";
 import { useSidebarPreference } from "@/lib/sidebar";
+import { profileAvatar } from "@/lib/profileAppearance";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: SquaresFour },
@@ -299,7 +301,7 @@ export function AppShell({
     (user?.user_metadata?.display_name as string | undefined) ||
     null;
   const email = user?.email ?? null;
-  const avatarUrl = (user?.user_metadata?.avatar_url as string | undefined) ?? null;
+  const avatarUrl = profileAvatar(user?.user_metadata);
   const initials = (() => {
     const n = displayName;
     if (n && n.trim()) {
@@ -433,7 +435,7 @@ export function AppShell({
                   </div>
                 )}
 
-                {/* AI Security Advisor button */}
+                {/* Security guidance; same neutral icon treatment as other toolbar controls. */}
                 {!isAdvisorPage && (
                   <button
                     id="ai-assistant-toggle"
@@ -449,10 +451,10 @@ export function AppShell({
                         : "border-border bg-card text-foreground hover:bg-secondary hover:border-accent/40",
                     )}
                   >
-                    <ShieldCheck
+                    <ChatCircleText
                       size={14}
-                      weight="duotone"
-                      className={aiOpen ? "text-accent-foreground" : "text-accent"}
+                      weight="regular"
+                      className={aiOpen ? "text-accent-foreground" : "text-muted-foreground"}
                     />
                     <span className="hidden md:inline">Security Advisor</span>
                   </button>

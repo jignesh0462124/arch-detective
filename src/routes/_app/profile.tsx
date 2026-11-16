@@ -1,13 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
-  User,
   EnvelopeSimple,
   ShieldCheck,
   SignOut,
   ImagesSquare,
-  X,
   CheckCircle,
 } from "@phosphor-icons/react";
 import { AppShell } from "@/components/brutal/AppShell";
@@ -18,6 +16,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { useActiveWorkspace } from "@/hooks/useWorkspace";
 import { fetchAuditEvents } from "@/lib/api/auditEvents";
 import { authErrorMessage, hasUnownedHistory } from "@/lib/authState";
+import { ProfileAvatar } from "@/components/profile/ProfileAvatar";
+import { ProfileArtworkPicker } from "@/components/profile/ProfileArtworkPicker";
+import { profileCover, type AppearanceKind } from "@/lib/profileAppearance";
 
 export const Route = createFileRoute("/_app/profile")({
   head: () => ({ meta: [{ title: "Profile · Archon" }] }),
@@ -28,7 +29,6 @@ function date(value?: string | null) {
   if (!value || !Number.isFinite(Date.parse(value))) return "Not available";
   return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium" }).format(new Date(value));
 }
-const covers = ["Grid", "Terrain", "Bauhaus", "Noir", "Circuit"];
 const coverKey = "archon-profile-cover";
 function ProfilePage() {
   return <ProfileContent />;
@@ -62,14 +62,10 @@ export function ProfileContent({
       // Keep the default cover if appearance storage is unavailable.
     }
   }, []);
-  const [imageFailed, setImageFailed] = useState(false);
-  const [avatarFailed, setAvatarFailed] = useState(false);
-  const [picker, setPicker] = useState(false);
-  const dialog = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
-    if (picker) dialog.current?.showModal();
-    else dialog.current?.close();
-  }, [picker]);
+  const [failedCover, setFailedCover] = useState<string | null>(null);
+  const [picker, setPicker] = useState<AppearanceKind | null>(null);
+  const [appearanceNotice, setAppearanceNotice] = useState("");
+  const coverSrc = profileCover(user?.user_metadata, cover);
   const [resetState, setResetState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [resetError, setResetError] = useState("");
   const [resetUntil, setResetUntil] = useState(0);
@@ -88,12 +84,11 @@ export function ProfileContent({
     setResetUntil(0);
     setSignOutError("");
     setSigningOut(false);
-    setAvatarFailed(false);
+    setPicker(null);
+    setAppearanceNotice("");
   }, [user?.id]);
   const rawName = user?.user_metadata?.full_name || user?.user_metadata?.display_name;
   const name = typeof rawName === "string" && rawName.trim() ? rawName : "Your account";
-  const avatar =
-    typeof user?.user_metadata?.avatar_url === "string" ? user.user_metadata.avatar_url : null;
   const confirmed = Boolean(user?.email_confirmed_at);
   const sendReset = async () => {
     if (!user?.email || resetState === "sending" || resetUntil > Date.now()) return;
@@ -134,18 +129,18 @@ export function ProfileContent({
         <section className="overflow-hidden rounded-lg border border-border bg-card">
           {!embedded && (
             <div className="relative h-28 bg-secondary sm:h-36">
-              {!imageFailed && (
+              {failedCover !== coverSrc && (
                 <img
-                  src={`/covers/cover-${cover}.jpg`}
+                  src={coverSrc}
                   alt=""
                   className="h-full w-full object-cover"
-                  onError={() => setImageFailed(true)}
+                  onError={() => setFailedCover(coverSrc)}
+                  decoding="async"
                 />
               )}
-              <div className="absolute inset-0 bg-black/40" />
               <button
                 type="button"
-                onClick={() => setPicker(true)}
+                onClick={() => setPicker("cover")}
                 className="absolute bottom-3 right-3 inline-flex min-h-10 items-center gap-2 rounded border border-white/50 bg-black/80 px-3 text-xs font-medium text-white"
               >
                 <ImagesSquare size={16} /> Change cover
@@ -153,18 +148,21 @@ export function ProfileContent({
             </div>
           )}
           <div className="flex items-center gap-4 p-5">
-            {avatar && !avatarFailed ? (
-              <img
-                src={avatar}
-                alt=""
-                onError={() => setAvatarFailed(true)}
-                className="size-14 shrink-0 rounded-lg object-cover"
+            <button
+              type="button"
+              onClick={() => setPicker("avatar")}
+              aria-label="Change profile image"
+              className="group flex shrink-0 flex-col items-center gap-1.5 rounded-lg p-1 focus-visible:shadow-ring"
+            >
+              <ProfileAvatar
+                metadata={user?.user_metadata}
+                email={user?.email}
+                className="size-16 rounded-xl border border-border text-lg group-hover:border-muted-foreground"
               />
-            ) : (
-              <div className="flex size-14 shrink-0 items-center justify-center rounded-lg bg-secondary text-accent">
-                <User size={28} />
-              </div>
-            )}
+              <span className="text-[11px] font-medium text-muted-foreground group-hover:text-foreground">
+                Change image
+              </span>
+            </button>
             <div className="min-w-0">
               <h2 className="break-words text-xl font-semibold">{name}</h2>
               <p className="mt-1 break-all text-sm text-muted-foreground">
@@ -177,6 +175,11 @@ export function ProfileContent({
             </div>
           </div>
         </section>
+        {appearanceNotice && (
+          <p role="status" className="text-sm text-muted-foreground">
+            {appearanceNotice}
+          </p>
+        )}
         {accountForm}
         <div className={embedded ? "grid min-w-0 gap-5" : "grid min-w-0 gap-5 md:grid-cols-2"}>
           <section className="min-w-0 rounded-lg border border-border bg-card p-5 sm:p-6">
@@ -328,57 +331,20 @@ export function ProfileContent({
           </p>
         )}
       </div>
-      <dialog
-        ref={dialog}
-        onClose={() => setPicker(false)}
-        className="m-auto w-[min(94vw,580px)] rounded-lg border border-border bg-card p-5 text-foreground backdrop:bg-black/60"
-        aria-labelledby="cover-title"
-      >
-        <div className="flex items-center justify-between">
-          <h2 id="cover-title" className="font-semibold">
-            Choose your profile cover
-          </h2>
-          <button
-            type="button"
-            aria-label="Close cover picker"
-            onClick={() => setPicker(false)}
-            className="rounded p-2"
-          >
-            <X size={18} />
-          </button>
-        </div>
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          {covers.map((label, index) => (
-            <button
-              type="button"
-              key={label}
-              aria-pressed={cover === index + 1}
-              onClick={() => {
-                setCover(index + 1);
-                setImageFailed(false);
-                try {
-                  localStorage.setItem(coverKey, String(index + 1));
-                } catch {
-                  /* Appearance still updates. */
-                }
-                setPicker(false);
-              }}
-              className="overflow-hidden rounded border border-border bg-secondary text-left"
-            >
-              <img
-                src={`/covers/cover-${index + 1}.jpg`}
-                alt=""
-                loading="lazy"
-                className="h-20 w-full object-cover"
-              />
-              <span className="block p-2 text-sm">
-                {label}
-                {cover === index + 1 ? " · Selected" : ""}
-              </span>
-            </button>
-          ))}
-        </div>
-      </dialog>
+      {picker && user && (
+        <ProfileArtworkPicker
+          key={`${user.id}:${picker}`}
+          kind={picker}
+          legacyCover={cover}
+          onClose={() => setPicker(null)}
+          onSaved={() => {
+            setAppearanceNotice(
+              picker === "avatar" ? "Profile image saved." : "Profile cover saved.",
+            );
+            setPicker(null);
+          }}
+        />
+      )}
     </Shell>
   );
 }

@@ -1,10 +1,10 @@
 # Python installation profiles
 
-Use a dedicated virtual environment and activate it before `npm run dev`; that script uses `python` from PATH. Never copy credentials into commands, test reports or version control.
+Use Python 3.12 (or the Docker-supported Python 3.11) in a dedicated virtual environment. `npm run dev` and `npm run dev:backend` prefer an activated environment, then `threatlens/.venv`, then `.venv`, before checking Python on PATH. The launcher checks the Python version and imports Uvicorn/asyncpg before starting; it does not install or change packages. Never copy credentials into commands, test reports or version control.
 
 ## Local API and progressive workbench
 
-From the repository root, using Python 3.12:
+From the repository root, using Python 3.12 (verify `python --version` before creating the environment):
 
 ```powershell
 python -m venv threatlens/.venv
@@ -16,6 +16,8 @@ npm run dev
 ```
 
 Do not recreate an existing environment in place during a deployment. Build and validate a separate environment, then switch processes deliberately. The cleanup verification used Python 3.12.14 on Windows with an isolated environment under ignored `output/cleanup-python-profile`.
+
+If Windows reports `An Application Control policy has blocked this file` while importing a native module, do not disable Application Control or unblock/rename DLLs to evade it. Use the approved project environment. If that environment is also blocked, ask your administrator to approve the intended Python installation. A global Python 3.14 installation is not the supported environment for these pinned dependencies.
 
 This profile supports the FastAPI application, Supabase-backed workbench and direct provider clients. It does **not** install the full Celery analysis toolchain, embedding models or research dependencies. Provider keys, Supabase configuration, private Storage, feature flags and migrations are still required for their corresponding features. An installation alone does not prove those services are configured correctly.
 

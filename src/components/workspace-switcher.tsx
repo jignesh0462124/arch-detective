@@ -128,13 +128,13 @@ export function WorkspaceSwitcher() {
           className={cn(
             "group relative z-30 flex w-full items-center gap-2.5 rounded-lg border border-border/80 bg-card/80 px-2.5 py-2 text-left transition-all",
             "hover:border-border hover:bg-sidebar-active focus:outline-none focus:ring-1 focus:ring-accent/40",
-            open && "border-accent/40 bg-sidebar-active shadow-sm",
+            open && "border-muted-foreground/40 bg-sidebar-active",
           )}
         >
           {/* Workspace avatar icon box */}
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-accent/15 border border-accent/25 text-accent font-mono text-xs font-bold uppercase transition-transform group-hover:scale-105">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border bg-secondary text-foreground text-xs font-semibold uppercase">
             {isLoading ? (
-              <CircleNotch size={15} className="animate-spin text-accent" />
+              <CircleNotch size={15} className="animate-spin text-muted-foreground" />
             ) : active?.name ? (
               active.name[0]
             ) : (
@@ -147,11 +147,11 @@ export function WorkspaceSwitcher() {
             <span className="block truncate text-[13px] font-semibold tracking-tight text-foreground leading-snug">
               {isLoading ? "Loading…" : active ? active.name : "Select workspace"}
             </span>
-            <span className="block truncate font-mono text-[10px] text-muted-foreground mt-0.5">
+            <span className="block truncate text-[11px] text-muted-foreground mt-0.5">
               {isLoading
                 ? "Connecting…"
                 : active
-                  ? `${active.role.toUpperCase()} · ${active.scan_count} scan${active.scan_count === 1 ? "" : "s"}`
+                  ? `${active.role.charAt(0).toUpperCase() + active.role.slice(1)} · ${active.scan_count} scan${active.scan_count === 1 ? "" : "s"}`
                   : "Choose project"}
             </span>
           </div>
@@ -174,17 +174,18 @@ export function WorkspaceSwitcher() {
             className="absolute left-0 right-0 top-[calc(100%+6px)] z-50 overflow-hidden rounded-lg border border-border bg-popover text-popover-foreground shadow-2xl animate-in fade-in-50 zoom-in-95 duration-100"
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-border/70 px-3 py-2 bg-muted/30">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
-                Workspaces
-              </span>
-              <span className="rounded-full bg-accent/15 px-2 py-0.5 font-mono text-[9px] font-semibold text-accent">
-                {workspaceList.length} Active
+            <div className="flex items-center justify-between border-b border-border px-3 py-2">
+              <span className="text-xs font-medium text-muted-foreground">Workspaces</span>
+              <span
+                className="text-xs tabular-nums text-muted-foreground"
+                aria-label={`${workspaceList.length} workspaces`}
+              >
+                {workspaceList.length}
               </span>
             </div>
 
             {/* Workspace list */}
-            <div className="max-h-56 overflow-y-auto divide-y divide-border/30 py-1">
+            <div className="max-h-56 overflow-y-auto py-1">
               {workspaceList.length === 0 ? (
                 <div className="px-3 py-4 text-center">
                   <Buildings
@@ -218,28 +219,25 @@ export function WorkspaceSwitcher() {
                       className={cn(
                         "group flex w-full items-center gap-2.5 px-3 py-2 text-left transition-colors",
                         isActive
-                          ? "bg-sidebar-active border-l-2 border-accent text-foreground font-semibold"
+                          ? "bg-sidebar-active border-l-2 border-foreground text-foreground font-semibold"
                           : "text-foreground hover:bg-muted/50 border-l-2 border-transparent",
                       )}
                     >
                       <span
                         className={cn(
-                          "flex h-6 w-6 shrink-0 items-center justify-center rounded-sm text-[11px] font-mono font-bold uppercase transition-colors",
-                          isActive
-                            ? "bg-accent/20 text-accent"
-                            : "bg-muted text-muted-foreground group-hover:text-foreground",
+                          "flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border bg-secondary text-[11px] font-semibold uppercase text-foreground",
                         )}
                       >
                         {ws.name[0] || "W"}
                       </span>
                       <div className="min-w-0 flex-1 overflow-hidden">
                         <p className="truncate text-[12px] font-medium leading-tight">{ws.name}</p>
-                        <p className="truncate font-mono text-[9px] text-muted-foreground mt-0.5">
+                        <p className="truncate text-[11px] text-muted-foreground mt-0.5">
                           {ws.slug} · {ws.scan_count} scan{ws.scan_count === 1 ? "" : "s"}
                         </p>
                       </div>
                       {isActive && (
-                        <Check size={14} weight="bold" className="shrink-0 text-accent" />
+                        <Check size={14} weight="regular" className="shrink-0 text-foreground" />
                       )}
                     </button>
                   );

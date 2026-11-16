@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { UserCircle } from "@phosphor-icons/react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { ProfileAvatar } from "@/components/profile/ProfileAvatar";
 
 export function AccountMenu() {
-  const { signOut, signingOut } = useAuth();
+  const { user, signOut, signingOut } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState("");
   async function leave() {
@@ -30,7 +30,11 @@ export function AccountMenu() {
         aria-label="Account menu"
         className="flex size-9 cursor-pointer list-none items-center justify-center rounded-md border border-border bg-card focus-visible:shadow-ring"
       >
-        <UserCircle size={19} />
+        <ProfileAvatar
+          metadata={user?.user_metadata}
+          email={user?.email}
+          className="size-6 text-[10px]"
+        />
       </summary>
       <div className="absolute right-0 z-50 mt-2 w-64 rounded-lg border border-border bg-card p-3 text-sm shadow-xl">
         <Link to="/settings" className="flex min-h-10 items-center rounded px-2 hover:bg-secondary">
