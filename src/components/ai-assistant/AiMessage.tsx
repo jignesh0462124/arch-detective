@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Check, Copy, ShieldCheck, User } from "@phosphor-icons/react";
+import { Check, Copy, User } from "@phosphor-icons/react";
+import { AdvisorIcon } from "@/components/ui/AdvisorIcon";
 import { cn } from "@/lib/utils";
 import type { UiMessage } from "@/hooks/useGroqChat";
 
@@ -324,7 +325,7 @@ export function AiMessage({ message }: AiMessageProps) {
       {/* Header Attribution */}
       <div className="flex items-center justify-between text-[10px] font-mono text-muted-foreground px-1">
         <div className="flex items-center gap-1.5">
-          <ShieldCheck size={13} weight="duotone" className="text-accent" />
+          <AdvisorIcon size={13} className="text-muted-foreground" />
           <span className="font-bold text-foreground">Security Advisor</span>
         </div>
 

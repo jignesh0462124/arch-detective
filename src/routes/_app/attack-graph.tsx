@@ -11,7 +11,6 @@ import {
   TreeStructure,
   DownloadSimple,
   Code,
-  ChatCircle,
   X,
   Copy,
   Check,
@@ -34,6 +33,7 @@ import { BrutalBadge } from "@/components/brutal/BrutalBadge";
 import { SectionCard } from "@/components/ui/section-card";
 import { StatTile } from "@/components/ui/stat-tile";
 import { SeverityBadge } from "@/components/ui/severity-badge";
+import { AdvisorIcon } from "@/components/ui/AdvisorIcon";
 import { useActiveWorkspace } from "@/hooks/useWorkspace";
 import { useAuth } from "@/hooks/useAuth";
 import { getFindingPage, getQueueFinding, findingError } from "@/lib/api/findingQueue";
@@ -1096,10 +1096,11 @@ function AttackGraphPage() {
                 <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground" /> Modeled component
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Vulnerable Component
+                <span className="h-2.5 w-2.5 rounded-sm border border-accent" /> Component with
+                findings
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-destructive" /> Selected target
+                <span className="h-2.5 w-2.5 rounded-sm border-2 border-primary" /> Selected node
               </span>
               <span className="inline-flex items-center gap-1.5 text-primary font-semibold">
                 <span className="inline-block h-0.5 w-3.5 bg-destructive rounded-full" /> Selected
@@ -1235,26 +1236,15 @@ function AttackGraphPage() {
                         onClick={() => setSelectedNodeId(node.id)}
                         className={cn(
                           "m-1 text-left rounded-md p-4 transition-colors cursor-pointer select-none shadow-xs flex flex-col justify-between border-2 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-1",
-                          isCompromised
-                            ? "border-destructive bg-destructive/10 dark:bg-destructive/15 hover:border-destructive"
-                            : isVulnerable
-                              ? "border-amber-500/80 bg-amber-500/10 hover:border-amber-500"
-                              : "border hairline bg-card hover:border-foreground/30",
+                          isCompromised || isVulnerable
+                            ? "border-accent/60 bg-card hover:border-accent"
+                            : "border hairline bg-card hover:border-foreground/30",
                           isSelected && "ring-2 ring-primary ring-offset-2 ring-offset-background",
                         )}
                         style={{ width: node.pw, height: node.ph }}
                       >
                         <div className="flex items-center justify-between">
-                          <div
-                            className={cn(
-                              "flex h-9 w-9 items-center justify-center rounded-sm border",
-                              isCompromised
-                                ? "bg-destructive/20 text-destructive border-destructive/30"
-                                : isVulnerable
-                                  ? "bg-amber-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30"
-                                  : "bg-secondary text-foreground hairline",
-                            )}
-                          >
+                          <div className="flex h-9 w-9 items-center justify-center rounded-sm border border-border bg-secondary text-muted-foreground">
                             {node.metadata?.file ? (
                               <Code size={18} weight="duotone" />
                             ) : (
@@ -1262,20 +1252,12 @@ function AttackGraphPage() {
                             )}
                           </div>
                           {isCompromised ? (
-                            <BrutalBadge
-                              tone="critical"
-                              dot
-                              className="text-[10px] font-bold py-0.5 px-2"
-                            >
-                              Target
+                            <BrutalBadge tone="outline" className="text-[11px] py-0.5 px-2">
+                              Finding
                             </BrutalBadge>
                           ) : isVulnerable ? (
-                            <BrutalBadge
-                              tone="high"
-                              dot
-                              className="text-[10px] font-bold py-0.5 px-2"
-                            >
-                              Vulnerable
+                            <BrutalBadge tone="outline" className="text-[11px] py-0.5 px-2">
+                              Has findings
                             </BrutalBadge>
                           ) : (
                             <BrutalBadge tone="ghost" className="text-[10px] font-mono py-0.5 px-2">
@@ -1284,12 +1266,7 @@ function AttackGraphPage() {
                           )}
                         </div>
                         <div>
-                          <div
-                            className={cn(
-                              "text-sm font-semibold line-clamp-2 leading-5 break-words",
-                              isCompromised ? "text-destructive" : "text-foreground",
-                            )}
-                          >
+                          <div className="text-sm font-semibold line-clamp-2 leading-5 break-words text-foreground">
                             {node.label}
                           </div>
                           <div
@@ -1315,10 +1292,14 @@ function AttackGraphPage() {
                       {isLiveScan ? "Finding location" : "Example target"}
                     </span>
                     {activeThreat && (
-                      <span className="font-mono text-[11px] font-bold bg-destructive/15 text-destructive px-2 py-0.5 rounded-xs border border-destructive/20">
-                        CVSS {formatCvss(activeThreat.cvssScore)} ·{" "}
-                        {activeThreat.severity.toUpperCase()}
-                      </span>
+                      <>
+                        <SeverityBadge severity={activeThreat.severity} size="sm" />
+                        <span className="text-xs text-foreground">
+                          {formatCvss(activeThreat.cvssScore) === "N/A"
+                            ? "CVSS unavailable"
+                            : `CVSS ${formatCvss(activeThreat.cvssScore)}`}
+                        </span>
+                      </>
                     )}
                     <span className="text-xs text-muted-foreground hidden sm:inline">
                       {isLiveScan ? "Recorded source location" : "Hypothetical target"}
@@ -1406,14 +1387,16 @@ function AttackGraphPage() {
                             {threat.title}
                           </span>
                         </div>
-                        <span className="font-mono text-[11px] font-bold text-destructive shrink-0">
-                          {formatCvss(threat.cvssScore)}
+                        <span className="text-xs text-muted-foreground shrink-0">
+                          {formatCvss(threat.cvssScore) === "N/A"
+                            ? "Score unavailable"
+                            : `CVSS ${formatCvss(threat.cvssScore)}`}
                         </span>
                       </div>
                       <div className="flex flex-wrap items-center gap-1.5 mt-2">
                         <SeverityBadge severity={threat.severity} size="sm" />
                         <BrutalBadge
-                          tone="primary"
+                          tone="outline"
                           className="text-[10px] font-semibold whitespace-nowrap"
                         >
                           {threat.strideCode}
@@ -1480,7 +1463,7 @@ function AttackGraphPage() {
                 <div className="flex flex-wrap items-center gap-2 pb-3.5 border-b border-border/80">
                   <SeverityBadge severity={activeThreat.severity} size="sm" />
 
-                  <span className="inline-flex items-center gap-1 rounded-sm border border-destructive/30 bg-destructive/10 px-2.5 py-0.5 font-mono text-[11px] font-bold text-destructive">
+                  <span className="inline-flex items-center gap-1 rounded border border-border bg-card px-2 py-0.5 text-xs text-foreground">
                     <span>CVSS</span>
                     <span>{formatCvss(activeThreat.cvssScore)}</span>
                   </span>
@@ -2167,7 +2150,7 @@ function AttackGraphPage() {
                     handleOpenAdvisor(activeThreat);
                   }}
                 >
-                  <ChatCircle size={14} weight="bold" /> Open Security Advisor
+                  <AdvisorIcon size={14} /> Open Security Advisor
                 </BrutalButton>
               </div>
             </div>

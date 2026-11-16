@@ -286,7 +286,9 @@ export function ReportEvidence({
                       <span className="text-xs text-muted-foreground">
                         {stateLabel(finding.state)}
                       </span>
-                      <span className="text-xs">CVSS {formatCvss(finding.cvss_score)}</span>
+                      <span className="text-xs">
+                        CVSS {formatCvss(finding.cvss_score) ?? "not available"}
+                      </span>
                     </div>
                   </button>
                 </li>
@@ -353,7 +355,7 @@ export function ReportEvidence({
                   {detail.data.finding.line_number
                     ? `:${detail.data.finding.line_number}`
                     : ""} · {stateLabel(detail.data.finding.state)} · CVSS{" "}
-                  {formatCvss(detail.data.finding.cvss_score)}
+                  {formatCvss(detail.data.finding.cvss_score) ?? "Not available"}
                 </p>
                 <p className="whitespace-pre-wrap break-words">
                   {detail.data.finding.description || "No description recorded."}

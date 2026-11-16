@@ -5,11 +5,12 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   SquaresFour,
   TreeStructure,
-  ShieldWarning,
+  BugBeetle,
+  ListChecks,
   FileText,
   CaretRight,
+  CaretLeft,
   ClockCounterClockwise,
-  ShieldCheck,
   FolderOpen,
   UserCircle,
   User,
@@ -17,9 +18,7 @@ import {
   Gear,
   List,
   X,
-  SidebarSimple,
   Buildings,
-  ChatCircleText,
 } from "@phosphor-icons/react";
 import { ThemeToggle } from "@/components/brutal/ThemeToggle";
 import { ArchonWordmark } from "@/components/ui/ArchonWordmark";
@@ -34,16 +33,17 @@ import { getStoredModelId, setStoredModelId } from "@/lib/api/ai-models";
 import { useAuth } from "@/hooks/useAuth";
 import { useSidebarPreference } from "@/lib/sidebar";
 import { profileAvatar } from "@/lib/profileAppearance";
+import { AdvisorIcon } from "@/components/ui/AdvisorIcon";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: SquaresFour },
   { to: "/workspace", label: "Codebase Audit", icon: FolderOpen },
   { to: "/attack-graph", label: "Attack Graph", icon: TreeStructure },
-  { to: "/findings", label: "Findings", icon: ShieldWarning },
-  { to: "/fix-verification", label: "Fix verification", icon: ShieldCheck },
+  { to: "/findings", label: "Findings", icon: BugBeetle },
+  { to: "/fix-verification", label: "Fix verification", icon: ListChecks },
   { to: "/reports", label: "Reports", icon: FileText },
   { to: "/audit-log", label: "Audit log", icon: ClockCounterClockwise },
-  { to: "/advisor", label: "Security Advisor", icon: ShieldCheck },
+  { to: "/advisor", label: "Security Advisor", icon: AdvisorIcon },
   { to: "/settings", label: "Settings", icon: Gear },
 ] as const;
 
@@ -358,20 +358,38 @@ export function AppShell({
           data-testid="desktop-sidebar"
           data-collapsed={collapsed}
           className={cn(
-            "sticky top-0 hidden h-dvh shrink-0 self-start flex-col overflow-y-auto overflow-x-hidden border-r border-border bg-sidebar px-3 py-4 lg:flex",
+            "sticky top-0 z-30 hidden h-dvh shrink-0 self-start border-r border-border bg-sidebar lg:block",
             "transition-[width] duration-150 motion-reduce:transition-none",
             collapsed ? "w-[72px]" : "w-[248px]",
           )}
         >
-          <SidebarContents
-            {...sidebarProps}
-            compact={collapsed}
-            workspaceRef={workspaceRef}
-            expandWorkspace={() => {
-              focusWorkspace.current = true;
-              setSidebarPreference("expanded");
-            }}
-          />
+          <div className="flex h-full min-h-0 flex-col overflow-y-auto overflow-x-hidden px-3 py-4">
+            <SidebarContents
+              {...sidebarProps}
+              compact={collapsed}
+              workspaceRef={workspaceRef}
+              expandWorkspace={() => {
+                focusWorkspace.current = true;
+                setSidebarPreference("expanded");
+              }}
+            />
+          </div>
+          <button
+            type="button"
+            data-testid="desktop-sidebar-toggle"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-expanded={!collapsed}
+            aria-controls={sidebarId}
+            onClick={() => setSidebarPreference(collapsed ? "expanded" : "collapsed")}
+            className="absolute right-0 top-1/2 flex size-11 -translate-y-1/2 translate-x-1/2 items-center justify-center rounded-full border border-border bg-sidebar text-foreground shadow-sm transition-colors hover:border-accent hover:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          >
+            {collapsed ? (
+              <CaretRight size={19} weight="bold" aria-hidden="true" />
+            ) : (
+              <CaretLeft size={19} weight="bold" aria-hidden="true" />
+            )}
+          </button>
         </aside>
 
         {/* Main */}
@@ -385,16 +403,6 @@ export function AppShell({
           {/* Header */}
           <header className="border-b border-border bg-background">
             <div className="flex items-center justify-between gap-2 px-2 py-3 sm:gap-3 sm:px-5">
-              <button
-                type="button"
-                aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-                aria-expanded={!collapsed}
-                aria-controls={sidebarId}
-                className="hidden size-11 shrink-0 items-center justify-center rounded-md border border-border bg-card hover:bg-secondary focus-visible:outline focus-visible:outline-accent lg:flex"
-                onClick={() => setSidebarPreference(collapsed ? "expanded" : "collapsed")}
-              >
-                <SidebarSimple size={20} />
-              </button>
               <button
                 ref={drawerTrigger}
                 type="button"
@@ -451,9 +459,8 @@ export function AppShell({
                         : "border-border bg-card text-foreground hover:bg-secondary hover:border-accent/40",
                     )}
                   >
-                    <ChatCircleText
+                    <AdvisorIcon
                       size={14}
-                      weight="regular"
                       className={aiOpen ? "text-accent-foreground" : "text-muted-foreground"}
                     />
                     <span className="hidden md:inline">Security Advisor</span>

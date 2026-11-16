@@ -13,6 +13,8 @@ const bundle = await build({
       import { SolutionPreview } from "./src/components/audit-workbench/SolutionPreview";
       import { SaaSHeroMotionGraphic } from "./src/components/marketing/SaaSHeroMotionGraphic";
       import { PrivacyContent } from "./src/components/settings/LegalContent";
+      import { SeverityBadge } from "./src/components/ui/severity-badge";
+      import { CoverageBar } from "./src/components/ui/coverage-bar";
       export { advisorErrorMessage } from "./src/lib/advisorPresentation";
       export const selector = () => renderToStaticMarkup(createElement(AiModelSelector, {
         selectedModel: "glm-5-3-flash", onSelectModel: () => {}
@@ -21,6 +23,8 @@ const bundle = await build({
       export const solution = (message) => renderToStaticMarkup(createElement(SolutionPreview, {message}));
       export const workflow = () => renderToStaticMarkup(createElement(SaaSHeroMotionGraphic));
       export const privacy = () => renderToStaticMarkup(createElement(PrivacyContent));
+      export const severity = (severity) => renderToStaticMarkup(createElement(SeverityBadge, {severity}));
+      export const coverage = (pct) => renderToStaticMarkup(createElement(CoverageBar, {label:"SOC 2", pct}));
     `,
     resolveDir: process.cwd(),
   },
@@ -76,6 +80,48 @@ test("collapsed model selector is neutral and remains accessible", () => {
   assert.doesNotMatch(html, /GLM|ONLINE|Neural|Fastest|Recommended|tok\/s/);
 });
 
+test("severity labels retain all four levels in one readable outlined style", () => {
+  for (const level of ["critical", "high", "medium", "low"]) {
+    const html = ui.severity(level);
+    assert.match(html, new RegExp(`>${level}<`));
+    assert.match(html, /rounded border bg-card/);
+    assert.match(html, /text-xs/);
+    assert.doesNotMatch(html, /severity-bg-|rounded-full|<svg/);
+  }
+});
+
+test("framework bars remain visible at midrange scores and expose truthful accessible values", () => {
+  for (const pct of [0, 50, 80, 100]) {
+    const html = ui.coverage(pct);
+    assert.match(html, /role="meter"/);
+    assert.match(html, new RegExp(`aria-valuenow="${pct}"`));
+    assert.match(html, new RegExp(`width:${pct}%`));
+    assert.match(html, /bg-foreground\/75/);
+    assert.match(html, /not certification/);
+  }
+  for (const pct of [NaN, Infinity]) {
+    assert.match(ui.coverage(pct), /Not available/);
+    assert.doesNotMatch(ui.coverage(pct), /role="meter"/);
+  }
+});
+
+test("finding list does not stretch to the evidence panel or force dark-only text", async () => {
+  const source = await readFile("src/routes/_app/findings.tsx", "utf8");
+  assert.match(source, /grid-cols-1 items-start gap-5 xl:grid-cols-12/);
+  const list = source.slice(
+    source.indexOf('aria-label="Findings list"'),
+    source.indexOf("{selectedId && ("),
+  );
+  assert.ok(list.includes("Previous"));
+  assert.doesNotMatch(list, /text-cream|text-white|border-white/);
+});
+
+test("report rows and details explain missing CVSS without inventing a score", async () => {
+  const source = await readFile("src/routes/_app/reports.$reportId.tsx", "utf8");
+  assert.match(source, /formatCvss\(finding\.cvss_score\) \?\? "not available"/);
+  assert.match(source, /formatCvss\(detail\.data\.finding\.cvss_score\) \?\? "Not available"/);
+});
+
 test("responses retain their content without repeated model badges", () => {
   const html = ui.message({
     id: "fixture",
@@ -84,8 +130,24 @@ test("responses retain their content without repeated model badges", () => {
     content: "Review and test this proposed change. CWE-89.",
   });
   assert.match(html, /Security Advisor/);
+  assert.match(html, /data-advisor-icon=""/);
   assert.match(html, /Review and test this proposed change\. CWE-89\./);
   assert.doesNotMatch(html, /GLM|Neural|ANALYST QUERY/);
+});
+
+test("Advisor marks share one regular speech-bubble design without restoring prompt decorations", async () => {
+  const icon = await readFile("src/components/ui/AdvisorIcon.tsx", "utf8");
+  assert.match(icon, /ChatCircleText/);
+  assert.match(icon, /weight="regular"/);
+  for (const path of [
+    "src/components/ai-assistant/AiMessage.tsx",
+    "src/routes/_app/attack-graph.tsx",
+  ])
+    assert.match(await readFile(path, "utf8"), /<AdvisorIcon/);
+  assert.doesNotMatch(
+    await readFile("src/components/ai-assistant/AiAssistantPanel.tsx", "utf8"),
+    /<AdvisorIcon|<ShieldCheck/,
+  );
 });
 
 test("response formatting preserves literal hashes and escapes untrusted code", () => {

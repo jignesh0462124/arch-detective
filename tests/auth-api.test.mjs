@@ -66,6 +66,23 @@ test("password unchanged; confirmation and reset use exact callback routes", asy
   await api.resetPassword("a@example.test");
   assert.equal(calls.resetPasswordForEmail[1].redirectTo, "https://archon.example/reset-password");
 });
+test("GitHub sign-in preserves the internal destination and rejects initiation failures", async () => {
+  let request;
+  globalThis.sdkFixture = {
+    signInWithOAuth: async (options) => {
+      request = options;
+      return { error: null };
+    },
+  };
+  await api.signInWithGitHub("/reports");
+  assert.equal(request.provider, "github");
+  assert.equal(request.options.redirectTo, "https://archon.example/login?next=%2Freports");
+  await api.signInWithGitHub("https://untrusted.example");
+  assert.equal(request.options.redirectTo, "https://archon.example/login?next=%2Fdashboard");
+  globalThis.sdkFixture.signInWithOAuth = async () => ({ error: new Error("offline") });
+  await assert.rejects(api.signInWithGitHub(), /offline/);
+});
+
 test("401 revalidates without replaying a mutation", async () => {
   let requests = 0,
     checks = 0;

@@ -45,6 +45,19 @@ for (const theme of ["light", "dark"]) {
         `${surface} control text`,
       );
     }
+    const fill =
+      "#" +
+      tokens.foreground
+        .slice(1)
+        .match(/../g)
+        .map((value, index) => {
+          const track = parseInt(tokens.muted.slice(1).match(/../g)[index], 16);
+          return Math.round(parseInt(value, 16) * 0.75 + track * 0.25)
+            .toString(16)
+            .padStart(2, "0");
+        })
+        .join("");
+    assert.ok(ratio(fill, tokens.muted) >= 3, `${theme} assessment bar is distinct from its track`);
     for (const severity of ["critical", "high", "medium", "low"]) {
       const rgba = block
         .match(new RegExp(`--severity-${severity}-bg:\\s*rgba\\(([^)]+)\\)`))[1]

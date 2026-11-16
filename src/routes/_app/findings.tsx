@@ -386,15 +386,14 @@ function FindingQueue({
           }
         />
       ) : (
-        <section className="grid min-w-0 grid-cols-1 gap-5 xl:grid-cols-12">
+        <section className="grid min-w-0 grid-cols-1 items-start gap-5 xl:grid-cols-12">
           <SectionCard
             className={cn("min-w-0", selectedId ? "xl:col-span-7" : "xl:col-span-12")}
-            variant="dark"
             padding="none"
             eyebrow="// FINDINGS"
             title={`${matching} matching finding${matching === 1 ? "" : "s"}`}
           >
-            <div className="divide-y divide-cream/15" aria-label="Findings list">
+            <div className="divide-y divide-border" aria-label="Findings list">
               {page.data.items.map((f) => (
                 <button
                   key={f.id}
@@ -408,12 +407,12 @@ function FindingQueue({
                   className={cn(
                     "block w-full min-w-0 border-l-2 p-4 text-left transition-colors sm:px-6",
                     selectedId === f.id
-                      ? "border-primary bg-cream/10"
-                      : "border-transparent hover:bg-cream/5",
+                      ? "border-primary bg-secondary"
+                      : "border-transparent hover:bg-secondary/60",
                   )}
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <span className="min-w-0 break-words text-sm font-medium text-cream">
+                    <span className="min-w-0 break-words text-sm font-medium text-foreground">
                       {f.title}
                     </span>
                     <span className="inline-flex shrink-0 rounded-md bg-card">
@@ -422,11 +421,11 @@ function FindingQueue({
                       </SeverityBadge>
                     </span>
                   </div>
-                  <p className="mt-2 break-all font-mono text-[11px] text-cream/60">
+                  <p className="mt-2 break-all font-mono text-[11px] text-muted-foreground">
                     {f.file_path || "No file location recorded"}
                     {f.line_number != null ? `:${f.line_number}` : ""}
                   </p>
-                  <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-cream/70">
+                  <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
                     <span>{stateLabel(f.state)}</span>
                     <span>{f.source}</span>
                     {f.cwe_id && <span>{f.cwe_id}</span>}
@@ -434,7 +433,7 @@ function FindingQueue({
                 </button>
               ))}
             </div>
-            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-cream/15 p-4 text-cream/70">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border p-4 text-muted-foreground">
               <span className="text-xs" aria-live="polite">
                 {offset + 1}–{Math.min(offset + page.data.items.length, matching)} of {matching}
               </span>
@@ -442,7 +441,7 @@ function FindingQueue({
                 <BrutalButton
                   size="sm"
                   variant="ghost"
-                  className="border border-white/25 text-white hover:bg-white/10"
+                  className="border border-border text-foreground hover:bg-secondary"
                   disabled={offset === 0 || update.isPending}
                   onClick={() => changePage(Math.max(0, offset - 50))}
                 >
@@ -451,7 +450,7 @@ function FindingQueue({
                 <BrutalButton
                   size="sm"
                   variant="ghost"
-                  className="border border-white/25 text-white hover:bg-white/10"
+                  className="border border-border text-foreground hover:bg-secondary"
                   disabled={offset + 50 >= matching || update.isPending}
                   onClick={() => changePage(offset + 50)}
                 >

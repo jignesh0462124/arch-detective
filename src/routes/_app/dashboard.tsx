@@ -6,7 +6,6 @@ import {
   Clock,
   FileText,
   Scan,
-  ShieldWarning,
   WarningCircle,
 } from "@phosphor-icons/react";
 import { AppShell } from "@/components/brutal/AppShell";
@@ -270,14 +269,9 @@ function WorkspaceDashboard({ userId, workspaceId }: { userId: string; workspace
                 className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="flex min-w-0 items-start gap-3">
-                  <ShieldWarning
-                    size={18}
-                    className="mt-0.5 shrink-0 text-accent"
-                    aria-hidden="true"
-                  />
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <SeverityBadge severity={finding.severity} size="sm" dot />
+                      <SeverityBadge severity={finding.severity} size="sm" />
                       <p className="min-w-0 break-words text-sm font-semibold text-foreground">
                         {finding.title}
                       </p>
@@ -349,12 +343,9 @@ function MetricCard({
   return (
     <div className="min-w-0 rounded-lg border border-border bg-card p-4 shadow-sm sm:p-5">
       <p className="text-xs font-medium text-muted-foreground">{label}</p>
-      <p
-        className={`mt-2 text-3xl font-semibold tabular-nums ${urgent ? "text-severity-critical" : "text-foreground"}`}
-      >
-        {value ?? "—"}
-      </p>
+      <p className="mt-2 text-3xl font-semibold tabular-nums text-foreground">{value ?? "—"}</p>
       <p className="mt-2 text-xs text-muted-foreground">{scope}</p>
+      {urgent && <p className="mt-1 text-xs text-severity-critical">Needs review</p>}
     </div>
   );
 }
@@ -362,15 +353,14 @@ function MetricCard({
 function StatusBadge({ status }: { status: DashboardScan["status"] }) {
   const className =
     status === "completed"
-      ? "bg-success/10 text-success"
+      ? "text-success"
       : status === "failed" || status === "cancelled"
-        ? "bg-destructive/10 text-destructive"
-        : "bg-accent/10 text-accent";
+        ? "text-destructive"
+        : "text-foreground";
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${className}`}
+      className={`inline-flex min-h-[24px] items-center rounded border border-border bg-card px-2 py-0.5 text-xs font-medium ${className}`}
     >
-      <span className="size-1.5 rounded-full bg-current" aria-hidden="true" />
       {dashboardScanStatus(status)}
     </span>
   );

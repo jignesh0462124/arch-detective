@@ -300,7 +300,7 @@ function FindingInspector({
                       Reference IDs: {control.rag_chunk_ids.join(", ")}
                     </p>
                   ) : null}
-                  <span className="mt-3 inline-block rounded border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-[10px]">
+                  <span className="mt-3 inline-block rounded border border-border bg-secondary px-2 py-1 text-xs text-muted-foreground">
                     Suggested — review required
                   </span>
                 </section>

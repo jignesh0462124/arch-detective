@@ -4,10 +4,10 @@ import { cn } from "@/lib/utils";
 export type SeverityLevel = "critical" | "high" | "medium" | "low";
 
 const SEVERITY_CLASS: Record<SeverityLevel, string> = {
-  critical: "severity-bg-critical",
-  high: "severity-bg-high",
-  medium: "severity-bg-medium",
-  low: "severity-bg-low",
+  critical: "text-severity-critical border-severity-critical/40",
+  high: "text-severity-high border-severity-high/40",
+  medium: "text-severity-medium border-severity-medium/40",
+  low: "text-severity-low border-severity-low/40",
 };
 
 const SEVERITY_DOT: Record<SeverityLevel, string> = {
@@ -32,12 +32,12 @@ export function SeverityBadge({
   size = "md",
   className,
 }: SeverityBadgeProps) {
-  const sizeClass = size === "sm" ? "px-1.5 py-0.5 text-[10px]" : "px-2 py-0.5 text-xs";
+  const sizeClass = size === "sm" ? "px-2 py-0.5 text-[11px]" : "px-2 py-0.5 text-xs";
 
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-md font-medium",
+        "inline-flex min-h-[22px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded border bg-card font-medium leading-4 capitalize",
         SEVERITY_CLASS[severity],
         sizeClass,
         className,

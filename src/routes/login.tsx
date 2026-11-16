@@ -2,12 +2,12 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, GithubLogo, EnvelopeSimple } from "@phosphor-icons/react";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { ThemeToggle } from "@/components/brutal/ThemeToggle";
-import { MarketingBackdrop } from "@/components/marketing/MarketingChrome";
 import { ArchonWordmark } from "@/components/ui/ArchonWordmark";
 import { useAuth } from "@/hooks/useAuth";
 import { resendConfirmation, signInWithGitHub } from "@/lib/api/auth";
 import { authErrorMessage, safeAuthDestination } from "@/lib/authState";
 import { authCallbackFailed } from "@/lib/supabase";
+import "@/components/auth/auth-page.css";
 
 type Mode = "signin" | "signup" | "forgot";
 export const Route = createFileRoute("/login")({
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/login")({
   component: AuthPage,
 });
 const inputClass =
-  "h-12 w-full rounded-lg border border-input bg-background px-4 text-sm outline-none focus:border-accent focus:shadow-ring disabled:opacity-60";
+  "auth-input h-12 w-full rounded-md border border-input bg-background px-4 text-sm outline-none focus:border-accent focus:shadow-ring disabled:opacity-60";
 export function AuthPage() {
   const search = Route.useSearch();
   const navigate = useNavigate();
@@ -142,309 +142,311 @@ export function AuthPage() {
     }
   }
   return (
-    <div className="relative min-h-screen bg-background text-foreground antialiased selection:bg-accent/20">
-      <MarketingBackdrop />
-
-      <div className="relative z-10 flex min-h-screen flex-col">
-        <header className="border-b border-border bg-background/95 backdrop-blur-md">
-          <div className="mx-auto flex min-h-16 max-w-[1280px] items-center justify-between px-4 sm:px-6">
-            <Link to="/" aria-label="Archon home">
-              <ArchonWordmark size="sm" />
+    <main className="auth-page text-foreground antialiased selection:bg-accent/20">
+      <section className="auth-shell" aria-labelledby="auth-title">
+        <header className="auth-header">
+          <div className="auth-brand">
+            <Link
+              to="/"
+              aria-label="Archon home"
+              className="auth-focus inline-flex min-h-11 items-center rounded-sm"
+            >
+              <ArchonWordmark size="md" hideTagline />
             </Link>
-            <div className="flex items-center gap-2">
-              <Link
-                to="/"
-                aria-label="Back to site"
-                className="flex min-h-10 items-center gap-2 px-3 text-sm text-muted-foreground"
-              >
-                <ArrowLeft size={14} />
-                <span className="hidden sm:inline">Back to site</span>
-              </Link>
-              <ThemeToggle />
-            </div>
+          </div>
+          <div className="auth-navigation">
+            <Link
+              to="/"
+              aria-label="Back to site"
+              className="auth-focus flex min-h-11 items-center gap-2 rounded-sm px-2 text-sm"
+            >
+              <ArrowLeft size={16} aria-hidden="true" />
+              <span className="hidden sm:inline">Back to site</span>
+            </Link>
+            <ThemeToggle className="size-11 lg:border-white/25 lg:bg-transparent lg:text-[#f5f1ec] lg:hover:bg-white/10" />
           </div>
         </header>
-        <main className="mx-auto w-full max-w-[1280px] px-4 py-6 sm:px-6 sm:py-10">
-          <section className="grid overflow-hidden rounded-xl border border-border bg-card lg:min-h-[740px] lg:grid-cols-12">
-            <div className="flex min-w-0 items-center justify-center px-5 py-8 sm:px-10 lg:col-span-6 lg:px-16 lg:py-12">
-              <div className="w-full max-w-[420px]">
-                <p className="mb-5 border-l-2 border-accent pl-3 text-xs font-medium tracking-wide text-muted-foreground">
-                  ACCOUNT ACCESS
-                </p>
-                <div className="mb-8">
-                  <h1 className="text-[32px] font-semibold leading-tight sm:text-4xl">
-                    {mode === "signup"
-                      ? "Create your account"
-                      : mode === "forgot"
-                        ? "Forgot your password?"
-                        : "Welcome back"}
-                  </h1>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {mode === "signup"
-                      ? "Create an account, verify your email if requested, then create or join a workspace."
-                      : mode === "forgot"
-                        ? "Enter your account email. We’ll send instructions to reset your password."
-                        : "Sign in to review your scans, findings and audit reports."}
-                  </p>
-                </div>
-                {auth.status === "error" && (
-                  <div role="alert" className="mb-4 text-sm">
-                    {auth.error}{" "}
-                    <button className="underline" onClick={() => void auth.retry()}>
-                      Retry session check
-                    </button>
-                  </div>
+        <div className="auth-form-area" data-mode={mode}>
+          <div className="auth-form-content">
+            <div className="auth-introduction">
+              <h1 id="auth-title" className="auth-title">
+                {mode === "signup"
+                  ? "Create your account"
+                  : mode === "forgot"
+                    ? "Forgot your password?"
+                    : "Welcome back"}
+              </h1>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                {mode === "signup"
+                  ? "Save your audits and review findings in one workspace."
+                  : mode === "forgot"
+                    ? "Enter your account email. We’ll send instructions to reset your password."
+                    : "Sign in to review your scans, findings and audit reports."}
+              </p>
+            </div>
+            {auth.status === "error" && (
+              <div role="alert" className="mb-4 text-sm">
+                {auth.error}{" "}
+                <button className="underline" onClick={() => void auth.retry()}>
+                  Retry session check
+                </button>
+              </div>
+            )}
+            {error && (
+              <p
+                id="auth-error"
+                role="alert"
+                className="mb-4 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm"
+              >
+                {error}
+              </p>
+            )}
+            {message && (
+              <div
+                role="status"
+                className="mb-4 rounded-md border border-accent/30 bg-accent/10 p-3 text-sm leading-relaxed"
+              >
+                <EnvelopeSimple size={18} className="mb-2 text-accent" />
+                {message}
+              </div>
+            )}
+            <form
+              onInput={(event) => {
+                const confirm = event.currentTarget.elements.namedItem("confirm");
+                if (confirm instanceof HTMLInputElement) confirm.setCustomValidity("");
+              }}
+              onSubmit={(event) => void submit(event)}
+              aria-describedby={error ? "auth-error" : undefined}
+              aria-busy={busy || auth.isLoading}
+            >
+              <fieldset disabled={busy || auth.isLoading} className="auth-fields">
+                {mode === "signup" && (
+                  <label className="block text-sm font-medium">
+                    Full name
+                    <input
+                      name="name"
+                      autoComplete="name"
+                      required
+                      maxLength={100}
+                      placeholder="Your full name"
+                      className={inputClass + " mt-1.5"}
+                    />
+                  </label>
                 )}
-                {error && (
-                  <p
-                    id="auth-error"
-                    role="alert"
-                    className="mb-4 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm"
-                  >
-                    {error}
-                  </p>
-                )}
-                {message && (
-                  <div
-                    role="status"
-                    className="mb-4 rounded-md border border-accent/30 bg-accent/10 p-3 text-sm leading-relaxed"
-                  >
-                    <EnvelopeSimple size={18} className="mb-2 text-accent" />
-                    {message}
-                  </div>
-                )}
-                <form
-                  onInput={(event) => {
-                    const confirm = event.currentTarget.elements.namedItem("confirm");
-                    if (confirm instanceof HTMLInputElement) confirm.setCustomValidity("");
-                  }}
-                  onSubmit={(event) => void submit(event)}
-                  aria-describedby={error ? "auth-error" : undefined}
-                >
-                  <fieldset disabled={busy || auth.isLoading} className="space-y-4">
-                    {mode === "signup" && (
-                      <label className="block text-sm font-medium">
-                        Full name
-                        <input
-                          name="name"
-                          autoComplete="name"
-                          required
-                          maxLength={100}
-                          className={inputClass + " mt-1.5"}
-                        />
+                <label className="block text-sm font-medium">
+                  Email address
+                  <input
+                    name="email"
+                    type="email"
+                    autoComplete={mode === "signin" ? "username" : "email"}
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    className={inputClass + " mt-1.5"}
+                  />
+                </label>
+                {mode !== "forgot" && (
+                  <div>
+                    <div className="mb-1.5 flex items-center justify-between gap-2">
+                      <label htmlFor="auth-password" className="text-sm font-medium">
+                        Password
                       </label>
-                    )}
-                    <label className="block text-sm font-medium">
-                      Email address
+                      {mode === "signin" && (
+                        <button
+                          type="button"
+                          onClick={() => switchMode("forgot")}
+                          className="auth-focus min-h-11 rounded-sm text-sm text-accent hover:underline"
+                        >
+                          Forgot password?
+                        </button>
+                      )}
+                    </div>
+                    <div className="relative">
                       <input
-                        name="email"
-                        type="email"
-                        autoComplete={mode === "signin" ? "username" : "email"}
+                        id="auth-password"
+                        name="password"
+                        type={show ? "text" : "password"}
+                        autoComplete={mode === "signup" ? "new-password" : "current-password"}
                         required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="you@example.com"
+                        minLength={mode === "signup" ? 8 : undefined}
+                        onKeyUp={(e) => setCaps(e.getModifierState("CapsLock"))}
+                        onBlur={() => setCaps(false)}
+                        aria-describedby="password-help"
+                        placeholder={mode === "signup" ? "Create a password" : undefined}
+                        className={inputClass + " pr-16"}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShow((v) => !v)}
+                        aria-label={show ? "Hide password" : "Show password"}
+                        aria-pressed={show}
+                        aria-controls="auth-password"
+                        className="auth-focus absolute right-0.5 top-0.5 flex h-11 w-14 items-center justify-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground"
+                      >
+                        <span className="text-xs">{show ? "Hide" : "Show"}</span>
+                      </button>
+                    </div>
+                    <p
+                      id="password-help"
+                      className="mt-1.5 text-xs leading-relaxed text-muted-foreground"
+                    >
+                      {caps ? "Caps Lock is on. " : ""}
+                      {mode === "signup"
+                        ? "At least 8 characters. A longer, unique password is recommended."
+                        : ""}
+                    </p>
+                  </div>
+                )}
+                {mode === "signup" && (
+                  <>
+                    <label className="block text-sm font-medium">
+                      Confirm password
+                      <input
+                        name="confirm"
+                        type={show ? "text" : "password"}
+                        autoComplete="new-password"
+                        required
+                        placeholder="Re-enter your password"
+                        onInput={(e) => e.currentTarget.setCustomValidity("")}
                         className={inputClass + " mt-1.5"}
                       />
                     </label>
-                    {mode !== "forgot" && (
-                      <div>
-                        <div className="mb-1.5 flex items-center justify-between gap-2">
-                          <label htmlFor="auth-password" className="text-sm font-medium">
-                            Password
-                          </label>
-                          {mode === "signin" && (
-                            <button
-                              type="button"
-                              onClick={() => switchMode("forgot")}
-                              className="min-h-8 text-xs text-accent hover:underline"
-                            >
-                              Forgot password?
-                            </button>
-                          )}
-                        </div>
-                        <div className="relative">
-                          <input
-                            id="auth-password"
-                            name="password"
-                            type={show ? "text" : "password"}
-                            autoComplete={mode === "signup" ? "new-password" : "current-password"}
-                            required
-                            minLength={mode === "signup" ? 8 : undefined}
-                            onKeyUp={(e) => setCaps(e.getModifierState("CapsLock"))}
-                            onBlur={() => setCaps(false)}
-                            aria-describedby="password-help"
-                            className={inputClass + " pr-12"}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShow((v) => !v)}
-                            aria-label={show ? "Hide password" : "Show password"}
-                            className="absolute right-1 top-1 flex size-10 items-center justify-center rounded-md hover:bg-secondary"
-                          >
-                            <span className="text-xs">{show ? "Hide" : "Show"}</span>
-                          </button>
-                        </div>
-                        <p id="password-help" className="mt-1.5 text-xs text-muted-foreground">
-                          {caps ? "Caps Lock is on. " : ""}
-                          {mode === "signup"
-                            ? "At least 8 characters. A longer, unique password is recommended."
-                            : "Use your existing account password."}
-                        </p>
-                      </div>
-                    )}
-                    {mode === "signup" && (
-                      <>
-                        <label className="block text-sm font-medium">
-                          Confirm password
-                          <input
-                            name="confirm"
-                            type={show ? "text" : "password"}
-                            autoComplete="new-password"
-                            required
-                            onInput={(e) => e.currentTarget.setCustomValidity("")}
-                            className={inputClass + " mt-1.5"}
-                          />
-                        </label>
-                        <p className="text-xs leading-relaxed text-muted-foreground">
-                          Read our{" "}
-                          <Link to="/terms" className="underline">
-                            usage notes
-                          </Link>{" "}
-                          and{" "}
-                          <Link to="/privacy" className="underline">
-                            data handling notice
-                          </Link>{" "}
-                          before continuing.
-                        </p>
-                      </>
-                    )}
-                    <button
-                      type="submit"
-                      disabled={busy || (mode === "forgot" && seconds > 0)}
-                      className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:cursor-wait disabled:opacity-60"
-                    >
-                      {busy
-                        ? mode === "forgot"
-                          ? "Sending instructions…"
-                          : mode === "signup"
-                            ? "Creating account…"
-                            : "Signing in…"
-                        : mode === "forgot"
-                          ? seconds
-                            ? `Resend in ${seconds}s`
-                            : "Send reset link"
-                          : mode === "signup"
-                            ? "Create account"
-                            : "Sign in"}
-                      <ArrowRight size={15} />
-                    </button>
-                  </fieldset>
-                </form>
-                {mode !== "forgot" && (
-                  <>
-                    <div className="my-5 flex items-center gap-4 text-xs text-muted-foreground">
-                      <span className="h-px flex-1 bg-border" />
-                      or
-                      <span className="h-px flex-1 bg-border" />
-                    </div>
-                    <button
-                      type="button"
-                      disabled={busy || auth.isLoading}
-                      className="flex min-h-12 w-full items-center justify-center gap-2 rounded-lg border border-border bg-card text-sm font-medium hover:bg-secondary disabled:opacity-60"
-                      onClick={() => {
-                        if (task.current) return;
-                        task.current = true;
-                        setBusy(true);
-                        setError("");
-                        void signInWithGitHub(search.next).catch(() => {
-                          if (mounted.current) {
-                            setError("GitHub sign-in could not start. Please retry.");
-                            setBusy(false);
-                          }
-                          task.current = false;
-                        });
-                      }}
-                    >
-                      <GithubLogo size={20} /> Continue with GitHub
-                    </button>
-                    <p className="mt-5 text-center text-sm text-muted-foreground">
-                      {mode === "signin" ? "New to Archon? " : "Already have an account? "}
-                      <button
-                        type="button"
-                        disabled={busy || auth.isLoading}
-                        onClick={() => switchMode(mode === "signin" ? "signup" : "signin")}
-                        className="min-h-9 font-medium text-accent underline underline-offset-4"
-                      >
-                        {mode === "signin" ? "Create an account" : "Sign in"}
-                      </button>
-                    </p>
                   </>
                 )}
-                {confirmation && (
+                <button
+                  type="submit"
+                  disabled={busy || (mode === "forgot" && seconds > 0)}
+                  className="auth-focus inline-flex h-12 w-full items-center justify-center gap-3 rounded-md bg-primary px-4 text-base font-semibold text-primary-foreground hover:bg-primary/90 disabled:cursor-wait disabled:opacity-60"
+                >
+                  {busy
+                    ? mode === "forgot"
+                      ? "Sending instructions…"
+                      : mode === "signup"
+                        ? "Creating account…"
+                        : "Signing in…"
+                    : mode === "forgot"
+                      ? seconds
+                        ? `Resend in ${seconds}s`
+                        : "Send reset link"
+                      : mode === "signup"
+                        ? "Create account"
+                        : "Sign in"}
+                  <ArrowRight size={18} aria-hidden="true" />
+                </button>
+              </fieldset>
+            </form>
+            {mode !== "forgot" && (
+              <>
+                <div className="auth-divider flex items-center gap-4 text-sm text-muted-foreground">
+                  <span className="h-px flex-1 bg-border" />
+                  or
+                  <span className="h-px flex-1 bg-border" />
+                </div>
+                <button
+                  type="button"
+                  disabled={busy || auth.isLoading}
+                  className="auth-focus flex min-h-12 w-full items-center justify-center gap-3 rounded-md border border-input bg-transparent text-sm font-semibold hover:bg-secondary disabled:opacity-60"
+                  onClick={() => {
+                    if (task.current) return;
+                    task.current = true;
+                    setBusy(true);
+                    setError("");
+                    void signInWithGitHub(search.next).catch(() => {
+                      if (mounted.current) {
+                        setError("GitHub sign-in could not start. Please retry.");
+                        setBusy(false);
+                      }
+                      task.current = false;
+                    });
+                  }}
+                >
+                  <GithubLogo size={22} weight="fill" aria-hidden="true" /> Continue with GitHub
+                </button>
+                <p className="auth-switch text-center text-sm text-muted-foreground">
+                  {mode === "signin" ? "New to Archon? " : "Already have an account? "}
                   <button
                     type="button"
-                    disabled={busy || seconds > 0}
-                    onClick={() => void resend()}
-                    className="mt-3 min-h-10 w-full rounded-lg border border-border px-3 text-sm disabled:opacity-60"
+                    disabled={busy || auth.isLoading}
+                    onClick={() => switchMode(mode === "signin" ? "signup" : "signin")}
+                    className="auth-focus min-h-11 rounded-sm font-medium text-accent underline underline-offset-4 disabled:opacity-60"
                   >
-                    {seconds ? `Resend confirmation in ${seconds}s` : "Resend confirmation email"}
+                    {mode === "signin" ? "Create an account" : "Sign in"}
                   </button>
-                )}
-                {mode === "forgot" && (
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => switchMode("signin")}
-                    className="mt-3 min-h-10 text-sm text-muted-foreground hover:underline"
-                  >
-                    Back to sign in
-                  </button>
-                )}
-                {message && (
-                  <p className="mt-3 text-xs text-muted-foreground">
-                    Wrong address? Edit the email above. Resend is available after 60 seconds.
-                  </p>
-                )}
-              </div>
-            </div>
-            <aside className="relative hidden overflow-hidden border-l border-border bg-[#0d0d0d] lg:col-span-6 lg:block">
-              <picture>
-                <source media="(min-width: 1024px)" srcSet="/assets/archon-auth-gateway.webp" />
-                <img
-                  alt=""
-                  width={1024}
-                  height={1280}
-                  loading="lazy"
-                  src="/assets/archon-auth-gateway.webp"
-                  className="absolute inset-x-0 bottom-0 h-[77%] w-full object-contain"
-                />
-              </picture>
-              <div className="absolute left-9 right-9 top-9 text-white">
-                <p className="border-l-2 border-[#ff5600] pl-3 text-xs text-[#ff914d]">
-                  YOUR AUDIT WORKSPACE
                 </p>
-                <p className="mt-4 text-2xl font-medium leading-snug">
-                  Review the evidence.
-                  <br />
-                  Understand the next step.
-                </p>
-              </div>
-            </aside>
-          </section>
-          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 py-3 text-xs text-muted-foreground">
-            <p>Use a personal or work email. Your saved audits stay with your account.</p>
-            <div className="flex gap-5">
-              <Link to="/privacy" className="underline-offset-4 hover:underline">
-                Privacy
-              </Link>
-              <Link to="/terms" className="underline-offset-4 hover:underline">
-                Terms
-              </Link>
-            </div>
+              </>
+            )}
+            {confirmation && (
+              <button
+                type="button"
+                disabled={busy || seconds > 0}
+                onClick={() => void resend()}
+                className="auth-focus mt-3 min-h-11 w-full rounded-md border border-input px-3 text-sm disabled:opacity-60"
+              >
+                {seconds ? `Resend confirmation in ${seconds}s` : "Resend confirmation email"}
+              </button>
+            )}
+            {mode === "forgot" && (
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => switchMode("signin")}
+                className="auth-focus mt-3 min-h-11 rounded-sm text-sm text-muted-foreground hover:underline"
+              >
+                Back to sign in
+              </button>
+            )}
+            {message && (
+              <p className="mt-3 text-xs text-muted-foreground">
+                Wrong address? Edit the email above. Resend is available after 60 seconds.
+              </p>
+            )}
           </div>
-        </main>
-      </div>
-    </div>
+        </div>
+        <aside className="auth-artwork" aria-label="Archon audit workspace illustration">
+          <picture>
+            <source media="(min-width: 1024px)" srcSet="/assets/archon-auth-gateway.webp" />
+            <img
+              alt=""
+              width={1024}
+              height={1280}
+              loading="eager"
+              fetchPriority="high"
+              src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+              decoding="async"
+              className="auth-gateway"
+            />
+          </picture>
+          <div className="auth-artwork-caption">
+            <p>
+              Review the evidence.
+              <br />
+              Understand the next step.
+            </p>
+          </div>
+        </aside>
+        <footer className="auth-footer text-xs text-muted-foreground sm:text-sm">
+          <p>
+            {mode === "signup"
+              ? "Verify your email if requested, then create or join a workspace."
+              : "Personal and work email addresses are welcome."}
+          </p>
+          <div className="flex items-center gap-5">
+            <Link
+              to="/privacy"
+              className="auth-focus inline-flex min-h-11 items-center rounded-sm text-accent underline underline-offset-4"
+            >
+              Privacy
+            </Link>
+            <Link
+              to="/terms"
+              className="auth-focus inline-flex min-h-11 items-center rounded-sm text-accent underline underline-offset-4"
+            >
+              Terms
+            </Link>
+          </div>
+        </footer>
+      </section>
+    </main>
   );
 }
