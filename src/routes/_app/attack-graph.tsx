@@ -563,13 +563,13 @@ function AttackGraphPage() {
 
   const STATS = [
     {
-      code: "01 // NODES",
+      code: "NODES",
       label: isLiveScan ? "Code components" : "System nodes",
       value: String(currentScenario.nodes.length),
       trend: isLiveScan ? "Source evidence only" : "Illustrative architecture",
     },
     {
-      code: "02 // VECTORS",
+      code: "VECTORS",
       label: isLiveScan && persistedScan ? "Loaded vectors" : "Attack vectors",
       value: findingsLoading ? "…" : String(currentScenario.threats.length),
       trend: findingsLoading
@@ -579,7 +579,7 @@ function AttackGraphPage() {
           : "STRIDE categorized",
     },
     {
-      code: "03 // MAX CVSS",
+      code: "MAX CVSS",
       label: "Peak severity",
       value: findingsLoading ? "…" : formatCvss(maxCvss),
       trend:
@@ -590,7 +590,7 @@ function AttackGraphPage() {
             : "Highest recorded score",
     },
     {
-      code: "04 // STRIDE",
+      code: "STRIDE",
       label: "Active vector",
       value: activeThreat ? STRIDE_DEFINITIONS[activeThreat.stride].code : "—",
       trend: activeThreat ? STRIDE_DEFINITIONS[activeThreat.stride].name : "No active vector",
@@ -847,7 +847,7 @@ function AttackGraphPage() {
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
                 <span className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase block mb-1 font-semibold">
-                  // TOPOLOGY MODEL · {currentScenario.industry}
+                  TOPOLOGY MODEL · {currentScenario.industry}
                   {isLiveScan ? " · DERIVED FROM FINDINGS" : " · EXAMPLE"}
                 </span>
                 <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground break-words overflow-wrap-anywhere">
@@ -885,7 +885,7 @@ function AttackGraphPage() {
         {/* How-to-read explainer */}
         <SectionCard
           padding="md"
-          eyebrow="// UNDERSTAND THIS GRAPH"
+          eyebrow="UNDERSTAND THIS GRAPH"
           title="How to read this attack graph"
           description="Select a STRIDE category, trace a finding, and inspect its source evidence."
           actions={
@@ -1019,7 +1019,7 @@ function AttackGraphPage() {
           <SectionCard
             className="w-full min-w-0 flex flex-col"
             padding="none"
-            eyebrow="// TOPOLOGY CANVAS"
+            eyebrow="TOPOLOGY CANVAS"
             title={isLiveScan ? "Finding evidence topology" : "Illustrative attack topology"}
             description={`${currentScenario.nodes.length} nodes · ${currentScenario.edges.length} connectors. ${isLiveScan ? "Source associations, not verified network paths." : "Example only; not a verified deployed architecture or exploit."}`}
             actions={
@@ -1344,8 +1344,8 @@ function AttackGraphPage() {
             padding="md"
             eyebrow={
               isLiveScan && persistedScan
-                ? `// THREAT VECTORS · ${filteredThreats.length} SHOWN · ${loadedFindings.length}/${totalFindings} LOADED`
-                : `// THREAT VECTORS · ${filteredThreats.length} SHOWN`
+                ? `THREAT VECTORS · ${filteredThreats.length} SHOWN · ${loadedFindings.length}/${totalFindings} LOADED`
+                : `THREAT VECTORS · ${filteredThreats.length} SHOWN`
             }
             title={
               <span className="font-bold text-lg text-foreground">Select a vector to trace</span>
@@ -1449,7 +1449,7 @@ function AttackGraphPage() {
           <SectionCard
             className="w-full min-w-0"
             padding="lg"
-            eyebrow={isLiveScan ? "// SAVED FINDING" : "// EXAMPLE THREAT VECTOR"}
+            eyebrow={isLiveScan ? "SAVED FINDING" : "EXAMPLE THREAT VECTOR"}
             title={activeThreat ? activeThreat.title : "No threat vectors in this view"}
             description={
               activeThreat
@@ -1491,7 +1491,7 @@ function AttackGraphPage() {
                     <div className="rounded-sm border border-border bg-secondary/30 p-4 space-y-1.5 border-l-4 border-l-primary shadow-2xs">
                       <div className="flex items-center justify-between">
                         <span className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase font-semibold">
-                          // THREAT SUMMARY
+                          THREAT SUMMARY
                         </span>
                         <span className="text-[10px] font-mono text-muted-foreground">
                           {isLiveScan ? "Scan evidence" : "Example scenario"}
@@ -1623,7 +1623,7 @@ function AttackGraphPage() {
                     <div className="space-y-2">
                       <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                         <span className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase font-semibold">
-                          // {isLiveScan ? "RECORDED SOURCES" : "POTENTIAL IMPACT"} (
+                          {isLiveScan ? "RECORDED SOURCES" : "POTENTIAL IMPACT"} (
                           {activeThreat.affectedAssets.length})
                         </span>
                         <span className="font-mono text-[11px] text-muted-foreground">
@@ -1697,8 +1697,11 @@ function AttackGraphPage() {
                     </div>
                   </div>
 
-                  {/* Right column: kill chain + reasoning */}
-                  <div className="xl:col-span-5 space-y-3 xl:border-l xl:hairline xl:pl-6 min-w-0 w-full">
+                  {/* Context cards share the column edge without a second nested frame. */}
+                  <aside
+                    aria-label="Finding context and selected component"
+                    className="xl:col-span-5 grid content-start gap-4 min-w-0 w-full"
+                  >
                     {!isLiveScan && (
                       <section className="rounded-sm border border-border bg-card p-4">
                         <h4 className="text-xs font-semibold">
@@ -1727,7 +1730,7 @@ function AttackGraphPage() {
 
                     {/* 2. Attack chain reasoning */}
                     <div className="rounded-sm border border-border bg-card p-4 min-w-0 w-full overflow-hidden shadow-2xs">
-                      <div className="flex items-center justify-between gap-2 border-b border-border/80 pb-2.5">
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/80 pb-2.5">
                         <div className="flex items-center gap-2 min-w-0">
                           <ShareNetwork size={14} weight="bold" className="text-primary shrink-0" />
                           <span className="font-mono text-[10px] uppercase tracking-wider font-semibold text-muted-foreground truncate">
@@ -1741,22 +1744,22 @@ function AttackGraphPage() {
 
                       <div className="pt-3 space-y-2">
                         {/* Step 1: Ingress */}
-                        <div className="flex items-center justify-between gap-3 rounded-sm border border-border/70 bg-secondary/30 px-3 py-2 text-xs">
+                        <div className="grid grid-cols-1 gap-1 rounded-sm border border-border/70 bg-secondary/30 px-3 py-2 text-xs sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-3">
                           <span className="text-xs text-muted-foreground shrink-0">
                             {isLiveScan ? "Context" : "Ingress edge"}
                           </span>
-                          <span className="font-mono text-xs font-medium text-foreground truncate text-right">
+                          <span className="min-w-0 break-words [overflow-wrap:anywhere] font-mono text-xs font-medium text-foreground sm:text-right">
                             {isLiveScan ? "Saved scan finding" : "Untrusted HTTP client (modeled)"}
                           </span>
                         </div>
 
                         {/* Step 2: Executes in */}
-                        <div className="flex items-center justify-between gap-3 rounded-sm border border-border/70 bg-secondary/30 px-3 py-2 text-xs">
+                        <div className="grid grid-cols-1 gap-1 rounded-sm border border-border/70 bg-secondary/30 px-3 py-2 text-xs sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-3">
                           <span className="text-xs text-muted-foreground shrink-0">
                             {isLiveScan ? "Codebase" : "Component"}
                           </span>
                           <span
-                            className="font-mono text-xs font-semibold text-foreground truncate text-right"
+                            className="min-w-0 break-words [overflow-wrap:anywhere] font-mono text-xs font-semibold text-foreground sm:text-right"
                             title={reasoningSource}
                           >
                             {reasoningSource}
@@ -1765,12 +1768,12 @@ function AttackGraphPage() {
 
                         {/* Step 3: Flaw origin */}
                         {reasoningFile && (
-                          <div className="flex items-center justify-between gap-3 rounded-sm border border-border bg-secondary/30 px-3 py-2 text-xs">
+                          <div className="grid grid-cols-1 gap-1 rounded-sm border border-border bg-secondary/30 px-3 py-2 text-xs sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-3">
                             <span className="text-xs text-muted-foreground shrink-0">
                               Source location
                             </span>
                             <span
-                              className="font-mono text-xs text-foreground truncate text-right"
+                              className="min-w-0 break-words [overflow-wrap:anywhere] font-mono text-xs text-foreground sm:text-right"
                               title={`${activeThreat.filePath}${activeThreat.lineNumber != null ? `:${activeThreat.lineNumber}` : ""}`}
                             >
                               {reasoningFile}
@@ -1780,12 +1783,12 @@ function AttackGraphPage() {
                         )}
 
                         {/* Step 4: Reaches target */}
-                        <div className="flex items-center justify-between gap-3 rounded-sm border border-border bg-secondary/30 px-3 py-2 text-xs">
+                        <div className="grid grid-cols-1 gap-1 rounded-sm border border-border bg-secondary/30 px-3 py-2 text-xs sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-3">
                           <span className="text-xs text-muted-foreground shrink-0">
                             {isLiveScan ? "Finding file" : "Example target"}
                           </span>
                           <span
-                            className="font-mono text-xs text-foreground truncate text-right"
+                            className="min-w-0 break-words [overflow-wrap:anywhere] font-mono text-xs text-foreground sm:text-right"
                             title={reasoningTarget}
                           >
                             {reasoningTarget}
@@ -1796,7 +1799,7 @@ function AttackGraphPage() {
 
                     {/* 3. Selected Node / Component Inspector */}
                     <div className="rounded-sm border border-border bg-card p-4 min-w-0 w-full overflow-hidden shadow-2xs">
-                      <div className="flex items-center justify-between gap-2 border-b border-border/80 pb-2.5">
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/80 pb-2.5">
                         <div className="flex items-center gap-2 min-w-0">
                           <TreeStructure
                             size={14}
@@ -1804,7 +1807,7 @@ function AttackGraphPage() {
                             className="text-primary shrink-0"
                           />
                           <span className="font-mono text-[10px] uppercase tracking-wider font-semibold text-muted-foreground truncate">
-                            // SELECTED COMPONENT
+                            SELECTED COMPONENT
                           </span>
                         </div>
                         {selectedNode && (
@@ -1887,7 +1890,7 @@ function AttackGraphPage() {
                                   Source File
                                 </span>
                                 <span
-                                  className="block font-mono text-xs text-foreground/90 mt-0.5 truncate"
+                                  className="block font-mono text-xs text-foreground/90 mt-0.5 break-words [overflow-wrap:anywhere]"
                                   title={selectedNode.metadata.file}
                                 >
                                   {selectedNode.metadata.file}
@@ -1901,7 +1904,7 @@ function AttackGraphPage() {
                                   Connected Tables
                                 </span>
                                 <span
-                                  className="block font-mono text-xs text-foreground/90 mt-0.5 truncate"
+                                  className="block font-mono text-xs text-foreground/90 mt-0.5 break-words [overflow-wrap:anywhere]"
                                   title={selectedNode.metadata.tables}
                                 >
                                   {selectedNode.metadata.tables}
@@ -1940,7 +1943,7 @@ function AttackGraphPage() {
                         </div>
                       )}
                     </div>
-                  </div>
+                  </aside>
                 </div>
               </div>
             ) : (
@@ -1991,7 +1994,7 @@ function AttackGraphPage() {
             <div className="flex items-center justify-between px-5 py-4 border-b hairline bg-secondary/30">
               <div className="min-w-0">
                 <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider block">
-                  // EVIDENCE AND REMEDIATION
+                  EVIDENCE AND REMEDIATION
                 </span>
                 <h3
                   id="attack-patch-title"
@@ -2029,7 +2032,7 @@ function AttackGraphPage() {
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
-                    // {isLiveScan ? "CAPTURED EVIDENCE" : "ILLUSTRATIVE EXAMPLE"}
+                    {isLiveScan ? "CAPTURED EVIDENCE" : "ILLUSTRATIVE EXAMPLE"}
                   </span>
                   {activeThreat.remediationSnippet?.patched && (
                     <button
@@ -2100,7 +2103,7 @@ function AttackGraphPage() {
               {activeThreat.remediationSnippet?.explanation && (
                 <div className="rounded-sm border hairline bg-secondary/30 p-3.5 space-y-1">
                   <span className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase block font-semibold">
-                    // SECURITY RATIONALE
+                    SECURITY RATIONALE
                   </span>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     {activeThreat.remediationSnippet.explanation}

@@ -28,7 +28,7 @@ const result = await build({
   platform: "node",
   jsx: "automatic",
   loader: { ".css": "empty" },
-  external: ["react", "react-dom/server"],
+  external: ["react", "react-dom", "react-dom/server"],
   plugins: [
     {
       name: "public-page-router-fixture",
@@ -49,7 +49,7 @@ const result = await build({
 });
 const require = createRequire(import.meta.url);
 const code = result.outputFiles[0].text.replace(
-  /from "(react|react\/jsx-runtime|react-dom\/server)"/g,
+  /from "(react|react\/jsx-runtime|react-dom|react-dom\/server)"/g,
   (_, name) => `from "${pathToFileURL(require.resolve(name)).href}"`,
 );
 const ui = await import(`data:text/javascript;base64,${Buffer.from(code).toString("base64")}`);

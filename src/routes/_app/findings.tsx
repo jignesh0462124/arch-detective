@@ -228,16 +228,16 @@ function FindingQueue({
   return (
     <div className="space-y-5 [&_button]:min-h-10">
       <SectionCard
-        eyebrow="// TRIAGE"
+        eyebrow="TRIAGE"
         title="Review scan findings"
         description="Inspect recorded evidence, review compliance mappings and track remediation status."
       >
         <div className="grid grid-cols-2 border-y border-border md:grid-cols-4">
           {[
-            ["01 // TOTAL", "All findings", total],
-            ["02 // CRIT", "Critical", severityCount("critical")],
-            ["03 // HIGH", "High", severityCount("high")],
-            ["04 // MED+LOW", "Med + Low", severityCount("medium") + severityCount("low")],
+            ["TOTAL", "All findings", total],
+            ["CRIT", "Critical", severityCount("critical")],
+            ["HIGH", "High", severityCount("high")],
+            ["MED+LOW", "Med + Low", severityCount("medium") + severityCount("low")],
           ].map(([code, label, value]) => (
             <StatTile key={code} code={String(code)} label={String(label)} value={String(value)} />
           ))}
@@ -390,7 +390,7 @@ function FindingQueue({
           <SectionCard
             className={cn("min-w-0", selectedId ? "xl:col-span-7" : "xl:col-span-12")}
             padding="none"
-            eyebrow="// FINDINGS"
+            eyebrow="FINDINGS"
             title={`${matching} matching finding${matching === 1 ? "" : "s"}`}
           >
             <div className="divide-y divide-border" aria-label="Findings list">
@@ -516,7 +516,7 @@ function FindingDetail({
   return (
     <SectionCard
       className="min-w-0 [&_h2]:break-words"
-      eyebrow={`// ${f.id.slice(0, 8)}`}
+      eyebrow={f.id.slice(0, 8)}
       title={f.title}
       actions={
         <button

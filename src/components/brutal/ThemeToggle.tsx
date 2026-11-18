@@ -24,7 +24,9 @@ export function ThemeToggle({
         className,
       )}
     >
-      {dark ? <Sun size={15} weight="fill" /> : <Moon size={15} weight="fill" />}
+      <span key={theme} className="theme-toggle-glyph" aria-hidden="true">
+        {dark ? <Sun size={15} weight="fill" /> : <Moon size={15} weight="fill" />}
+      </span>
       {toolbar && (
         <span className="hidden truncate font-mono text-xs font-bold md:inline">
           {dark ? "Dark mode" : "Light mode"}

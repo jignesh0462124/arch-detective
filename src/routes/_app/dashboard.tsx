@@ -12,6 +12,7 @@ import { AppShell } from "@/components/brutal/AppShell";
 import { SectionCard } from "@/components/ui/section-card";
 import { CoverageBar } from "@/components/ui/coverage-bar";
 import { SeverityBadge } from "@/components/ui/severity-badge";
+import { DashboardSkeleton, LoadingRows, Skeleton } from "@/components/ui/data-loading";
 import { useAuth } from "@/hooks/useAuth";
 import { useActiveWorkspace } from "@/hooks/useWorkspace";
 import { useDashboardFindings, useDashboardScans } from "@/hooks/useDashboard";
@@ -57,7 +58,7 @@ function DashboardPage() {
       }
     >
       {auth.isLoading || workspace.isLoading ? (
-        <DashboardNotice title="Loading your workspace…" />
+        <DashboardSkeleton />
       ) : workspace.isError ? (
         <DashboardNotice
           title="Your workspace could not be loaded"
@@ -90,7 +91,7 @@ function WorkspaceDashboard({ userId, workspaceId }: { userId: string; workspace
   const activeScan = scans.data?.recent.find((scan) => isScanInProgress(scan.status));
   const signals = frameworkSignals(latest?.framework_scores ?? {});
 
-  if (scans.isPending) return <DashboardNotice title="Loading saved audit activity…" />;
+  if (scans.isPending) return <DashboardSkeleton />;
   if (scans.isError)
     return (
       <DashboardNotice
@@ -136,7 +137,7 @@ function WorkspaceDashboard({ userId, workspaceId }: { userId: string; workspace
     summary = `${open} open finding${open === 1 ? "" : "s"} in this completed audit need review.`;
 
   return (
-    <div className="space-y-5">
+    <div className="data-reveal space-y-5">
       <section
         aria-labelledby="latest-audit-heading"
         className="min-w-0 rounded-xl border border-border bg-card p-5 shadow-sm sm:p-6"
@@ -217,11 +218,22 @@ function WorkspaceDashboard({ userId, workspaceId }: { userId: string; workspace
       ) : null}
 
       <section aria-label="Audit metrics" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard label="Total findings" value={total} scope="Latest completed audit" />
-        <MetricCard label="Open findings" value={open} scope="Latest completed audit" />
+        <MetricCard
+          label="Total findings"
+          value={total}
+          loading={findings.counts.isPending}
+          scope="Latest completed audit"
+        />
+        <MetricCard
+          label="Open findings"
+          value={open}
+          loading={findings.open.isPending}
+          scope="Latest completed audit"
+        />
         <MetricCard
           label="Open critical"
           value={criticalOpen}
+          loading={findings.criticalOpen.isPending}
           scope="Latest completed audit"
           urgent={Boolean(criticalOpen)}
         />
@@ -244,7 +256,7 @@ function WorkspaceDashboard({ userId, workspaceId }: { userId: string; workspace
         padding="none"
       >
         {findings.open.isPending ? (
-          <p className="px-5 py-6 text-sm text-muted-foreground">Loading open findings…</p>
+          <LoadingRows label="Loading open findings…" />
         ) : findings.open.isError ? (
           <p className="px-5 py-6 text-sm text-muted-foreground">
             Open findings are unavailable. Use Retry above.
@@ -262,7 +274,7 @@ function WorkspaceDashboard({ userId, workspaceId }: { userId: string; workspace
             The findings changed while loading. Retry to refresh this list.
           </p>
         ) : (
-          <ol className="divide-y divide-border">
+          <ol className="data-reveal divide-y divide-border">
             {findings.open.data.items.slice(0, 3).map((finding) => (
               <li
                 key={finding.id}
@@ -334,16 +346,30 @@ function MetricCard({
   value,
   scope,
   urgent = false,
+  loading = false,
 }: {
   label: string;
   value: number | undefined;
   scope: string;
   urgent?: boolean;
+  loading?: boolean;
 }) {
   return (
     <div className="min-w-0 rounded-lg border border-border bg-card p-4 shadow-sm sm:p-5">
       <p className="text-xs font-medium text-muted-foreground">{label}</p>
-      <p className="mt-2 text-3xl font-semibold tabular-nums text-foreground">{value ?? "—"}</p>
+      <div
+        className="mt-2 min-h-9 text-3xl font-semibold tabular-nums text-foreground"
+        aria-busy={loading}
+      >
+        {loading && value === undefined ? (
+          <>
+            <span className="sr-only">Loading {label.toLowerCase()}…</span>
+            <Skeleton className="h-9 w-12" />
+          </>
+        ) : (
+          <span className="data-reveal inline-block">{value ?? "—"}</span>
+        )}
+      </div>
       <p className="mt-2 text-xs text-muted-foreground">{scope}</p>
       {urgent && <p className="mt-1 text-xs text-severity-critical">Needs review</p>}
     </div>

@@ -1,0 +1,194 @@
+/* Functional loading placeholders, not simulated data or completion percentages. */
+.data-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--foreground) 9%, var(--card));
+  contain: paint;
+}
+.data-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--foreground) 7%, transparent),
+    transparent
+  );
+  animation: data-shimmer 1.65s ease-in-out infinite;
+}
+@keyframes data-shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+.data-reveal {
+  animation: data-reveal 240ms ease-out both;
+}
+@keyframes data-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.page-data-activity {
+  height: 2px;
+  overflow: hidden;
+  contain: paint;
+}
+.page-data-activity-fill {
+  display: block;
+  height: 100%;
+  width: 28%;
+  background: var(--accent);
+  animation: page-data-load 1.25s ease-in-out infinite;
+}
+@keyframes page-data-load {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(360%);
+  }
+}
+.theme-toggle-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  animation: theme-glyph-in 280ms ease-out;
+}
+
+/* Keep the edge control anchored while its chevron turns with the sidebar. */
+.sidebar-toggle-button {
+  transition:
+    scale 140ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+.sidebar-toggle-button:active {
+  scale: 0.9;
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+.sidebar-toggle-chevron {
+  display: inline-flex;
+  transform: rotate(0deg);
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sidebar-toggle-button[data-collapsed="true"] .sidebar-toggle-chevron {
+  transform: rotate(180deg);
+}
+@keyframes theme-glyph-in {
+  from {
+    opacity: 0;
+    transform: rotate(-25deg) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+/* A browser snapshot cross-fade keeps surfaces/text in sync, including artwork. */
+:root[data-theme-transition="snapshot"] *,
+:root[data-theme-transition="snapshot"] *::before,
+:root[data-theme-transition="snapshot"] *::after {
+  transition: none !important;
+}
+:root[data-theme-transition="snapshot"]::view-transition-group(root) {
+  animation-duration: 360ms;
+}
+:root[data-theme-transition="snapshot"]::view-transition-old(root) {
+  animation: theme-fade-out 360ms ease-in-out both;
+  mix-blend-mode: normal;
+}
+:root[data-theme-transition="snapshot"]::view-transition-new(root) {
+  animation: theme-fade-in 360ms ease-in-out both;
+  mix-blend-mode: normal;
+}
+@keyframes theme-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes theme-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Older browsers retain an immediate preference update with a light colour tween. */
+:root[data-theme-transition="colors"]
+  :where(
+    body,
+    .bg-card,
+    .bg-background,
+    .bg-sidebar,
+    .bg-secondary,
+    .text-foreground,
+    .text-muted-foreground,
+    .border-border,
+    button,
+    input,
+    select,
+    textarea
+  ) {
+  transition:
+    background-color 320ms ease,
+    color 320ms ease,
+    border-color 320ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-toggle-button,
+  .sidebar-toggle-chevron {
+    transition: none;
+  }
+  .sidebar-toggle-button:active {
+    scale: 1;
+  }
+  .data-skeleton::after,
+  .data-reveal,
+  .page-data-activity-fill,
+  .theme-toggle-glyph {
+    animation: none;
+    transform: none;
+  }
+  .page-data-activity-fill {
+    width: 100%;
+    opacity: 0.65;
+  }
+  :root[data-theme-transition="colors"]
+    :where(
+      body,
+      .bg-card,
+      .bg-background,
+      .bg-sidebar,
+      .bg-secondary,
+      .text-foreground,
+      .text-muted-foreground,
+      .border-border,
+      button,
+      input,
+      select,
+      textarea
+    ) {
+    transition: none;
+  }
+  :root::view-transition-old(root),
+  :root::view-transition-new(root) {
+    animation: none !important;
+  }
+}

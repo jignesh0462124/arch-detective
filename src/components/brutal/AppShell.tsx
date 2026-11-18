@@ -34,6 +34,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useSidebarPreference } from "@/lib/sidebar";
 import { profileAvatar } from "@/lib/profileAppearance";
 import { AdvisorIcon } from "@/components/ui/AdvisorIcon";
+import { PageDataActivity } from "@/components/ui/data-loading";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: SquaresFour },
@@ -359,7 +360,7 @@ export function AppShell({
           data-collapsed={collapsed}
           className={cn(
             "sticky top-0 z-30 hidden h-dvh shrink-0 self-start border-r border-border bg-sidebar lg:block",
-            "transition-[width] duration-150 motion-reduce:transition-none",
+            "transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
             collapsed ? "w-[72px]" : "w-[248px]",
           )}
         >
@@ -377,18 +378,17 @@ export function AppShell({
           <button
             type="button"
             data-testid="desktop-sidebar-toggle"
+            data-collapsed={collapsed}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             aria-expanded={!collapsed}
             aria-controls={sidebarId}
             onClick={() => setSidebarPreference(collapsed ? "expanded" : "collapsed")}
-            className="absolute right-0 top-1/2 flex size-11 -translate-y-1/2 translate-x-1/2 items-center justify-center rounded-full border border-border bg-sidebar text-foreground shadow-sm transition-colors hover:border-accent hover:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="sidebar-toggle-button absolute right-0 top-1/2 flex size-11 -translate-y-1/2 translate-x-1/2 items-center justify-center rounded-full border border-border bg-sidebar text-foreground shadow-sm hover:border-accent hover:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
-            {collapsed ? (
-              <CaretRight size={19} weight="bold" aria-hidden="true" />
-            ) : (
-              <CaretLeft size={19} weight="bold" aria-hidden="true" />
-            )}
+            <span className="sidebar-toggle-chevron" aria-hidden="true">
+              <CaretLeft size={19} weight="bold" />
+            </span>
           </button>
         </aside>
 
@@ -409,7 +409,7 @@ export function AppShell({
                 aria-label="Open navigation"
                 aria-expanded={drawerOpen}
                 aria-controls={drawerId}
-                className="flex size-11 shrink-0 items-center justify-center rounded-md border border-border bg-card hover:bg-secondary focus-visible:outline focus-visible:outline-accent lg:hidden"
+                className="sidebar-toggle-button flex size-11 shrink-0 items-center justify-center rounded-md border border-border bg-card hover:bg-secondary focus-visible:outline focus-visible:outline-accent lg:hidden"
                 onClick={() => {
                   setMobileMoreOpen(false);
                   setDrawerOpen(true);
@@ -480,6 +480,7 @@ export function AppShell({
                 <div className="flex shrink-0 items-center gap-2">{actions}</div>
               </div>
             ) : null}
+            <PageDataActivity />
           </header>
 
           <div className={isAdvisorPage ? "flex min-h-0 min-w-0 flex-1" : "mt-5 min-w-0"}>
@@ -532,7 +533,7 @@ export function AppShell({
                 type="button"
                 autoFocus
                 aria-label="Close navigation"
-                className="flex size-11 items-center justify-center rounded-md border border-border hover:bg-secondary focus-visible:outline focus-visible:outline-accent"
+                className="sidebar-toggle-button flex size-11 items-center justify-center rounded-md border border-border hover:bg-secondary focus-visible:outline focus-visible:outline-accent"
                 onClick={() => setDrawerOpen(false)}
               >
                 <X size={20} />

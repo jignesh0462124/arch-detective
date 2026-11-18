@@ -262,3 +262,61 @@ test("graph uses neutral source presentation while retaining recorded evidence a
   assert.match(source, /Validate exploitability before remediation/);
   assert.match(source, /<SeverityBadge severity=\{activeThreat\.severity\}/);
 });
+
+test("graph labels omit decorative slashes and context cards share a responsive column", async () => {
+  const { default: ts } = await import("typescript");
+  const source = await readFile("src/routes/_app/attack-graph.tsx", "utf8");
+  const tree = ts.createSourceFile(
+    "attack-graph.tsx",
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
+  const labels = [];
+  const visit = (node) => {
+    if (ts.isJsxText(node) || ts.isStringLiteralLike(node) || ts.isTemplateHead(node))
+      labels.push(node.text.trim());
+    ts.forEachChild(node, visit);
+  };
+  visit(tree);
+  assert.deepEqual(
+    labels.filter((text) => /^(?:\d+\s+)?\/\//.test(text)),
+    [],
+  );
+  for (const label of ["TOPOLOGY CANVAS", "SAVED FINDING", "THREAT SUMMARY", "SELECTED COMPONENT"])
+    assert.ok(labels.includes(label), label);
+  const context = source.slice(source.indexOf("<aside"), source.indexOf("</aside>"));
+  assert.match(context, /aria-label="Finding context and selected component"/);
+  assert.match(context, /grid content-start gap-4/);
+  assert.doesNotMatch(context, /xl:border-l|xl:pl-6|truncate text-right/);
+  assert.equal((context.match(/sm:grid-cols-\[auto_minmax\(0,1fr\)\]/g) || []).length, 4);
+  assert.match(context, /overflow-wrap:anywhere/);
+});
+
+test("Findings labels omit decorative slashes without changing evidence or metrics", async () => {
+  const { default: ts } = await import("typescript");
+  const source = await readFile("src/routes/_app/findings.tsx", "utf8");
+  const tree = ts.createSourceFile(
+    "findings.tsx",
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
+  const labels = [];
+  const visit = (node) => {
+    if (ts.isJsxText(node) || ts.isStringLiteralLike(node) || ts.isTemplateHead(node))
+      labels.push(node.text.trim());
+    ts.forEachChild(node, visit);
+  };
+  visit(tree);
+  assert.deepEqual(
+    labels.filter((text) => /^(?:\d+\s+)?\/\//.test(text)),
+    [],
+  );
+  for (const label of ["TRIAGE", "FINDINGS", "TOTAL", "CRIT", "HIGH", "MED+LOW"])
+    assert.ok(labels.includes(label), label);
+  assert.match(source, /eyebrow=\{f\.id\.slice\(0, 8\)\}/);
+  assert.match(source, /severityCount\("medium"\) \+ severityCount\("low"\)/);
+});

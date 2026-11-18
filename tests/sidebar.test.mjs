@@ -48,13 +48,41 @@ test("desktop toggle is circular, directional and anchored outside the scrollabl
   assert.match(toggle, /translate-x-1\/2/);
   assert.match(toggle, /size-11/);
   assert.match(toggle, /rounded-full/);
-  assert.match(toggle, /<CaretRight/);
   assert.match(toggle, /<CaretLeft/);
+  assert.match(toggle, /data-collapsed=\{collapsed\}/);
+  assert.match(toggle, /className="sidebar-toggle-chevron" aria-hidden="true"/);
   assert.match(toggle, /aria-expanded=\{!collapsed\}/);
   assert.match(toggle, /aria-controls=\{sidebarId\}/);
   assert.equal((shell.match(/data-testid="desktop-sidebar-toggle"/g) || []).length, 1);
   assert.doesNotMatch(shell.slice(shell.indexOf("{/* Header */}")), /<SidebarSimple/);
   assert.match(shell, /aria-label="Open navigation"/);
+});
+
+test("sidebar motion keeps the same control mounted and respects reduced motion", async () => {
+  const shell = await readFile("src/components/brutal/AppShell.tsx", "utf8");
+  const css = await readFile("src/motion.css", "utf8");
+  const toggle = shell.slice(
+    shell.indexOf('data-testid="desktop-sidebar-toggle"'),
+    shell.indexOf("{/* Main */}"),
+  );
+  assert.match(
+    toggle,
+    /onClick=\{\(\) => setSidebarPreference\(collapsed \? "expanded" : "collapsed"\)\}/,
+  );
+  assert.doesNotMatch(toggle, /key=|setTimeout|disabled=|onAnimationEnd/);
+  assert.match(shell, /transition-\[width\] duration-300/);
+  assert.match(shell, /motion-reduce:transition-none/);
+  assert.match(css, /\.sidebar-toggle-button:active\s*\{\s*scale: 0\.9/);
+  assert.match(
+    css,
+    /\[data-collapsed="true"\] \.sidebar-toggle-chevron\s*\{\s*transform: rotate\(180deg\)/,
+  );
+  const reduced = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)"));
+  assert.match(
+    reduced,
+    /\.sidebar-toggle-button,\s*\.sidebar-toggle-chevron\s*\{\s*transition: none/,
+  );
+  assert.match(reduced, /\.sidebar-toggle-button:active\s*\{\s*scale: 1/);
 });
 
 test("Findings and Fix verification have distinct purpose-specific icons in shared navigation", async () => {

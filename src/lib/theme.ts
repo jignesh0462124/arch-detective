@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { cancelThemeTransition, transitionTheme } from "./themeMotion";
 
 export type Theme = "light" | "dark";
 const key = "archon-theme";
@@ -18,19 +19,23 @@ function apply(theme: Theme) {
   document.documentElement.classList.toggle("dark", theme === "dark");
 }
 export function setTheme(theme: Theme) {
-  current = theme;
-  apply(theme);
-  try {
-    window.localStorage.setItem(key, theme);
-  } catch {
-    /* Keep the in-memory preference usable. */
-  }
-  window.dispatchEvent(new Event(event));
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+  transitionTheme(() => {
+    current = theme;
+    apply(theme);
+    try {
+      window.localStorage.setItem(key, theme);
+    } catch {
+      /* Keep the in-memory preference usable. */
+    }
+    window.dispatchEvent(new Event(event));
+  });
 }
 function subscribe(update: () => void) {
   apply(read());
   const storage = (value: StorageEvent) => {
     if (value.key !== key && value.key !== null) return;
+    cancelThemeTransition();
     current = undefined;
     apply(read());
     update();
