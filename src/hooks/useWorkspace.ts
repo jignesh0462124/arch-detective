@@ -27,8 +27,8 @@ export function useWorkspaces() {
   const { user, isAuthenticated } = useAuth();
   return useQuery({
     queryKey: ["workspaces", user?.id],
-    queryFn: async () => {
-      const list = await fetchWorkspaces();
+    queryFn: async ({ signal }) => {
+      const list = await fetchWorkspaces(signal);
       return list ?? [];
     },
     staleTime: 30_000,
@@ -68,7 +68,7 @@ export function useRevokeInvite(workspaceId: string) {
 
 export function useActiveWorkspace() {
   const { user } = useAuth();
-  const { data: workspaces, isLoading, isError, error } = useWorkspaces();
+  const { data: workspaces, isLoading, isError, error, refetch } = useWorkspaces();
   const [activeId, setActiveId] = useState<string | null>(() => {
     if (typeof window === "undefined") return null;
     return accountStorage.getItem(ACTIVE_WS_KEY);
@@ -121,7 +121,16 @@ export function useActiveWorkspace() {
     }
   }, [active, activeId]);
 
-  return { active, activeId, workspaces: workspaces ?? [], isLoading, isError, error, setActive };
+  return {
+    active,
+    activeId,
+    workspaces: workspaces ?? [],
+    isLoading,
+    isError,
+    error,
+    setActive,
+    refetch,
+  };
 }
 
 export function useCreateWorkspace() {

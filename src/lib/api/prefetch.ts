@@ -8,7 +8,7 @@ export async function prefetchUserData(client: QueryClient): Promise<void> {
   await client.prefetchQuery({
     queryKey: ["workspaces", scope.owner],
     queryFn: async ({ signal }) => {
-      const rows = await fetchWorkspaces();
+      const rows = await fetchWorkspaces(signal);
       if (signal.aborted || !isCurrentScope(scope))
         throw new DOMException("Account changed", "AbortError");
       return rows ?? [];

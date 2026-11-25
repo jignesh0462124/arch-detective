@@ -1,0 +1,702 @@
+[
+  {
+    "target": "thesis_figure_207",
+    "label": "Figure 1.1: Overall architecture of ThreatLens showing the application interface, authenticated API, source preparation, security analysis and private persistence. ",
+    "physical_page": 24,
+    "displayed_page": "13",
+    "verified": true
+  },
+  {
+    "target": "thesis_figure_272",
+    "label": "Figure 2.1: Complementary security-review approaches and their evidence: static patterns, package versions, suspected credentials, configuration settings, model explanations and human judgement. ",
+    "physical_page": 32,
+    "displayed_page": "21",
+    "verified": true
+  },
+  {
+    "target": "thesis_figure_289",
+    "label": "Figure 3.1: Research workflow from problem definition and requirements to architecture, implementation, verification and discussion of limitations. ",
+    "physical_page": 35,
+    "displayed_page": "24",
+    "verified": true
+  },
+  {
+    "target": "thesis_figure_367",
+    "label": "Figure 4.1: Separation between the local API/workbench environment and the optional scanner-worker and retrieval environment. ",
+    "physical_page": 43,
+    "displayed_page": "32",
+    "verified": true
+  },
+  {
+    "target": "thesis_figure_424",
+    "label": "Figure 5.1: Read-only Audit Workbench showing source navigation, a selected finding and its recorded evidence.",
+    "physical_page": 49,
+    "displayed_page": "38",
+    "verified": true
+  },
+  {
+    "target": "thesis_figure_427",
+    "label": "Figure 5.2: Attack Graph interface using isolated test-fixture data: (a) source associations and graph controls; (b) selected finding evidence and remediation guidance. Connections do not establish confirmed exploitability.. ",
+    "physical_page": 51,
+    "displayed_page": "40",
+    "verified": true
+  },
+  {
+    "target": "thesis_figure_471",
+    "label": "Figure 6.1: Saved audit report excerpt showing recorded source evidence, remediation and suggested verification checks. The excerpt illustrates reporting behaviour, not independently validated detection accuracy. ",
+    "physical_page": 57,
+    "displayed_page": "46",
+    "verified": true
+  },
+  {
+    "target": "thesis_figure_512",
+    "label": "Figure 7.1: Summary of project objectives, corresponding implementation evidence and remaining validation needs. ",
+    "physical_page": 63,
+    "displayed_page": "52",
+    "verified": true
+  },
+  {
+    "target": "thesis_figure_541",
+    "label": "Figure 8.1: Proposed progression from reproducible benchmarks and broader coverage to controlled automation, deployment evaluation and user studies. ",
+    "physical_page": 67,
+    "displayed_page": "56",
+    "verified": true
+  },
+  {
+    "target": "thesis_table_6_1",
+    "label": "Table 6.1: Functional Test Matrix",
+    "physical_page": 56,
+    "displayed_page": "45",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_39",
+    "label": "ABSTRACT",
+    "physical_page": 6,
+    "displayed_page": "i",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_47",
+    "label": "LIST OF FIGURES",
+    "physical_page": 8,
+    "displayed_page": "iii",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_50",
+    "label": "LIST OF TABLES",
+    "physical_page": 9,
+    "displayed_page": "iv",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_53",
+    "label": "LIST OF SYMBOLS AND ABBREVIATIONS",
+    "physical_page": 10,
+    "displayed_page": "v",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_56",
+    "label": "LIST OF PUBLICATIONS PROJECT COMPETITIONS AND PATENTS",
+    "physical_page": 11,
+    "displayed_page": "vi",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_154",
+    "label": "CHAPTER 1\nINTRODUCTION",
+    "physical_page": 16,
+    "displayed_page": "5",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_155",
+    "label": "1.1 Background and Motivation ",
+    "physical_page": 17,
+    "displayed_page": "6",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_161",
+    "label": "1.2 Problem Statement ",
+    "physical_page": 18,
+    "displayed_page": "7",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_167",
+    "label": "1.3 Existing Approaches and Challenges ",
+    "physical_page": 19,
+    "displayed_page": "8",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_173",
+    "label": "1.4 Research Gap ",
+    "physical_page": 20,
+    "displayed_page": "9",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_179",
+    "label": "1.5 Aim and Objectives ",
+    "physical_page": 21,
+    "displayed_page": "10",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_191",
+    "label": "1.6 Research Questions ",
+    "physical_page": 22,
+    "displayed_page": "11",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_198",
+    "label": "1.7 Project Scope and Limitations ",
+    "physical_page": 23,
+    "displayed_page": "12",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_204",
+    "label": "1.8 Main Contributions ",
+    "physical_page": 24,
+    "displayed_page": "13",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_221",
+    "label": "1.9 Thesis Organization ",
+    "physical_page": 26,
+    "displayed_page": "15",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_238",
+    "label": "CHAPTER 2\nLITERATURE REVIEW",
+    "physical_page": 28,
+    "displayed_page": "17",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_239",
+    "label": "2.1 Introduction to Software Vulnerability Detection ",
+    "physical_page": 29,
+    "displayed_page": "18",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_243",
+    "label": "2.2 Static Application Security Testing (SAST) ",
+    "physical_page": 29,
+    "displayed_page": "18",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_247",
+    "label": "2.3 Dependency, Secret and Configuration Analysis ",
+    "physical_page": 30,
+    "displayed_page": "19",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_251",
+    "label": "2.4 AI and Large Language Models for Code Security ",
+    "physical_page": 30,
+    "displayed_page": "19",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_255",
+    "label": "2.5 Retrieval-Augmented Generation in Security Analysis ",
+    "physical_page": 30,
+    "displayed_page": "19",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_259",
+    "label": "2.6 Vulnerability Taxonomies and CVSS Prioritization ",
+    "physical_page": 31,
+    "displayed_page": "20",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_263",
+    "label": "2.7 Compliance Mapping and Remediation Guidance ",
+    "physical_page": 31,
+    "displayed_page": "20",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_267",
+    "label": "2.8 Comparison with Existing Security Assessment Tools ",
+    "physical_page": 32,
+    "displayed_page": "21",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_274",
+    "label": "2.9 Comparative Literature Synthesis ",
+    "physical_page": 33,
+    "displayed_page": "22",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_278",
+    "label": "2.10 Consolidated Research Gap ",
+    "physical_page": 33,
+    "displayed_page": "22",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_283",
+    "label": "CHAPTER 3\nMETHODOLOGY",
+    "physical_page": 34,
+    "displayed_page": "23",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_284",
+    "label": "3.1 Research Design and Workflow ",
+    "physical_page": 35,
+    "displayed_page": "24",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_290",
+    "label": "3.2 Functional and Non-Functional Requirements ",
+    "physical_page": 35,
+    "displayed_page": "24",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_294",
+    "label": "3.3 Test Project and Input Selection ",
+    "physical_page": 36,
+    "displayed_page": "25",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_299",
+    "label": "3.4 Source Code Ingestion and Preprocessing ",
+    "physical_page": 36,
+    "displayed_page": "25",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_303",
+    "label": "3.5 Static Scanning and Finding Normalization ",
+    "physical_page": 37,
+    "displayed_page": "26",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_307",
+    "label": "3.6 LLM-Assisted Analysis and RAG ",
+    "physical_page": 37,
+    "displayed_page": "26",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_311",
+    "label": "3.7 Severity Scoring and Compliance Mapping ",
+    "physical_page": 37,
+    "displayed_page": "26",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_315",
+    "label": "3.8 Remediation and Report Generation ",
+    "physical_page": 38,
+    "displayed_page": "27",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_319",
+    "label": "3.9 Evaluation Protocol ",
+    "physical_page": 38,
+    "displayed_page": "27",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_323",
+    "label": "3.10 Evaluation Metrics ",
+    "physical_page": 38,
+    "displayed_page": "27",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_335",
+    "label": "3.11 Ethical and Security Considerations ",
+    "physical_page": 39,
+    "displayed_page": "28",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_340",
+    "label": "CHAPTER 4\nDATA COLLECTION, TOOLS AND COMPUTATIONAL PLATFORM",
+    "physical_page": 40,
+    "displayed_page": "29",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_341",
+    "label": "4.1 Hardware and Operating Environment ",
+    "physical_page": 41,
+    "displayed_page": "30",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_346",
+    "label": "4.2 Programming Languages and Frameworks ",
+    "physical_page": 41,
+    "displayed_page": "30",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_350",
+    "label": "4.3 Frontend Technologies ",
+    "physical_page": 41,
+    "displayed_page": "30",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_354",
+    "label": "4.4 Backend Technologies ",
+    "physical_page": 42,
+    "displayed_page": "31",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_358",
+    "label": "4.5 Database, Authentication and Storage ",
+    "physical_page": 42,
+    "displayed_page": "31",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_362",
+    "label": "4.6 Background Processing and Deployment Modes ",
+    "physical_page": 42,
+    "displayed_page": "31",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_369",
+    "label": "4.7 Security Scanners, AI and Retrieval Services ",
+    "physical_page": 43,
+    "displayed_page": "32",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_373",
+    "label": "4.8 Data Sources and Reference Material ",
+    "physical_page": 44,
+    "displayed_page": "33",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_377",
+    "label": "4.9 Reproducibility and Version Control ",
+    "physical_page": 44,
+    "displayed_page": "33",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_382",
+    "label": "CHAPTER 5\nSYSTEM DESIGN AND IMPLEMENTATION",
+    "physical_page": 45,
+    "displayed_page": "34",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_383",
+    "label": "5.1 Overall ThreatLens Architecture ",
+    "physical_page": 46,
+    "displayed_page": "35",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_387",
+    "label": "5.2 User Interface and Application Navigation ",
+    "physical_page": 46,
+    "displayed_page": "35",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_391",
+    "label": "5.3 Authentication, Authorization and Workspaces ",
+    "physical_page": 46,
+    "displayed_page": "35",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_395",
+    "label": "5.4 Local In-Process Scanning Pipeline ",
+    "physical_page": 47,
+    "displayed_page": "36",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_399",
+    "label": "5.5 Hosted Scanning and Worker-Orchestrated Pipeline ",
+    "physical_page": 47,
+    "displayed_page": "36",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_403",
+    "label": "5.6 Static Scanning Engines and Finding Normalization ",
+    "physical_page": 47,
+    "displayed_page": "36",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_407",
+    "label": "5.7 AI Agent Pipeline and Prompt Design ",
+    "physical_page": 48,
+    "displayed_page": "37",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_411",
+    "label": "5.8 CVSS Scoring and Vulnerability Classification ",
+    "physical_page": 48,
+    "displayed_page": "37",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_415",
+    "label": "5.9 RAG and Compliance Mapping ",
+    "physical_page": 48,
+    "displayed_page": "37",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_419",
+    "label": "5.10 Scan Visualization and Attack Graph ",
+    "physical_page": 49,
+    "displayed_page": "38",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_429",
+    "label": "5.11 Reporting, Exports and Audit Events ",
+    "physical_page": 51,
+    "displayed_page": "40",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_433",
+    "label": "5.12 Database Schema and Data Relationships ",
+    "physical_page": 52,
+    "displayed_page": "41",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_437",
+    "label": "5.13 API Design and Data Flow ",
+    "physical_page": 52,
+    "displayed_page": "41",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_441",
+    "label": "5.14 Security and Reliability Controls ",
+    "physical_page": 52,
+    "displayed_page": "41",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_445",
+    "label": "5.15 Deployment and Configuration ",
+    "physical_page": 53,
+    "displayed_page": "42",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_450",
+    "label": "CHAPTER 6\nTESTING AND SUMMARY OF RESULTS",
+    "physical_page": 54,
+    "displayed_page": "43",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_451",
+    "label": "6.1 Experimental Environment ",
+    "physical_page": 55,
+    "displayed_page": "44",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_456",
+    "label": "6.2 Test Dataset and Ground Truth ",
+    "physical_page": 55,
+    "displayed_page": "44",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_461",
+    "label": "6.3 Functional Test Cases ",
+    "physical_page": 55,
+    "displayed_page": "44",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_465",
+    "label": "6.4 Vulnerability Detection Results ",
+    "physical_page": 56,
+    "displayed_page": "45",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_472",
+    "label": "6.5 Detection Quality Metrics ",
+    "physical_page": 57,
+    "displayed_page": "46",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_477",
+    "label": "6.6 Performance and Scan Duration ",
+    "physical_page": 58,
+    "displayed_page": "47",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_482",
+    "label": "6.7 AI, RAG and Remediation Evaluation ",
+    "physical_page": 58,
+    "displayed_page": "47",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_487",
+    "label": "6.8 Robustness, Security and Error Handling ",
+    "physical_page": 59,
+    "displayed_page": "48",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_492",
+    "label": "6.9 Comparison with Baselines ",
+    "physical_page": 59,
+    "displayed_page": "48",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_497",
+    "label": "6.10 Discussion and Limitations ",
+    "physical_page": 59,
+    "displayed_page": "48",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_502",
+    "label": "CHAPTER 7\nCONCLUSION",
+    "physical_page": 61,
+    "displayed_page": "50",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_503",
+    "label": "7.1 Summary of Achieved Objectives ",
+    "physical_page": 62,
+    "displayed_page": "51",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_507",
+    "label": "7.2 Key Findings and Contributions ",
+    "physical_page": 62,
+    "displayed_page": "51",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_514",
+    "label": "7.3 Limitations and Final Remarks ",
+    "physical_page": 63,
+    "displayed_page": "52",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_519",
+    "label": "CHAPTER 8\nFUTURE SCOPE",
+    "physical_page": 64,
+    "displayed_page": "53",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_520",
+    "label": "8.1 Scanning Coverage and Language Support ",
+    "physical_page": 65,
+    "displayed_page": "54",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_524",
+    "label": "8.2 AI and Retrieval Improvements ",
+    "physical_page": 65,
+    "displayed_page": "54",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_528",
+    "label": "8.3 Continuous Integration and Workflow Automation ",
+    "physical_page": 65,
+    "displayed_page": "54",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_532",
+    "label": "8.4 Scalability, Security and Deployment ",
+    "physical_page": 66,
+    "displayed_page": "55",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_536",
+    "label": "8.5 Extended Validation and User Studies ",
+    "physical_page": 66,
+    "displayed_page": "55",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_549",
+    "label": "REFERENCES",
+    "physical_page": 68,
+    "displayed_page": "57",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_558",
+    "label": "APPENDICES",
+    "physical_page": 69,
+    "displayed_page": "58",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_559",
+    "label": "APPENDIX A — PROJECT AND GROUP PHOTOGRAPHS",
+    "physical_page": 69,
+    "displayed_page": "58",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_561",
+    "label": "APPENDIX B — INDUSTRY PHOTOGRAPHS AND CERTIFICATES",
+    "physical_page": 69,
+    "displayed_page": "58",
+    "verified": true
+  },
+  {
+    "target": "thesis_heading_563",
+    "label": "APPENDIX C — PROJECT COMPETITION AND AWARD CERTIFICATES",
+    "physical_page": 69,
+    "displayed_page": "58",
+    "verified": true
+  }
+]

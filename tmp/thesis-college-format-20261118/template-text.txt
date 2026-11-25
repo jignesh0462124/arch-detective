@@ -1,0 +1,246 @@
+P0 [Normal] 
+P1 [Normal] 		
+P2 [Normal] 
+P3 [Normal] PROJECT TITLE
+P4 [Normal] (Calibri 18 bold)
+P5 [Normal] 
+P6 [Normal] 
+P7 [Normal] 
+P8 [Normal] Project Report submitted 
+P9 [Normal] in
+P10 [Normal] partial fulfillment of requirement for the award of degree of
+P11 [Normal] (Calibri 12 Italic bold)
+P12 [Normal] 
+P13 [Normal] Bachelor of Technology 
+P14 [Normal] in 
+P15 [Normal] Computer Science and Engineering
+P16 [Normal] 	(Calibri 16 bold)	
+P17 [Normal] 
+P18 [Normal] by
+P19 [Normal] Mr. X.Y.Z	1						Ms. X.Y.Z2
+P20 [Normal] Mr. X.Y.Z	3						Mr. X.Y.Z4
+P21 [Normal] (Calibri 16 bold)
+P22 [Normal] 
+P23 [Normal] Guide
+P24 [Normal] Dr./Prof. X.Y.Z.
+P25 [Normal] Designation
+P26 [Normal] (Calibri 16 bold)
+P27 [Normal] 
+P28 [Normal] 
+P29 [Normal] 
+P30 [Normal] November 2026
+P31 [Normal] (Calibri 16 bold)
+P32 [Normal] 
+P33 [Normal] 
+P34 [Normal] 
+P35 [Normal] 
+P36 [Normal] 
+P37 [Normal] 
+P38 [Normal] 
+P39 [Normal] 
+P40 [Normal] 
+P41 [Normal] 
+P42 [Normal] 
+P43 [Normal] 
+P44 [Normal] 
+P45 [Normal] 
+P46 [Normal] 
+P47 [Normal] 
+P48 [Normal] 
+P49 [Normal] 
+P50 [Normal] 
+P51 [Normal] 
+P52 [Normal] 
+P53 [Normal] 
+P54 [Normal] 
+P55 [Normal] PROJECT TITLE
+P56 [Normal] (Calibri 18 Bold)
+P57 [Normal] 
+P58 [Normal] 
+P59 [Normal] Project Report submitted 
+P60 [Normal] in
+P61 [Normal] partial fulfillment of requirement for the award of degree of
+P62 [Normal] (Calibri 12 Italic bold)
+P63 [Normal] 
+P64 [Normal] Bachelor of Technology
+P65 [Normal] in 
+P66 [Normal] Computer Science and Engineering
+P67 [Normal] 	(Calibri 16 bold)	
+P68 [Normal] 
+P69 [Normal] by
+P70 [Normal] Mr. X.Y.Z	1						Ms. X.Y.Z2
+P71 [Normal] Mr. X.Y.Z	3						Mr. X.Y.Z4
+P72 [Normal] (Calibri 16 bold)
+P73 [Normal] 
+P74 [Normal] Guide
+P75 [Normal] Dr./Prof. X.Y.Z.
+P76 [Normal] Designation
+P77 [Normal] (Calibri 16 bold)
+P78 [Normal] 
+P79 [Normal] 
+P80 [Normal] 
+P81 [Normal] 
+P82 [Normal] November 2026
+P83 [Normal] (Calibri 16 bold)
+P84 [Normal] 
+P85 [Normal] 
+P86 [Normal] 
+P87 [Normal] 
+P88 [Normal] 
+P89 [Normal] 
+P90 [Normal] 
+P91 [Normal] 
+P92 [Normal] 
+P93 [Normal] 
+P94 [Normal] 
+P95 [Normal] 
+P96 [Normal] 
+P97 [Normal] © G H Raisoni College of Engineering, Nagpur, Year 2026
+P98 [Normal] 
+P99 [Normal] 
+P100 [Normal] 
+P101 [Normal] Declaration
+P102 [Normal]  
+P103 [Normal] 
+P104 [Normal] We, hereby declare that the project report titled “________ _________ __________ ____________” submitted herein has been carried out by us towards partial fulfillment of requirement for the award of Degree of Bachelor of Technology in Computer Science and Engineering. The work is original and has not been submitted earlier as a whole or in part for the award of any degree / diploma at this or any other Institution / University.
+P105 [Normal] We also hereby assign to G H Raisoni College of Engineering, Nagpur all rights under copyright that may exist in and to the above work and any revised or expanded derivative work based on the work as mentioned. Other work copied from references, manuals etc. are disclaimed.
+P106 [Normal] 
+P107 [Normal] 
+P108 [Normal] 
+P109 [Normal] Date:
+P110 [Normal] Place:
+P111 [Normal] 
+P112 [Normal] 
+P113 [Normal] 
+P114 [Normal] 
+P115 [Normal] 
+P116 [Normal] 
+P117 [Normal] 
+P118 [Normal] 
+P119 [Normal] 
+P120 [Normal] 
+P121 [Normal] 
+P122 [Normal] Certificate
+P123 [Normal] 
+P124 [Normal] The project report entitled as “PROJECT TITLE” submitted by Student1, Student2, Student3 and Student4 for the award of Degree of Bachelor of Technology in Computer Science and Engineering has been carried out under my supervision. The work is comprehensive, complete and fit for evaluation. 
+P125 [Normal] 
+P126 [Normal] 
+P127 [Normal] 
+P128 [Normal] 
+P129 [Normal] 
+P130 [Normal] 
+P131 [Normal] 
+P132 [Normal] 
+P133 [Normal] 
+P134 [Normal] 
+P135 [Normal] 
+P136 [Normal] 
+P137 [Normal] 	
+P138 [Normal] ACKNOWLEDGEMENT
+P139 [Normal] 
+P140 [Normal] 
+P141 [Normal] 
+P142 [Normal] 
+P143 [Normal] 
+P144 [Normal] 
+P145 [Normal] 
+P146 [Normal] 
+P147 [Normal] 
+P148 [Normal] 
+P149 [Normal] 
+P150 [Normal] 
+P151 [Normal] 
+P152 [Normal] 
+P153 [Normal] 
+P154 [Normal] 
+P155 [Normal] 
+P156 [Normal] 
+P157 [Normal] 
+P158 [Normal] 
+P159 [Normal] 
+P160 [Normal] 
+P161 [Normal] 
+P162 [Normal] 
+P163 [Normal] 
+P164 [Normal] 
+P165 [Normal] 
+P166 [Normal] 
+P167 [Normal] 
+P168 [Normal] 
+P169 [Normal] 
+P170 [Normal] 
+P171 [Normal] 
+P172 [Normal] 
+P173 [Normal] 
+P174 [Normal] 
+P175 [Normal] 
+P176 [Normal] 
+P177 [Normal] 
+P178 [Normal] 
+P179 [Normal] 
+P180 [Normal] 
+P181 [Normal] 
+P182 [Normal] 
+P183 [Normal] Instructions for Project report writing
+P184 [Normal] Sequence of pages –
+P185 [Normal] Part A
+P186 [List Paragraph] Cover page   (Without copyright)   
+P187 [List Paragraph] Inner first page (With copyright) © G H Raisoni College of Engineering, Nagpur, Year 2026
+P188 [List Paragraph] Declaration & Certificate – Color print (do not stretch logos)
+P189 [List Paragraph] Certificate from industry (if any) on industry letterhead describing duration and project work done, achievement & stipend/placement details.
+P190 [List Paragraph] Acknowledgement
+P191 [Normal] Note - Cover page & Inner page will be same except inner page will have copyright instruction
+P192 [Normal] 
+P193 [Normal] Part B   (This part will have page numbers in roman i, e. i, ii, iii………..)
+P194 [List Paragraph] Abstract (1-2 pages on Complete Project) --- Roman page nos. (Start)
+P195 [List Paragraph] List of Figures
+P196 [List Paragraph] List of Tables
+P197 [List Paragraph] List of Symbols
+P198 [List Paragraph] List of Publications/Project competitions/Patents filed if any. Roman page nos. (End)
+P199 [Normal] Part C (This part will have page numbers as 1, 2, 3…………..)
+P200 [List Paragraph] Index
+P201 [List Paragraph] Chapters (Numerals/page no. From 2nd page onwards of every chapter and separator between chapters)
+P202 [Normal] 
+P203 [Normal] 
+P204 [Normal] Tentative Chapter Scheme
+P205 [List Paragraph] Introduction
+P206 [List Paragraph] Literature Review (10-14 pages minimum)
+P207 [List Paragraph] Methodology
+P208 [List Paragraph] Data Collection / Tools / Platform used
+P209 [List Paragraph] Design / Implementation / modelling
+P210 [List Paragraph] Testing & Summary of Results
+P211 [List Paragraph] Conclusion (should be in bulleted form)
+P212 [List Paragraph] Future Scope (should be in bulleted form)
+P213 [List Paragraph] References (IEEE/ASME/ASCE style in chronological order). Refer IEEE/ASME/ASCE papers no other format will be allowed.
+P214 [Normal] 
+P215 [Normal] Appendices
+P216 [List Paragraph] List of images/photos of project, group photo with guide/co-guide (if any)
+P217 [List Paragraph] List of image/photos in industry along with industry supervisors
+P218 [List Paragraph] Copy of certificate of winning/participation in project competition/best innovation awards
+P219 [List Paragraph] Paper published if any
+P220 [List Paragraph] Soft copy of entire project report & PPT in CD & Video of project of 1 Min.
+P221 [Normal] 
+P222 [Normal] Page Margin & Font
+P223 [Normal] Paper size A 4, Margin (in Inch): 
+P224 [Normal] Top 1, 	Bottom 1.25, 	Left 1.5, 	Right 0.8, (in Inch)
+P225 [Normal] Page Nos. Bottom center,	 Spacing 1.5 
+P226 [Normal] 
+P227 [Normal] Chapter & chapter title			16 Bold	Upper case
+P228 [Normal] Section & section title			14 Bold	Title case
+P229 [Normal] Sub-section & Sub-section title		12 Bold	Title case
+P230 [Normal] Title of figures, tables			12 Bold	
+P231 [Normal] Other written matter			12 Normal
+P232 [Normal] 
+P233 [Normal] 
+P234 [Normal] Copies of project report (Library -01, Institute Guide -01, Dept. copy-01 and number of students)
+P235 [List Paragraph] Important Note:
+P236 [Normal] Hard Bound for Project Phase in VII Sem.(If project is there in VII Sem only)
+P237 [Normal] Spiral Bound for Project Phase I in VII Sem and Hard Bound for Project Phase II in VIII Sem(If project is there in VII Sem and VIII Sem both)
+P238 [Normal] Hard Bound for Internship Project
+P239 [Normal] Plagiarism check compulsory (Turnitin) less than 15%
+P240 [Normal] Do not change the position of logo(s)
+P241 [Normal] Do not change the aspect ratio of the logo in any case
+TABLES
+[['Name of student', 'Mobile No', 'Mail ID \n(Other than Raisoni.net)', 'Signature'], ['XYZ1', '', '', ''], ['XYZ2', '', '', ''], ['XYZ3', '', '', ''], ['XYZ4', '', '', '']]
+[['Dr. /Prof. XYZ\nGuide\nAssistant / Associate / Professor\n  Department of Computer Science and Engineering \nG H R C E, Nagpur\n                    \n                                       (Calibri 12 bold)                                  ', 'Dr. XYZ\nProject Incharge\nAssistant  Professor\n    Department of Computer Science and Engineering \nG H R C E, Nagpur\n\n           (Calibri 12 bold)                                  ']]
+[['Dr. XYZ\nHead\nDepartment of Computer Science and Engineering\nG H R C E, Nagpur\n                                       (Calibri 12 bold)                                  ', 'Dr. Sachin Untawale\nDirector\nG H R C E,  Nagpur\n\n  (Calibri 12 bold)                                  ']]

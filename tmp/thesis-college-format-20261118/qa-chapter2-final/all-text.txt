@@ -1,0 +1,1655 @@
+PAGE 1
+ThreatLens: An AI-Assisted Framework for Automated
+Source Code Security Assessment, Vulnerability
+Prioritization and Compliance Analysis
+Project Report submitted in partial fulfillment of the requirements for the award of
+the degree of
+Bachelor of Technology
+in
+Computer Science and Engineering
+by
+Mr. Jignesh Sonewane Mr. Soham Pashine
+Mr. Bhargave Bawane
+Under the guidance of
+Prof. Pankaj Sonewane
+Head of Department (Data Science, IoT and Cyber Security)
+November 2026
+Department of Computer Science and Engineering
+G H Raisoni College of Engineering
+An Empowered Autonomous Institute affiliated to Rashtrasant Tukadoji Maharaj Nagpur University, Nagpur
+Accredited by NAAC with “A++” Grade (3rd Cycle)
+CRPF Gate No. 3, Hingna Road, Digdoh Hills, Nagpur – 440 016 (INDIA)
+T: +91 9604787184, 9689903286, 9921008391 | E: principal.ghrce@raisoni.net | W: ghrce.raisoni.net
+
+PAGE 2
+ThreatLens: An AI-Assisted Framework for Automated
+Source Code Security Assessment, Vulnerability
+Prioritization and Compliance Analysis
+Project Report submitted in partial fulfillment of the requirements for the award of
+the degree of
+Bachelor of Technology
+in
+Computer Science and Engineering
+by
+Mr. Jignesh Sonewane Mr. Soham Pashine
+Mr. Bhargave Bawane
+Under the guidance of
+Prof. Pankaj Sonewane
+Head of Department (Data Science, IoT and Cyber Security)
+November 2026
+Department of Computer Science and Engineering
+G H Raisoni College of Engineering
+An Empowered Autonomous Institute affiliated to Rashtrasant Tukadoji Maharaj Nagpur University, Nagpur
+Accredited by NAAC with “A++” Grade (3rd Cycle)
+CRPF Gate No. 3, Hingna Road, Digdoh Hills, Nagpur – 440 016 (INDIA)
+T: +91 9604787184, 9689903286, 9921008391 | E: principal.ghrce@raisoni.net | W: ghrce.raisoni.net
+© G H Raisoni College of Engineering, Nagpur, 2026
+
+PAGE 3
+DECLARATION
+We hereby declare that the project report titled "ThreatLens: An AI-Assisted Framework
+for Automated Source Code Security Assessment, Vulnerability Prioritization and
+Compliance Analysis" submitted herein has been carried out by us towards partial
+fulfillment of the requirements for the award of the degree of Bachelor of Technology in
+Computer Science and Engineering. The work is original and has not been submitted
+earlier as a whole or in part for the award of any degree or diploma at this or any other
+institution or university.
+We also hereby assign to G H Raisoni College of Engineering, Nagpur, all rights under
+copyright that may exist in and to the above work and any revised or expanded derivative
+work based on it, as specified by the college declaration template. Information obtained
+from other references materials, technical manuals has been appropriately cited
+throughout the thesis.
+Student Details and Signatures
+Mobile
+Student name Email ID Signature
+number
+Jignesh.sonewane.cyb@ghrce.r
+Mr. Jignesh Sonewane 7499325646
+aisoni.net
+Mr. Soham Pashine 8956330692 Sohampashine0@gmail.com
+bhargav.bawane.cyb@ghrce.ra
+Mr. Bhargav Bawane
+isoni.net
+Date: [ / / ]
+Place: Nagpur
+
+PAGE 4
+CERTIFICATE
+The project report entitled "ThreatLens: An AI-Assisted Framework for Automated Source
+Code Security Assessment, Vulnerability Prioritization and Compliance Analysis"
+submitted by [Student 1], [Student 2], [Student 3] and [Student 4] for the award of the
+degree of Bachelor of Technology in Computer Science and Engineering has been carried
+out under my supervision. The work is comprehensive, complete and fit for evaluation.
+Approval and Signature Details
+Guide Project Incharge
+Pankaj Sonewane [Fill]
+[Signature] [Signature]
+Institutional Approval
+Head of Department Director
+[Fill] [Fill]
+[Signature] [Signature]
+[Enter official names and designations, verify the declaration and obtain the prescribed
+signatures.]
+
+PAGE 5
+ACKNOWLEDGEMENT
+We would like to thank our project guide. Pankaj Sonewane, for his guidance and
+direction to support during the development of ThreatLens Software. His feedback during
+project to discussions helped us to improve our and address the technical challenges, and
+present our work more efficiently.
+We are also thankful to the faculty and staff of G H Raisoni College of Engineering,
+Nagpur, for providing the facilities and academic environment, computational resources
+and administration.
+We also acknowledge the researchers, open-source contributors and standards
+organizations whose published research, technical documentation and security
+frameworks compliance supported the development of ThreatLens(Archon) Software.
+Their contributions provided valuable insights into vulnerability detection, code analysis,
+RAG, CVSS-based risk assessment and remediation recommendations. Responsibility for
+the system architecture, database Security implementation, experimental evaluation,
+and audit security and conclusions in solution format ai automated way.
+We are grateful to our families and friends for their patience, encouragement and
+support during the development, we acknowledge the effort of every member of the
+project team in maintaining the code, reviewing, testing and preparing the manuscript
+and thesis, and completing the work collaboratively.
+
+PAGE 6
+ABSTRACT
+Security assessment is often treated as a separate activity from software development.
+Developers may receive vulnerability reports that identify a problem but provide little
+context about the affected code, its potential impact, or the steps needed to address it.
+Compliance requirements add another challenge, particularly when technical findings
+must be connected to documented controls or browser-extension store policies. These
+gaps make security review difficult to interpret and act upon, especially for small
+development teams.
+This thesis presents ThreatLens, a web-based platform that brings codebase auditing,
+threat modeling, compliance assessment, and remediation guidance into a single
+workflow. Users can submit project archives for analysis and examine saved results
+through a read-only, editor-style workbench. The platform combines static security
+checks with language-model-assisted analysis to identify potential weaknesses and
+provide explanations grounded in available source evidence. Findings include severity,
+recorded file locations, relevant code excerpts, and remediation guidance.
+The workbench connects source files with findings, control mappings, and suggested
+verification steps. An evidence-based graph helps users explore relationships between
+findings and affected components without presenting those relationships as confirmed
+exploitation paths. Security Advisor provides contextual explanations and code
+suggestions, while keeping proposed changes separate from the uploaded source.
+Browser-extension reviews extend this workflow to Chrome Web Store and Microsoft
+Edge Add-ons policies, distinguishing detected violations from requirements that need
+manual review or cannot be assessed from the submitted package.
+ThreatLens also provides saved audit history, finding triage, comparison of compatible
+extension reviews, and downloadable reports. Workspace authorization, private source
+storage, evidence redaction, and time-limited source previews support controlled access
+to sensitive project information. Verification covers automated regressions, access-
+control checks, report generation, and representative browser workflows; these checks
+i
+
+PAGE 7
+establish functional behavior rather than proving universal vulnerability-detection
+accuracy.
+The principal contribution is an integrated, traceable review workflow that helps
+developers move from a reported concern to its supporting evidence, possible remedy,
+and verification approach. ThreatLens supports informed security decisions, but does not
+replace manual testing, professional assessment, or official compliance and store-
+approval processes.
+Keywords: Codebase Security Auditing; Static Analysis; Threat Modeling; Compliance
+Assessment; Large Language Models; Secure Software Development.
+ii
+
+PAGE 8
+LIST OF FIGURES
+Page
+Figure No. Figure Name
+No.
+Overall architecture of ThreatLens showing the application
+Fig. 1.1 interface, authenticated API, source preparation, security 15
+analysis and private persistence.
+Complementary security-review approaches and their
+evidence: static patterns, package versions, suspected
+Fig. 2.1 27
+credentials, configuration settings, model explanations and
+human judgement.
+Research workflow from problem definition and requirements
+Fig. 3.1 to architecture, implementation, verification and discussion of 31
+limitations.
+Separation between the local API/workbench environment
+Fig. 4.1 39
+and the optional scanner-worker and retrieval environment.
+Read-only Audit Workbench showing source navigation, a
+Fig. 5.1 45
+selected finding and its recorded evidence.
+Attack Graph interface using isolated test-fixture data: (a)
+source associations and graph controls; (b) selected finding
+Fig. 5.2 47
+evidence and remediation guidance. Connections do not
+establish confirmed exploitability..
+Saved audit report excerpt showing recorded source evidence,
+remediation and suggested verification checks. The excerpt
+Fig. 6.1 53
+illustrates reporting behaviour, not independently validated
+detection accuracy.
+Summary of project objectives, corresponding implementation
+Fig. 7.1 59
+evidence and remaining validation needs.
+Proposed progression from reproducible benchmarks and
+Fig. 8.1 broader coverage to controlled automation, deployment 63
+evaluation and user studies.
+iii
+
+PAGE 9
+LIST OF TABLES
+Page
+Table No. Table Name
+No.
+Table 6.1 Functional Test Matrix 52
+iv
+
+PAGE 10
+LIST OF SYMBOLS AND ABBREVIATIONS
+Symbol Description Unit
+True positives: correctly detected, independently
+TP Count
+confirmed vulnerabilities
+False positives: reported findings not confirmed as
+FP Count
+vulnerabilities
+False negatives: confirmed vulnerabilities missed by the
+FN Count
+analysis
+P Precision: TP / (TP + FP) Dimensionless
+R Recall: TP / (TP + FN) Dimensionless
+F₁ F1-score: harmonic mean of precision and recall Dimensionless
+Nₑ Number of files eligible for analysis Count
+v
+
+PAGE 11
+LIST OF PUBLICATIONS PROJECT COMPETITIONS AND PATENTS
+Sr. No. Category Details
+Not applicable. No research paper related to this
+1 Publications
+project has been published to date.
+Awarded First Prize for the project “ThreatLens” at
+Project Competition /
+2 [official seminar name], organised by [department
+Award
+and institution], on [date].
+Not applicable, if no patent application has been
+3 Patent Filings
+filed.
+vi
+
+PAGE 12
+TABLE OF CONTENTS
+ABSTRACT .................................................................................................................. i
+LIST OF FIGURES ....................................................................................................... iii
+LIST OF TABLES ......................................................................................................... iv
+LIST OF SYMBOLS AND ABBREVIATIONS .................................................................... v
+LIST OF PUBLICATIONS PROJECT COMPETITIONS AND PATENTS ................................ vi
+CHAPTER 1 INTRODUCTION ....................................................................................... 5
+1.1 Background and Motivation ..................................................................................... 6
+1.2 Problem Statement .................................................................................................. 7
+1.3 Existing Approaches and Challenges ........................................................................ 9
+1.4 Research Gap .......................................................................................................... 10
+1.5 Aim and Objectives ................................................................................................. 11
+1.6 Research Questions ................................................................................................ 12
+1.7 Project Scope and Limitations ................................................................................ 13
+1.8 Main Contributions ................................................................................................ 14
+1.9 Thesis Organization ................................................................................................ 17
+CHAPTER 2 LITERATURE REVIEW .............................................................................. 19
+2.1 Introduction to Software Vulnerability Detection ................................................. 20
+2.2 Static Application Security Testing (SAST) .............................................................. 21
+2.3 Dependency, Secret and Configuration Analysis ................................................... 22
+2.4 AI and Large Language Models for Code Security .................................................. 23
+2.5 Retrieval-Augmented Generation in Security Analysis .......................................... 24
+2.6 Vulnerability Taxonomies and CVSS Prioritization ................................................. 25
+2.7 Compliance Mapping and Remediation Guidance ................................................. 26
+2.8 Comparison with Existing Security Assessment Tools ........................................... 26
+2.9 Comparative Literature Synthesis .......................................................................... 28
+2.10 Consolidated Research Gap ................................................................................. 29
+1
+
+PAGE 13
+CHAPTER 3 METHODOLOGY .................................................................................... 30
+3.1 Research Design and Workflow ............................................................................. 31
+3.2 Functional and Non-Functional Requirements ...................................................... 31
+3.3 Test Project and Input Selection ............................................................................ 32
+3.4 Source Code Ingestion and Preprocessing ............................................................. 32
+3.5 Static Scanning and Finding Normalization ............................................................ 33
+3.6 LLM-Assisted Analysis and RAG .............................................................................. 33
+3.7 Severity Scoring and Compliance Mapping ............................................................ 33
+3.8 Remediation and Report Generation ..................................................................... 34
+3.9 Evaluation Protocol ................................................................................................ 34
+3.10 Evaluation Metrics ................................................................................................ 34
+3.11 Ethical and Security Considerations ..................................................................... 35
+CHAPTER 4 DATA COLLECTION, TOOLS AND COMPUTATIONAL PLATFORM .............. 36
+4.1 Hardware and Operating Environment .................................................................. 37
+4.2 Programming Languages and Frameworks ............................................................ 37
+4.3 Frontend Technologies ........................................................................................... 37
+4.4 Backend Technologies ............................................................................................ 38
+4.5 Database, Authentication and Storage .................................................................. 38
+4.6 Background Processing and Deployment Modes .................................................. 38
+4.7 Security Scanners, AI and Retrieval Services .......................................................... 39
+4.8 Data Sources and Reference Material.................................................................... 40
+4.9 Reproducibility and Version Control ...................................................................... 40
+CHAPTER 5 SYSTEM DESIGN AND IMPLEMENTATION ............................................... 41
+5.1 Overall ThreatLens Architecture ............................................................................ 42
+5.2 User Interface and Application Navigation ............................................................ 42
+5.3 Authentication, Authorization and Workspaces .................................................... 42
+5.4 Local In-Process Scanning Pipeline ......................................................................... 43
+5.5 Hosted Scanning and Worker-Orchestrated Pipeline ............................................ 43
+2
+
+PAGE 14
+5.6 Static Scanning Engines and Finding Normalization .............................................. 43
+5.7 AI Agent Pipeline and Prompt Design .................................................................... 44
+5.8 CVSS Scoring and Vulnerability Classification ........................................................ 44
+5.9 RAG and Compliance Mapping ............................................................................... 44
+5.10 Scan Visualization and Attack Graph .................................................................... 45
+5.11 Reporting, Exports and Audit Events ................................................................... 47
+5.12 Database Schema and Data Relationships ........................................................... 48
+5.13 API Design and Data Flow..................................................................................... 48
+5.14 Security and Reliability Controls .......................................................................... 48
+5.15 Deployment and Configuration ............................................................................ 49
+CHAPTER 6 TESTING AND SUMMARY OF RESULTS .................................................... 50
+6.1 Experimental Environment .................................................................................... 51
+6.2 Test Dataset and Ground Truth .............................................................................. 51
+6.3 Functional Test Cases ............................................................................................. 51
+6.4 Vulnerability Detection Results .............................................................................. 52
+6.5 Detection Quality Metrics ...................................................................................... 53
+6.6 Performance and Scan Duration ............................................................................ 54
+6.7 AI, RAG and Remediation Evaluation ..................................................................... 54
+6.8 Robustness, Security and Error Handling ............................................................... 55
+6.9 Comparison with Baselines .................................................................................... 55
+6.10 Discussion and Limitations ................................................................................... 55
+CHAPTER 7 CONCLUSION ......................................................................................... 57
+7.1 Summary of Achieved Objectives ........................................................................... 58
+7.2 Key Findings and Contributions .............................................................................. 58
+7.3 Limitations and Final Remarks ............................................................................... 59
+CHAPTER 8 FUTURE SCOPE ...................................................................................... 60
+8.1 Scanning Coverage and Language Support ............................................................ 61
+8.2 AI and Retrieval Improvements .............................................................................. 61
+3
+
+PAGE 15
+8.3 Continuous Integration and Workflow Automation .............................................. 61
+8.4 Scalability, Security and Deployment ..................................................................... 62
+8.5 Extended Validation and User Studies ................................................................... 62
+REFERENCES ............................................................................................................ 64
+APPENDICES ............................................................................................................ 65
+APPENDIX A PROJECT AND GROUP PHOTOGRAPHS ................................................. 65
+APPENDIX B INDUSTRY PHOTOGRAPHS AND CERTIFICATES ..................................... 65
+APPENDIX C PROJECT COMPETITION AND AWARD CERTIFICATES ............................. 65
+4
+
+PAGE 16
+CHAPTER 1
+INTRODUCTION
+
+PAGE 17
+1.1 Background and Motivation
+Software applications handle personal information and business transactions. They also
+carry messages and give people access to essential services. A decision made while
+writing a single part of an application, such as where to check a permission or how to
+store a sensitive value, can affect all the users who depend on it. Input validation and
+database query construction are similarly easy to overlook when the immediate goal is
+to make a feature work. Security review belongs in the development process while there
+is still time to inspect and change those decisions. The National Institute of Standards and
+Technology (NIST) makes this point in its Secure Software Development Framework,
+which places security practices throughout the software development life cycle. [1]
+As a project grows, the work of checking a warning is seldom confined to the line named
+in the alert. The developer may need to follow a value from the file in which it arrives to
+the file in which it is used. A framework may handle one step, while a library or a local
+helper handles another. The review then becomes a question of which checks are already
+in place and what would happen if the proposed correction changed the way the
+application behaves.
+Consider an ordinary review after a change to an account page. A developer receives a
+warning and opens the affected file. To decide whether to act, they need the original
+location, enough surrounding code to understand it and a clear account of what the
+warning means. If the finding is still open when another developer returns to the audit,
+those details should be available without reconstructing the investigation from memory.
+This is the part of source review that motivates ThreatLens.
+Static Application Security Testing (SAST) examines source without running the
+application. It can point a reviewer towards code worth checking, including unsafe output
+handling, injection-prone operations and possible exposure of credentials. The reported
+line is where the investigation starts. A rule can raise an alert for code that is safe in
+context, and it can miss behaviour that depends on application state or business rules.
+The reviewer still has to look at the code before classifying the issue. [2]
+6
+
+PAGE 18
+A language model can explain an unfamiliar operation or draft a possible remedy. That
+help is useful when a scanner has identified a concrete issue but its message leaves the
+developer unsure what to change. The explanation may also make assumptions about
+code the model has not seen. NIST describes plausible, unsupported model output as
+confabulation and recommends evaluating generated output and checking the sources
+that support it. In an audit, that means keeping each generated explanation beside the
+evidence it discusses so a reviewer can check the two against one another. [3]
+We developed ThreatLens to support review from the time a project is submitted to the
+time a finding is revisited or reported. A developer can follow the progress of an analysis,
+open a saved finding and inspect the available source before deciding on the next step.
+The purpose of the workflow is to make that decision easier to trace. The decision itself
+still belongs to the reviewer.
+1.2 Problem Statement
+An automated warning has practical value when a developer can connect it to a specific
+part of the application. A category name alone cannot tell the reviewer which statement
+caused the warning or whether it matters in the conditions where the software runs.
+Before proposing a fix, the reviewer needs to establish whether input can reach the
+recorded operation and whether a check elsewhere already prevents the unsafe case. A
+useful finding supplies the location and evidence for that investigation.
+An HTML update provides a simple example. Assigning a fixed, trusted value and
+assigning a value that an outside user can influence require different conclusions, even
+when both uses appear on the same kind of line. The recorded evidence can establish
+that the update occurs. It may leave the origin of the value or the surrounding protections
+unclear. In that situation, asking the developer to check the value and its path is more
+useful than presenting the warning as confirmed cross-site scripting or promising that a
+replacement will fix it.
+The same distinction affects remediation. A change may address the operation a scanner
+recognised while failing to address the actual source of the problem. It may also alter a
+7
+
+PAGE 19
+legitimate part of the interface. A proposed remedy is easier to assess when it says what
+behaviour must stay the same and which checks would show that the change is
+acceptable.
+Reviewers also need a way to decide what to look at first. The Common Vulnerability
+Scoring System (CVSS) describes technical severity. FIRST treats that score as one input
+to vulnerability management, where the organisation and its environment still matter. A
+high score can justify earlier review, but a developer still needs to know whether the
+affected function is available in their deployment and what the application depends on it
+for. ThreatLens therefore presents severity as a property of the finding and leaves the
+decision about operational priority to the reviewer. [4]
+A review system has to show what happened when an audit could not run to completion.
+Uploaded archives are untrusted, and recovery from a failure must not make a partially
+analysed project appear clean. The source preview may be preparing while analysis runs.
+An external service may be unavailable. A developer may leave the page and return to
+the audit later. Each condition calls for a different explanation because it leaves a
+different amount of evidence available to the reviewer.
+For instance, an accepted upload means the service received and recorded the
+submission. It does not mean that every check ran or that the result is ready. If a preview
+later expires, the report may still be available. The interface should make clear that the
+evidence is limited by the expired preview rather than suggesting that the finding has
+disappeared.
+The problem addressed here is how to connect automated checks to a review process
+that people can understand and repeat. ThreatLens needs to keep each finding tied to
+the evidence that produced it, offer remediation that can be checked and restrict private
+material to the people authorised to see it. The resulting audit should tell the reader what
+the system assessed and where its assessment stopped.
+8
+
+PAGE 20
+1.3 Existing Approaches and Challenges
+In a manual review, the reviewer can ask whether a piece of code behaves as the
+application intended and whether it follows the business rules that apply to it. That
+context is especially useful when a general scanner rule would make little sense on its
+own. Manual review depends on the time and experience available, though. Two
+reviewers may also follow different paths through a large project unless the scope and
+the evidence they inspected are recorded.
+Rule-based scanners help with checks that can be repeated over the same files. Different
+scanners can describe the same underlying condition using different names or point to
+different parts of it. Conversely, the same rule can identify separate occurrences that
+need separate review. Consolidation has to keep enough information to tell these cases
+apart. If a result is combined with another one, the reviewer should still be able to see
+where the original evidence came from.
+A conversational assistant can explain a finding in terms familiar to the developer. An
+answer given without the exact source version may fit a similar-looking example and still
+be wrong for the saved audit. In ThreatLens, finding-specific guidance uses the evidence
+available to the authorised reviewer. The suggestion appears separately from the
+uploaded source so an example can be read without assuming that it is part of the original
+code.
+Some compliance questions cannot be answered from source alone. Chrome Web Store
+policies cover the extension and the way it is presented, including declarations and
+marketing materials. Microsoft Edge Add-ons policies also consider matters such as
+permissions, privacy, functionality and changes to browser settings. A built extension ZIP
+can show what is in the package or which permissions the extension requests. It may not
+tell the reviewer what the developer disclosed or whether the user saw an appropriate
+explanation. Those questions may require a declaration or a manual check. [5] [6]
+The same record can therefore contain several kinds of information. A scanner alert
+records an observation. A suggested control mapping gives the reviewer a policy to
+9
+
+PAGE 21
+consider. A model response may explain either item, and a reviewer can record a decision
+separately. Keeping these entries distinct lets a reader see what was measured, what was
+suggested and what still needs evidence.
+1.4 Research Gap
+The research gap addressed by this thesis is how automated results can be carried into
+an assessment that remains traceable as the reviewer moves between views and returns
+to a saved audit. Tools already exist for parts of that work. This study examines their
+integration within ThreatLens and asks what evidence would show that the integrated
+workflow behaves as intended.
+The first issue is continuity of evidence. A developer should be able to open a finding in
+the Audit Workbench, select it again in Findings, and recognise the same record in the
+Attack Graph, Security Advisor and Reports. The title of a finding may be shared by more
+than one occurrence, so a title is a poor substitute for its audit, file location and recorded
+evidence. Each view can serve a different purpose while still making it clear which finding
+is under review.
+That requirement becomes more important when a view is filtered or only some records
+have loaded. A count can be accurate for the view shown and still differ from the saved
+audit total. The interface needs to say which count it presents. An evidence link should
+likewise keep its original audit and location, even when the source excerpt is temporarily
+unavailable.
+The second issue is how to interpret remediation guidance. A reviewer should be able to
+see which part of a suggestion comes from the evidence and which part depends on an
+assumption about the application. The proposed change must remain separate from the
+original code. Its status should also be clear: generating a suggestion shows that the
+system produced a response, while applying a change and checking it are separate
+actions.
+The third issue is how to assess coverage and correctness. A completed job means the
+scan reached its end state. It may still leave files, vulnerability classes or policy
+10
+
+PAGE 22
+requirements outside the assessment. Evaluation therefore needs to identify the input
+that was eligible, the evidence saved, and the checks the system did not perform. Access
+isolation and consistent reporting can be tested with known cases. Detection accuracy
+requires a different comparison against independent labels.
+These issues define what the integration has to demonstrate. The implementation can
+be examined through known workflows and their saved evidence. A claim that the
+combined system detects more vulnerabilities than another method would require a
+controlled comparison beyond that implementation check.
+1.5 Aim and Objectives
+The aim of the project is to develop and evaluate ThreatLens as an AI-assisted framework
+for automated source-code security assessment, vulnerability prioritisation and
+compliance analysis. The work starts from recorded source evidence and gives
+developers a way to inspect a finding before deciding whether to act on it.
+The project objectives are:
+• Provide an authenticated submission route that validates supported project inputs
+and prepares the source for assessment.
+• Combine static checks with language-model-assisted analysis while keeping the origin
+and source evidence of each finding.
+• Organise findings in a consistent form with the file location, vulnerability category,
+available severity information and review status.
+• Provide a read-only Audit Workbench where developers can inspect source, findings,
+remediation steps and suggested checks.
+• Offer explanations and code suggestions on request, separate from the uploaded code
+and subject to review before use.
+• Show evidence relationships and relevant compliance mappings while identifying
+which paths and controls still need verification.
+11
+
+PAGE 23
+• Preserve audit history and reports so authorised reviewers can reopen results at a
+later stage.
+• Use documented test cases and fixtures to examine workflow behaviour, evidence
+consistency, access restrictions, failure handling and interface responsiveness.
+The objectives define a review workflow; they do not require unrestricted execution of
+uploaded projects or automatic acceptance of generated fixes. Detection is bounded by
+the checks performed and the evidence those checks can reach.
+1.6 Research Questions
+The project addresses four research questions.
+RQ1. How can static security checks and language-model-assisted analysis be combined
+while preserving the source location, provenance and supporting evidence of each
+finding?
+RQ2. How can an editor-style workbench present findings, severity information and
+remediation guidance so that users can distinguish recorded facts from assumptions and
+generated suggestions?
+RQ3. How can security findings and compliance assessments be presented together
+without confusing vulnerability severity, policy outcomes and unassessed requirements?
+RQ4. How reliably does the implemented workflow handle authorised access, incomplete
+scans, unavailable services, source expiry and the reopening of saved results?
+The four questions call for different kinds of evidence. The first two can be investigated
+by following known findings from analysis into the Workbench and checking which source
+evidence remains available. The third calls for a review of policies with different evidence
+requirements, such as a check the package can answer and one that still needs a
+developer declaration. The fourth concerns how the system behaves when access
+changes, processing is incomplete or source is no longer available.
+Repeatable tests can establish whether the workflow handles those cases consistently.
+They cannot establish precision or recall unless the expected results were independently
+12
+
+PAGE 24
+labelled and a procedure was set for matching findings to those labels. In the same way,
+a screenshot can show what is available on a page, but a usability study would be needed
+to tell whether reviewers can interpret it reliably.
+1.7 Project Scope and Limitations
+The main workflow covers submitted source projects and saved audit results. A
+developer supplies a project ZIP, and the service prepares source previews as they
+become available. Recorded findings can then be examined in the read-only Workbench.
+Related views support filtering, triage, evidence relationships, contextual guidance and
+report downloads. Repository features depend on the required GitHub setup and the
+permissions of the person using them.
+ThreatLens also reviews built ZIP packages intended for the Chrome Web Store or
+Microsoft Edge Add-ons. The review compares available package evidence and supplied
+declarations with versioned policy references. It distinguishes violations detected by the
+checks from requirements that need human review, remain unassessed or do not apply.
+ThreatLens does not install the extension, inspect the developer's browser settings or
+submit the package to a store.
+The extension package illustrates a wider limit of the project. A package may contain
+enough information to compare a declared permission with a policy. A separate
+requirement may depend on behaviour or information outside that package. If the
+reviewer cannot obtain that evidence, an unassessed status conveys more than a pass
+would. The store makes its own approval decision.
+Assessment is bounded by the source that is available, the supported analysis methods,
+the input limits and the services configured for the run. Static checks do not reproduce
+every runtime condition or establish that the application follows every business rule.
+Model explanations can also be wrong. A report with no recorded findings shows what
+the completed assessment recorded for the supplied input. It cannot rule out weaknesses
+outside that coverage.
+13
+
+PAGE 25
+Remediation suggestions require review and testing. When repository publishing is
+configured, an authorised user can review a diff and publish it through a separate branch
+and pull request. The workflow does not change the target branch automatically. A
+proposed change, a structural validation check and an open pull request each provide a
+different record of progress. None establishes on its own that the original finding has
+been resolved.
+Project information is restricted through authenticated workspace access and private
+source storage. Source previews are available for a defined period. Saved findings and
+reports have their own history, so a reviewer may be able to revisit the audit after the
+preview has expired. Where the deployment uses an external model service, service
+availability and the way the configuration handles submitted material also need to be
+considered when projects are selected for assessment.
+These limits matter when interpreting results. A past report can establish what the
+system recorded at the time of the audit. If its underlying preview is no longer available,
+the report cannot substitute for the original source when a reviewer needs to test a
+detailed explanation. That follow-up may require a new audit of an authorised copy of
+the project.
+1.8 Main Contributions
+Figure 1.1 shows the components used in the audit workflow. The application sends
+authorised requests to the API. Source preparation and analysis may progress
+independently, and the resulting records make it possible to revisit an assessment from
+another page. The contributions below concern the workflow built around those records.
+14
+
+PAGE 26
+Figure 1.1: Overall architecture of ThreatLens showing the application interface,
+authenticated API, source preparation, security analysis and private persistence.
+Contribution 1. Integrated audit workflow.
+ThreatLens brings project submission, analysis progress, source review, finding
+management and reporting into the same application. An audit reference lets a
+developer return to a saved result without having to remain on the page that started the
+scan. This is useful when one person starts the audit and another authorised member
+reviews it later.
+Contribution 2. Source-oriented review environment.
+The Audit Workbench places the file tree, read-only source viewer and finding details
+together. A developer can compare the explanation with the recorded line and its
+surrounding context without leaving the audit. The workbench is for inspection; its
+source display is separate from the process of changing a repository.
+15
+
+PAGE 27
+Contribution 3. Controlled remediation presentation.
+The interface separates written remediation from a requested code suggestion. When a
+code solution is generated, it can include the assessment, the proposed code, the
+assumptions behind it and suggested verification steps. An interrupted response stays
+identifiable as incomplete. This lets the reviewer decide whether the available guidance
+is sufficient even when a model response did not finish.
+Contribution 4. Traceable finding and evidence views.
+Findings, the graph and reports refer back to saved audit information. The graph can
+show which components or locations are associated with recorded findings. Its
+connections are evidence relationships. A reviewer would need independent runtime
+evidence before describing one as an attack path that was actually used.
+Contribution 5. Store-specific extension-policy review.
+The extension workflow uses separate policy references for Chrome and Edge. It
+combines evidence from the built package with the developer's declarations and shows
+where manual review is still needed. A corrected package can be reviewed as a new audit.
+Comparisons are useful where the review settings and coverage are compatible;
+otherwise a changed result also needs to be interpreted in light of the checks that ran.
+Contribution 6. Verification of supporting system behaviour.
+Documented checks address access isolation, scan state handling, source availability,
+report completeness and interface responsiveness. These checks are useful when they
+reproduce a situation a reviewer would encounter. For example, a test that reopens a
+saved scan checks whether the workflow retains the result. It says nothing about how
+many vulnerabilities the detector missed.
+The contribution of this work is the way the system connects those review functions and
+records the evidence available at each step. ThreatLens uses language models as part of
+that workflow and relies on a reviewer to decide which findings and suggestions are
+supported.
+16
+
+PAGE 28
+1.9 Thesis Organization
+Chapter 1 introduces the problem, explains why it matters to source review and sets out
+the aim, questions and scope of ThreatLens.
+Chapter 2 reviews static analysis, language-model assistance, vulnerability classification,
+compliance mapping and remediation. It compares what the different approaches
+contribute to an assessment.
+Chapter 3 sets out the methodology, including how inputs are chosen, how findings are
+formed and how the workflow is evaluated. It also considers the responsibility of handling
+submitted projects.
+Chapter 4 describes the development environment, tools, data sources and supporting
+services. These details separate the available platform from the configuration used in a
+particular evaluation.
+Chapter 5 explains the architecture and implementation, from authentication and scan
+processing to source review, compliance assessment and report generation.
+Chapter 6 presents the test procedure, observed results and limitations. It distinguishes
+behaviour verified by functional checks from results that would require a separate
+detection-quality evaluation.
+Chapter 7 draws the conclusions that the available evidence supports. Chapter 8 outlines
+work on broader coverage, evaluation, deployment and user studies. The references and
+appendices provide the supporting literature and technical material.
+References Cited in This Chapter
+[1] M. Souppaya, K. Scarfone and D. Dodson, Secure Software Development
+Framework Version 1.1: Recommendations for Mitigating the Risk of Software
+Vulnerabilities, NIST SP 800-218, February 2022. Official publication.
+[2] OWASP Foundation, Static Analysis, OWASP Developer Guide. Official
+documentation.
+17
+
+PAGE 29
+[3] National Institute of Standards and Technology, Artificial Intelligence Risk
+Management Framework: Generative Artificial Intelligence Profile, NIST AI 600-1,
+July 2024. Official publication.
+[4] FIRST, Common Vulnerability Scoring System Version 3.1: Specification Document.
+Official specification.
+[5] Google, Chrome Web Store Program Policies. Official policies.
+[6] Microsoft, Developer Policies for the Microsoft Edge Add-ons Store. Official
+policies.
+18
+
+PAGE 30
+CHAPTER 2
+LITERATURE REVIEW
+
+PAGE 31
+2.1 Introduction to Software Vulnerability Detection
+Vulnerability detection starts with a question about behaviour: can a weakness in the
+software cause a security failure under the conditions in which the software is used? A
+scanner can often point to the relevant operation before that question has been
+answered. The report may identify where a value is processed, for example, while leaving
+open where the value came from and whether a check ran before it reached that point.
+A developer reviewing the report needs both the observation and the context needed to
+interpret it.
+A source location makes a finding easier to investigate. It also keeps the scope of the
+claim visible. A line that invokes a sensitive operation does not establish which users can
+reach it, how it is configured in production or what other parts of the application do
+before the call. One review may be able to settle those questions from the surrounding
+files. Another may have to leave them open because the deployment settings or the
+relevant code were not part of the submitted project.
+The methods in this chapter look at different parts of that problem. Source analysis can
+recognise a code pattern and, where the tool supports it, follow data between
+operations. A dependency check reasons from package identity and version information.
+A reviewer can consider who can reach a function and which business rules apply to it.
+These kinds of evidence belong side by side in an assessment, since one tool may answer
+a question that another never examined.
+A report with no findings is particularly easy to overread. For a reviewer, there is a
+practical difference between a file that was checked without a reported match and a file
+the tool could not analyse. There is also a difference between an alert that remains open
+and one the reviewer has examined and ruled out. Those distinctions shape the
+discussion that follows. They let us compare methods by what they examine and what
+they can support, without assuming that running several of them together improves
+accuracy.
+20
+
+PAGE 32
+2.2 Static Application Security Testing (SAST)
+Static Application Security Testing (SAST) examines a program without running the target
+application. The OWASP Developer Guide describes techniques that apply rules, patterns
+or models to source or other representations of the program [1]. A pattern rule may
+record a particular call or expression. A check that works with a syntax tree can
+distinguish the role of that expression in the program instead of relying on the characters
+around it. Neither approach necessarily answers whether that part of the program will
+run in the deployment being reviewed.
+Control-flow and data-flow methods address different questions. A control-flow analysis
+concerns the possible order of statements, such as whether a decision can bypass a
+check. A data-flow analysis asks how a value moves and changes as the program runs. A
+reviewer may need both accounts. The fact that a value could reach one statement in the
+source is less informative when the statement sits behind a condition that cannot be met
+in the relevant setting.
+OWASP uses taint analysis to describe the tracking of untrusted input from a source,
+through the operations that pass it on, to a sink where it is used [1]. For a developer, the
+useful part of that account is the path it makes visible. If a report records the sink but
+omits an intervening check, the reviewer needs to inspect that check before accepting
+the result. Likewise, a check designed for one context cannot be assumed to protect a
+different operation just because it runs earlier.
+The strength of a static finding depends on what the tool can see and what it knows about
+the code. A framework may route requests through a layer the tool does not model.
+Generated code or unresolved settings can hide pieces of the path. OWASP lists these
+gaps alongside the possibility of false positives and false negatives [1]. For ThreatLens,
+the design implication is to preserve the source location and any reported path or rule
+evidence, together with enough information to identify which checks ran. That gives the
+developer a place to start when a finding looks questionable.
+21
+
+PAGE 33
+2.3 Dependency, Secret and Configuration Analysis
+Dependency analysis, secret detection and configuration review each start with a
+different object. The dependency analyser examines the software packages a project
+uses. A secret detector looks for values that may grant access. A configuration check
+reads settings that influence how the application is built or deployed. Grouping their
+findings in one report is useful, but the reason for recording an alert should remain
+specific to the method that produced it.
+For a dependency alert, a package name is only part of the evidence. A manifest may
+declare a range of acceptable versions, while a lock file records a particular resolution. If
+the submitted files only identify the range, the reviewer has to say what remains
+uncertain about the installed version. An advisory can establish that a version is affected;
+the project's dependency information establishes whether that version was selected.
+Whether the affected part of the package is in use is a separate question.
+Secret detection has a comparable uncertainty at the level of an individual value. A token-
+shaped string might be a credential, a placeholder in a sample file or a test value. A report
+should show enough context to explain why the value was flagged without copying it into
+a document that might be shared. A configuration warning has a different interpretation
+problem. A setting in an example file may never be loaded, or an environment-specific
+value may override it. The finding becomes useful when the reviewer knows which file
+supplied the evidence and whether that file governs the deployment under discussion.
+Basak and colleagues developed SecretBench as a labelled collection of candidate
+software secrets from public repositories [2]. They report 97,479 labelled candidates, of
+which 15,084 were classified as true secrets. Those counts describe their dataset. They
+are not findings produced by ThreatLens. What matters for the design of an evaluation is
+that a detector should face realistic look-alikes along with genuine cases. Testing only
+with conspicuous examples can show whether a rule will fire, but it cannot show how
+often it raises an unnecessary alert. The same reasoning supports keeping a scanner's
+unmatched or unassessed cases visible in the experimental account.
+22
+
+PAGE 34
+2.4 AI and Large Language Models for Code Security
+The literature reviewed by Zhou and colleagues treats vulnerability detection and repair
+as distinct tasks [3]. A detection asks whether the available evidence supports a problem,
+while a repair proposes a change to address it. Their survey discusses prompt design,
+fine-tuning and retrieval among the ways researchers adapt language models to security
+tasks. It also examines which units of code are supplied and how datasets are
+constructed. Those details matter because the same model can be asked to classify an
+isolated function or to help a reviewer understand a finding that spans several files.
+For ThreatLens, the most immediate role of a model is to explain a saved finding and,
+when requested, suggest a change. The explanation can translate a concise scanner
+message into terms the developer can relate to the surrounding code. A useful response
+names the operation it observed and points to the recorded evidence. When it relies on
+a condition the supplied code does not establish, it should identify that condition
+explicitly. This is particularly important when only a short source excerpt is available.
+Consider a reviewer who asks why an operation was flagged and receives a plausible
+account involving a call elsewhere in the project. The answer is useful if the reviewer can
+check that call in the submitted version. If the model was never shown the caller, the
+answer should be read as a possibility to investigate. Clarity helps the reviewer notice the
+difference; it does not make the missing source available.
+A repair suggestion raises a further question: does the change preserve the behaviour
+the application is meant to provide? A proposal may look reasonable in the selected
+excerpt and still interfere with a valid use case. Review therefore includes checking both
+the reported weakness and the ordinary behaviour around the affected code. A response
+that states its assumptions and gives a testable rationale is easier to assess than a patch
+with no explanation. The survey gives reasons to study this workflow, but it provides no
+measured accuracy for the particular models, prompts or provider configured for this
+project [3].
+23
+
+PAGE 35
+2.5 Retrieval-Augmented Generation in Security Analysis
+Retrieval-augmented generation (RAG) gives a model access to reference material
+selected for the question at hand. In the work by Lewis and colleagues, a retriever
+searches an external collection and the generator uses the selected material when
+producing an answer [4]. The study evaluated knowledge-intensive language tasks. Its
+relevance here is the separation between the source of a reference and the text
+generated from it. Its results do not establish how a security review system will choose
+or interpret a control.
+For a security assessment, the passage supplied to the model might describe a weakness
+category or state a policy requirement. The description is useful when it helps the
+reviewer interpret the observed code. A paragraph that happens to use similar terms is
+not enough on its own. If the candidate passage covers a different version of a policy or
+a different kind of application, the model can cite it accurately while drawing the wrong
+conclusion about the project.
+For example, a policy reference about what information must be disclosed may be
+relevant to a finding that involves data collection. The passage can explain the obligation.
+Whether the developer met it depends on the applicable version and on what was
+disclosed to users. That second part requires evidence from the project or its
+accompanying declarations. Retrieval helps locate the obligation; the underlying finding
+still has to carry evidence that the reviewer can inspect.
+The two steps suggest different evaluation questions. To examine retrieval, it is possible
+to ask whether the expected reference appears among the returned passages and
+whether the correct version was selected. To examine generation, the reviewer can ask
+whether the response uses the passage accurately and makes only claims warranted by
+the code and the reference. A satisfactory result in one step does not establish a
+satisfactory result in the other. Keeping the reference identity and its relationship to the
+finding makes both judgments possible.
+24
+
+PAGE 36
+2.6 Vulnerability Taxonomies and CVSS Prioritization
+MITRE's Common Weakness Enumeration (CWE) provides names and identifiers for
+recurring types of weakness in software and hardware [5]. Using a shared identifier can
+help a reviewer compare findings that different tools describe in different words. The
+identifier describes a type of problem. Several locations can share one CWE without
+referring to the same defect, and a reviewer may need more evidence to choose the most
+appropriate category for a particular alert.
+The Common Vulnerability Scoring System (CVSS) is concerned with severity. The version
+cited in this thesis, CVSS v3.1, distinguishes Base metrics from Temporal and
+Environmental metrics [6]. The Base group captures technical characteristics of the
+vulnerability. Temporal metrics account for conditions that can change, and
+Environmental metrics can reflect the deployment where the issue matters. The vector
+records the metric choices behind a score. That record is useful when a reviewer wants
+to understand why two otherwise similar findings received different values.
+A reviewer using a score to decide what to address first still needs local information. The
+importance of the affected application, the way it is exposed and the protections already
+in place can change what should be done first. FIRST describes CVSS as an input to that
+decision and identifies organisational considerations beyond the score [6]. A missing
+score should be left as unavailable rather than interpreted as a severity of zero.
+Classification, severity and review status should therefore remain separate fields. The
+weakness label answers what kind of issue the report describes. The severity indicates
+the potential seriousness under the recorded assumptions. A status such as open tells
+the team where the finding is in its review process. A control reference can be displayed
+alongside these fields, but it answers a different question about a requirement. If the
+fields were collapsed into a single indicator, the reviewer could not tell whether an item
+changed because of new evidence, a revised score or a decision about how to handle it.
+25
+
+PAGE 37
+2.7 Compliance Mapping and Remediation Guidance
+Compliance mapping begins with an observation and a specific requirement. The
+mapping has to explain the connection. A source file might show that a setting is present,
+but it may not show who is responsible for it, when it is checked or whether it is active in
+another environment. Recording the relevant requirement is useful because it tells the
+reviewer what to check next. A stronger conclusion needs evidence that covers the rest
+of the requirement.
+The gap is most visible with obligations that concern organisational practice. A repository
+can contain a policy configuration without documenting how exceptions are approved or
+whether the procedure is followed. In a package review, a developer's declaration and
+the material shown to users may be necessary evidence. Where those details are absent,
+classifying the matter as requiring review is more informative than treating it as a pass or
+assuming a violation. It also lets a report remain useful after the initial assessment, since
+the reviewer knows what material would resolve the open question.
+Remediation guidance should name the assumption behind the proposed change and
+identify the behaviour to check after applying it. For a setting, a reviewer might compare
+the value in the submitted file with the value actually used in an authorised test
+environment. For a source change, the check should cover the reported condition and
+the normal behaviour the original code supported. A successful review of a proposal
+shows that it is suitable for testing. It does not show that it was merged, deployed or
+confirmed to resolve the finding. ThreatLens presents the guidance with that boundary
+in mind.
+2.8 Comparison with Existing Security Assessment Tools
+The comparison here is between assessment methods. A tool can do well at identifying
+what is in a submitted project and still be poorly placed to answer what happens in a
+deployed environment. Comparing tools by the number of alerts they produce would
+miss that difference. The useful questions are what each method needs as input, what
+evidence it returns and what work remains before a reviewer can act.
+26
+
+PAGE 38
+A source rule can point to a file and an operation that merit inspection. A dependency
+tool can link a recorded package version to an advisory. Secret and configuration checks
+direct attention to a possible credential or a relevant setting. A model can give those
+observations a readable explanation, while a human reviewer can check the assumptions
+against application behaviour. Figure 2.1 locates the point where these forms of evidence
+meet. It does not show that each method contributes equally to every case.
+Consider an audit in which a dependency warning appears beside a separate source
+finding. The dependency warning has to be reviewed against the installed package
+version and its use in the project. The source finding has to be reviewed against the
+recorded code and the conditions under which it runs. They may lead to different actions,
+even when both are assigned the same severity. The point of presenting them in one
+place is to make the evidence easier to compare, rather than to imply that the two checks
+had the same coverage or confidence.
+Figure 2.1: Complementary security-review approaches and their evidence: static
+patterns, package versions, suspected credentials, configuration settings, model
+explanations and human judgement.
+27
+
+PAGE 39
+An interface comparison can show how easily a reviewer can locate the supporting
+evidence or find a recorded decision. A performance comparison needs common inputs,
+the same matching rules and a definition of what counts as a correct finding. It also needs
+to account for work the baseline did not perform. A shorter run that skipped part of the
+input is not evidence of a faster check over the same scope.
+2.9 Comparative Literature Synthesis
+The cited sources address different parts of a review. OWASP explains what a static tool
+can observe and why its findings need interpretation [1]. SecretBench shows the value of
+retaining false-alarm candidates when constructing an evaluation dataset [2]. Zhou and
+colleagues examine how models are used for detection and repair and why the choice of
+input and evaluation data matters [3]. The three sources are useful at different points:
+when deciding what evidence to retain from a scanner, when planning a test set and
+when deciding what a generated response needs to explain.
+Lewis and colleagues provide a basis for coupling an answer with retrieved text [4]. CWE
+and CVSS provide terminology against which classification and severity can be described
+consistently [5, 6]. None of these references tells the reviewer whether a particular
+mapping applies to the submitted project. That judgment depends on the project
+evidence and whether it satisfies the conditions stated in the reference. The role of the
+system is to carry the source and the reference into the same review without losing the
+distinction.
+This synthesis gives us two practical design criteria. Each finding needs an identifiable
+origin so it can be reopened and checked. Its explanation should state which assertions
+follow from the evidence and which remain open. These criteria can be assessed even if
+a broad detection benchmark is not available. Testing them can establish whether the
+application preserves a usable review trail. A claim about the accuracy of the combined
+system requires further evidence about the defects it finds and misses.
+28
+
+PAGE 40
+2.10 Consolidated Research Gap
+The gap addressed in this thesis lies in the handoff between a tool observation and the
+reviewer's decision. A finding may move through a source view, a classification, a
+suggested control and a report. At each point the reviewer needs to recognise the original
+observation and see any assumptions introduced later. A system can produce technically
+valid output at each step, yet still leave an unclear assessment if the evidence stops being
+traceable between those views.
+The difference is visible when a saved report is reopened. If source is no longer available,
+the report should still distinguish a retained observation from a claim that would need a
+fresh inspection to verify. If a rule failed or an input could not be assessed, the report
+needs to communicate that lost coverage. An evaluation of the workflow can reproduce
+these cases and examine whether the presentation remains accurate. Such tests answer
+questions about continuity and reliability, not about overall detection accuracy.
+The methodology in Chapter 3 follows from this division. Evidence continuity can be
+examined by tracing a known finding from its original location to the saved report.
+Coverage can be examined by recording which material was included, excluded or
+unavailable. Detection performance needs independently labelled cases and a
+repeatable comparison. Usability and operational behaviour also need measures that fit
+their own questions. Taken separately, those checks allow the study to say which parts
+of ThreatLens have been evaluated and where additional evidence is still needed.
+29
+
+PAGE 41
+CHAPTER 3
+METHODOLOGY
+
+PAGE 42
+3.1 Research Design and Workflow
+The study follows an engineering-development approach. Requirements are identified
+from the review tasks a developer must perform, translated into architecture and data
+contracts, and implemented through successive application components.
+Verification examines both successful workflows and failure conditions. The final
+discussion relates the available evidence to the original objectives.
+This approach allows implementation progress to be documented without presenting
+every completed feature as a validated research result.
+Figure 3.1: Research workflow from problem definition and requirements to
+architecture, implementation, verification and discussion of limitations.
+3.2 Functional and Non-Functional Requirements
+Functional requirements include sign-in, workspace selection, project intake, progress
+display, finding inspection, source navigation, remediation guidance and report access.
+Non-functional requirements include controlled resource use, readable interfaces,
+explicit failure states and protection of private material.
+31
+
+PAGE 43
+Requirements should be assigned identifiers and connected to test cases. Reopening a
+completed audit, for example, concerns persistence. Denying an outsider’s source
+request concerns authorisation. These behaviours require different verification
+procedures even though both are necessary for a reliable application.
+3.3 Test Project and Input Selection
+Test inputs should include deliberately vulnerable fixtures, corrected versions of those
+fixtures and permitted real-world projects. Inputs should vary in language, size, directory
+structure, dependencies and supported file types.
+Benign examples are necessary to examine false alarms. Selection must also avoid
+exposing live credentials or private code.
+[AUTHOR INPUT: List the exact test projects, licences or permissions, versions,
+checksums and reasons for selection.]
+The dataset description should identify whether each input is a synthetic fixture, an open-
+source project or a private project used with permission.
+3.4 Source Code Ingestion and Preprocessing
+The intake process validates the submitted archive before preparing files for inspection.
+Paths, archive expansion and supported content require checks because uploads are
+untrusted.
+A manifest records files available for preview, while analysis may use a smaller eligible
+subset. Preprocessing must preserve the relationship between a saved finding and its
+original source coordinates.
+Excluded or truncated material belongs in the coverage record. It should not disappear
+from the explanation of what the system analysed.
+32
+
+PAGE 44
+3.5 Static Scanning and Finding Normalization
+Analysis outputs are normalised into records that can be displayed consistently. A useful
+record includes an identifier, severity, description, source location, provenance and any
+available weakness or remediation information.
+Normalisation must preserve distinctions in the original evidence. Two alerts with the
+same title are not necessarily duplicates. Similarly, an empty result after scanner failure
+is not equivalent to a successful check with no findings.
+Duplicate handling and error interpretation therefore require explicit test cases.
+3.6 LLM-Assisted Analysis and RAG
+Model-assisted analysis receives bounded context and returns information for review.
+Repository text is treated as data, not as instructions that can redefine the task.
+For a configured retrieval experiment, relevant reference passages are supplied
+alongside the finding, with identifiers retained for inspection. The study should record
+the provider, model, prompt version, context limits and reference-corpus version.
+The local API profile alone does not establish that the separate retrieval stack was
+installed or exercised. Results must identify the actual configuration used.
+3.7 Severity Scoring and Compliance Mapping
+Severity, weakness classification and control mapping are evaluated separately. A score
+needs a defensible metric vector, while a control mapping needs an identifiable source
+and a reason for applicability.
+Missing values remain unavailable rather than being converted into harmless scores.
+Reviewers should record disagreements and the reasoning used to resolve them.
+Framework assessment signals are presented as automated interpretations of available
+evidence, not as statements that an organisation satisfies every requirement.
+33
+
+PAGE 45
+3.8 Remediation and Report Generation
+Written remediation is retained alongside the finding. A code solution, where requested,
+is presented as a proposed replacement and must not be confused with uploaded
+source.
+Reports are assembled from saved assessment data so that exporting a document does
+not silently trigger a new analysis. Evaluation should compare displayed findings with
+exported content, including source locations, limitations and missing fields.
+Private Advisor conversations should not be introduced into shared audit output during
+report preparation.
+3.9 Evaluation Protocol
+Each run should record the application revision, input checksum, configuration, active
+engines and timestamps.
+Functional tests examine workflow behaviour. Access-control tests examine permitted
+and denied actions. Labelled detection tests examine correctness.
+Repeated timing runs should use the same machine and comparable network conditions
+where practical. Model and baseline settings should be fixed before the final evaluation.
+Failures and skipped integrations must remain in the record rather than being excluded
+to improve the apparent outcome.
+3.10 Evaluation Metrics
+Detection quality is measured using independently labelled reference cases.
+Let:
+1. TP represent correctly identified labelled defects.
+1. FP represent incorrectly reported defects.
+1. FN represent labelled defects that were missed.
+34
+
+PAGE 46
+The metrics are:
+Precision = TP / (TP + FP)
+Recall = TP / (TP + FN)
+F1-score = 2TP / (2TP + FP + FN)
+A zero denominator should be handled using a stated convention rather than silently
+treated as a perfect result.
+Timing metrics should distinguish acceptance-to-first-preview, analysis, persistence and
+end-to-end completion. Coverage should report analysed files against eligible files, with
+exclusions explained.
+3.11 Ethical and Security Considerations
+Only authorised projects should be uploaded. Source code, credentials and conversations
+require controlled access. Any use of an external provider should be disclosed to the
+project owner.
+Public thesis figures should remove identifying account details without altering the
+assessment results. Tests involving deletion or publishing must use isolated resources.
+The study should distinguish actual observations from illustrative diagrams, test fixtures
+and proposed future work. Relevant writing or analytical assistance should be disclosed
+according to institutional requirements.
+35
+
+PAGE 47
+CHAPTER 4
+DATA COLLECTION, TOOLS AND COMPUTATIONAL PLATFORM
+
+PAGE 48
+4.1 Hardware and Operating Environment
+Hardware information is necessary for interpreting performance. The development
+workspace is on Windows, and the installation guide describes a Python 3.12 local
+profile.
+The final experiment must record its own machine and software configuration.
+[AUTHOR INPUT: Processor, memory, operating-system build, browser version,
+network conditions, Python version, Node.js version and test date.]
+When a remote model service is used, its computation must not be described as running
+on the development machine’s GPU.
+4.2 Programming Languages and Frameworks
+The application uses TypeScript and React for the interface and Python with FastAPI for
+the API. SQL migrations describe persistent data structures and access policies.
+These technologies serve different responsibilities: browser interaction, request handling
+and data integrity.
+Version information should come from the dependency files and lockfiles associated with
+the evaluated commit. Older prototype documents should not be used as substitutes for
+the installed configuration.
+4.3 Frontend Technologies
+The documented frontend uses React 19, TanStack Router and Query, Tailwind CSS and
+Monaco.
+Routing connects application pages, query management coordinates server data, and
+Monaco provides source inspection. The workbench remains read-only.
+Responsive controls support navigation and source review at different viewport sizes.
+Frontend evaluation should include keyboard access, loading and error states, long file
+paths and returning to an accepted scan after navigating elsewhere.
+37
+
+PAGE 49
+4.4 Backend Technologies
+FastAPI provides the request layer for intake, scan status, source reads, findings,
+guidance and reports.
+The backend coordinates private storage and database persistence while retaining
+request-specific identity. It also mediates optional provider and repository operations.
+A reachable API is not the same as a correctly configured integration. A successful health
+response does not demonstrate that a model provider, private storage bucket or
+repository permission is working.
+4.5 Database, Authentication and Storage
+The documented platform uses Supabase Auth, PostgreSQL and private Storage.
+Application authorisation is scoped to workspaces, while database policies constrain
+access to rows.
+Supabase documents Row Level Security as a mechanism for applying policies to
+database access [7].
+Source previews and saved assessment metadata have different retention behaviour.
+The current project documentation specifies a 30-day source-preview window. This must
+not be interpreted as automatic deletion of every finding and report after 30 days.
+4.6 Background Processing and Deployment Modes
+The installation guide provides separate API, testing and full scanner-worker profiles. The
+API profile supports the local progressive workbench and direct provider clients. The full
+profile includes additional worker, embedding and research dependencies.
+Installing the API profile does not prove that Celery, Redis, Qdrant or specialist scanner
+executables are operating.
+The thesis must identify which mode produced each set of results and keep optional
+deployment descriptions separate from observed local behaviour.
+38
+
+PAGE 50
+Figure 4.1: Separation between the local API/workbench environment and the
+optional scanner-worker and retrieval environment.
+Use one lane for the browser, FastAPI, database and private source storage. Use a
+second, explicitly optional lane for workers, broker, scanner executables, embeddings
+and vector retrieval.
+4.7 Security Scanners, AI and Retrieval Services
+The full deployment supports specialist analysis components in addition to model-
+assisted review. Scanner availability, executable versions and successful invocation
+require confirmation from run records.
+Provider selection and fallback should be documented without claiming that every
+available model was evaluated. Retrieval experiments require an identified corpus and
+embedding configuration.
+Dependency declarations describe installation requirements, but they do not prove that
+every service contributed to a particular scan.
+39
+
+PAGE 51
+4.8 Data Sources and Reference Material
+Evidence sources include authorised input projects, saved findings, source snapshots,
+generated reports, application logs and public technical references.
+The existing figure notes identify captures from saved MERN and GHRCE project audits.
+These captures help explain the interface, but they are not independently labelled
+vulnerability datasets.
+Research papers provide background, while official terminology and specifications
+support classification. Each source should be used only for the type of claim it can
+establish.
+4.9 Reproducibility and Version Control
+A reproducible record connects each input to a repository revision, dependency
+configuration, active feature flags, model selection and output set.
+Useful artefacts include sanitised configuration summaries, input checksums, commands,
+timestamps and structured test results. Public records must exclude secrets and private
+source material.
+Screenshots should carry a capture date and identify demonstration data where
+applicable. Repeating a run under changed provider behaviour or reference material
+should be treated as a new experimental condition.
+40
+
+PAGE 52
+CHAPTER 5
+SYSTEM DESIGN AND IMPLEMENTATION
+
+PAGE 53
+5.1 Overall ThreatLens Architecture
+The architecture separates user interaction, request authorisation, analysis, source
+preparation and persistent results.
+The browser requests operations through the API, while saved audit records allow users
+to revisit results. Source preparation and analysis have independent progress because
+uploading a readable preview is not the same as completing security checks.
+Figure 1.1 provides the system overview. It is referenced here rather than repeated,
+keeping this chapter focused on implementation decisions and two essential interface
+figures.
+5.2 User Interface and Application Navigation
+The navigation follows the review workflow through Dashboard, Codebase Audit,
+Findings, Workbench, Attack Graph, Reports and Security Advisor.
+History and resume controls help users return to saved work. Settings and profile controls
+are separate from the assessment itself.
+The interface should explain whether a view shows the latest completed audit, a selected
+historical scan or an example scenario. This distinction prevents users from interpreting
+an empty or still-running scan as a clean assessment.
+5.3 Authentication, Authorization and Workspaces
+Authentication identifies the user, while authorisation determines which workspace
+resources that user may access.
+The application must check resource relationships rather than trusting identifiers
+supplied by the browser. Database policies provide an additional boundary, while
+privileged server credentials remain outside client bundles.
+A viewer’s ability to read shared findings does not imply permission to delete scans or
+publish repository changes. These distinctions require verification through actual
+permitted and denied requests.
+42
+
+PAGE 54
+5.4 Local In-Process Scanning Pipeline
+The saved-ZIP path accepts an authorised upload, prepares scan state and starts source
+handling and analysis.
+Available previews can be published while remaining files are still being prepared.
+Findings should become final only after persistence succeeds. A source-preparation
+failure must not erase otherwise saved findings.
+Returning to the intake page uses an account- and workspace-scoped reference to
+reopen the audit. The lifetime of an accepted scan is therefore separate from the lifetime
+of the upload component.
+5.5 Hosted Scanning and Worker-Orchestrated Pipeline
+The repository also documents a separate scanner-worker deployment with additional
+dependencies and services.
+A worker architecture can move long-running tasks away from API processes, but
+requires explicit job ownership, recovery and service configuration. It is a deployment
+option, not proof that the current saved-ZIP path uses the same orchestration.
+[AUTHOR INPUT: Identify whether the worker deployment was exercised, including
+broker, worker and service versions. Otherwise, state that it was not evaluated.]
+5.6 Static Scanning Engines and Finding Normalization
+Normalised findings allow the interface to present severity, location, origin and
+remediation consistently across supported inputs.
+Stable finding identifiers remain important when titles or source locations are similar.
+Counts and pagination must refer to saved records, not only to the rows currently
+displayed.
+An engine failure should contribute a limitation to the scan. An unsupported language
+should remain outside any claim of complete coverage. The actual engine set must be
+documented for each execution mode.
+43
+
+PAGE 55
+5.7 AI Agent Pipeline and Prompt Design
+Model assistance is used to interpret findings and prepare guidance from bounded
+context.
+A finding-specific request must preserve the authorised workspace, scan and finding
+relationship. It should not silently become a general conversation after losing its context.
+Prompts should separate observations, assumptions, suggested changes and verification
+steps. The interface also needs explicit handling for interrupted responses. A truncated
+code suggestion remains incomplete even when its opening explanation appears
+convincing.
+5.8 CVSS Scoring and Vulnerability Classification
+The interface preserves recorded weakness identifiers and available scores. CVSS 3.1
+defines severity through a metric vector [6]. A valid zero score is therefore different from
+a missing score.
+A model-generated score should be checked for consistency with its vector and
+supporting evidence.
+Triage decisions, such as accepting risk or marking a false positive, remain separate from
+severity. Creating a fix proposal or downloading a report must not automatically change
+a finding’s triage state.
+5.9 RAG and Compliance Mapping
+The repository contains retrieval components, including embedding, vector-client and
+corpus-preparation modules. Their presence establishes implementation material, not
+successful execution in the current local mode.
+A retrieval-enabled assessment should preserve the corpus version, retrieved control
+identifiers and evidence supporting each proposed relationship.
+When a required service is unavailable, that limitation should be reported. A saved
+framework percentage must not be presented as legal compliance or certification.
+44
+
+PAGE 56
+5.10 Scan Visualization and Attack Graph
+The workbench places the file explorer, source viewer and finding details within one
+page. A reviewer can inspect the reported location while retaining access to evidence and
+remediation.
+The graph provides a complementary view of relationships between findings and source
+components. In the saved-evidence view, connectors represent associations rather than
+verified network routes or successful exploitation.
+Illustrative scenarios must remain explicitly labelled and separate from the user’s saved
+evidence.
+Figure 5.1: Read-only Audit Workbench showing source navigation, a selected finding
+and its recorded evidence.
+45
+
+PAGE 57
+46
+
+PAGE 58
+Figure 5.2: Attack Graph interface using isolated test-fixture data: (a) source
+associations and graph controls; (b) selected finding evidence and remediation
+guidance. Connections do not establish confirmed exploitability..
+Use clear screenshots from the actual application. These are the only two figures required
+in Chapter 5.
+5.11 Reporting, Exports and Audit Events
+Reports organise completed saved audits and prepare PDFs on demand. The exported
+document should preserve the same finding identities, evidence and limitations shown
+in the interface.
+47
+
+PAGE 59
+Audit events record actions and state transitions, whereas scan history records saved
+assessments. They should not be described as interchangeable.
+Export verification must examine all selected or filtered results rather than assuming that
+one visible page contains the entire dataset. A report communicates assessment
+evidence; it is not an approval certificate.
+5.12 Database Schema and Data Relationships
+Workspaces connect members to scans, and scans connect findings with source
+snapshots and related assessment information.
+Optional conversation and repository features add relationships without changing the
+meaning of the core audit records.
+Foreign keys and access policies serve different purposes. A valid database relationship
+does not, by itself, authorise the requesting user to read or modify the linked record.
+Both structural integrity and access enforcement are necessary.
+5.13 API Design and Data Flow
+API requests need a clear scope and a response appropriate to the operation. List
+endpoints return bounded summaries, while detailed evidence is loaded when selected.
+Upload acceptance, scan completion and source availability require distinct states.
+Request failures should distinguish unavailable services, invalid credentials and denied
+access.
+Safe-read recovery must not become automatic replay of uploads or publishing
+operations. API documentation should identify these behaviours without exposing
+credentials or private payloads.
+5.14 Security and Reliability Controls
+The documented design includes archive validation, private storage, source redaction,
+workspace checks, bounded processing and explicit error states.
+48
+
+PAGE 60
+Uploaded dependency files must not cause arbitrary package installation on the API host.
+Report generation restricts resource access, and code suggestions remain read-only until
+handled through a separately authorised workflow.
+These controls require dedicated verification, including malformed inputs and revoked
+access. No single scanner run, unit-test suite or successful deployment establishes that
+every security boundary works.
+5.15 Deployment and Configuration
+The frontend builds as a standalone Node.js server, while the API runs separately.
+Both services must refer to the intended identity project, and browser origins must match
+the API’s permitted configuration. Optional integrations are enabled only when their
+services and credentials are configured.
+Installation profiles should be reproduced in isolated environments. Public frontend
+configuration and server-only secrets must remain distinct. Actual environment-file
+values, passwords and access tokens must never appear in the thesis.
+49
+
+PAGE 61
+CHAPTER 6
+TESTING AND SUMMARY OF RESULTS
+
+PAGE 62
+6.1 Experimental Environment
+This chapter distinguishes documented interface observations from quantitative
+experiments. The available figure notes describe captures made on 12 November 2026,
+but those captures do not constitute a complete regression report.
+A defensible experimental record must identify the evaluated application revision and
+active deployment mode.
+[AUTHOR INPUT: Insert the environment from Section 4.1, run identifiers,
+provider/model, enabled engines, corpus version where relevant, and commands used
+for the final evaluation.]
+The environment description should make it possible to distinguish local processing from
+externally hosted services.
+6.2 Test Dataset and Ground Truth
+Ground truth is the reference against which detection claims are judged. It should
+identify each intentionally introduced or independently confirmed weakness, its location,
+expected behaviour and corrected counterpart.
+Saved alerts cannot independently supply this reference because they are the outputs
+being evaluated.
+[AUTHOR INPUT: Provide the labelled test inventory, reviewer procedure and policy for
+ambiguous cases.]
+Real project names may be anonymised where necessary. However, the selection
+method and limitations of the dataset must remain clear.
+6.3 Functional Test Cases
+Functional verification should cover sign-in, workspace selection, upload acceptance,
+progressive source access, history reopening, finding selection, remediation guidance
+and report export.
+51
+
+PAGE 63
+Negative cases include malformed archives, unavailable providers, expired previews and
+denied workspace access.
+A screenshot can demonstrate a visible state, but it does not show every transition that
+led to that state. Actual outcomes should be recorded with supporting evidence.
+Table 6.1: Functional Test Matrix
+Observed result
+Test case Expected behaviour
+and evidence
+Accepted ZIP followed by Reopen the same server-side scan
+[AUTHOR INPUT]
+navigation to another page without duplicate submission
+Finding selected in the Correct evidence and source
+[AUTHOR INPUT]
+workbench location remain associated
+Provider or source-preview Explicit limitation without a false
+[AUTHOR INPUT]
+failure clean or completed state
+Viewer and outsider Only authorised reads and actions
+[AUTHOR INPUT]
+requests are permitted
+Saved finding identities and
+PDF export [AUTHOR INPUT]
+limitations match the report
+6.4 Vulnerability Detection Results
+The existing capture notes describe a saved MERN project audit with six reported
+findings. They also distinguish 90 preview entries from 81 scanned files.
+These figures describe saved output. They do not establish six independently confirmed
+vulnerabilities or provide an accuracy measure.
+The difference between preview count and analysed-file count illustrates why coverage
+must be reported separately from source availability.
+[AUTHOR INPUT: Insert verified detection counts from the labelled evaluation. If
+unavailable, retain this section as an explicitly limited review of saved output.]
+52
+
+PAGE 64
+Figure 6.1: Saved audit report excerpt showing recorded source evidence,
+remediation and suggested verification checks. The excerpt illustrates reporting
+behaviour, not independently validated detection accuracy.
+6.5 Detection Quality Metrics
+Precision, recall and F1 should be calculated only after comparing findings with the
+labelled reference.
+Duplicate alerts need a documented matching rule so that repeated reports do not inflate
+true positives. Historical manuscript totals should not be reused without their underlying
+evaluation records and matching procedure.
+53
+
+PAGE 65
+[AUTHOR INPUT: Supply TP, FP, FN, matching rules and per-language or per-category
+results.]
+If these records are unavailable, the thesis should state that detection quality has not yet
+been established rather than presenting an estimated accuracy value.
+6.6 Performance and Scan Duration
+Useful timing separates waiting for acceptance, obtaining a readable source preview,
+analysing content and saving the final result.
+Repeated runs should report the number of observations and a suitable summary, such
+as the median and range.
+Concurrent stages can overlap. Their durations must not simply be added and presented
+as elapsed completion time. Differences between phase timings and total duration
+require recorded timing boundaries rather than assumed overhead.
+[AUTHOR INPUT: Insert traceable run measurements, the number of repetitions and
+the exact timing boundaries.]
+6.7 AI, RAG and Remediation Evaluation
+Explanations should be reviewed for groundedness, uncertainty, correct source
+references and whether the proposed change preserves behaviour.
+The saved SVG-related example is useful because static trusted markup must not
+automatically be equated with attacker-controlled HTML. A suggestion that overstates
+the evidence is a review failure even if its wording appears polished.
+Retrieval evaluation requires labelled relevant controls. Repair evaluation requires
+applicable changes and appropriate tests.
+[AUTHOR INPUT: Supply reviewer ratings, disagreements, relevance judgements and
+verified remediation examples.]
+54
+
+PAGE 66
+6.8 Robustness, Security and Error Handling
+Robustness testing should deliberately interrupt the normal workflow. Relevant cases
+include unsafe archives, removed membership, expired source access, interrupted
+responses and unavailable services.
+Each case requires an expected outcome and observed evidence.
+A backend outage must not be mistaken for an invalid user session. Similarly, a scanner
+failure must not be counted as a successful clean scan.
+The final assessment of these controls must refer to recorded tests. Application
+documentation and screenshots alone cannot establish that the failure paths behave
+correctly.
+6.9 Comparison with Baselines
+A useful baseline comparison would evaluate static-only analysis and the combined
+workflow on the same labelled inputs.
+Where retrieval is studied, retrieval-enabled and non-retrieval conditions should use
+matched model settings and clearly defined relevance labels. Timing conditions should
+also remain comparable.
+[AUTHOR INPUT: Insert actual baseline results or state that no controlled baseline
+experiment was completed.]
+A feature comparison or literature survey cannot establish that ThreatLens is faster or
+more accurate than another system.
+6.10 Discussion and Limitations
+The available material supports a discussion of workflow design and saved-output
+presentation. It does not establish universal vulnerability detection, compliance
+correctness or superiority over other tools.
+Important limitations include incomplete runtime context, partial file coverage,
+dependence on external services and the need for reviewer judgement.
+55
+
+PAGE 67
+The final thesis should identify which research questions have direct experimental
+answers and which remain open. A limited conclusion supported by evidence is more
+defensible than a broad claim based only on successful demonstrations.
+56
+
+PAGE 68
+CHAPTER 7
+CONCLUSION
+
+PAGE 69
+7.1 Summary of Achieved Objectives
+• The documented implementation brings project intake, source review, findings,
+guidance and reporting into one workspace-oriented application. Existing captures
+illustrate several of these interfaces with saved output.
+• The distinction between source availability and analysis completion is particularly
+important. It allows progress to be communicated without claiming that an unfinished
+assessment is clean.
+• Completion of each objective should be supported by the test evidence in Chapter 6
+rather than inferred from the presence of an application page.
+7.2 Key Findings and Contributions
+• The main engineering contribution is a traceable review workflow. Recorded evidence
+remains distinct from proposed changes, while the graph and reports offer
+complementary ways to inspect saved results.
+• The study also identifies an important evaluation distinction: preview coverage,
+analysed-file coverage, finding counts and detection accuracy are different quantities.
+• Treating these separately makes both the interface and the research discussion easier
+to understand. Quantitative improvements remain conditional on a completed and
+reproducible evaluation.
+58
+
+PAGE 70
+Figure 7.1: Summary of project objectives, corresponding implementation evidence
+and remaining validation needs.
+The figure should use three columns: Objective, Available Evidence and Remaining
+Verification. Do not mark an objective as passed without its corresponding test record.
+7.3 Limitations and Final Remarks
+• ThreatLens should be understood as assistance for developers and reviewers, not an
+automatic security authority.
+• Its usefulness depends on the quality of inputs, active analysis components and the
+care with which findings are interpreted. A repository cannot demonstrate every
+organisational control, and generated guidance cannot replace testing.
+• The project provides a basis for further evaluation while keeping these limitations
+visible. Its strongest supported contribution is the integration of review tasks, not a
+guarantee that uploaded software is secure.
+59
+
+PAGE 71
+CHAPTER 8
+FUTURE SCOPE
+
+PAGE 72
+8.1 Scanning Coverage and Language Support
+• Future work should broaden language and framework coverage through explicit
+parser support and documented rules.
+• Cross-file reasoning and runtime-aware validation may address cases that isolated
+snippets cannot explain. New capabilities should include benign examples, vulnerable
+fixtures and clear exclusion rules.
+• Packaged extensions and infrastructure configurations require their own assessment
+profiles. They should not be described as fully covered merely because their files can
+be uploaded.
+8.2 AI and Retrieval Improvements
+• Model and retrieval improvements should begin with evaluation data rather than an
+assumption that a larger model will perform better.
+• Useful directions include versioned control corpora, relevance judgements, prompt
+comparisons and checks for unsupported explanations.
+• Context selection should preserve the evidence needed to investigate a finding while
+respecting privacy and input limits. Claims of reduced hallucination or improved
+remediation require measured comparisons, including cases where no code change is
+justified.
+8.3 Continuous Integration and Workflow Automation
+• Repository scanning and reviewed publishing are already described as configurable
+capabilities. Future work should therefore focus on extending and validating them
+rather than presenting them as entirely absent.
+• Potential directions include policy-controlled continuous-integration initiation, clearer
+review checkpoints and reliable comparison after changes.
+61
+
+PAGE 73
+• Publishing must retain explicit approval. Passing external checks must not
+automatically resolve a finding. Deployment and permission constraints should be
+tested in isolated repositories before broader use.
+8.4 Scalability, Security and Deployment
+• Further deployment work should evaluate queueing, worker isolation, concurrent
+uploads, storage cleanup and recovery under load.
+• Performance improvements must not weaken authorisation or omit checks without
+disclosure. Operational evaluation should include provider outages, rate limits and
+membership changes during active work.
+• Browser-extension policy packs will also require version maintenance as store
+requirements change. The objective is controlled and observable behaviour under
+realistic conditions, not merely a lower duration from one benchmark run.
+8.5 Extended Validation and User Studies
+• The next research stage should use diverse, independently labelled projects and
+participants with different levels of security experience.
+• A user study could measure the time required to locate evidence, the ability to
+distinguish suggestions from confirmed results, and the correctness of remediation
+decisions.
+• Participant consent and source confidentiality are necessary. These studies would
+provide evidence about whether the integrated interface improves review work
+rather than relying only on screenshots or developer impressions.
+62
+
+PAGE 74
+Figure 8.1: Proposed progression from reproducible benchmarks and broader
+coverage to controlled automation, deployment evaluation and user studies.
+• The roadmap can contain four stages:
+• Reconcile evidence and datasets.
+• Extend and evaluate analysis.
+• Validate deployment and automation.
+• Study developer outcomes.
+• Label the diagram “Proposed future work”. Do not include invented completion dates
+or percentage improvements.
+63
+
+PAGE 75
+REFERENCES
+[1] OWASP Foundation, “Static analysis,” OWASP Developer Guide. Available: OWASP
+Static Analysis.
+[2] S. K. Basak, L. Neil, B. Reaves and L. Williams, “SecretBench: A Dataset of Software
+Secrets,” 2023, arXiv:2303.06729. Available: SecretBench.
+[3] X. Zhou, S. Cao, X. Sun and D. Lo, “Large Language Model for Vulnerability Detection
+and Repair: Literature Review and the Road Ahead,” 2024, arXiv:2404.02525. Available:
+Vulnerability Detection and Repair Review.
+[4] P. Lewis et al., “Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks,”
+Advances in Neural Information Processing Systems, vol. 33, 2020. Available: Retrieval-
+Augmented Generation.
+[5] MITRE, “About CWE.” Available: Common Weakness Enumeration.
+[6] FIRST.Org, “Common Vulnerability Scoring System v3.1: Specification Document,”
+2019. Available: CVSS v3.1 Specification.
+[7] Supabase, “Row Level Security,” Supabase Documentation. Available: Row Level
+Security.
+64
+
+PAGE 76
+APPENDICES
+APPENDIX A — PROJECT AND GROUP PHOTOGRAPHS
+[Insert genuine project and group photographs here.] Add a short caption identifying the
+activity, location and date where known. Obtain permission from identifiable
+participants. These photographs document project activity rather than detection
+accuracy.
+APPENDIX B — INDUSTRY PHOTOGRAPHS AND CERTIFICATES
+[Insert relevant industry-visit photographs and authentic certificates here, if applicable.]
+If no industry visit or certificate applies to the project, remove this appendix or state “Not
+applicable”, according to the institution’s format.
+APPENDIX C — PROJECT COMPETITION AND AWARD CERTIFICATES
+[Insert verified participation or award certificates here.] Identify the event and date.
+Clearly distinguish participation from an award. The front-matter list of publications,
+competitions and patents should use the same verified records.
+65

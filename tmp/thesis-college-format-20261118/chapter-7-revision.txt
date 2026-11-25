@@ -1,0 +1,20 @@
+@512
+The first objective was to bring intake, analysis and review into one workspace. ThreatLens provides a route from a project submission to a saved audit, with views for source, findings, guidance and reporting. The figures show how a reviewer can return to the completed assessment and inspect its evidence. This is a more precise outcome than saying that a scan alone gives the developer everything needed to assess the project.
+@513
+The implementation separates source readiness from analysis completion. This was important for the Workbench because files may become visible while a job is still processing. It also matters later, when a saved finding can remain visible after a preview expires. The review can continue using the information that remains, provided the interface explains which evidence is no longer available.
+@514
+The reporting objective was to take the saved assessment beyond the interactive Workbench without performing a new scan. The report example shows that a finding can be presented with recorded evidence, remediation and suggested checks in one document. The absence of a full parity trace limits the conclusion to the report path and content demonstrated in Chapter 6.
+@516
+The main engineering contribution is the connection between findings and the material used to review them. The Workbench brings the evidence and advice together while leaving the two distinguishable. The graph helps the reviewer navigate saved associations, and the report preserves those limitations for a reader who does not have the interactive view. None of these views needs to imply confirmed runtime impact to be useful.
+@517
+The study also shows why several apparently similar counts need separate labels. An archive contains files, the preview service makes some entries viewable, and the analysis stages examine eligible inputs. The findings count describes output from those stages. Detection accuracy would describe agreement with an independent reference. Presenting those values as if they measured the same thing would make the study harder to interpret.
+@518
+The combined workflow gives the developer a way to revisit a finding and form a judgement. The saved SVG example is a useful reminder that a risky operation can be present without sufficient evidence of vulnerable behaviour. The proposed guidance should preserve that distinction rather than promote a possible condition to a confirmed defect. The effectiveness of that support across projects is still an open evaluation question.
+@521
+Figure 7.1 relates the project objectives to available evidence and the checks still needed. It is best read as a summary of scope. A system component can be implemented and illustrated before there is enough evidence to judge its effectiveness across environments, languages or user groups.
+@523
+ThreatLens should be used as support for defensive review. The reviewer still needs to inspect the relevant behaviour, decide how much confidence to place in the finding and verify a proposed change. When an input ruleset, source excerpt or service is incomplete, the application can make that limitation visible but cannot remove it by presenting a more definitive answer.
+@524
+The available results do not establish the application's detection accuracy or superiority over a static baseline. A separate deployment and performance study would also be needed to compare local and worker processing. The captured case examples remain useful for their intended purpose: showing how a developer can read the result and where further evidence would be needed.
+@525
+The most defensible conclusion is that the project connects several review tasks that would otherwise require separate tools or files. It preserves a path from the saved finding to source evidence where available, then to advice and a report. The value of that connection should now be tested with labelled projects and independent reviewers rather than inferred from the completeness of the interface.

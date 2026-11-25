@@ -15,14 +15,15 @@ export interface DashboardScan {
   completed_at: string | null;
 }
 
-export interface DashboardScans {
+export interface DashboardLatestAudit {
   latestCompleted: DashboardScan | null;
   completedTotal: number;
-  recent: DashboardScan[];
 }
 
 const SCAN_FIELDS =
   "id,workspace_id,target_name,scan_type,status,progress,finding_count,selected_frameworks,framework_scores,created_at,completed_at";
+const RECENT_FIELDS = "id,workspace_id,target_name,scan_type,status,finding_count,created_at";
+const readSignal = (signal: AbortSignal) => AbortSignal.any([signal, AbortSignal.timeout(15_000)]);
 
 function asDashboardScan(row: Record<string, unknown>): DashboardScan {
   return {
@@ -47,38 +48,39 @@ function asDashboardScan(row: Record<string, unknown>): DashboardScan {
   };
 }
 
-/** Small, RLS-scoped overview; no full scan or finding-history downloads. */
-export async function fetchDashboardScans(
+/** RLS-scoped overview; independent of the recent-activity feed. */
+export async function fetchDashboardLatestAudit(
   workspaceId: string,
   signal: AbortSignal,
-): Promise<DashboardScans> {
-  const [recentResult, completedResult] = await Promise.all([
-    supabase
-      .from("scans")
-      .select(SCAN_FIELDS)
-      .eq("workspace_id", workspaceId)
-      .order("created_at", { ascending: false })
-      .order("id", { ascending: false })
-      .range(0, 4)
-      .abortSignal(signal),
-    supabase
-      .from("scans")
-      .select(SCAN_FIELDS, { count: "exact" })
-      .eq("workspace_id", workspaceId)
-      .eq("status", "completed")
-      .order("completed_at", { ascending: false })
-      .order("id", { ascending: false })
-      .limit(1)
-      .abortSignal(signal),
-  ]);
+): Promise<DashboardLatestAudit> {
+  const completedResult = await supabase
+    .from("scans")
+    .select(SCAN_FIELDS, { count: "exact" })
+    .eq("workspace_id", workspaceId)
+    .eq("status", "completed")
+    .order("completed_at", { ascending: false })
+    .order("id", { ascending: false })
+    .limit(1)
+    .abortSignal(readSignal(signal));
 
-  if (recentResult.error) throw recentResult.error;
   if (completedResult.error) throw completedResult.error;
   if (completedResult.count === null) throw new Error("Completed scan count is unavailable.");
 
   return {
-    recent: (recentResult.data ?? []).map(asDashboardScan),
     latestCompleted: completedResult.data?.[0] ? asDashboardScan(completedResult.data[0]) : null,
     completedTotal: completedResult.count,
   };
+}
+
+export async function fetchDashboardRecentScans(workspaceId: string, signal: AbortSignal) {
+  const result = await supabase
+    .from("scans")
+    .select(RECENT_FIELDS)
+    .eq("workspace_id", workspaceId)
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: false })
+    .limit(5)
+    .abortSignal(readSignal(signal));
+  if (result.error) throw result.error;
+  return (result.data ?? []).map(asDashboardScan);
 }

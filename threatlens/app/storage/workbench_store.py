@@ -64,14 +64,16 @@ class WorkbenchStore:
             raise HTTPException(503, "Audit persistence is temporarily unavailable")
         return response.json() if response.content else None
 
-    async def page(self, table: str, *, offset=0, limit=200, token=None, **filters):
+    async def page(self, table: str, *, offset=0, limit=200, token=None, require_exact=False, **filters):
         headers = {"apikey": self.key, "Authorization": f"Bearer {token or self.key}", "Prefer": "count=exact"}
         async with connection() as client:
             response = await client.get(f"{self.url}/rest/v1/{table}", headers=headers,
                 params={**filters, "offset": offset, "limit": limit})
         if not response.is_success:
             raise HTTPException(503, "Audit persistence is temporarily unavailable")
-        total = response.headers.get("content-range", "*/0").rsplit("/", 1)[-1]
+        total = response.headers.get("content-range", "" if require_exact else "*/0").rsplit("/", 1)[-1]
+        if require_exact and not total.isdigit():
+            raise HTTPException(503, "Audit finding counts are temporarily unavailable")
         return {"items": response.json(), "total": int(total) if total.isdigit() else offset + len(response.json()), "offset": offset, "limit": limit}
 
     async def rows(self, table: str, **filters):

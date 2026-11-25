@@ -438,6 +438,35 @@ async def finding_counts(scan_id: uuid.UUID, workspace_id: uuid.UUID, token: str
     return JSONResponse({"total": counts["total"], "severity": counts["severity"]}, headers={"Cache-Control": "no-store"})
 
 
+@router.get("/scans/{scan_id}/workbench/findings/dashboard")
+async def dashboard_findings(
+    scan_id: uuid.UUID,
+    workspace_id: uuid.UUID,
+    token: str = Depends(access_token),
+    repository: WorkbenchStore = Depends(store),
+):
+    scan = await repository.authorize(str(scan_id), token, str(workspace_id))
+    if scan["status"] != "completed":
+        raise HTTPException(409, "Wait for the scan to complete before viewing its summary")
+
+    fields = ("id", "title", "severity", "file_path", "line_number")
+    scope = {"scan_id": f"eq.{scan_id}", "token": token, "require_exact": True}
+    total, opened, critical = await asyncio.gather(
+        repository.page("findings", **scope, select="id", limit=1),
+        repository.page(
+            "findings", **scope, state="eq.open", select=",".join(fields),
+            order="severity.asc,created_at.asc,id.asc", limit=3,
+        ),
+        repository.page("findings", **scope, state="eq.open", severity="eq.critical", select="id", limit=1),
+    )
+    return JSONResponse(redact_evidence({
+        "total": total["total"],
+        "open": opened["total"],
+        "criticalOpen": critical["total"],
+        "items": [{key: row.get(key) for key in fields} for row in opened["items"]],
+    }), headers={"Cache-Control": "no-store"})
+
+
 def csv_cell(value):
     text = "" if value is None else str(value)
     # Quoting alone does not prevent spreadsheet formula execution.

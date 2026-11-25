@@ -52,6 +52,7 @@ const privateKinds = new Set([
   "finding-counts",
   "finding-queue",
   "finding-detail",
+  "dashboard-findings",
   "report",
   "report-findings",
   "report-finding",

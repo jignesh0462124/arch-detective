@@ -68,25 +68,25 @@ const query = (data, isPending = false, isError = false) => ({
 function setup() {
   globalThis.loadingFixture = {
     queries: [],
-    scans: query({
-      latestCompleted: {
-        id: "scan",
-        target_name: "Saved project",
-        scan_type: "codebase",
-        completed_at: "2026-11-17T10:00:00Z",
-        framework_scores: {},
-      },
-      recent: [],
-      completedTotal: 3,
-    }),
-    findings: {
-      counts: query({ total: 6 }),
-      open: query({
-        total: 6,
-        items: [{ id: "f", title: "Recorded finding", severity: "high", file_path: "code.ts" }],
+    scans: {
+      latest: query({
+        latestCompleted: {
+          id: "scan",
+          target_name: "Saved project",
+          scan_type: "codebase",
+          completed_at: "2026-11-17T10:00:00Z",
+          framework_scores: {},
+        },
+        completedTotal: 3,
       }),
-      criticalOpen: query({ total: 1 }),
+      recent: query([]),
     },
+    findings: query({
+      total: 6,
+      open: 6,
+      criticalOpen: 1,
+      items: [{ id: "f", title: "Recorded finding", severity: "high", file_path: "code.ts" }],
+    }),
   };
 }
 test("skeletons have one status label, no fake findings and no focusable controls", () => {
@@ -114,14 +114,10 @@ test("session loading stays gated and stops animating on failure", () => {
 });
 test("dashboard progressively replaces pending cards with real values and preserves errors", () => {
   setup();
-  globalThis.loadingFixture.scans = query(undefined, true);
+  globalThis.loadingFixture.scans.latest = query(undefined, true);
   assert.match(ui.dashboard(), /dashboard-loading/);
   setup();
-  globalThis.loadingFixture.findings = {
-    counts: query(undefined, true),
-    open: query(undefined, true),
-    criticalOpen: query(undefined, true),
-  };
+  globalThis.loadingFixture.findings = query(undefined, true);
   const pending = ui.dashboard();
   assert.match(pending, /Saved project/);
   assert.match(pending, /data-skeleton/);
@@ -131,20 +127,38 @@ test("dashboard progressively replaces pending cards with real values and preser
   assert.match(ready, /6 open findings/);
   assert.match(ready, /Recorded finding/);
   assert.doesNotMatch(ready, /data-skeleton/);
-  globalThis.loadingFixture.findings = {
-    counts: query(undefined, false, true),
-    open: query(undefined, false, true),
-    criticalOpen: query(undefined, false, true),
-  };
+  // A revalidation can fail while old (potentially revoked) data is still in Query state.
+  globalThis.loadingFixture.findings.isError = true;
   const error = ui.dashboard();
   assert.match(error, /Finding counts could not be loaded/);
   assert.match(error, /Retry/);
-  assert.doesNotMatch(error, /data-skeleton|No findings were recorded/);
+  assert.doesNotMatch(error, /data-skeleton|No findings were recorded|Recorded finding/);
+});
+test("the latest audit and recent scans do not wait on or borrow errors from each other", () => {
+  setup();
+  globalThis.loadingFixture.scans.recent = query(undefined, true);
+  const slowRecent = ui.dashboard();
+  assert.match(slowRecent, /Saved project/);
+  assert.match(slowRecent, /Recorded finding/);
+  assert.match(slowRecent, /Loading recent scans/);
+  assert.doesNotMatch(slowRecent, /dashboard-loading/);
+  globalThis.loadingFixture.scans.recent = query(undefined, false, true);
+  assert.match(ui.dashboard(), /Retry recent scans/);
+  assert.match(ui.dashboard(), /Saved project/);
+
+  globalThis.loadingFixture.scans.latest.isError = true;
+  globalThis.loadingFixture.scans.recent = query([
+    { id: "active", target_name: "New upload", status: "running", scan_type: "codebase" },
+  ]);
+  const failedLatest = ui.dashboard();
+  assert.match(failedLatest, /The latest audit is unavailable/);
+  assert.match(failedLatest, /New upload/);
+  assert.doesNotMatch(failedLatest, /Saved project|Recorded finding/);
 });
 test("background refreshes retain saved content instead of flashing skeletons", () => {
   setup();
-  globalThis.loadingFixture.scans.isFetching = true;
-  globalThis.loadingFixture.findings.counts.isFetching = true;
+  globalThis.loadingFixture.scans.latest.isFetching = true;
+  globalThis.loadingFixture.findings.isFetching = true;
   assert.match(ui.dashboard(), /6 open findings/);
   assert.doesNotMatch(ui.dashboard(), /dashboard-loading|data-skeleton/);
 });

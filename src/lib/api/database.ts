@@ -42,33 +42,36 @@ async function getCurrentUserId(): Promise<string> {
   return data.user.id;
 }
 
-async function getWorkspaceRoles(): Promise<{
-  userId: string;
-  roles: Map<string, Workspace["role"]>;
-}> {
-  const userId = await getCurrentUserId();
-  const { data, error } = await supabase
+async function getWorkspaceRoles(userId: string, signal?: AbortSignal) {
+  const query = supabase
     .from("workspace_members")
     .select("workspace_id, role")
     .eq("user_id", userId);
+  const { data, error } = await (signal ? query.abortSignal(signal) : query);
   if (error) throw error;
-  return {
-    userId,
-    roles: new Map((data ?? []).map((m) => [m.workspace_id, m.role as Workspace["role"]])),
-  };
+  return new Map((data ?? []).map((m) => [m.workspace_id, m.role as Workspace["role"]]));
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // WORKSPACES
 // ═══════════════════════════════════════════════════════════════════════════════
 
-export async function dbFetchWorkspaces(): Promise<Workspace[]> {
-  const { userId, roles } = await getWorkspaceRoles();
-  // Ultra-fast single-query via PostgreSQL view (eliminates 2*N sequential count queries)
-  const { data: viewData, error: viewError } = await supabase
-    .from("workspaces_with_counts")
-    .select("*")
-    .order("created_at", { ascending: false });
+export async function dbFetchWorkspaces(signal?: AbortSignal): Promise<Workspace[]> {
+  const userId = await getCurrentUserId();
+  signal?.throwIfAborted();
+  const readSignal = signal
+    ? AbortSignal.any([signal, AbortSignal.timeout(15_000)])
+    : AbortSignal.timeout(15_000);
+  // Both reads use the signed-in user; the workspace view doesn't depend on the role result.
+  const [roles, { data: viewData, error: viewError }] = await Promise.all([
+    getWorkspaceRoles(userId, readSignal),
+    supabase
+      .from("workspaces_with_counts")
+      .select("id,name,slug,owner_user_id,member_count,scan_count,settings,created_at")
+      .order("created_at", { ascending: false })
+      .abortSignal(readSignal),
+  ]);
+  readSignal.throwIfAborted();
 
   if (!viewError && viewData) {
     return viewData.map((row) => ({
@@ -102,7 +105,9 @@ export async function dbFetchWorkspaces(): Promise<Workspace[]> {
       updated_at
     `,
     )
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .abortSignal(readSignal);
+  readSignal.throwIfAborted();
 
   if (error) {
     console.error("Failed to fetch workspaces from Supabase:", error);
@@ -127,7 +132,8 @@ export async function dbFetchWorkspaces(): Promise<Workspace[]> {
 }
 
 export async function dbFetchWorkspace(workspaceId: string): Promise<Workspace> {
-  const { userId, roles } = await getWorkspaceRoles();
+  const userId = await getCurrentUserId();
+  const roles = await getWorkspaceRoles(userId);
   // Ultra-fast single-query via PostgreSQL view
   const { data: viewData, error: viewError } = await supabase
     .from("workspaces_with_counts")

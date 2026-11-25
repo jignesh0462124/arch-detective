@@ -4,7 +4,7 @@ import { build } from "esbuild";
 
 const output = await build({
   stdin: {
-    contents: `export * from "./src/lib/workspaceSettings"; export * from "./src/lib/api/auditHistory"; export * from "./src/lib/api/auditDeletion"; export {dbUpdateWorkspace, dbDeleteWorkspace, dbFetchMembers, dbFetchPendingInvites, dbRemoveMember, dbRevokeInvite} from "./src/lib/api/database"; export {updateMemberRole} from "./src/lib/api/workspaces"; export {centeredGraphScroll} from "./src/lib/attackGraphView"; export {setAuthOwner} from "./src/lib/authState";`,
+    contents: `export * from "./src/lib/workspaceSettings"; export * from "./src/lib/api/auditHistory"; export * from "./src/lib/api/auditDeletion"; export {dbFetchWorkspaces, dbUpdateWorkspace, dbDeleteWorkspace, dbFetchMembers, dbFetchPendingInvites, dbRemoveMember, dbRevokeInvite} from "./src/lib/api/database"; export {updateMemberRole} from "./src/lib/api/workspaces"; export {centeredGraphScroll} from "./src/lib/attackGraphView"; export {setAuthOwner} from "./src/lib/authState";`,
     resolveDir: process.cwd(),
   },
   bundle: true,
@@ -237,6 +237,51 @@ test("centering uses canvas coordinates, existing scroll and clamps edges", () =
   );
 });
 
+test("startup reads workspace rows and roles in parallel under the same cancellation signal", async () => {
+  const membership = Promise.withResolvers();
+  const actor = new AbortController();
+  fixture({
+    workspace_members: [membership.promise],
+    workspaces_with_counts: [
+      {
+        data: [{ id: "ws", name: "Shared project", owner_user_id: "other", scan_count: 7 }],
+        error: null,
+      },
+    ],
+  });
+  const read = api.dbFetchWorkspaces(actor.signal);
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.deepEqual(calls.map((call) => call.table).sort(), [
+    "workspace_members",
+    "workspaces_with_counts",
+  ]);
+  const signals = calls.map(
+    ({ methods }) => methods.find(([method]) => method === "abortSignal")[1],
+  );
+  assert.equal(signals[0], signals[1]);
+  membership.resolve({ data: [{ workspace_id: "ws", role: "analyst" }], error: null });
+  const [workspace] = await read;
+  assert.equal(workspace.role, "analyst");
+  assert.equal(workspace.scan_count, 7);
+  actor.abort();
+  assert.equal(signals[0].aborted, true);
+});
+
+test("an aborted startup read doesn't run the compatibility fallback", async () => {
+  const view = Promise.withResolvers();
+  const abort = new AbortController();
+  fixture({ workspaces_with_counts: [view.promise] });
+  const read = api.dbFetchWorkspaces(abort.signal);
+  await new Promise((resolve) => setImmediate(resolve));
+  abort.abort();
+  view.resolve({ data: null, error: new Error("cancelled") });
+  await assert.rejects(read, { name: "AbortError" });
+  assert.equal(
+    calls.some((call) => call.table === "workspaces"),
+    false,
+  );
+});
+
 test("successful workspace update returns the saved database state", async () => {
   const saved = {
     id: "ws",
@@ -319,13 +364,16 @@ test("deletion keeps other users/workspaces/scan caches and corrects last-page o
     ["source-window", "actor", "ws", "scan"],
     ["report", "actor", "ws", "scan"],
     ["finding-queue", "actor", "ws", "scan"],
+    ["dashboard-findings", "actor", "ws", "scan"],
+    ["dashboard-findings", "actor", "other-ws", "scan"],
     ["scan", "scan", "actor"],
     ["findings", "scan", {}, "actor"],
     ["source-window", "other", "ws", "scan"],
     ["source-window", "actor", "other-ws", "scan"],
     ["source-window", "actor", "ws", "other-scan"],
     ["audit-history", "actor", "ws"],
-    ["dashboard-scans", "actor", "ws"],
+    ["dashboard-scans", "actor", "ws", "latest"],
+    ["dashboard-scans", "actor", "ws", "recent"],
     ["reports", "actor", "ws"],
     ["attack-graph-scans", "actor", "ws"],
   ])
@@ -333,13 +381,20 @@ test("deletion keeps other users/workspaces/scan caches and corrects last-page o
   await api.refreshAfterAuditDeletion(client, "actor", "ws", "scan");
   assert.equal(client.getQueryData(["source-window", "actor", "ws", "scan"]), undefined);
   assert.equal(client.getQueryData(["report", "actor", "ws", "scan"]), undefined);
+  assert.equal(client.getQueryData(["dashboard-findings", "actor", "ws", "scan"]), undefined);
+  assert.ok(client.getQueryData(["dashboard-findings", "actor", "other-ws", "scan"]));
   assert.equal(client.getQueryData(["scan", "scan", "actor"]), undefined);
   assert.equal(client.getQueryData(["findings", "scan", {}, "actor"]), undefined);
   assert.ok(client.getQueryData(["source-window", "other", "ws", "scan"]));
   assert.ok(client.getQueryData(["source-window", "actor", "other-ws", "scan"]));
   assert.ok(client.getQueryData(["source-window", "actor", "ws", "other-scan"]));
-  for (const prefix of ["audit-history", "dashboard-scans", "reports", "attack-graph-scans"])
+  for (const prefix of ["audit-history", "reports", "attack-graph-scans"])
     assert.equal(client.getQueryState([prefix, "actor", "ws"]).isInvalidated, true);
+  for (const area of ["latest", "recent"])
+    assert.equal(
+      client.getQueryState(["dashboard-scans", "actor", "ws", area]).isInvalidated,
+      true,
+    );
   assert.equal(api.historyOffsetAfterDelete(20, 21, 20), 0);
   assert.equal(api.historyOffsetAfterDelete(20, 22, 20), 20);
   assert.equal(api.historyOffsetAfterDelete(40, 41, 20), 20);

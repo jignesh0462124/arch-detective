@@ -41,6 +41,12 @@ export interface FindingCounts {
   total: number;
   severity: Partial<Record<Severity, number>>;
 }
+export interface DashboardFindings {
+  total: number;
+  open: number;
+  criticalOpen: number;
+  items: Pick<FindingSummary, "id" | "title" | "severity" | "file_path" | "line_number">[];
+}
 export interface QueueDetail {
   finding: WorkbenchFinding;
   file: SnapshotFile | null;
@@ -67,6 +73,8 @@ export const getFindingScans = (workspaceId: string, offset: number, signal?: Ab
   );
 export const getFindingCounts = (workspaceId: string, scanId: string, signal?: AbortSignal) =>
   get<FindingCounts>(`${base(scanId)}/counts?${params(workspaceId)}`, signal);
+export const getDashboardFindings = (workspaceId: string, scanId: string, signal?: AbortSignal) =>
+  get<DashboardFindings>(`${base(scanId)}/dashboard?${params(workspaceId)}`, signal);
 export const getFindingPage = (
   workspaceId: string,
   scanId: string,

@@ -1,0 +1,1167 @@
+{
+  "revision": "143aee65ec03",
+  "files": {
+    "src/start.ts": {
+      "line_count": 22,
+      "form": "Repository listing"
+    },
+    "src/server.ts": {
+      "line_count": 54,
+      "form": "Repository listing"
+    },
+    "src/router.tsx": {
+      "line_count": 26,
+      "form": "Repository listing"
+    },
+    "src/routes/__root.tsx": {
+      "line_count": 179,
+      "form": "Repository listing"
+    },
+    "src/routes/_app.tsx": {
+      "line_count": 32,
+      "form": "Repository listing"
+    },
+    "src/routes/_app/advisor.tsx": {
+      "line_count": 40,
+      "form": "Repository listing"
+    },
+    "src/routes/_app/attack-graph.tsx": {
+      "line_count": 2165,
+      "form": "Repository listing"
+    },
+    "src/routes/_app/audit-log.tsx": {
+      "line_count": 684,
+      "form": "Repository listing"
+    },
+    "src/routes/_app/dashboard.tsx": {
+      "line_count": 559,
+      "form": "Repository listing"
+    },
+    "src/routes/_app/findings.tsx": {
+      "line_count": 702,
+      "form": "Repository listing"
+    },
+    "src/routes/_app/fix-verification.tsx": {
+      "line_count": 812,
+      "form": "Repository listing"
+    },
+    "src/routes/_app/profile.tsx": {
+      "line_count": 350,
+      "form": "Repository listing"
+    },
+    "src/routes/_app/reports.$reportId.tsx": {
+      "line_count": 410,
+      "form": "Repository listing"
+    },
+    "src/routes/_app/reports.tsx": {
+      "line_count": 383,
+      "form": "Repository listing"
+    },
+    "src/routes/_app/settings.tsx": {
+      "line_count": 15,
+      "form": "Repository listing"
+    },
+    "src/routes/_app/workspace.tsx": {
+      "line_count": 3008,
+      "form": "Repository listing"
+    },
+    "src/routes/about.tsx": {
+      "line_count": 267,
+      "form": "Repository listing"
+    },
+    "src/routes/index.tsx": {
+      "line_count": 239,
+      "form": "Repository listing"
+    },
+    "src/routes/login.tsx": {
+      "line_count": 452,
+      "form": "Repository listing"
+    },
+    "src/routes/privacy.tsx": {
+      "line_count": 12,
+      "form": "Repository listing"
+    },
+    "src/routes/register.tsx": {
+      "line_count": 6,
+      "form": "Repository listing"
+    },
+    "src/routes/reset-password.tsx": {
+      "line_count": 237,
+      "form": "Repository listing"
+    },
+    "src/routes/team.tsx": {
+      "line_count": 16,
+      "form": "Repository listing"
+    },
+    "src/routes/terms.tsx": {
+      "line_count": 12,
+      "form": "Repository listing"
+    },
+    "src/routes/workspace/$workspaceId/scans/$scanId/workbench.tsx": {
+      "line_count": 31,
+      "form": "Repository listing"
+    },
+    "src/routes/workspace/$workspaceId/settings.tsx": {
+      "line_count": 18,
+      "form": "Repository listing"
+    },
+    "src/routes/workspace/new.tsx": {
+      "line_count": 186,
+      "form": "Repository listing"
+    },
+    "src/components/ai-assistant/AdvisorWorkspace.tsx": {
+      "line_count": 567,
+      "form": "Repository listing"
+    },
+    "src/components/ai-assistant/AiAssistantPanel.tsx": {
+      "line_count": 273,
+      "form": "Repository listing"
+    },
+    "src/components/ai-assistant/AiChatContext.ts": {
+      "line_count": 11,
+      "form": "Repository listing"
+    },
+    "src/components/ai-assistant/AiChatProvider.tsx": {
+      "line_count": 8,
+      "form": "Repository listing"
+    },
+    "src/components/ai-assistant/AiMessage.tsx": {
+      "line_count": 379,
+      "form": "Repository listing"
+    },
+    "src/components/ai-assistant/AiModelSelector.tsx": {
+      "line_count": 174,
+      "form": "Repository listing"
+    },
+    "src/components/audit-workbench/AuditHistory.tsx": {
+      "line_count": 574,
+      "form": "Repository listing"
+    },
+    "src/components/audit-workbench/AuditUpload.tsx": {
+      "line_count": 539,
+      "form": "Repository listing"
+    },
+    "src/components/audit-workbench/AuditWorkbench.tsx": {
+      "line_count": 1396,
+      "form": "Repository listing"
+    },
+    "src/components/audit-workbench/CodeSolution.tsx": {
+      "line_count": 243,
+      "form": "Repository listing"
+    },
+    "src/components/audit-workbench/ScanAnimation.tsx": {
+      "line_count": 165,
+      "form": "Repository listing"
+    },
+    "src/components/audit-workbench/SolutionPreview.tsx": {
+      "line_count": 190,
+      "form": "Repository listing"
+    },
+    "src/components/audit-workbench/SourceEditor.tsx": {
+      "line_count": 257,
+      "form": "Repository listing"
+    },
+    "src/components/audit-workbench/editorEngine.ts": {
+      "line_count": 16,
+      "form": "Repository listing"
+    },
+    "src/components/audit-workbench/preload.ts": {
+      "line_count": 13,
+      "form": "Repository listing"
+    },
+    "src/components/audit-workbench/useWorkbenchData.ts": {
+      "line_count": 216,
+      "form": "Repository listing"
+    },
+    "src/components/auth/AccountMenu.tsx": {
+      "line_count": 65,
+      "form": "Repository listing"
+    },
+    "src/components/auth/AuthProvider.tsx": {
+      "line_count": 170,
+      "form": "Repository listing"
+    },
+    "src/components/auth/RequireAuth.tsx": {
+      "line_count": 51,
+      "form": "Repository listing"
+    },
+    "src/components/auth/auth-page.css": {
+      "line_count": 278,
+      "form": "Repository listing"
+    },
+    "src/components/brutal/AppShell.tsx": {
+      "line_count": 631,
+      "form": "Repository listing"
+    },
+    "src/components/brutal/BrutalBadge.tsx": {
+      "line_count": 52,
+      "form": "Repository listing"
+    },
+    "src/components/brutal/BrutalButton.tsx": {
+      "line_count": 45,
+      "form": "Repository listing"
+    },
+    "src/components/brutal/ThemeToggle.tsx": {
+      "line_count": 37,
+      "form": "Repository listing"
+    },
+    "src/components/extension-review/ExtensionReviewPanel.tsx": {
+      "line_count": 818,
+      "form": "Repository listing"
+    },
+    "src/components/extension-review/ExtensionUpload.tsx": {
+      "line_count": 293,
+      "form": "Repository listing"
+    },
+    "src/components/github/GitHubRepositories.tsx": {
+      "line_count": 484,
+      "form": "Repository listing"
+    },
+    "src/components/marketing/LandingCodePreview.tsx": {
+      "line_count": 128,
+      "form": "Repository listing"
+    },
+    "src/components/marketing/MarketingChrome.tsx": {
+      "line_count": 222,
+      "form": "Repository listing"
+    },
+    "src/components/marketing/ProjectNotice.tsx": {
+      "line_count": 143,
+      "form": "Repository listing"
+    },
+    "src/components/marketing/ReviewWorkflow.tsx": {
+      "line_count": 64,
+      "form": "Repository listing"
+    },
+    "src/components/marketing/SaaSHeroMotionGraphic.tsx": {
+      "line_count": 352,
+      "form": "Repository listing"
+    },
+    "src/components/marketing/TeamPage.tsx": {
+      "line_count": 63,
+      "form": "Repository listing"
+    },
+    "src/components/marketing/public-pages.css": {
+      "line_count": 429,
+      "form": "Repository listing"
+    },
+    "src/components/profile/ProfileArtworkPicker.tsx": {
+      "line_count": 199,
+      "form": "Repository listing"
+    },
+    "src/components/profile/ProfileAvatar.tsx": {
+      "line_count": 35,
+      "form": "Repository listing"
+    },
+    "src/components/reports/ReportUi.tsx": {
+      "line_count": 140,
+      "form": "Repository listing"
+    },
+    "src/components/settings/LegalContent.tsx": {
+      "line_count": 37,
+      "form": "Repository listing"
+    },
+    "src/components/settings/SettingsPage.tsx": {
+      "line_count": 560,
+      "form": "Repository listing"
+    },
+    "src/components/settings/legalNotices.ts": {
+      "line_count": 80,
+      "form": "Repository listing"
+    },
+    "src/components/ui/AdvisorIcon.tsx": {
+      "line_count": 6,
+      "form": "Repository listing"
+    },
+    "src/components/ui/ArchonLogo.tsx": {
+      "line_count": 47,
+      "form": "Repository listing"
+    },
+    "src/components/ui/ArchonWordmark.tsx": {
+      "line_count": 51,
+      "form": "Repository listing"
+    },
+    "src/components/ui/SettingsFrame.tsx": {
+      "line_count": 12,
+      "form": "Repository listing"
+    },
+    "src/components/ui/audit-analytics.tsx": {
+      "line_count": 711,
+      "form": "Repository listing"
+    },
+    "src/components/ui/code-panel.tsx": {
+      "line_count": 84,
+      "form": "Repository listing"
+    },
+    "src/components/ui/coverage-bar.tsx": {
+      "line_count": 42,
+      "form": "Repository listing"
+    },
+    "src/components/ui/data-loading.tsx": {
+      "line_count": 92,
+      "form": "Repository listing"
+    },
+    "src/components/ui/section-card.tsx": {
+      "line_count": 107,
+      "form": "Repository listing"
+    },
+    "src/components/ui/severity-badge.tsx": {
+      "line_count": 52,
+      "form": "Repository listing"
+    },
+    "src/components/ui/stat-tile.tsx": {
+      "line_count": 49,
+      "form": "Repository listing"
+    },
+    "src/components/workspace-switcher.tsx": {
+      "line_count": 375,
+      "form": "Repository listing"
+    },
+    "src/components/workspace/WorkspaceSettingsPage.tsx": {
+      "line_count": 765,
+      "form": "Repository listing"
+    },
+    "src/hooks/useAuditEvents.ts": {
+      "line_count": 26,
+      "form": "Repository listing"
+    },
+    "src/hooks/useAuth.ts": {
+      "line_count": 7,
+      "form": "Repository listing"
+    },
+    "src/hooks/useDashboard.ts": {
+      "line_count": 52,
+      "form": "Repository listing"
+    },
+    "src/hooks/useFindingQueue.ts": {
+      "line_count": 92,
+      "form": "Repository listing"
+    },
+    "src/hooks/useGroqChat.ts": {
+      "line_count": 557,
+      "form": "Repository listing"
+    },
+    "src/hooks/useReports.ts": {
+      "line_count": 103,
+      "form": "Repository listing"
+    },
+    "src/hooks/useScans.ts": {
+      "line_count": 52,
+      "form": "Repository listing"
+    },
+    "src/hooks/useUnsavedSettings.ts": {
+      "line_count": 18,
+      "form": "Repository listing"
+    },
+    "src/hooks/useWorkspace.ts": {
+      "line_count": 204,
+      "form": "Repository listing"
+    },
+    "src/lib/advisorPresentation.ts": {
+      "line_count": 29,
+      "form": "Repository listing"
+    },
+    "src/lib/api/advisorHistory.ts": {
+      "line_count": 66,
+      "form": "Repository listing"
+    },
+    "src/lib/api/ai-client.ts": {
+      "line_count": 136,
+      "form": "Repository listing"
+    },
+    "src/lib/api/ai-models.ts": {
+      "line_count": 119,
+      "form": "Repository listing"
+    },
+    "src/lib/api/attackGraph.ts": {
+      "line_count": 894,
+      "form": "Repository listing"
+    },
+    "src/lib/api/attackGraphScans.ts": {
+      "line_count": 60,
+      "form": "Repository listing"
+    },
+    "src/lib/api/auditDeletion.ts": {
+      "line_count": 141,
+      "form": "Repository listing"
+    },
+    "src/lib/api/auditEvents.ts": {
+      "line_count": 103,
+      "form": "Repository listing"
+    },
+    "src/lib/api/auditHistory.ts": {
+      "line_count": 53,
+      "form": "Repository listing"
+    },
+    "src/lib/api/auditStorage.ts": {
+      "line_count": 201,
+      "form": "Repository listing"
+    },
+    "src/lib/api/auditSync.ts": {
+      "line_count": 52,
+      "form": "Repository listing"
+    },
+    "src/lib/api/auth.ts": {
+      "line_count": 99,
+      "form": "Repository listing"
+    },
+    "src/lib/api/client.ts": {
+      "line_count": 163,
+      "form": "Repository listing"
+    },
+    "src/lib/api/compliance.ts": {
+      "line_count": 312,
+      "form": "Repository listing"
+    },
+    "src/lib/api/dashboard.ts": {
+      "line_count": 84,
+      "form": "Repository listing"
+    },
+    "src/lib/api/database.ts": {
+      "line_count": 896,
+      "form": "Repository listing"
+    },
+    "src/lib/api/escapeHtml.ts": {
+      "line_count": 7,
+      "form": "Repository listing"
+    },
+    "src/lib/api/extensionReview.ts": {
+      "line_count": 160,
+      "form": "Repository listing"
+    },
+    "src/lib/api/findingQueue.ts": {
+      "line_count": 132,
+      "form": "Repository listing"
+    },
+    "src/lib/api/findings.ts": {
+      "line_count": 366,
+      "form": "Repository listing"
+    },
+    "src/lib/api/frameworks.ts": {
+      "line_count": 13,
+      "form": "Repository listing"
+    },
+    "src/lib/api/github.ts": {
+      "line_count": 53,
+      "form": "Repository listing"
+    },
+    "src/lib/api/groq-client.ts": {
+      "line_count": 23,
+      "form": "Repository listing"
+    },
+    "src/lib/api/localScan.ts": {
+      "line_count": 348,
+      "form": "Repository listing"
+    },
+    "src/lib/api/prefetch.ts": {
+      "line_count": 18,
+      "form": "Repository listing"
+    },
+    "src/lib/api/profileAppearance.ts": {
+      "line_count": 14,
+      "form": "Repository listing"
+    },
+    "src/lib/api/reports.ts": {
+      "line_count": 219,
+      "form": "Repository listing"
+    },
+    "src/lib/api/scanProgress.ts": {
+      "line_count": 126,
+      "form": "Repository listing"
+    },
+    "src/lib/api/scanSummary.ts": {
+      "line_count": 47,
+      "form": "Repository listing"
+    },
+    "src/lib/api/scans.ts": {
+      "line_count": 73,
+      "form": "Repository listing"
+    },
+    "src/lib/api/types.ts": {
+      "line_count": 155,
+      "form": "Repository listing"
+    },
+    "src/lib/api/workbench.ts": {
+      "line_count": 273,
+      "form": "Repository listing"
+    },
+    "src/lib/api/workspaces.ts": {
+      "line_count": 165,
+      "form": "Repository listing"
+    },
+    "src/lib/attackGraphView.ts": {
+      "line_count": 131,
+      "form": "Repository listing"
+    },
+    "src/lib/auditResume.ts": {
+      "line_count": 31,
+      "form": "Repository listing"
+    },
+    "src/lib/auditView.ts": {
+      "line_count": 51,
+      "form": "Repository listing"
+    },
+    "src/lib/authState.ts": {
+      "line_count": 140,
+      "form": "Repository listing"
+    },
+    "src/lib/browserVisibility.ts": {
+      "line_count": 8,
+      "form": "Repository listing"
+    },
+    "src/lib/codeSolution.ts": {
+      "line_count": 90,
+      "form": "Repository listing"
+    },
+    "src/lib/dashboardView.ts": {
+      "line_count": 33,
+      "form": "Repository listing"
+    },
+    "src/lib/error-capture.ts": {
+      "line_count": 27,
+      "form": "Repository listing"
+    },
+    "src/lib/error-page.ts": {
+      "line_count": 30,
+      "form": "Repository listing"
+    },
+    "src/lib/findingView.ts": {
+      "line_count": 23,
+      "form": "Repository listing"
+    },
+    "src/lib/lovable-error-reporting.ts": {
+      "line_count": 36,
+      "form": "Repository listing"
+    },
+    "src/lib/profileAppearance.ts": {
+      "line_count": 61,
+      "form": "Repository listing"
+    },
+    "src/lib/reportExport.ts": {
+      "line_count": 77,
+      "form": "Repository listing"
+    },
+    "src/lib/reportView.ts": {
+      "line_count": 12,
+      "form": "Repository listing"
+    },
+    "src/lib/settings.ts": {
+      "line_count": 20,
+      "form": "Repository listing"
+    },
+    "src/lib/sidebar.ts": {
+      "line_count": 48,
+      "form": "Repository listing"
+    },
+    "src/lib/supabase.ts": {
+      "line_count": 54,
+      "form": "Repository listing"
+    },
+    "src/lib/theme.ts": {
+      "line_count": 53,
+      "form": "Repository listing"
+    },
+    "src/lib/themeMotion.ts": {
+      "line_count": 70,
+      "form": "Repository listing"
+    },
+    "src/lib/utils.ts": {
+      "line_count": 6,
+      "form": "Repository listing"
+    },
+    "src/lib/workspaceSettings.ts": {
+      "line_count": 68,
+      "form": "Repository listing"
+    },
+    "src/motion.css": {
+      "line_count": 194,
+      "form": "Repository listing"
+    },
+    "src/styles.css": {
+      "line_count": 758,
+      "form": "Repository listing"
+    },
+    "src/types/monaco-languages.d.ts": {
+      "line_count": 2,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/__init__.py": {
+      "line_count": 33,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/ai_chat.py": {
+      "line_count": 329,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/audit_events.py": {
+      "line_count": 72,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/audit_workbench.py": {
+      "line_count": 662,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/auth.py": {
+      "line_count": 128,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/export.py": {
+      "line_count": 179,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/extension_reviews.py": {
+      "line_count": 327,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/frameworks.py": {
+      "line_count": 59,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/github_review.py": {
+      "line_count": 563,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/local_access.py": {
+      "line_count": 52,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/local_scan.py": {
+      "line_count": 1222,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/local_scan_evidence.py": {
+      "line_count": 54,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/report_library.py": {
+      "line_count": 202,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/reports.py": {
+      "line_count": 213,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/scans.py": {
+      "line_count": 526,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/workspaces.py": {
+      "line_count": 321,
+      "form": "Repository listing"
+    },
+    "threatlens/app/api/ws.py": {
+      "line_count": 137,
+      "form": "Repository listing"
+    },
+    "threatlens/app/main.py": {
+      "line_count": 128,
+      "form": "Repository listing"
+    },
+    "threatlens/app/config.py": {
+      "line_count": 158,
+      "form": "Sanitized listing"
+    },
+    "threatlens/app/auth/__init__.py": {
+      "line_count": 10,
+      "form": "Repository listing"
+    },
+    "threatlens/app/auth/dependencies.py": {
+      "line_count": 52,
+      "form": "Repository listing"
+    },
+    "threatlens/app/auth/jwt_verifier.py": {
+      "line_count": 201,
+      "form": "Repository listing"
+    },
+    "threatlens/app/auth/permissions.py": {
+      "line_count": 48,
+      "form": "Repository listing"
+    },
+    "threatlens/app/services/advisor_history.py": {
+      "line_count": 87,
+      "form": "Repository listing"
+    },
+    "threatlens/app/services/github_connection.py": {
+      "line_count": 187,
+      "form": "Repository listing"
+    },
+    "threatlens/app/services/reviewed_fixes.py": {
+      "line_count": 128,
+      "form": "Repository listing"
+    },
+    "threatlens/app/__init__.py": {
+      "line_count": 1,
+      "form": "Repository listing"
+    },
+    "threatlens/app/database.py": {
+      "line_count": 81,
+      "form": "Repository listing"
+    },
+    "threatlens/app/middleware/__init__.py": {
+      "line_count": 1,
+      "form": "Repository listing"
+    },
+    "threatlens/app/middleware/request_logging.py": {
+      "line_count": 57,
+      "form": "Repository listing"
+    },
+    "threatlens/app/models/__init__.py": {
+      "line_count": 31,
+      "form": "Repository listing"
+    },
+    "threatlens/app/models/audit_event.py": {
+      "line_count": 46,
+      "form": "Repository listing"
+    },
+    "threatlens/app/models/compliance_violation.py": {
+      "line_count": 39,
+      "form": "Repository listing"
+    },
+    "threatlens/app/models/finding.py": {
+      "line_count": 117,
+      "form": "Repository listing"
+    },
+    "threatlens/app/models/profile.py": {
+      "line_count": 42,
+      "form": "Repository listing"
+    },
+    "threatlens/app/models/report.py": {
+      "line_count": 57,
+      "form": "Repository listing"
+    },
+    "threatlens/app/models/scan.py": {
+      "line_count": 118,
+      "form": "Repository listing"
+    },
+    "threatlens/app/models/scan_artifact.py": {
+      "line_count": 76,
+      "form": "Repository listing"
+    },
+    "threatlens/app/models/workspace.py": {
+      "line_count": 83,
+      "form": "Repository listing"
+    },
+    "threatlens/app/models/workspace_invite.py": {
+      "line_count": 64,
+      "form": "Repository listing"
+    },
+    "threatlens/app/schemas/__init__.py": {
+      "line_count": 52,
+      "form": "Repository listing"
+    },
+    "threatlens/app/schemas/auth.py": {
+      "line_count": 45,
+      "form": "Repository listing"
+    },
+    "threatlens/app/schemas/finding.py": {
+      "line_count": 83,
+      "form": "Repository listing"
+    },
+    "threatlens/app/schemas/report.py": {
+      "line_count": 26,
+      "form": "Repository listing"
+    },
+    "threatlens/app/schemas/scan.py": {
+      "line_count": 173,
+      "form": "Repository listing"
+    },
+    "threatlens/app/storage/__init__.py": {
+      "line_count": 10,
+      "form": "Repository listing"
+    },
+    "threatlens/app/storage/client.py": {
+      "line_count": 225,
+      "form": "Repository listing"
+    },
+    "threatlens/app/storage/lifecycle.py": {
+      "line_count": 15,
+      "form": "Repository listing"
+    },
+    "threatlens/app/storage/paths.py": {
+      "line_count": 45,
+      "form": "Repository listing"
+    },
+    "threatlens/app/storage/workbench_store.py": {
+      "line_count": 128,
+      "form": "Repository listing"
+    },
+    "threatlens/app/tasks/__init__.py": {
+      "line_count": 4,
+      "form": "Repository listing"
+    },
+    "threatlens/app/tasks/celery_app.py": {
+      "line_count": 44,
+      "form": "Repository listing"
+    },
+    "threatlens/app/tasks/report_task.py": {
+      "line_count": 231,
+      "form": "Repository listing"
+    },
+    "threatlens/app/tasks/scan_task.py": {
+      "line_count": 558,
+      "form": "Repository listing"
+    },
+    "supabase/migrations/20261003000001_initial_schema.sql": {
+      "line_count": 260,
+      "form": "Repository listing"
+    },
+    "supabase/migrations/20261004000001_mode_fix_rls.sql": {
+      "line_count": 321,
+      "form": "Repository listing"
+    },
+    "supabase/migrations/20261007000001_workspace_settings_and_invites.sql": {
+      "line_count": 50,
+      "form": "Repository listing"
+    },
+    "supabase/migrations/20261007000002_fast_workspace_counts_view.sql": {
+      "line_count": 33,
+      "form": "Repository listing"
+    },
+    "supabase/migrations/20261017185644_harden_workspace_rls.sql": {
+      "line_count": 177,
+      "form": "Repository listing"
+    },
+    "supabase/migrations/20261019092935_audit_workbench.sql": {
+      "line_count": 110,
+      "form": "Repository listing"
+    },
+    "supabase/migrations/20261019164441_progressive_audit_workbench.sql": {
+      "line_count": 35,
+      "form": "Repository listing"
+    },
+    "supabase/migrations/20261020045234_report_library_counts.sql": {
+      "line_count": 31,
+      "form": "Repository listing"
+    },
+    "supabase/migrations/20261023093955_github_reviewed_fixes.sql": {
+      "line_count": 63,
+      "form": "Repository listing"
+    },
+    "supabase/migrations/20261024060713_advisor_conversations.sql": {
+      "line_count": 62,
+      "form": "Repository listing"
+    },
+    "supabase/migrations/20261105060545_extension_reviews.sql": {
+      "line_count": 92,
+      "form": "Repository listing"
+    },
+    "supabase/migrations/20261105124250_extension_scan_metadata.sql": {
+      "line_count": 7,
+      "form": "Repository listing"
+    },
+    "threatlens/alembic/alembic.ini": {
+      "line_count": 41,
+      "form": "Sanitized listing"
+    },
+    "threatlens/alembic/env.py": {
+      "line_count": 81,
+      "form": "Repository listing"
+    },
+    "threatlens/alembic/versions/0001_initial_schema.py": {
+      "line_count": 457,
+      "form": "Repository listing"
+    },
+    "threatlens/app/ingestion/__init__.py": {
+      "line_count": 27,
+      "form": "Repository listing"
+    },
+    "threatlens/app/ingestion/arch_parser.py": {
+      "line_count": 126,
+      "form": "Repository listing"
+    },
+    "threatlens/app/ingestion/code_extractor.py": {
+      "line_count": 321,
+      "form": "Repository listing"
+    },
+    "threatlens/app/ingestion/log_parser.py": {
+      "line_count": 134,
+      "form": "Repository listing"
+    },
+    "threatlens/app/ingestion/source_snapshot.py": {
+      "line_count": 115,
+      "form": "Repository listing"
+    },
+    "threatlens/app/ingestion/validation.py": {
+      "line_count": 86,
+      "form": "Repository listing"
+    },
+    "threatlens/app/scanners/__init__.py": {
+      "line_count": 4,
+      "form": "Repository listing"
+    },
+    "threatlens/app/scanners/bandit_runner.py": {
+      "line_count": 87,
+      "form": "Repository listing"
+    },
+    "threatlens/app/scanners/base.py": {
+      "line_count": 251,
+      "form": "Repository listing"
+    },
+    "threatlens/app/scanners/dependency_audit.py": {
+      "line_count": 254,
+      "form": "Repository listing"
+    },
+    "threatlens/app/scanners/extension_review.py": {
+      "line_count": 277,
+      "form": "Repository listing"
+    },
+    "threatlens/app/scanners/llm_code_reviewer.py": {
+      "line_count": 163,
+      "form": "Repository listing"
+    },
+    "threatlens/app/scanners/log_anomaly.py": {
+      "line_count": 182,
+      "form": "Repository listing"
+    },
+    "threatlens/app/scanners/normalization.py": {
+      "line_count": 156,
+      "form": "Repository listing"
+    },
+    "threatlens/app/scanners/semgrep_runner.py": {
+      "line_count": 100,
+      "form": "Repository listing"
+    },
+    "threatlens/app/scanners/trufflehog_runner.py": {
+      "line_count": 72,
+      "form": "Repository listing"
+    },
+    "threatlens/app/agent/__init__.py": {
+      "line_count": 10,
+      "form": "Repository listing"
+    },
+    "threatlens/app/agent/compliance_mapper.py": {
+      "line_count": 311,
+      "form": "Repository listing"
+    },
+    "threatlens/app/agent/cvss_scorer.py": {
+      "line_count": 182,
+      "form": "Repository listing"
+    },
+    "threatlens/app/agent/prompts/__init__.py": {
+      "line_count": 1,
+      "form": "Repository listing"
+    },
+    "threatlens/app/agent/prompts/classifier.py": {
+      "line_count": 49,
+      "form": "Repository listing"
+    },
+    "threatlens/app/agent/prompts/compliance.py": {
+      "line_count": 64,
+      "form": "Repository listing"
+    },
+    "threatlens/app/agent/prompts/remediation.py": {
+      "line_count": 59,
+      "form": "Repository listing"
+    },
+    "threatlens/app/agent/prompts/summary.py": {
+      "line_count": 54,
+      "form": "Repository listing"
+    },
+    "threatlens/app/agent/remediation_planner.py": {
+      "line_count": 107,
+      "form": "Repository listing"
+    },
+    "threatlens/app/agent/summary_writer.py": {
+      "line_count": 155,
+      "form": "Repository listing"
+    },
+    "threatlens/app/rag/__init__.py": {
+      "line_count": 1,
+      "form": "Repository listing"
+    },
+    "threatlens/app/rag/chunkers/__init__.py": {
+      "line_count": 20,
+      "form": "Repository listing"
+    },
+    "threatlens/app/rag/chunkers/base.py": {
+      "line_count": 72,
+      "form": "Repository listing"
+    },
+    "threatlens/app/rag/chunkers/cve_chunker.py": {
+      "line_count": 97,
+      "form": "Repository listing"
+    },
+    "threatlens/app/rag/chunkers/gdpr_chunker.py": {
+      "line_count": 16,
+      "form": "Repository listing"
+    },
+    "threatlens/app/rag/chunkers/iso27001_chunker.py": {
+      "line_count": 39,
+      "form": "Repository listing"
+    },
+    "threatlens/app/rag/chunkers/nist_chunker.py": {
+      "line_count": 49,
+      "form": "Repository listing"
+    },
+    "threatlens/app/rag/chunkers/owasp_chunker.py": {
+      "line_count": 19,
+      "form": "Repository listing"
+    },
+    "threatlens/app/rag/chunkers/pci_chunker.py": {
+      "line_count": 33,
+      "form": "Repository listing"
+    },
+    "threatlens/app/rag/chunkers/soc2_chunker.py": {
+      "line_count": 25,
+      "form": "Repository listing"
+    },
+    "threatlens/app/rag/embedder.py": {
+      "line_count": 50,
+      "form": "Repository listing"
+    },
+    "threatlens/app/rag/qdrant_client.py": {
+      "line_count": 133,
+      "form": "Repository listing"
+    },
+    "threatlens/app/rag/retriever.py": {
+      "line_count": 94,
+      "form": "Repository listing"
+    },
+    "threatlens/app/report/__init__.py": {
+      "line_count": 7,
+      "form": "Repository listing"
+    },
+    "threatlens/app/report/generator.py": {
+      "line_count": 498,
+      "form": "Repository listing"
+    },
+    "threatlens/app/report/templates/base.html": {
+      "line_count": 149,
+      "form": "Repository listing"
+    },
+    "threatlens/app/report/templates/compliance_section.html": {
+      "line_count": 10,
+      "form": "Repository listing"
+    },
+    "threatlens/app/report/templates/executive_summary.html": {
+      "line_count": 25,
+      "form": "Repository listing"
+    },
+    "threatlens/app/report/templates/extension_review.html": {
+      "line_count": 45,
+      "form": "Repository listing"
+    },
+    "threatlens/app/report/templates/findings.html": {
+      "line_count": 47,
+      "form": "Repository listing"
+    },
+    ".env.example": {
+      "line_count": 3,
+      "form": "Sanitized template"
+    },
+    "threatlens/.env.example": {
+      "line_count": 54,
+      "form": "Sanitized template"
+    },
+    "components.json": {
+      "line_count": 22,
+      "form": "Repository listing"
+    },
+    "docker-compose.prod.yml": {
+      "line_count": 129,
+      "form": "Repository listing"
+    },
+    "eslint.config.js": {
+      "line_count": 57,
+      "form": "Repository listing"
+    },
+    "package.json": {
+      "line_count": 69,
+      "form": "Repository listing"
+    },
+    "scripts/dev-backend.mjs": {
+      "line_count": 139,
+      "form": "Repository listing"
+    },
+    "threatlens/Dockerfile": {
+      "line_count": 39,
+      "form": "Repository listing"
+    },
+    "threatlens/docker-compose.yml": {
+      "line_count": 130,
+      "form": "Repository listing"
+    },
+    "threatlens/requirements-api.txt": {
+      "line_count": 27,
+      "form": "Repository listing"
+    },
+    "threatlens/requirements-test.txt": {
+      "line_count": 7,
+      "form": "Repository listing"
+    },
+    "threatlens/requirements.txt": {
+      "line_count": 57,
+      "form": "Repository listing"
+    },
+    "tsconfig.json": {
+      "line_count": 27,
+      "form": "Repository listing"
+    },
+    "vite.config.ts": {
+      "line_count": 21,
+      "form": "Repository listing"
+    }
+  },
+  "volumes": {
+    "Code\\01 Frontend\\01 Routes and Entry Points Volume 01.docx": {
+      "listing_pages": 110,
+      "distinct_files": 11
+    },
+    "Code\\01 Frontend\\01 Routes and Entry Points Volume 02.docx": {
+      "listing_pages": 110,
+      "distinct_files": 8
+    },
+    "Code\\01 Frontend\\01 Routes and Entry Points Volume 03.docx": {
+      "listing_pages": 23,
+      "distinct_files": 10
+    },
+    "Code\\01 Frontend\\02 Components Volume 01.docx": {
+      "listing_pages": 110,
+      "distinct_files": 17
+    },
+    "Code\\01 Frontend\\02 Components Volume 02.docx": {
+      "listing_pages": 110,
+      "distinct_files": 23
+    },
+    "Code\\01 Frontend\\02 Components Volume 03.docx": {
+      "listing_pages": 60,
+      "distinct_files": 15
+    },
+    "Code\\01 Frontend\\03 Data Clients and Styles Volume 01.docx": {
+      "listing_pages": 110,
+      "distinct_files": 29
+    },
+    "Code\\01 Frontend\\03 Data Clients and Styles Volume 02.docx": {
+      "listing_pages": 80,
+      "distinct_files": 38
+    },
+    "Code\\02 Backend and API\\01 API Routes Volume 01.docx": {
+      "listing_pages": 110,
+      "distinct_files": 15
+    },
+    "Code\\02 Backend and API\\01 API Routes Volume 02.docx": {
+      "listing_pages": 13,
+      "distinct_files": 3
+    },
+    "Code\\02 Backend and API\\02 Authentication Services and Storage.docx": {
+      "listing_pages": 77,
+      "distinct_files": 37
+    },
+    "Code\\03 Database\\Database and Access Policies.docx": {
+      "listing_pages": 45,
+      "distinct_files": 15
+    },
+    "Code\\04 Detection and Reporting\\Detection Analysis and Reports Volume 01.docx": {
+      "listing_pages": 110,
+      "distinct_files": 44
+    },
+    "Code\\04 Detection and Reporting\\Detection Analysis and Reports Volume 02.docx": {
+      "listing_pages": 5,
+      "distinct_files": 3
+    },
+    "Code\\05 Environment and Deployment\\Environment and Deployment.docx": {
+      "listing_pages": 18,
+      "distinct_files": 14
+    }
+  }
+}

@@ -73,7 +73,7 @@ export function useFindingQueue(
     onSuccess: async () => {
       // Refresh both this queue and existing consumers; never cache a synthetic success.
       await Promise.all([
-        ...["finding-queue", "finding-detail", "finding-counts"].map((key) =>
+        ...["finding-queue", "finding-detail", "finding-counts", "dashboard-findings"].map((key) =>
           client.invalidateQueries({ queryKey: [key, ...scope] }),
         ),
         client.invalidateQueries({ queryKey: ["findings", scanId] }),

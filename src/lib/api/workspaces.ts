@@ -63,8 +63,8 @@ export interface WorkspaceUpdatePayload {
 /**
  * Fetch all workspaces the user is authorized to view directly from the Supabase database.
  */
-export async function fetchWorkspaces(): Promise<Workspace[]> {
-  return dbFetchWorkspaces();
+export async function fetchWorkspaces(signal?: AbortSignal): Promise<Workspace[]> {
+  return dbFetchWorkspaces(signal);
 }
 
 /**

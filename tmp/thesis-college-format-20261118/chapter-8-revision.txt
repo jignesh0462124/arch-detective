@@ -1,0 +1,42 @@
+@529
+Broader language support should begin with an explicit inventory of the formats already analysed and the rule coverage for each. New parsers and rules can then be added against representative projects and small controlled fixtures. Each release should state which files were eligible, which checks actually ran and what remained outside scope. A file extension appearing in the source viewer is not evidence of analysis support.
+@530
+Cross-file analysis could help in cases where a saved line gives only part of the evidence. For example, a review may need to know whether a value was validated before it reached the reported operation. New checks should retain usable source locations and record uncertainty when the connection cannot be established statically. Vulnerable and corrected counterparts, along with similar benign fixtures, should be used to test that behaviour.
+@531
+Browser-extension packages and infrastructure configuration need policies appropriate to their formats. A packaged extension can ship built bundles that a general project audit would normally omit. An infrastructure file may supply only part of the deployment context. Progress in either area should be documented as broader, measurable coverage rather than a guarantee that a package complies with every applicable rule.
+@533
+The first improvement for model-assisted review is a set of cases with independently judged evidence. The set should include clear cases, cases with ambiguous evidence and cases in which no code change is justified. Reviewers can then judge whether the model explains the right issue, preserves relevant behaviour and states a useful verification step. This would allow a model or prompt change to be measured on a task rather than judged by answer length.
+@534
+Retrieval should be evaluated with versioned corpora and reference judgements. A reviewer should be able to trace a proposed mapping to the material returned for that request and decide whether it applies. Comparisons between retrieval-enabled and plain generation should keep other settings consistent. Recording irrelevant or unavailable references is as useful as counting successful matches because it shows where the system needs to abstain.
+@535
+Context selection remains a privacy and quality decision. Sending more source can put unrelated material at risk without clarifying the finding. Extra excerpts should be chosen because they help establish a relevant relationship or preserve behaviour in a proposed remedy. A follow-up evaluation should examine whether these selections improve the judgement of the reviewer while respecting authorisation and retention limits.
+@537
+The current architecture already describes configurable repository scanning and reviewed publishing. Future work should establish how those capabilities behave under real repository policy in a dedicated test repository. Relevant cases include a branch changing after review, a user losing permission, and a successful branch operation followed by a failed pull-request operation. A reliable implementation should show its recorded state and offer a safe recovery path.
+@538
+Where a team authorises continuous integration, a scan can be associated with a specific revision and a recorded analysis profile. Later comparison should make changed coverage visible instead of assuming that absence of a finding proves it was corrected. CI outcomes should refer to the exact revision that was checked. This would give a reviewer enough information to interpret timing, analysis and test results together.
+@539
+Publishing should remain a reviewed decision. A suggested patch, recorded approval, external test result and triage update are separate steps. An automated check can provide evidence for the decision without resolving a finding on its own. Initial evaluation should use isolated repositories and avoid production branches or accounts that are outside the test scope.
+@541
+Operational testing should compare the local and worker profiles on the same inputs and stage coverage. Acceptance time, time to first usable evidence, persisted completion time and recovery after failure are useful separate outcomes. Concurrent requests and queue congestion should be added only after the baseline environment is documented. This would help identify where a delay occurs instead of attributing every slow response to scanning itself.
+@542
+Scale should also be evaluated under failure conditions. Rate limits, provider outages and interruptions can reveal whether retry behaviour preserves state and avoids duplicate results. A membership change or expired source should not be hidden by stale cached data. Tests can exercise these cases with isolated accounts and generated inputs, recording both the visible response and the state left in storage.
+@543
+Maintenance of extension policy packs is a separate operational task. New store requirements can change the meaning of an assessment without changing the package. Historical results should retain the policy version they used. A recheck under a new version should show the change and distinguish new evaluation coverage from a newly introduced issue in the developer's package.
+@545
+A broader validation study should include independently labelled projects across several languages and participants who have different levels of experience with security review. The first phase can establish how consistently the detector identifies expected issues. A later phase can assess whether participants reach better-supported decisions in the integrated interface than when they review raw tool output.
+@546
+Useful user-study outcomes include time to locate the recorded evidence, correct identification of unsupported claims and the quality of the recommended verification step. Task completion should be measured alongside mistakes so that a faster review is not interpreted as an improvement if it produces more unsupported decisions. Order and practice effects can be reduced by varying which interface the participant uses first.
+@547
+Participant consent and source confidentiality should be planned before collecting observations. Tasks can use synthetic or approved code with enough context to answer the question without exposing private projects. The study record should state the participant group, task conditions and how uncertain judgements were handled. Findings about one group should not automatically be applied to all developers.
+@550
+Figure 8.1 outlines the order of the proposed work. An evidence baseline comes first because later comparisons need a stable input set, matching rules and a run record. There is little value in comparing more configurations before the study can identify what each configuration actually examined.
+@551
+The first milestone is a shareable fixture inventory with independent labels and corrections. The test record should show how a report was matched, which cases remained unresolved and which stages ran. That gives later changes a baseline that can be repeated.
+@552
+The second milestone extends analysis where the baseline shows a specific gap. The new coverage should be tested on the same supported cases, with extra fixtures that examine the added behaviour. A change in the number of alerts should be interpreted alongside matching and review effort.
+@553
+The third milestone checks repository operations and deployment recovery in isolated environments. It should establish how accepted work is retried or stopped, and what evidence is available after failure. This step gives operational claims the same traceability as findings.
+@554
+The final milestone studies how reviewers interpret the results. It depends on a stable workflow and tasks with answers that independent reviewers can explain. The study should look for wrong conclusions as well as successful decisions, especially when the source or assessment is incomplete.
+@555
+The milestones are proposed work. Advancing from one to the next depends on what the previous evaluation shows, rather than on a fixed schedule or assumed improvement. This keeps future changes tied to gaps identified in the project evidence.

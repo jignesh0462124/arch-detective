@@ -116,7 +116,7 @@ class MemoryStore:
     async def rows(self, table, **filters):
         return await self.rest("GET", table, params=filters)
 
-    async def page(self, table, *, offset=0, limit=200, token=None, **filters):
+    async def page(self, table, *, offset=0, limit=200, token=None, require_exact=False, **filters):
         entries = await self.rows(table, **filters)
         for field in reversed(filters.get("order", "id.asc").split(",")):
             key, direction = field.split(".")
@@ -415,6 +415,62 @@ def test_database_pages_global_counts_and_selected_evidence(client, monkeypatch)
     assert detail["file"]["id"] == first["location"]["file_id"]
     assert "object_path" not in detail["file"]
     assert browser.get(f"/api/v1/scans/{scan_id}/workbench/findings/{uuid.uuid4()}").status_code == 404
+
+
+def test_dashboard_summary_has_exact_totals_only_three_rows_and_keeps_access_checks(client):
+    browser, repository = client
+    scan_id, other_scan = str(uuid.uuid4()), str(uuid.uuid4())
+    scan = {"id": scan_id, "workspace_id": WORKSPACE, "status": "completed"}
+    repository.tables["scans"] = [scan]
+    repository.tables["findings"] = [
+        {"id": str(n), "scan_id": scan_id, "title": f"Issue {n}", "severity": severity,
+         "state": state, "file_path": "src/example.ts", "line_number": n + 1,
+         "created_at": "2026-11-24", "code_snippet": "not part of the dashboard payload"}
+        for n, (severity, state) in enumerate([
+            ("medium", "open"), ("high", "open"), ("critical", "open"),
+            ("critical", "open"), ("critical", "resolved"), ("low", "accepted_risk"),
+        ])
+    ]
+    repository.tables["findings"].append({**repository.tables["findings"][2], "scan_id": other_scan})
+    endpoint = f"/api/v1/scans/{scan_id}/workbench/findings/dashboard"
+    response = browser.get(endpoint, params={"workspace_id": WORKSPACE})
+    assert response.status_code == 200 and response.headers["cache-control"] == "no-store"
+    body = response.json()
+    assert (body["total"], body["open"], body["criticalOpen"]) == (6, 4, 2)
+    assert [row["id"] for row in body["items"]] == ["2", "3", "1"]
+    assert all(set(row) == {"id", "title", "severity", "file_path", "line_number"} for row in body["items"])
+
+    assert browser.get(endpoint, params={"workspace_id": str(uuid.uuid4())}).status_code == 404
+    repository.member = False
+    assert browser.get(endpoint, params={"workspace_id": WORKSPACE}).status_code == 404
+    repository.member = True
+    scan["status"] = "running"
+    assert browser.get(endpoint, params={"workspace_id": WORKSPACE}).status_code == 409
+    scan["status"] = "completed"
+    repository.tables["findings"].clear()
+    assert browser.get(endpoint, params={"workspace_id": WORKSPACE}).json() == {
+        "total": 0, "open": 0, "criticalOpen": 0, "items": [],
+    }
+
+
+@pytest.mark.asyncio
+async def test_dashboard_store_reads_use_caller_token_and_fail_without_exact_count(monkeypatch):
+    import httpx
+    from app.storage import workbench_store as storage
+
+    async def handler(request):
+        assert request.headers["authorization"] == "Bearer caller"
+        assert request.headers["prefer"] == "count=exact"
+        assert request.url.params["limit"] == "3"
+        return httpx.Response(200, json=[])
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        monkeypatch.setattr(storage, "_client", client)
+        monkeypatch.setattr(storage.settings, "SUPABASE_URL", "https://fixture.invalid")
+        monkeypatch.setattr(storage.settings, "SUPABASE_SERVICE_ROLE_KEY", "fixture-server-only")
+        with pytest.raises(HTTPException) as error:
+            await storage.WorkbenchStore().page("findings", limit=3, token="caller", require_exact=True)
+        assert error.value.status_code == 503
 
 
 def test_bootstrap_prioritizes_preview_outside_first_file_page(client, monkeypatch):

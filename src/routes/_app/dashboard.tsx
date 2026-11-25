@@ -63,7 +63,7 @@ function DashboardPage() {
         <DashboardNotice
           title="Your workspace could not be loaded"
           description="Check your connection and retry. Saved audit results have not been replaced with browser history."
-          retry={() => void window.location.reload()}
+          retry={() => void workspace.refetch()}
         />
       ) : !auth.user ? (
         <DashboardNotice title="Sign in to view your dashboard" />
@@ -86,19 +86,36 @@ function DashboardPage() {
 
 function WorkspaceDashboard({ userId, workspaceId }: { userId: string; workspaceId: string }) {
   const scans = useDashboardScans(userId, workspaceId);
-  const latest = scans.data?.latestCompleted;
+  const latest = scans.latest.isError ? undefined : scans.latest.data?.latestCompleted;
   const findings = useDashboardFindings(userId, workspaceId, latest?.id);
-  const activeScan = scans.data?.recent.find((scan) => isScanInProgress(scan.status));
+  const recentScans = scans.recent.isError ? undefined : scans.recent.data;
+  const activeScan = recentScans?.find((scan) => isScanInProgress(scan.status));
   const signals = frameworkSignals(latest?.framework_scores ?? {});
+  const recentActivity = (
+    <RecentScans
+      scans={recentScans}
+      workspaceId={workspaceId}
+      retry={scans.recent.isError ? () => void scans.recent.refetch() : undefined}
+    />
+  );
 
-  if (scans.isPending) return <DashboardSkeleton />;
-  if (scans.isError)
+  if (scans.latest.isPending)
     return (
-      <DashboardNotice
-        title="Audit activity is unavailable"
-        description="The database request failed. No scans or findings are being shown as zero."
-        retry={() => void scans.refetch()}
-      />
+      <div className="space-y-5">
+        <DashboardSkeleton />
+        {recentActivity}
+      </div>
+    );
+  if (scans.latest.isError)
+    return (
+      <div className="space-y-5">
+        <DashboardNotice
+          title="The latest audit is unavailable"
+          description="The database request failed. No scans or findings are being shown as zero."
+          retry={() => void scans.latest.refetch()}
+        />
+        {recentActivity}
+      </div>
     );
 
   if (!latest)
@@ -116,15 +133,15 @@ function WorkspaceDashboard({ userId, workspaceId }: { userId: string; workspace
             label: activeScan ? "View audit activity" : "Run Codebase Audit",
           }}
         />
-        <RecentScans scans={scans.data.recent} workspaceId={workspaceId} />
+        {recentActivity}
       </div>
     );
 
-  const findingError =
-    findings.counts.isError || findings.open.isError || findings.criticalOpen.isError;
-  const total = findings.counts.data?.total;
-  const open = findings.open.data?.total;
-  const criticalOpen = findings.criticalOpen.data?.total;
+  const findingError = findings.isError;
+  const result = findingError ? undefined : findings.data;
+  const total = result?.total;
+  const open = result?.open;
+  const criticalOpen = result?.criticalOpen;
 
   let summary = "Loading saved finding counts…";
   if (findingError) summary = "Finding summary unavailable. Retry to see the saved evidence.";
@@ -205,11 +222,7 @@ function WorkspaceDashboard({ userId, workspaceId }: { userId: string; workspace
           </span>
           <button
             type="button"
-            onClick={() => {
-              void findings.counts.refetch();
-              void findings.open.refetch();
-              void findings.criticalOpen.refetch();
-            }}
+            onClick={() => void findings.refetch()}
             className={secondaryActionClass}
           >
             <ArrowClockwise size={16} aria-hidden="true" /> Retry
@@ -221,25 +234,25 @@ function WorkspaceDashboard({ userId, workspaceId }: { userId: string; workspace
         <MetricCard
           label="Total findings"
           value={total}
-          loading={findings.counts.isPending}
+          loading={findings.isPending}
           scope="Latest completed audit"
         />
         <MetricCard
           label="Open findings"
           value={open}
-          loading={findings.open.isPending}
+          loading={findings.isPending}
           scope="Latest completed audit"
         />
         <MetricCard
           label="Open critical"
           value={criticalOpen}
-          loading={findings.criticalOpen.isPending}
+          loading={findings.isPending}
           scope="Latest completed audit"
           urgent={Boolean(criticalOpen)}
         />
         <MetricCard
           label="Completed scans"
-          value={scans.data.completedTotal}
+          value={scans.latest.data?.completedTotal}
           scope="Current workspace"
         />
       </section>
@@ -255,13 +268,13 @@ function WorkspaceDashboard({ userId, workspaceId }: { userId: string; workspace
         }
         padding="none"
       >
-        {findings.open.isPending ? (
+        {findings.isPending ? (
           <LoadingRows label="Loading open findings…" />
-        ) : findings.open.isError ? (
+        ) : !result ? (
           <p className="px-5 py-6 text-sm text-muted-foreground">
             Open findings are unavailable. Use Retry above.
           </p>
-        ) : findings.open.data.total === 0 ? (
+        ) : result.open === 0 ? (
           <div className="flex items-start gap-3 px-5 py-6">
             <CheckCircle size={20} className="shrink-0 text-success" aria-hidden="true" />
             <p className="text-sm text-foreground/80">
@@ -269,13 +282,13 @@ function WorkspaceDashboard({ userId, workspaceId }: { userId: string; workspace
               items.
             </p>
           </div>
-        ) : findings.open.data.items.length === 0 ? (
+        ) : result.items.length === 0 ? (
           <p className="px-5 py-6 text-sm text-muted-foreground">
             The findings changed while loading. Retry to refresh this list.
           </p>
         ) : (
           <ol className="data-reveal divide-y divide-border">
-            {findings.open.data.items.slice(0, 3).map((finding) => (
+            {result.items.map((finding) => (
               <li
                 key={finding.id}
                 className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
@@ -309,7 +322,7 @@ function WorkspaceDashboard({ userId, workspaceId }: { userId: string; workspace
         )}
       </SectionCard>
 
-      <RecentScans scans={scans.data.recent} workspaceId={workspaceId} />
+      {recentActivity}
 
       <SectionCard
         eyebrow="Assessed frameworks"
@@ -423,7 +436,15 @@ function ScanAction({ scan, workspaceId }: { scan: DashboardScan; workspaceId: s
   );
 }
 
-function RecentScans({ scans, workspaceId }: { scans: DashboardScan[]; workspaceId: string }) {
+function RecentScans({
+  scans,
+  workspaceId,
+  retry,
+}: {
+  scans: DashboardScan[] | undefined;
+  workspaceId: string;
+  retry?: () => void;
+}) {
   return (
     <SectionCard
       eyebrow="Workspace activity"
@@ -436,7 +457,16 @@ function RecentScans({ scans, workspaceId }: { scans: DashboardScan[]; workspace
       }
       padding="none"
     >
-      {scans.length === 0 ? (
+      {retry ? (
+        <div role="alert" className="flex flex-wrap items-center gap-3 px-5 py-4 text-sm">
+          <p className="text-muted-foreground">Recent scans could not be loaded.</p>
+          <button type="button" onClick={retry} className={secondaryActionClass}>
+            Retry recent scans
+          </button>
+        </div>
+      ) : !scans ? (
+        <LoadingRows label="Loading recent scans…" />
+      ) : scans.length === 0 ? (
         <p className="px-5 py-6 text-sm text-muted-foreground">
           No scans have been saved in this workspace yet.
         </p>

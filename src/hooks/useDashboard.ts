@@ -1,23 +1,51 @@
+import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchDashboardScans } from "@/lib/api/dashboard";
-import { getFindingCounts, getFindingPage, type QueueFilters } from "@/lib/api/findingQueue";
+import {
+  fetchDashboardLatestAudit,
+  fetchDashboardRecentScans,
+  type DashboardScan,
+} from "@/lib/api/dashboard";
+import { getDashboardFindings } from "@/lib/api/findingQueue";
 import { isScanInProgress } from "@/lib/dashboardView";
 
-const openFilters: QueueFilters = { severity: "all", state: "open", q: "" };
-const criticalOpenFilters: QueueFilters = { severity: "critical", state: "open", q: "" };
-
 export function useDashboardScans(userId: string | undefined, workspaceId: string | undefined) {
-  return useQuery({
-    queryKey: ["dashboard-scans", userId, workspaceId],
-    queryFn: ({ signal }) => fetchDashboardScans(workspaceId!, signal),
+  const scope = ["dashboard-scans", userId, workspaceId];
+  const options = {
     enabled: Boolean(userId && workspaceId),
     retry: false,
     gcTime: 0,
     staleTime: 15_000,
-    refetchOnMount: "always",
+  };
+  const recent = useQuery({
+    ...options,
+    queryKey: [...scope, "recent"],
+    queryFn: ({ signal }) => fetchDashboardRecentScans(workspaceId!, signal),
     refetchInterval: (query) =>
-      query.state.data?.recent.some((scan) => isScanInProgress(scan.status)) ? 15_000 : false,
+      query.state.data?.some((scan) => isScanInProgress(scan.status)) ? 15_000 : false,
   });
+  const latest = useQuery({
+    ...options,
+    queryKey: [...scope, "latest"],
+    queryFn: ({ signal }) => fetchDashboardLatestAudit(workspaceId!, signal),
+  });
+  const previousRecent = useRef<DashboardScan[] | undefined>(undefined);
+  const refetchLatest = latest.refetch;
+  const recentScans = recent.isError ? undefined : recent.data;
+  useEffect(() => {
+    if (!recentScans) return;
+    const previous = previousRecent.current;
+    previousRecent.current = recentScans;
+    if (
+      previous?.some(
+        (scan) =>
+          isScanInProgress(scan.status) &&
+          !recentScans.some((next) => next.id === scan.id && isScanInProgress(next.status)),
+      )
+    ) {
+      void refetchLatest();
+    }
+  }, [recentScans, refetchLatest]);
+  return { latest, recent };
 }
 
 export function useDashboardFindings(
@@ -25,28 +53,11 @@ export function useDashboardFindings(
   workspaceId: string,
   scanId: string | undefined,
 ) {
-  const scope = [userId, workspaceId, scanId];
-  const enabled = Boolean(userId && workspaceId && scanId);
-  const counts = useQuery({
-    queryKey: ["finding-counts", ...scope],
-    queryFn: ({ signal }) => getFindingCounts(workspaceId, scanId!, signal),
-    enabled,
+  return useQuery({
+    queryKey: ["dashboard-findings", userId, workspaceId, scanId],
+    queryFn: ({ signal }) => getDashboardFindings(workspaceId, scanId!, signal),
+    enabled: Boolean(userId && workspaceId && scanId),
     retry: false,
     gcTime: 0,
   });
-  const open = useQuery({
-    queryKey: ["finding-queue", ...scope, openFilters, 0],
-    queryFn: ({ signal }) => getFindingPage(workspaceId, scanId!, openFilters, 0, signal),
-    enabled,
-    retry: false,
-    gcTime: 0,
-  });
-  const criticalOpen = useQuery({
-    queryKey: ["finding-queue", ...scope, criticalOpenFilters, 0],
-    queryFn: ({ signal }) => getFindingPage(workspaceId, scanId!, criticalOpenFilters, 0, signal),
-    enabled,
-    retry: false,
-    gcTime: 0,
-  });
-  return { counts, open, criticalOpen };
 }

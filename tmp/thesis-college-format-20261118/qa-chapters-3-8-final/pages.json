@@ -1,0 +1,2598 @@
+[
+  {
+    "page": 1,
+    "text": "ThreatLens: An AI-Assisted Framework for Automated\nSource Code Security Assessment, Vulnerability\nPrioritization and Compliance Analysis\nProject Report submitted in partial fulfillment of the requirements for the award of\nthe degree of\nBachelor of Technology\nin\nComputer Science and Engineering\nby\nMr. Jignesh Sonewane Mr. Soham Pashine\nMr. Bhargave Bawane\nUnder the guidance of\nProf. Pankaj Sonewane\nHead of Department (Data Science, IoT and Cyber Security)\nNovember 2026\nDepartment of Computer Science and Engineering\nG H Raisoni College of Engineering\nAn Empowered Autonomous Institute affiliated to Rashtrasant Tukadoji Maharaj Nagpur University, Nagpur\nAccredited by NAAC with \u201cA++\u201d Grade (3rd Cycle)\nCRPF Gate No. 3, Hingna Road, Digdoh Hills, Nagpur \u2013 440 016 (INDIA)\nT: +91 9604787184, 9689903286, 9921008391 | E: principal.ghrce@raisoni.net | W: ghrce.raisoni.net",
+    "fonts": [
+      [
+        [
+          "BCDGEE+BookmanOldStyle",
+          8.0
+        ],
+        181
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        150
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          18.0
+        ],
+        137
+      ],
+      [
+        [
+          "BCDJEE+Calibri-BoldItalic",
+          12.0
+        ],
+        119
+      ]
+    ],
+    "outside_border": [],
+    "images": [
+      {
+        "x0": 108.0,
+        "x1": 270.31,
+        "width": 162.31,
+        "height": 64.54999999999995,
+        "top": 66.10000000000002,
+        "bottom": 130.64999999999998
+      },
+      {
+        "x0": 115.45,
+        "x1": 532.4,
+        "width": 416.95,
+        "height": 30.950000000000003,
+        "top": 692.18,
+        "bottom": 723.13
+      }
+    ]
+  },
+  {
+    "page": 2,
+    "text": "ThreatLens: An AI-Assisted Framework for Automated\nSource Code Security Assessment, Vulnerability\nPrioritization and Compliance Analysis\nProject Report submitted in partial fulfillment of the requirements for the award of\nthe degree of\nBachelor of Technology\nin\nComputer Science and Engineering\nby\nMr. Jignesh Sonewane Mr. Soham Pashine\nMr. Bhargave Bawane\nUnder the guidance of\nProf. Pankaj Sonewane\nHead of Department (Data Science, IoT and Cyber Security)\nNovember 2026\nDepartment of Computer Science and Engineering\nG H Raisoni College of Engineering\nAn Empowered Autonomous Institute affiliated to Rashtrasant Tukadoji Maharaj Nagpur University, Nagpur\nAccredited by NAAC with \u201cA++\u201d Grade (3rd Cycle)\nCRPF Gate No. 3, Hingna Road, Digdoh Hills, Nagpur \u2013 440 016 (INDIA)\nT: +91 9604787184, 9689903286, 9921008391 | E: principal.ghrce@raisoni.net | W: ghrce.raisoni.net\n\u00a9 G H Raisoni College of Engineering, Nagpur, 2026",
+    "fonts": [
+      [
+        [
+          "BCDGEE+BookmanOldStyle",
+          8.0
+        ],
+        181
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        150
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          18.0
+        ],
+        137
+      ],
+      [
+        [
+          "BCDJEE+Calibri-BoldItalic",
+          12.0
+        ],
+        119
+      ]
+    ],
+    "outside_border": [],
+    "images": [
+      {
+        "x0": 108.0,
+        "x1": 270.31,
+        "width": 162.31,
+        "height": 64.54999999999995,
+        "top": 66.10000000000002,
+        "bottom": 130.64999999999998
+      },
+      {
+        "x0": 115.45,
+        "x1": 532.4,
+        "width": 416.95,
+        "height": 30.950000000000003,
+        "top": 692.18,
+        "bottom": 723.13
+      }
+    ]
+  },
+  {
+    "page": 3,
+    "text": "DECLARATION\nWe hereby declare that the project report titled \"ThreatLens: An AI-Assisted Framework\nfor Automated Source Code Security Assessment, Vulnerability Prioritization and\nCompliance Analysis\" submitted herein has been carried out by us towards partial\nfulfillment of the requirements for the award of the degree of Bachelor of Technology in\nComputer Science and Engineering. The work is original and has not been submitted\nearlier as a whole or in part for the award of any degree or diploma at this or any other\ninstitution or university.\nWe also hereby assign to G H Raisoni College of Engineering, Nagpur, all rights under\ncopyright that may exist in and to the above work and any revised or expanded derivative\nwork based on it, as specified by the college declaration template. Information obtained\nfrom other references materials, technical manuals has been appropriately cited\nthroughout the thesis.\nStudent Details and Signatures\nMobile\nStudent name Email ID Signature\nnumber\nJignesh.sonewane.cyb@ghrce.r\nMr. Jignesh Sonewane 7499325646\naisoni.net\nMr. Soham Pashine 8956330692 Sohampashine0@gmail.com\nbhargav.bawane.cyb@ghrce.ra\nMr. Bhargav Bawane\nisoni.net\nDate: [ / / ]\nPlace: Nagpur",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1134
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        72
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        12
+      ]
+    ],
+    "outside_border": [],
+    "images": [
+      {
+        "x0": 108.0,
+        "x1": 537.5799999999999,
+        "width": 429.5799999999999,
+        "height": 26.599999999999994,
+        "top": 735.75,
+        "bottom": 762.3499999999999
+      },
+      {
+        "x0": 108.0,
+        "x1": 270.31,
+        "width": 162.31,
+        "height": 64.54999999999995,
+        "top": 66.10000000000002,
+        "bottom": 130.64999999999998
+      }
+    ]
+  },
+  {
+    "page": 4,
+    "text": "CERTIFICATE\nThe project report entitled \"ThreatLens: An AI-Assisted Framework for Automated Source\nCode Security Assessment, Vulnerability Prioritization and Compliance Analysis\"\nsubmitted by [Student 1], [Student 2], [Student 3] and [Student 4] for the award of the\ndegree of Bachelor of Technology in Computer Science and Engineering has been carried\nout under my supervision. The work is comprehensive, complete and fit for evaluation.\nApproval and Signature Details\nGuide Project Incharge\nPankaj Sonewane [Fill]\n[Signature] [Signature]\nInstitutional Approval\nHead of Department Director\n[Fill] [Fill]\n[Signature] [Signature]\n[Enter official names and designations, verify the declaration and obtain the prescribed\nsignatures.]",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        622
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        99
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        12
+      ]
+    ],
+    "outside_border": [],
+    "images": [
+      {
+        "x0": 108.0,
+        "x1": 537.5799999999999,
+        "width": 429.5799999999999,
+        "height": 26.599999999999994,
+        "top": 735.75,
+        "bottom": 762.3499999999999
+      },
+      {
+        "x0": 108.0,
+        "x1": 270.31,
+        "width": 162.31,
+        "height": 64.54999999999995,
+        "top": 66.10000000000002,
+        "bottom": 130.64999999999998
+      }
+    ]
+  },
+  {
+    "page": 5,
+    "text": "ACKNOWLEDGEMENT\nWe would like to thank our project guide. Pankaj Sonewane, for his guidance and\ndirection to support during the development of ThreatLens Software. His feedback during\nproject to discussions helped us to improve our and address the technical challenges, and\npresent our work more efficiently.\nWe are also thankful to the faculty and staff of G H Raisoni College of Engineering,\nNagpur, for providing the facilities and academic environment, computational resources\nand administration.\nWe also acknowledge the researchers, open-source contributors and standards\norganizations whose published research, technical documentation and security\nframeworks compliance supported the development of ThreatLens(Archon) Software.\nTheir contributions provided valuable insights into vulnerability detection, code analysis,\nRAG, CVSS-based risk assessment and remediation recommendations. Responsibility for\nthe system architecture, database Security implementation, experimental evaluation,\nand audit security and conclusions in solution format ai automated way.\nWe are grateful to our families and friends for their patience, encouragement and\nsupport during the development, we acknowledge the effort of every member of the\nproject team in maintaining the code, reviewing, testing and preparing the manuscript\nand thesis, and completing the work collaboratively.",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1354
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        16
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 6,
+    "text": "ABSTRACT\nSecurity assessment is often treated as a separate activity from software development.\nDevelopers may receive vulnerability reports that identify a problem but provide little\ncontext about the affected code, its potential impact, or the steps needed to address it.\nCompliance requirements add another challenge, particularly when technical findings\nmust be connected to documented controls or browser-extension store policies. These\ngaps make security review difficult to interpret and act upon, especially for small\ndevelopment teams.\nThis thesis presents ThreatLens, a web-based platform that brings codebase auditing,\nthreat modeling, compliance assessment, and remediation guidance into a single\nworkflow. Users can submit project archives for analysis and examine saved results\nthrough a read-only, editor-style workbench. The platform combines static security\nchecks with language-model-assisted analysis to identify potential weaknesses and\nprovide explanations grounded in available source evidence. Findings include severity,\nrecorded file locations, relevant code excerpts, and remediation guidance.\nThe workbench connects source files with findings, control mappings, and suggested\nverification steps. An evidence-based graph helps users explore relationships between\nfindings and affected components without presenting those relationships as confirmed\nexploitation paths. Security Advisor provides contextual explanations and code\nsuggestions, while keeping proposed changes separate from the uploaded source.\nBrowser-extension reviews extend this workflow to Chrome Web Store and Microsoft\nEdge Add-ons policies, distinguishing detected violations from requirements that need\nmanual review or cannot be assessed from the submitted package.\nThreatLens also provides saved audit history, finding triage, comparison of compatible\nextension reviews, and downloadable reports. Workspace authorization, private source\nstorage, evidence redaction, and time-limited source previews support controlled access\nto sensitive project information. Verification covers automated regressions, access-\ncontrol checks, report generation, and representative browser workflows; these checks\ni",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2186
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        9
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 7,
+    "text": "establish functional behavior rather than proving universal vulnerability-detection\naccuracy.\nThe principal contribution is an integrated, traceable review workflow that helps\ndevelopers move from a reported concern to its supporting evidence, possible remedy,\nand verification approach. ThreatLens supports informed security decisions, but does not\nreplace manual testing, professional assessment, or official compliance and store-\napproval processes.\nKeywords: Codebase Security Auditing; Static Analysis; Threat Modeling; Compliance\nAssessment; Large Language Models; Secure Software Development.\nii",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        603
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 8,
+    "text": "LIST OF FIGURES\nPage\nFigure No. Figure Name\nNo.\nOverall architecture of ThreatLens showing the application\nFig. 1.1 interface, authenticated API, source preparation, security 15\nanalysis and private persistence.\nComplementary security-review approaches and their\nevidence: static patterns, package versions, suspected\nFig. 2.1 27\ncredentials, configuration settings, model explanations and\nhuman judgement.\nResearch workflow from problem definition and requirements\nFig. 3.1 to architecture, implementation, verification and discussion of 32\nlimitations.\nSeparation between the local API/workbench environment\nFig. 4.1 47\nand the optional scanner-worker and retrieval environment.\nRead-only Audit Workbench showing source navigation, a\nFig. 5.1 59\nselected finding and its recorded evidence.\nAttack Graph interface using isolated test-fixture data: (a)\nsource associations and graph controls; (b) selected finding\nFig. 5.2 61\nevidence and remediation guidance. Connections do not\nestablish confirmed exploitability..\nSaved audit report excerpt showing recorded source evidence,\nremediation and suggested verification checks. The excerpt\nFig. 6.1 71\nillustrates reporting behaviour, not independently validated\ndetection accuracy.\nSummary of project objectives, corresponding implementation\nFig. 7.1 80\nevidence and remaining validation needs.\nProposed progression from reproducible benchmarks and\nFig. 8.1 broader coverage to controlled automation, deployment 86\nevaluation and user studies.\niii",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1452
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        29
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        16
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 9,
+    "text": "LIST OF TABLES\nPage\nTable No. Table Name\nNo.\nTable 6.1 Functional Test Matrix 69\niv",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        43
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        27
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        15
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 10,
+    "text": "LIST OF SYMBOLS AND ABBREVIATIONS\nSymbol Description Unit\nTrue positives: correctly detected, independently\nTP Count\nconfirmed vulnerabilities\nFalse positives: reported findings not confirmed as\nFP Count\nvulnerabilities\nFalse negatives: confirmed vulnerabilities missed by the\nFN Count\nanalysis\nP Precision: TP / (TP + FP) Dimensionless\nR Recall: TP / (TP + FN) Dimensionless\nF\u2081 F1-score: harmonic mean of precision and recall Dimensionless\nN\u2091 Number of files eligible for analysis Count\nv",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        432
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        34
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        21
+      ],
+      [
+        [
+          "BCDKEE+Calibri",
+          12.0
+        ],
+        4
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 11,
+    "text": "LIST OF PUBLICATIONS PROJECT COMPETITIONS AND PATENTS\nSr. No. Category Details\nNot applicable. No research paper related to this\n1 Publications\nproject has been published to date.\nAwarded First Prize for the project \u201cThreatLens\u201d at\nProject Competition /\n2 [official seminar name], organised by [department\nAward\nand institution], on [date].\nNot applicable, if no patent application has been\n3 Patent Filings\nfiled.\nvi",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        291
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        54
+      ],
+      [
+        [
+          "BCDKEE+Calibri",
+          12.0
+        ],
+        52
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        22
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 12,
+    "text": "TABLE OF CONTENTS\nABSTRACT .................................................................................................................. i\nLIST OF FIGURES ....................................................................................................... iii\nLIST OF TABLES ......................................................................................................... iv\nLIST OF SYMBOLS AND ABBREVIATIONS .................................................................... v\nLIST OF PUBLICATIONS PROJECT COMPETITIONS AND PATENTS ................................ vi\nCHAPTER 1 INTRODUCTION ....................................................................................... 5\n1.1 Background and Motivation ..................................................................................... 6\n1.2 Problem Statement .................................................................................................. 7\n1.3 Existing Approaches and Challenges ........................................................................ 9\n1.4 Research Gap .......................................................................................................... 10\n1.5 Aim and Objectives ................................................................................................. 11\n1.6 Research Questions ................................................................................................ 12\n1.7 Project Scope and Limitations ................................................................................ 13\n1.8 Main Contributions ................................................................................................ 14\n1.9 Thesis Organization ................................................................................................ 17\nCHAPTER 2 LITERATURE REVIEW .............................................................................. 19\n2.1 Introduction to Software Vulnerability Detection ................................................. 20\n2.2 Static Application Security Testing (SAST) .............................................................. 21\n2.3 Dependency, Secret and Configuration Analysis ................................................... 22\n2.4 AI and Large Language Models for Code Security .................................................. 23\n2.5 Retrieval-Augmented Generation in Security Analysis .......................................... 24\n2.6 Vulnerability Taxonomies and CVSS Prioritization ................................................. 25\n2.7 Compliance Mapping and Remediation Guidance ................................................. 26\n2.8 Comparison with Existing Security Assessment Tools ........................................... 26\n2.9 Comparative Literature Synthesis .......................................................................... 28\n2.10 Consolidated Research Gap ................................................................................. 29\n1",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2187
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        773
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        18
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 13,
+    "text": "CHAPTER 3 METHODOLOGY .................................................................................... 30\n3.1 Research Design and Workflow ............................................................................. 31\n3.2 Functional and Non-Functional Requirements ...................................................... 32\n3.3 Test Project and Input Selection ............................................................................ 33\n3.4 Source Code Ingestion and Preprocessing ............................................................. 34\n3.5 Static Scanning and Finding Normalization ............................................................ 35\n3.6 LLM-Assisted Analysis and RAG .............................................................................. 35\n3.7 Severity Scoring and Compliance Mapping ............................................................ 36\n3.8 Remediation and Report Generation ..................................................................... 37\n3.9 Evaluation Protocol ................................................................................................ 37\n3.10 Evaluation Metrics ................................................................................................ 38\n3.11 Ethical and Security Considerations ..................................................................... 40\nCHAPTER 4 DATA COLLECTION, TOOLS AND COMPUTATIONAL PLATFORM .............. 42\n4.1 Hardware and Operating Environment .................................................................. 43\n4.2 Programming Languages and Frameworks ............................................................ 43\n4.3 Frontend Technologies ........................................................................................... 44\n4.4 Backend Technologies ............................................................................................ 45\n4.5 Database, Authentication and Storage .................................................................. 45\n4.6 Background Processing and Deployment Modes .................................................. 46\n4.7 Security Scanners, AI and Retrieval Services .......................................................... 47\n4.8 Data Sources and Reference Material.................................................................... 48\n4.9 Reproducibility and Version Control ...................................................................... 49\nCHAPTER 5 SYSTEM DESIGN AND IMPLEMENTATION ............................................... 51\n5.1 Overall ThreatLens Architecture ............................................................................ 52\n5.2 User Interface and Application Navigation ............................................................ 52\n5.3 Authentication, Authorization and Workspaces .................................................... 53\n5.4 Local In-Process Scanning Pipeline ......................................................................... 54\n5.5 Hosted Scanning and Worker-Orchestrated Pipeline ............................................ 54\n2",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2816
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        273
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 14,
+    "text": "5.6 Static Scanning Engines and Finding Normalization .............................................. 55\n5.7 AI Agent Pipeline and Prompt Design .................................................................... 55\n5.8 CVSS Scoring and Vulnerability Classification ........................................................ 56\n5.9 RAG and Compliance Mapping ............................................................................... 57\n5.10 Scan Visualization and Attack Graph .................................................................... 58\n5.11 Reporting, Exports and Audit Events ................................................................... 62\n5.12 Database Schema and Data Relationships ........................................................... 62\n5.13 API Design and Data Flow..................................................................................... 63\n5.14 Security and Reliability Controls .......................................................................... 63\n5.15 Deployment and Configuration ............................................................................ 64\nCHAPTER 6 TESTING AND SUMMARY OF RESULTS .................................................... 66\n6.1 Experimental Environment .................................................................................... 67\n6.2 Test Dataset and Ground Truth .............................................................................. 67\n6.3 Functional Test Cases ............................................................................................. 68\n6.4 Vulnerability Detection Results .............................................................................. 69\n6.5 Detection Quality Metrics ...................................................................................... 71\n6.6 Performance and Scan Duration ............................................................................ 72\n6.7 AI, RAG and Remediation Evaluation ..................................................................... 73\n6.8 Robustness, Security and Error Handling ............................................................... 74\n6.9 Comparison with Baselines .................................................................................... 75\n6.10 Discussion and Limitations ................................................................................... 76\nCHAPTER 7 CONCLUSION ......................................................................................... 78\n7.1 Summary of Achieved Objectives ........................................................................... 79\n7.2 Key Findings and Contributions .............................................................................. 79\n7.3 Limitations and Final Remarks ............................................................................... 81\nCHAPTER 8 FUTURE SCOPE ...................................................................................... 82\n8.1 Scanning Coverage and Language Support ............................................................ 83\n8.2 AI and Retrieval Improvements .............................................................................. 83\n3",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2872
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        315
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 15,
+    "text": "8.3 Continuous Integration and Workflow Automation .............................................. 84\n8.4 Scalability, Security and Deployment ..................................................................... 85\n8.5 Extended Validation and User Studies ................................................................... 85\nREFERENCES ............................................................................................................ 88\nAPPENDICES ............................................................................................................ 89\nAPPENDIX A PROJECT AND GROUP PHOTOGRAPHS ................................................. 89\nAPPENDIX B INDUSTRY PHOTOGRAPHS AND CERTIFICATES ..................................... 89\nAPPENDIX C PROJECT COMPETITION AND AWARD CERTIFICATES ............................. 89\n4",
+    "fonts": [
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        502
+      ],
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        345
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 16,
+    "text": "CHAPTER 1\nINTRODUCTION",
+    "fonts": [
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        23
+      ],
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 17,
+    "text": "1.1 Background and Motivation\nSoftware applications handle personal information and business transactions. They also\ncarry messages and give people access to essential services. A decision made while\nwriting a single part of an application, such as where to check a permission or how to\nstore a sensitive value, can affect all the users who depend on it. Input validation and\ndatabase query construction are similarly easy to overlook when the immediate goal is\nto make a feature work. Security review belongs in the development process while there\nis still time to inspect and change those decisions. The National Institute of Standards and\nTechnology (NIST) makes this point in its Secure Software Development Framework,\nwhich places security practices throughout the software development life cycle. [1]\nAs a project grows, the work of checking a warning is seldom confined to the line named\nin the alert. The developer may need to follow a value from the file in which it arrives to\nthe file in which it is used. A framework may handle one step, while a library or a local\nhelper handles another. The review then becomes a question of which checks are already\nin place and what would happen if the proposed correction changed the way the\napplication behaves.\nConsider an ordinary review after a change to an account page. A developer receives a\nwarning and opens the affected file. To decide whether to act, they need the original\nlocation, enough surrounding code to understand it and a clear account of what the\nwarning means. If the finding is still open when another developer returns to the audit,\nthose details should be available without reconstructing the investigation from memory.\nThis is the part of source review that motivates ThreatLens.\nStatic Application Security Testing (SAST) examines source without running the\napplication. It can point a reviewer towards code worth checking, including unsafe output\nhandling, injection-prone operations and possible exposure of credentials. The reported\nline is where the investigation starts. A rule can raise an alert for code that is safe in\ncontext, and it can miss behaviour that depends on application state or business rules.\nThe reviewer still has to look at the code before classifying the issue. [2]\n6",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2242
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        31
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 18,
+    "text": "A language model can explain an unfamiliar operation or draft a possible remedy. That\nhelp is useful when a scanner has identified a concrete issue but its message leaves the\ndeveloper unsure what to change. The explanation may also make assumptions about\ncode the model has not seen. NIST describes plausible, unsupported model output as\nconfabulation and recommends evaluating generated output and checking the sources\nthat support it. In an audit, that means keeping each generated explanation beside the\nevidence it discusses so a reviewer can check the two against one another. [3]\nWe developed ThreatLens to support review from the time a project is submitted to the\ntime a finding is revisited or reported. A developer can follow the progress of an analysis,\nopen a saved finding and inspect the available source before deciding on the next step.\nThe purpose of the workflow is to make that decision easier to trace. The decision itself\nstill belongs to the reviewer.\n1.2 Problem Statement\nAn automated warning has practical value when a developer can connect it to a specific\npart of the application. A category name alone cannot tell the reviewer which statement\ncaused the warning or whether it matters in the conditions where the software runs.\nBefore proposing a fix, the reviewer needs to establish whether input can reach the\nrecorded operation and whether a check elsewhere already prevents the unsafe case. A\nuseful finding supplies the location and evidence for that investigation.\nAn HTML update provides a simple example. Assigning a fixed, trusted value and\nassigning a value that an outside user can influence require different conclusions, even\nwhen both uses appear on the same kind of line. The recorded evidence can establish\nthat the update occurs. It may leave the origin of the value or the surrounding protections\nunclear. In that situation, asking the developer to check the value and its path is more\nuseful than presenting the warning as confirmed cross-site scripting or promising that a\nreplacement will fix it.\nThe same distinction affects remediation. A change may address the operation a scanner\nrecognised while failing to address the actual source of the problem. It may also alter a\n7",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2204
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        23
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 19,
+    "text": "legitimate part of the interface. A proposed remedy is easier to assess when it says what\nbehaviour must stay the same and which checks would show that the change is\nacceptable.\nReviewers also need a way to decide what to look at first. The Common Vulnerability\nScoring System (CVSS) describes technical severity. FIRST treats that score as one input\nto vulnerability management, where the organisation and its environment still matter. A\nhigh score can justify earlier review, but a developer still needs to know whether the\naffected function is available in their deployment and what the application depends on it\nfor. ThreatLens therefore presents severity as a property of the finding and leaves the\ndecision about operational priority to the reviewer. [4]\nA review system has to show what happened when an audit could not run to completion.\nUploaded archives are untrusted, and recovery from a failure must not make a partially\nanalysed project appear clean. The source preview may be preparing while analysis runs.\nAn external service may be unavailable. A developer may leave the page and return to\nthe audit later. Each condition calls for a different explanation because it leaves a\ndifferent amount of evidence available to the reviewer.\nFor instance, an accepted upload means the service received and recorded the\nsubmission. It does not mean that every check ran or that the result is ready. If a preview\nlater expires, the report may still be available. The interface should make clear that the\nevidence is limited by the expired preview rather than suggesting that the finding has\ndisappeared.\nThe problem addressed here is how to connect automated checks to a review process\nthat people can understand and repeat. ThreatLens needs to keep each finding tied to\nthe evidence that produced it, offer remediation that can be checked and restrict private\nmaterial to the people authorised to see it. The resulting audit should tell the reader what\nthe system assessed and where its assessment stopped.\n8",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2015
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 20,
+    "text": "1.3 Existing Approaches and Challenges\nIn a manual review, the reviewer can ask whether a piece of code behaves as the\napplication intended and whether it follows the business rules that apply to it. That\ncontext is especially useful when a general scanner rule would make little sense on its\nown. Manual review depends on the time and experience available, though. Two\nreviewers may also follow different paths through a large project unless the scope and\nthe evidence they inspected are recorded.\nRule-based scanners help with checks that can be repeated over the same files. Different\nscanners can describe the same underlying condition using different names or point to\ndifferent parts of it. Conversely, the same rule can identify separate occurrences that\nneed separate review. Consolidation has to keep enough information to tell these cases\napart. If a result is combined with another one, the reviewer should still be able to see\nwhere the original evidence came from.\nA conversational assistant can explain a finding in terms familiar to the developer. An\nanswer given without the exact source version may fit a similar-looking example and still\nbe wrong for the saved audit. In ThreatLens, finding-specific guidance uses the evidence\navailable to the authorised reviewer. The suggestion appears separately from the\nuploaded source so an example can be read without assuming that it is part of the original\ncode.\nSome compliance questions cannot be answered from source alone. Chrome Web Store\npolicies cover the extension and the way it is presented, including declarations and\nmarketing materials. Microsoft Edge Add-ons policies also consider matters such as\npermissions, privacy, functionality and changes to browser settings. A built extension ZIP\ncan show what is in the package or which permissions the extension requests. It may not\ntell the reviewer what the developer disclosed or whether the user saw an appropriate\nexplanation. Those questions may require a declaration or a manual check. [5] [6]\nThe same record can therefore contain several kinds of information. A scanner alert\nrecords an observation. A suggested control mapping gives the reviewer a policy to\n9",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2150
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        40
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 21,
+    "text": "consider. A model response may explain either item, and a reviewer can record a decision\nseparately. Keeping these entries distinct lets a reader see what was measured, what was\nsuggested and what still needs evidence.\n1.4 Research Gap\nThe research gap addressed by this thesis is how automated results can be carried into\nan assessment that remains traceable as the reviewer moves between views and returns\nto a saved audit. Tools already exist for parts of that work. This study examines their\nintegration within ThreatLens and asks what evidence would show that the integrated\nworkflow behaves as intended.\nThe first issue is continuity of evidence. A developer should be able to open a finding in\nthe Audit Workbench, select it again in Findings, and recognise the same record in the\nAttack Graph, Security Advisor and Reports. The title of a finding may be shared by more\nthan one occurrence, so a title is a poor substitute for its audit, file location and recorded\nevidence. Each view can serve a different purpose while still making it clear which finding\nis under review.\nThat requirement becomes more important when a view is filtered or only some records\nhave loaded. A count can be accurate for the view shown and still differ from the saved\naudit total. The interface needs to say which count it presents. An evidence link should\nlikewise keep its original audit and location, even when the source excerpt is temporarily\nunavailable.\nThe second issue is how to interpret remediation guidance. A reviewer should be able to\nsee which part of a suggestion comes from the evidence and which part depends on an\nassumption about the application. The proposed change must remain separate from the\noriginal code. Its status should also be clear: generating a suggestion shows that the\nsystem produced a response, while applying a change and checking it are separate\nactions.\nThe third issue is how to assess coverage and correctness. A completed job means the\nscan reached its end state. It may still leave files, vulnerability classes or policy\n10",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2038
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        18
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 22,
+    "text": "requirements outside the assessment. Evaluation therefore needs to identify the input\nthat was eligible, the evidence saved, and the checks the system did not perform. Access\nisolation and consistent reporting can be tested with known cases. Detection accuracy\nrequires a different comparison against independent labels.\nThese issues define what the integration has to demonstrate. The implementation can\nbe examined through known workflows and their saved evidence. A claim that the\ncombined system detects more vulnerabilities than another method would require a\ncontrolled comparison beyond that implementation check.\n1.5 Aim and Objectives\nThe aim of the project is to develop and evaluate ThreatLens as an AI-assisted framework\nfor automated source-code security assessment, vulnerability prioritisation and\ncompliance analysis. The work starts from recorded source evidence and gives\ndevelopers a way to inspect a finding before deciding whether to act on it.\nThe project objectives are:\n\u2022 Provide an authenticated submission route that validates supported project inputs\nand prepares the source for assessment.\n\u2022 Combine static checks with language-model-assisted analysis while keeping the origin\nand source evidence of each finding.\n\u2022 Organise findings in a consistent form with the file location, vulnerability category,\navailable severity information and review status.\n\u2022 Provide a read-only Audit Workbench where developers can inspect source, findings,\nremediation steps and suggested checks.\n\u2022 Offer explanations and code suggestions on request, separate from the uploaded code\nand subject to review before use.\n\u2022 Show evidence relationships and relevant compliance mappings while identifying\nwhich paths and controls still need verification.\n11",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1727
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        24
+      ],
+      [
+        [
+          "BCDKEE+Calibri",
+          12.0
+        ],
+        6
+      ],
+      [
+        [
+          "BCDLEE+ArialMT",
+          12.0
+        ],
+        6
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 23,
+    "text": "\u2022 Preserve audit history and reports so authorised reviewers can reopen results at a\nlater stage.\n\u2022 Use documented test cases and fixtures to examine workflow behaviour, evidence\nconsistency, access restrictions, failure handling and interface responsiveness.\nThe objectives define a review workflow; they do not require unrestricted execution of\nuploaded projects or automatic acceptance of generated fixes. Detection is bounded by\nthe checks performed and the evidence those checks can reach.\n1.6 Research Questions\nThe project addresses four research questions.\nRQ1. How can static security checks and language-model-assisted analysis be combined\nwhile preserving the source location, provenance and supporting evidence of each\nfinding?\nRQ2. How can an editor-style workbench present findings, severity information and\nremediation guidance so that users can distinguish recorded facts from assumptions and\ngenerated suggestions?\nRQ3. How can security findings and compliance assessments be presented together\nwithout confusing vulnerability severity, policy outcomes and unassessed requirements?\nRQ4. How reliably does the implemented workflow handle authorised access, incomplete\nscans, unavailable services, source expiry and the reopening of saved results?\nThe four questions call for different kinds of evidence. The first two can be investigated\nby following known findings from analysis into the Workbench and checking which source\nevidence remains available. The third calls for a review of policies with different evidence\nrequirements, such as a check the package can answer and one that still needs a\ndeveloper declaration. The fourth concerns how the system behaves when access\nchanges, processing is incomplete or source is no longer available.\nRepeatable tests can establish whether the workflow handles those cases consistently.\nThey cannot establish precision or recall unless the expected results were independently\n12",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1900
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        24
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        16
+      ],
+      [
+        [
+          "BCDKEE+Calibri",
+          12.0
+        ],
+        2
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 24,
+    "text": "labelled and a procedure was set for matching findings to those labels. In the same way,\na screenshot can show what is available on a page, but a usability study would be needed\nto tell whether reviewers can interpret it reliably.\n1.7 Project Scope and Limitations\nThe main workflow covers submitted source projects and saved audit results. A\ndeveloper supplies a project ZIP, and the service prepares source previews as they\nbecome available. Recorded findings can then be examined in the read-only Workbench.\nRelated views support filtering, triage, evidence relationships, contextual guidance and\nreport downloads. Repository features depend on the required GitHub setup and the\npermissions of the person using them.\nThreatLens also reviews built ZIP packages intended for the Chrome Web Store or\nMicrosoft Edge Add-ons. The review compares available package evidence and supplied\ndeclarations with versioned policy references. It distinguishes violations detected by the\nchecks from requirements that need human review, remain unassessed or do not apply.\nThreatLens does not install the extension, inspect the developer's browser settings or\nsubmit the package to a store.\nThe extension package illustrates a wider limit of the project. A package may contain\nenough information to compare a declared permission with a policy. A separate\nrequirement may depend on behaviour or information outside that package. If the\nreviewer cannot obtain that evidence, an unassessed status conveys more than a pass\nwould. The store makes its own approval decision.\nAssessment is bounded by the source that is available, the supported analysis methods,\nthe input limits and the services configured for the run. Static checks do not reproduce\nevery runtime condition or establish that the application follows every business rule.\nModel explanations can also be wrong. A report with no recorded findings shows what\nthe completed assessment recorded for the supplied input. It cannot rule out weaknesses\noutside that coverage.\n13",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1983
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        35
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 25,
+    "text": "Remediation suggestions require review and testing. When repository publishing is\nconfigured, an authorised user can review a diff and publish it through a separate branch\nand pull request. The workflow does not change the target branch automatically. A\nproposed change, a structural validation check and an open pull request each provide a\ndifferent record of progress. None establishes on its own that the original finding has\nbeen resolved.\nProject information is restricted through authenticated workspace access and private\nsource storage. Source previews are available for a defined period. Saved findings and\nreports have their own history, so a reviewer may be able to revisit the audit after the\npreview has expired. Where the deployment uses an external model service, service\navailability and the way the configuration handles submitted material also need to be\nconsidered when projects are selected for assessment.\nThese limits matter when interpreting results. A past report can establish what the\nsystem recorded at the time of the audit. If its underlying preview is no longer available,\nthe report cannot substitute for the original source when a reviewer needs to test a\ndetailed explanation. That follow-up may require a new audit of an authorised copy of\nthe project.\n1.8 Main Contributions\nFigure 1.1 shows the components used in the audit workflow. The application sends\nauthorised requests to the API. Source preparation and analysis may progress\nindependently, and the resulting records make it possible to revisit an assessment from\nanother page. The contributions below concern the workflow built around those records.\n14",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1623
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        24
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        2
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 26,
+    "text": "Figure 1.1: Overall architecture of ThreatLens showing the application interface,\nauthenticated API, source preparation, security analysis and private persistence.\nContribution 1. Integrated audit workflow.\nThreatLens brings project submission, analysis progress, source review, finding\nmanagement and reporting into the same application. An audit reference lets a\ndeveloper return to a saved result without having to remain on the page that started the\nscan. This is useful when one person starts the audit and another authorised member\nreviews it later.\nContribution 2. Source-oriented review environment.\nThe Audit Workbench places the file tree, read-only source viewer and finding details\ntogether. A developer can compare the explanation with the recorded line and its\nsurrounding context without leaving the audit. The workbench is for inspection; its\nsource display is separate from the process of changing a repository.\n15",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        679
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        258
+      ]
+    ],
+    "outside_border": [],
+    "images": [
+      {
+        "x0": 108.68,
+        "x1": 537.0699999999999,
+        "width": 428.38999999999993,
+        "height": 353.20000000000005,
+        "top": 79.44999999999993,
+        "bottom": 432.65
+      }
+    ]
+  },
+  {
+    "page": 27,
+    "text": "Contribution 3. Controlled remediation presentation.\nThe interface separates written remediation from a requested code suggestion. When a\ncode solution is generated, it can include the assessment, the proposed code, the\nassumptions behind it and suggested verification steps. An interrupted response stays\nidentifiable as incomplete. This lets the reviewer decide whether the available guidance\nis sufficient even when a model response did not finish.\nContribution 4. Traceable finding and evidence views.\nFindings, the graph and reports refer back to saved audit information. The graph can\nshow which components or locations are associated with recorded findings. Its\nconnections are evidence relationships. A reviewer would need independent runtime\nevidence before describing one as an attack path that was actually used.\nContribution 5. Store-specific extension-policy review.\nThe extension workflow uses separate policy references for Chrome and Edge. It\ncombines evidence from the built package with the developer's declarations and shows\nwhere manual review is still needed. A corrected package can be reviewed as a new audit.\nComparisons are useful where the review settings and coverage are compatible;\notherwise a changed result also needs to be interpreted in light of the checks that ran.\nContribution 6. Verification of supporting system behaviour.\nDocumented checks address access isolation, scan state handling, source availability,\nreport completeness and interface responsiveness. These checks are useful when they\nreproduce a situation a reviewer would encounter. For example, a test that reopens a\nsaved scan checks whether the workflow retains the result. It says nothing about how\nmany vulnerabilities the detector missed.\nThe contribution of this work is the way the system connects those review functions and\nrecords the evidence available at each step. ThreatLens uses language models as part of\nthat workflow and relies on a reviewer to decide which findings and suggestions are\nsupported.\n16",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1802
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        220
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 28,
+    "text": "1.9 Thesis Organization\nChapter 1 introduces the problem, explains why it matters to source review and sets out\nthe aim, questions and scope of ThreatLens.\nChapter 2 reviews static analysis, language-model assistance, vulnerability classification,\ncompliance mapping and remediation. It compares what the different approaches\ncontribute to an assessment.\nChapter 3 sets out the methodology, including how inputs are chosen, how findings are\nformed and how the workflow is evaluated. It also considers the responsibility of handling\nsubmitted projects.\nChapter 4 describes the development environment, tools, data sources and supporting\nservices. These details separate the available platform from the configuration used in a\nparticular evaluation.\nChapter 5 explains the architecture and implementation, from authentication and scan\nprocessing to source review, compliance assessment and report generation.\nChapter 6 presents the test procedure, observed results and limitations. It distinguishes\nbehaviour verified by functional checks from results that would require a separate\ndetection-quality evaluation.\nChapter 7 draws the conclusions that the available evidence supports. Chapter 8 outlines\nwork on broader coverage, evaluation, deployment and user studies. The references and\nappendices provide the supporting literature and technical material.\nReferences Cited in This Chapter\n[1] M. Souppaya, K. Scarfone and D. Dodson, Secure Software Development\nFramework Version 1.1: Recommendations for Mitigating the Risk of Software\nVulnerabilities, NIST SP 800-218, February 2022. Official publication.\n[2] OWASP Foundation, Static Analysis, OWASP Developer Guide. Official\ndocumentation.\n17",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1507
+      ],
+      [
+        [
+          "BCDMEE+Calibri-Italic",
+          12.0
+        ],
+        133
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        34
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        25
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 29,
+    "text": "[3] National Institute of Standards and Technology, Artificial Intelligence Risk\nManagement Framework: Generative Artificial Intelligence Profile, NIST AI 600-1,\nJuly 2024. Official publication.\n[4] FIRST, Common Vulnerability Scoring System Version 3.1: Specification Document.\nOfficial specification.\n[5] Google, Chrome Web Store Program Policies. Official policies.\n[6] Microsoft, Developer Policies for the Microsoft Edge Add-ons Store. Official\npolicies.\n18",
+    "fonts": [
+      [
+        [
+          "BCDMEE+Calibri-Italic",
+          12.0
+        ],
+        252
+      ],
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        216
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 30,
+    "text": "CHAPTER 2\nLITERATURE REVIEW",
+    "fonts": [
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        28
+      ],
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 31,
+    "text": "2.1 Introduction to Software Vulnerability Detection\nVulnerability detection starts with a question about behaviour: can a weakness in the\nsoftware cause a security failure under the conditions in which the software is used? A\nscanner can often point to the relevant operation before that question has been\nanswered. The report may identify where a value is processed, for example, while leaving\nopen where the value came from and whether a check ran before it reached that point.\nA developer reviewing the report needs both the observation and the context needed to\ninterpret it.\nA source location makes a finding easier to investigate. It also keeps the scope of the\nclaim visible. A line that invokes a sensitive operation does not establish which users can\nreach it, how it is configured in production or what other parts of the application do\nbefore the call. One review may be able to settle those questions from the surrounding\nfiles. Another may have to leave them open because the deployment settings or the\nrelevant code were not part of the submitted project.\nThe methods in this chapter look at different parts of that problem. Source analysis can\nrecognise a code pattern and, where the tool supports it, follow data between\noperations. A dependency check reasons from package identity and version information.\nA reviewer can consider who can reach a function and which business rules apply to it.\nThese kinds of evidence belong side by side in an assessment, since one tool may answer\na question that another never examined.\nA report with no findings is particularly easy to overread. For a reviewer, there is a\npractical difference between a file that was checked without a reported match and a file\nthe tool could not analyse. There is also a difference between an alert that remains open\nand one the reviewer has examined and ruled out. Those distinctions shape the\ndiscussion that follows. They let us compare methods by what they examine and what\nthey can support, without assuming that running several of them together improves\naccuracy.\n20",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2009
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        54
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 32,
+    "text": "2.2 Static Application Security Testing (SAST)\nStatic Application Security Testing (SAST) examines a program without running the target\napplication. The OWASP Developer Guide describes techniques that apply rules, patterns\nor models to source or other representations of the program [1]. A pattern rule may\nrecord a particular call or expression. A check that works with a syntax tree can\ndistinguish the role of that expression in the program instead of relying on the characters\naround it. Neither approach necessarily answers whether that part of the program will\nrun in the deployment being reviewed.\nControl-flow and data-flow methods address different questions. A control-flow analysis\nconcerns the possible order of statements, such as whether a decision can bypass a\ncheck. A data-flow analysis asks how a value moves and changes as the program runs. A\nreviewer may need both accounts. The fact that a value could reach one statement in the\nsource is less informative when the statement sits behind a condition that cannot be met\nin the relevant setting.\nOWASP uses taint analysis to describe the tracking of untrusted input from a source,\nthrough the operations that pass it on, to a sink where it is used [1]. For a developer, the\nuseful part of that account is the path it makes visible. If a report records the sink but\nomits an intervening check, the reviewer needs to inspect that check before accepting\nthe result. Likewise, a check designed for one context cannot be assumed to protect a\ndifferent operation just because it runs earlier.\nThe strength of a static finding depends on what the tool can see and what it knows about\nthe code. A framework may route requests through a layer the tool does not model.\nGenerated code or unresolved settings can hide pieces of the path. OWASP lists these\ngaps alongside the possibility of false positives and false negatives [1]. For ThreatLens,\nthe design implication is to preserve the source location and any reported path or rule\nevidence, together with enough information to identify which checks ran. That gives the\ndeveloper a place to start when a finding looks questionable.\n21",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2098
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        48
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 33,
+    "text": "2.3 Dependency, Secret and Configuration Analysis\nDependency analysis, secret detection and configuration review each start with a\ndifferent object. The dependency analyser examines the software packages a project\nuses. A secret detector looks for values that may grant access. A configuration check\nreads settings that influence how the application is built or deployed. Grouping their\nfindings in one report is useful, but the reason for recording an alert should remain\nspecific to the method that produced it.\nFor a dependency alert, a package name is only part of the evidence. A manifest may\ndeclare a range of acceptable versions, while a lock file records a particular resolution. If\nthe submitted files only identify the range, the reviewer has to say what remains\nuncertain about the installed version. An advisory can establish that a version is affected;\nthe project's dependency information establishes whether that version was selected.\nWhether the affected part of the package is in use is a separate question.\nSecret detection has a comparable uncertainty at the level of an individual value. A token-\nshaped string might be a credential, a placeholder in a sample file or a test value. A report\nshould show enough context to explain why the value was flagged without copying it into\na document that might be shared. A configuration warning has a different interpretation\nproblem. A setting in an example file may never be loaded, or an environment-specific\nvalue may override it. The finding becomes useful when the reviewer knows which file\nsupplied the evidence and whether that file governs the deployment under discussion.\nBasak and colleagues developed SecretBench as a labelled collection of candidate\nsoftware secrets from public repositories [2]. They report 97,479 labelled candidates, of\nwhich 15,084 were classified as true secrets. Those counts describe their dataset. They\nare not findings produced by ThreatLens. What matters for the design of an evaluation is\nthat a detector should face realistic look-alikes along with genuine cases. Testing only\nwith conspicuous examples can show whether a rule will fire, but it cannot show how\noften it raises an unnecessary alert. The same reasoning supports keeping a scanner's\nunmatched or unassessed cases visible in the experimental account.\n22",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2271
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        51
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 34,
+    "text": "2.4 AI and Large Language Models for Code Security\nThe literature reviewed by Zhou and colleagues treats vulnerability detection and repair\nas distinct tasks [3]. A detection asks whether the available evidence supports a problem,\nwhile a repair proposes a change to address it. Their survey discusses prompt design,\nfine-tuning and retrieval among the ways researchers adapt language models to security\ntasks. It also examines which units of code are supplied and how datasets are\nconstructed. Those details matter because the same model can be asked to classify an\nisolated function or to help a reviewer understand a finding that spans several files.\nFor ThreatLens, the most immediate role of a model is to explain a saved finding and,\nwhen requested, suggest a change. The explanation can translate a concise scanner\nmessage into terms the developer can relate to the surrounding code. A useful response\nnames the operation it observed and points to the recorded evidence. When it relies on\na condition the supplied code does not establish, it should identify that condition\nexplicitly. This is particularly important when only a short source excerpt is available.\nConsider a reviewer who asks why an operation was flagged and receives a plausible\naccount involving a call elsewhere in the project. The answer is useful if the reviewer can\ncheck that call in the submitted version. If the model was never shown the caller, the\nanswer should be read as a possibility to investigate. Clarity helps the reviewer notice the\ndifference; it does not make the missing source available.\nA repair suggestion raises a further question: does the change preserve the behaviour\nthe application is meant to provide? A proposal may look reasonable in the selected\nexcerpt and still interfere with a valid use case. Review therefore includes checking both\nthe reported weakness and the ordinary behaviour around the affected code. A response\nthat states its assumptions and gives a testable rationale is easier to assess than a patch\nwith no explanation. The survey gives reasons to study this workflow, but it provides no\nmeasured accuracy for the particular models, prompts or provider configured for this\nproject [3].\n23",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2163
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        52
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 35,
+    "text": "2.5 Retrieval-Augmented Generation in Security Analysis\nRetrieval-augmented generation (RAG) gives a model access to reference material\nselected for the question at hand. In the work by Lewis and colleagues, a retriever\nsearches an external collection and the generator uses the selected material when\nproducing an answer [4]. The study evaluated knowledge-intensive language tasks. Its\nrelevance here is the separation between the source of a reference and the text\ngenerated from it. Its results do not establish how a security review system will choose\nor interpret a control.\nFor a security assessment, the passage supplied to the model might describe a weakness\ncategory or state a policy requirement. The description is useful when it helps the\nreviewer interpret the observed code. A paragraph that happens to use similar terms is\nnot enough on its own. If the candidate passage covers a different version of a policy or\na different kind of application, the model can cite it accurately while drawing the wrong\nconclusion about the project.\nFor example, a policy reference about what information must be disclosed may be\nrelevant to a finding that involves data collection. The passage can explain the obligation.\nWhether the developer met it depends on the applicable version and on what was\ndisclosed to users. That second part requires evidence from the project or its\naccompanying declarations. Retrieval helps locate the obligation; the underlying finding\nstill has to carry evidence that the reviewer can inspect.\nThe two steps suggest different evaluation questions. To examine retrieval, it is possible\nto ask whether the expected reference appears among the returned passages and\nwhether the correct version was selected. To examine generation, the reviewer can ask\nwhether the response uses the passage accurately and makes only claims warranted by\nthe code and the reference. A satisfactory result in one step does not establish a\nsatisfactory result in the other. Keeping the reference identity and its relationship to the\nfinding makes both judgments possible.\n24",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2029
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        57
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 36,
+    "text": "2.6 Vulnerability Taxonomies and CVSS Prioritization\nMITRE's Common Weakness Enumeration (CWE) provides names and identifiers for\nrecurring types of weakness in software and hardware [5]. Using a shared identifier can\nhelp a reviewer compare findings that different tools describe in different words. The\nidentifier describes a type of problem. Several locations can share one CWE without\nreferring to the same defect, and a reviewer may need more evidence to choose the most\nappropriate category for a particular alert.\nThe Common Vulnerability Scoring System (CVSS) is concerned with severity. The version\ncited in this thesis, CVSS v3.1, distinguishes Base metrics from Temporal and\nEnvironmental metrics [6]. The Base group captures technical characteristics of the\nvulnerability. Temporal metrics account for conditions that can change, and\nEnvironmental metrics can reflect the deployment where the issue matters. The vector\nrecords the metric choices behind a score. That record is useful when a reviewer wants\nto understand why two otherwise similar findings received different values.\nA reviewer using a score to decide what to address first still needs local information. The\nimportance of the affected application, the way it is exposed and the protections already\nin place can change what should be done first. FIRST describes CVSS as an input to that\ndecision and identifies organisational considerations beyond the score [6]. A missing\nscore should be left as unavailable rather than interpreted as a severity of zero.\nClassification, severity and review status should therefore remain separate fields. The\nweakness label answers what kind of issue the report describes. The severity indicates\nthe potential seriousness under the recorded assumptions. A status such as open tells\nthe team where the finding is in its review process. A control reference can be displayed\nalongside these fields, but it answers a different question about a requirement. If the\nfields were collapsed into a single indicator, the reviewer could not tell whether an item\nchanged because of new evidence, a revised score or a decision about how to handle it.\n25",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2101
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        54
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 37,
+    "text": "2.7 Compliance Mapping and Remediation Guidance\nCompliance mapping begins with an observation and a specific requirement. The\nmapping has to explain the connection. A source file might show that a setting is present,\nbut it may not show who is responsible for it, when it is checked or whether it is active in\nanother environment. Recording the relevant requirement is useful because it tells the\nreviewer what to check next. A stronger conclusion needs evidence that covers the rest\nof the requirement.\nThe gap is most visible with obligations that concern organisational practice. A repository\ncan contain a policy configuration without documenting how exceptions are approved or\nwhether the procedure is followed. In a package review, a developer's declaration and\nthe material shown to users may be necessary evidence. Where those details are absent,\nclassifying the matter as requiring review is more informative than treating it as a pass or\nassuming a violation. It also lets a report remain useful after the initial assessment, since\nthe reviewer knows what material would resolve the open question.\nRemediation guidance should name the assumption behind the proposed change and\nidentify the behaviour to check after applying it. For a setting, a reviewer might compare\nthe value in the submitted file with the value actually used in an authorised test\nenvironment. For a source change, the check should cover the reported condition and\nthe normal behaviour the original code supported. A successful review of a proposal\nshows that it is suitable for testing. It does not show that it was merged, deployed or\nconfirmed to resolve the finding. ThreatLens presents the guidance with that boundary\nin mind.\n2.8 Comparison with Existing Security Assessment Tools\nThe comparison here is between assessment methods. A tool can do well at identifying\nwhat is in a submitted project and still be poorly placed to answer what happens in a\ndeployed environment. Comparing tools by the number of alerts they produce would\nmiss that difference. The useful questions are what each method needs as input, what\nevidence it returns and what work remains before a reviewer can act.\n26",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2074
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        105
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 38,
+    "text": "A source rule can point to a file and an operation that merit inspection. A dependency\ntool can link a recorded package version to an advisory. Secret and configuration checks\ndirect attention to a possible credential or a relevant setting. A model can give those\nobservations a readable explanation, while a human reviewer can check the assumptions\nagainst application behaviour. Figure 2.1 locates the point where these forms of evidence\nmeet. It does not show that each method contributes equally to every case.\nConsider an audit in which a dependency warning appears beside a separate source\nfinding. The dependency warning has to be reviewed against the installed package\nversion and its use in the project. The source finding has to be reviewed against the\nrecorded code and the conditions under which it runs. They may lead to different actions,\neven when both are assigned the same severity. The point of presenting them in one\nplace is to make the evidence easier to compare, rather than to imply that the two checks\nhad the same coverage or confidence.\nFigure 2.1: Complementary security-review approaches and their evidence: static\npatterns, package versions, suspected credentials, configuration settings, model\nexplanations and human judgement.\n27",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1068
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        196
+      ]
+    ],
+    "outside_border": [],
+    "images": [
+      {
+        "x0": 108.68,
+        "x1": 537.01,
+        "width": 428.33,
+        "height": 257.0,
+        "top": 379.0899999999999,
+        "bottom": 636.0899999999999
+      }
+    ]
+  },
+  {
+    "page": 39,
+    "text": "An interface comparison can show how easily a reviewer can locate the supporting\nevidence or find a recorded decision. A performance comparison needs common inputs,\nthe same matching rules and a definition of what counts as a correct finding. It also needs\nto account for work the baseline did not perform. A shorter run that skipped part of the\ninput is not evidence of a faster check over the same scope.\n2.9 Comparative Literature Synthesis\nThe cited sources address different parts of a review. OWASP explains what a static tool\ncan observe and why its findings need interpretation [1]. SecretBench shows the value of\nretaining false-alarm candidates when constructing an evaluation dataset [2]. Zhou and\ncolleagues examine how models are used for detection and repair and why the choice of\ninput and evaluation data matters [3]. The three sources are useful at different points:\nwhen deciding what evidence to retain from a scanner, when planning a test set and\nwhen deciding what a generated response needs to explain.\nLewis and colleagues provide a basis for coupling an answer with retrieved text [4]. CWE\nand CVSS provide terminology against which classification and severity can be described\nconsistently [5, 6]. None of these references tells the reviewer whether a particular\nmapping applies to the submitted project. That judgment depends on the project\nevidence and whether it satisfies the conditions stated in the reference. The role of the\nsystem is to carry the source and the reference into the same review without losing the\ndistinction.\nThis synthesis gives us two practical design criteria. Each finding needs an identifiable\norigin so it can be reopened and checked. Its explanation should state which assertions\nfollow from the evidence and which remain open. These criteria can be assessed even if\na broad detection benchmark is not available. Testing them can establish whether the\napplication preserves a usable review trail. A claim about the accuracy of the combined\nsystem requires further evidence about the defects it finds and misses.\n28",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2035
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        38
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 40,
+    "text": "2.10 Consolidated Research Gap\nThe gap addressed in this thesis lies in the handoff between a tool observation and the\nreviewer's decision. A finding may move through a source view, a classification, a\nsuggested control and a report. At each point the reviewer needs to recognise the original\nobservation and see any assumptions introduced later. A system can produce technically\nvalid output at each step, yet still leave an unclear assessment if the evidence stops being\ntraceable between those views.\nThe difference is visible when a saved report is reopened. If source is no longer available,\nthe report should still distinguish a retained observation from a claim that would need a\nfresh inspection to verify. If a rule failed or an input could not be assessed, the report\nneeds to communicate that lost coverage. An evaluation of the workflow can reproduce\nthese cases and examine whether the presentation remains accurate. Such tests answer\nquestions about continuity and reliability, not about overall detection accuracy.\nThe methodology in Chapter 3 follows from this division. Evidence continuity can be\nexamined by tracing a known finding from its original location to the saved report.\nCoverage can be examined by recording which material was included, excluded or\nunavailable. Detection performance needs independently labelled cases and a\nrepeatable comparison. Usability and operational behaviour also need measures that fit\ntheir own questions. Taken separately, those checks allow the study to say which parts\nof ThreatLens have been evaluated and where additional evidence is still needed.\n29",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1581
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        32
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 41,
+    "text": "CHAPTER 3\nMETHODOLOGY",
+    "fonts": [
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        22
+      ],
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 42,
+    "text": "3.1 Research Design and Workflow\nThis project used an engineering development method. The starting point was a practical\nproblem: after a scan, a developer needs to know what was found, where it was found\nand whether the available evidence supports taking action. The research therefore\nconsidered the whole review process, from accepting a project to opening the saved\nreport. A successful upload alone would not answer the problem, and a long findings list\nwould be of limited use if the developer could not trace entries back to the source.\nThe work was divided into requirements, design, implementation and evaluation. The\ndesign stage identified the data that must survive between steps: a scan reference, its\nworkspace, the status of the analysis and the locations associated with saved findings.\nImplementation then used this common structure for the Workbench, Findings and\nReports. Evaluation considered functional behaviour separately from detection quality.\nThe former can be demonstrated with an observed workflow; the latter requires a sample\nwith independently established labels.\nFigure 3.1 summarises the sequence. It brings the developer's actions and the internal\nprocessing steps together, without treating them as interchangeable. Archive acceptance\nmeans that the system has taken responsibility for a request. It does not mean that\nanalysis has finished. Likewise, saving a finding makes it available for review; it does not\nestablish that a defect can be reproduced at runtime. These distinctions determine what\nthe later screenshots and evaluation tables can support.\nThe review process also provides a way to investigate disagreements. A reviewer can\ncompare the finding description with the recorded path, the line or excerpt, the detection\norigin and the suggested remedy. If the excerpt is missing, or if it does not justify the\ndescription, the right outcome is to retain that uncertainty. It would be misleading to\nreplace a limited source observation with a more definite conclusion simply because the\nsystem can generate a longer explanation.\n31",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2046
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        34
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 43,
+    "text": "Figure 3.1: Research workflow from problem definition and requirements to\narchitecture, implementation, verification and discussion of limitations.\n3.2 Functional and Non-Functional Requirements\nThe functional requirements follow the order in which a developer uses the application.\nThe user signs in, selects a permitted workspace, starts an audit, follows its progress and\nreviews the saved findings. The review should support a source lookup, severity and\nstatus filters, and a report that can be reopened after leaving the Workbench. A valid\nrequest must return a stable scan reference so that navigation or a page reload does not\ncreate a second audit by itself.\nThe non-functional requirements specify what should happen when the normal path\ncannot complete. Uploads and previews have defined bounds; access must be checked\nin the workspace that owns the scan; and a file reference should indicate when the\ncorresponding preview is unavailable. Interface messages must distinguish an in-progress\nscan, a failed scan and a completed scan with no findings returned. Treating these states\nas equivalent would make an incomplete review look like a clean result.\n32",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        974
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        149
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        48
+      ]
+    ],
+    "outside_border": [],
+    "images": [
+      {
+        "x0": 108.68,
+        "x1": 537.02,
+        "width": 428.34,
+        "height": 264.0,
+        "top": 79.44999999999993,
+        "bottom": 343.44999999999993
+      }
+    ]
+  },
+  {
+    "page": 44,
+    "text": "Each requirement can be checked against a specific observation rather than a general\nimpression of the interface. For example, a persistence check should reopen the same\nscan after navigation and confirm its reference. A reporting check should compare the\nexported report with the saved audit. An authorisation check is different: it requires an\naccount without the necessary access and an explicit denial. A screenshot taken with the\nowner account is useful for demonstrating the interface but cannot replace that negative\ntest.\n3.3 Test Project and Input Selection\nInput selection serves two purposes. Authorised application projects show whether a\nrealistic project structure can be uploaded and reviewed. Controlled fixtures support\nnarrower questions about detection or error handling. A useful detection fixture includes\na known weakness, while a corrected counterpart and a similar benign case show\nwhether the detector distinguishes the underlying condition from a familiar pattern. The\nfixture label needs to come from manual inspection or a reliable published description,\nnot the scanner being evaluated.\nFor a comparative evaluation, each input should have a short record describing its origin,\nversion, permission to use it, and expected findings. An archive checksum identifies the\nexact input, while a file inventory records what is present. A label should refer to a\nweakness category and a location or relevant code region. The reviewer should note\nwhether the label was established from source inspection alone, supported by a safe test\nor left uncertain. This record makes it possible to tell a change in detector behaviour from\na change in the input itself.\nThe application captures used in this thesis come from project workspaces and\ndemonstration inputs. They show how saved findings are presented. A complete list of\nindependently labelled weaknesses, clean controls and input checksums was not\navailable for those captures. They are therefore treated as workflow evidence and case\nexamples, not as a detection benchmark. Section 6.2 explains the effect of this limitation\non the results.\n33",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2080
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        38
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 45,
+    "text": "Only inputs that the project team is permitted to inspect should be included in a\nrepeatable collection. Where possible, a small synthetic fixture should stand in for a\nprivate repository or a file containing personal data. The useful property to retain is the\ncode structure relevant to the test. Retaining unrelated account information or real\ncredentials would not improve the measurement and would introduce a new security\nconcern.\n3.4 Source Code Ingestion and Preprocessing\nIngestion prepares an upload for inspection without running the submitted program. The\narchive must be accepted by the input validation rules before its entries are considered.\nPath and size checks help prevent extraction outside the intended directory or an\nunexpectedly large expansion. The file-selection policy then excludes unsupported,\ngenerated or otherwise out-of-scope material for the relevant audit type. The important\nboundary is between files present in the upload and files available to a particular analysis\nstage.\nThe source preview and the scanner's analysis input serve different jobs. The preview\nsupports human review; the analysis selection determines where a detector can look. A\npreview may be redacted, shortened or unavailable, and a file listed in the Workbench is\nnot evidence that every analysis stage examined it. Coverage should therefore identify\nthe relevant stage and report known exclusions. The number of preview entries cannot\nstand in for the number of files examined by the scanner.\nSource coordinates should be preserved when enough evidence is available. For a line-\nbased detector, the useful record is the path together with the line or range from the\noriginal package. A location that could not be tied to the package should be described as\nunavailable. Masking or bounding a preview limits what can be displayed, but it does not\nmake it acceptable to invent a location or present a manufactured excerpt. This is\nparticularly important for minified files and snippets whose starting line is uncertain.\n34",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1984
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        45
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 46,
+    "text": "3.5 Static Scanning and Finding Normalization\nStatic scanning draws on rules or specialist checks appropriate to the configured profile.\nThe outputs of these checks are not necessarily shaped alike: two tools may use different\nseverity labels, and one may report a code line while another reports a package or\nconfiguration item. Normalisation translates the available details into a common finding\nrecord so that evidence from different origins can be presented together. It should\npreserve the origin and mark absent values as absent.\nDuplicate handling is part of this process because two outputs can refer to the same\nunderlying issue. Matching needs a stable basis such as rule or weakness identity, file or\npackage location and relevant evidence. A title is a useful description but is not a reliable\nidentity. Two independent instances can share a title, and a later edit may move a finding\nto another line. For a comparison across releases, a changed line should lead to review\nof the source context rather than automatic closure of the earlier issue.\nA detector's failure or omission must remain visible after normalisation. An empty list\nwith a successful status means that the relevant stage returned no records. An empty list\nafter a stage was disabled, skipped or interrupted says something different about\ncoverage. The evaluation therefore retains execution status alongside counts. This makes\nit possible to investigate why a result is missing without assuming that an unavailable\ndetector examined the project.\n3.6 LLM-Assisted Analysis and RAG\nModel assistance is introduced after the evidence boundary has been established. The\ntask for the model is to explain or help remedy a particular finding, using a limited set of\nauthorised context. The caller supplies the selected evidence and asks the model to state\nits assumptions. Project files and retrieved material are treated as inputs to interpret, not\nas instructions that can alter the review objective or grant permission to carry out an\naction.\nWhen retrieval is enabled, an explanation may draw on relevant references in addition\nto the source excerpt. A useful experiment would record the retrieval mode, the corpus\n35",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2117
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        82
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 47,
+    "text": "version and the references returned for each case. A reviewer can then check whether\nthe cited passage actually supports the proposed mapping or advice. A reference such as\na weakness description supplies background, but cannot show that the same condition is\nreachable in the submitted project.\nThe model's output is kept separate from recorded source evidence. In a case where the\navailable snippet shows a risky operation but no untrusted input, the output should\ndistinguish the observed operation from the condition that would make it dangerous. If\nthe service fails, has no usable context or ends before finishing, the review must say so.\nAn incomplete suggestion is not equivalent to a finished remedy and should not be scored\nas one.\n3.7 Severity Scoring and Compliance Mapping\nScoring answers a different question from weakness classification. A weakness identifier\ndescribes the kind of issue. A CVSS score, where supported, describes severity under the\nassumptions used to calculate it. A control mapping identifies a requirement that may be\nrelevant to review. Triage records the team's decision about the issue. Combining these\ninto one status would hide important distinctions: a severe candidate may remain\nunverified, and a relevant control does not by itself establish non-compliance.\nInterpretation should start with the evidence and retain the assumptions behind any\nscore or mapping. If a score is unavailable, absence must not be displayed as a score of\nzero. If the evidence does not justify a vector or control, the brief should state what needs\nchecking. A reviewer who disagrees with a mapping should be able to point to the missing\ncondition or inaccurate reference rather than having to reject the entire scan record.\nAt the report level, any total or percentage needs a clear denominator and a statement\nof coverage. For example, the number of assessed controls is not the same as the number\nof requirements in a framework. A source-based application scan cannot observe all\norganisational controls. The method therefore uses framework signals as review aids\nrather than treating them as certification or a substitute for a separate compliance\nassessment.\n36",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2144
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        45
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 48,
+    "text": "3.8 Remediation and Report Generation\nRemediation begins with the reason for the finding. The first question is whether the\navailable evidence establishes the problem described. Written steps can then give the\nsmallest useful change and explain what it should preserve. Where a code example is\navailable, it belongs in a separate read-only presentation. The developer should be able\nto compare it with recorded evidence without mistaking the suggestion for a change\nalready made to the project.\nVerification should be tied to project behaviour. A reviewer can ask which input or code\npath is affected, how normal behaviour is preserved, and whether an appropriate test or\na subsequent audit supports the proposed change. Passing a project test, opening a pull\nrequest and no longer observing a finding in a later scan represent distinct outcomes.\nNone should silently overwrite the recorded triage decision. A comparison is only useful\nif both scans had a reasonable opportunity to examine the same issue.\nThe report is generated from saved results. Its role is to make the evidence, scope and\nrecommendations readable outside the Workbench, without performing a new scan. A\nreport parity check should compare finding counts, paths, available scores and\nremediation with the corresponding saved audit. It should also distinguish deliberate\nredaction or an unavailable preview from a rendering problem. Private Advisor messages\nare not required to explain the saved findings and are not part of this comparison.\n3.9 Evaluation Protocol\nThe evaluation design separates functional tests, detection assessment, performance\nmeasurements and access-control checks. Functional checks cover transitions such as\nupload acceptance, progress and reopening saved results. Detection assessment requires\nindependent labels. Performance measurements require timestamps for clearly defined\nevents under a recorded configuration. Authorisation checks need both allowed and\ndenied cases. A pass in one group does not imply a pass in another.\nA repeatable run record should state the application revision, profile, input identifier,\nenabled tools and whether any stage was skipped. For comparisons, the input set,\n37",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2137
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        64
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 49,
+    "text": "matching rules and reporting scope should be fixed before reviewing aggregate results.\nIf a tool fails or a sample is unsupported, the reason belongs in the results. Excluding it\nwithout explanation can make both coverage and runtime appear better than they\nactually were.\nThe results chapter applies this design to the evidence available. It describes completed\ndemonstrations and uses logged regression tests when their scope is documented. It\nkeeps expected outcomes separate when an observation was not retained. Controlled\ndetection comparisons and repeatable timing experiments are described as follow-up\nmeasurements where the required records are missing, rather than being inferred from\nscreenshots or isolated examples.\nThe planned test sequence has two checkpoints. The first establishes whether the audit\nwas usable: it records acceptance, any exclusions, which stages completed and whether\nthe result could be reopened. The second concerns interpretation. It asks whether a\nreviewer can reproduce a location, identify the source of the recommendation and\ndistinguish a finding that needs review from a verified defect. A recording of the second\ncheckpoint without the first could conceal missing coverage; the first without the second\ncould show a completed job whose output is difficult to act on.\nChanges to an input should be evaluated against both checkpoints. Consider an\nindependently labelled vulnerable fixture and a revised copy. If the original is reported\nbut the revised copy is outside the analysis scope, disappearance of the finding is\ninconclusive. If both auditable regions are covered, the comparison can be examined\nmore closely. A precise decision also checks whether the reported location moved or\nwhether a previous duplicate is now represented by a different finding. This procedure\navoids treating every change in count as a source-code improvement.\n3.10 Evaluation Metrics\nDetection measurements begin with a matching decision. A reported item should match\na labelled issue only when the weakness category and relevant location or code region\nrefer to the same underlying condition. A written matching rule is especially important\n38",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2149
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        25
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 50,
+    "text": "when tools report at different levels of detail. The evaluation unit should be fixed before\ncounts are calculated, so that one labelled weakness cannot accidentally be counted\nseveral times.\nA true positive (TP) is a reported item that matches a labelled weakness under that rule.\nIn a combined system, a group of duplicate reports should yield one match rather than\none match per contributing tool. The contributing origins can still be recorded for later\nanalysis.\nA false positive (FP) is a reported candidate that is rejected on the agreed evidence,\nincluding a finding raised on an independently checked benign case. An item should not\nbe called false simply because the initial label set missed it. A potentially valid but\nunresolved item should be reviewed or kept separate from the measured set.\nA false negative (FN) is a labelled weakness with no matching report. If analysis never\ncovered the file or package in question, the coverage restriction should be recorded as\nwell. The distinction matters because adding a rule will not address a weakness in code\nthat the scan never examines.\nPrecision describes how many of the reported and adjudicated results are valid. Recall\ndescribes how many of the labelled issues were found. A tool can raise its apparent recall\nby reporting more candidates, at the cost of creating more review work. The two\nmeasures are therefore reported together, or left unreported where the required counts\nare not available.\nThe F1 score combines precision and recall through their harmonic mean. It is a compact\nsummary but does not reveal the distribution of missed weaknesses across languages or\ncategories. The underlying counts and the scope of the input set remain necessary for\ninterpretation. The formulas used in this thesis are given below.\nPrecision = TP / (TP + FP)\nRecall = TP / (TP + FN)\nF1-score = 2TP / (2TP + FP + FN)\n39",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1798
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        81
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 51,
+    "text": "An undefined denominator is reported as such. For example, when a tool returns no\nadjudicated predictions, a precision value should not be guessed. When a group contains\nno labelled weaknesses, it cannot establish recall. The method also records how\nunresolved candidates are handled. Applying the same rule to each tool matters more\nthan producing a complete-looking metric table.\nTime and coverage measurements accompany the detection metrics where records\nallow. Time to first visible result, analysis duration and elapsed time from submission to\npersistence are different measurements. A performance report should identify which\none is used and whether queueing or model delays are included. The same record should\nstate how many eligible files were examined so that a fast run with reduced coverage\ncannot be mistaken for an equivalent run.\nCoverage can be reported at more than one level when the inventory exists. A file-level\nstatement records how many eligible files a stage examined. A category-level statement\nrecords which classes of issue or policy checks that stage was intended to assess. The first\ndoes not answer the second: a scanner can examine an entire eligible file set and still\nhave no rule for a particular weakness. A negative result therefore needs both the\nanalysis scope and the rule or assessment scope to be meaningful.\n3.11 Ethical and Security Considerations\nThe project is a defensive review tool. Source should only be uploaded when its owner\nor an authorised team has granted permission. Demonstration inputs and illustrations\nshould not expose private account details, repository credentials or copies of code that\nare unnecessary to support the observation. The ability to preserve an audit record does\nnot remove the obligation to minimise the information it contains.\nModel-assisted review adds a separate data-handling question. Only the context needed\nfor the task should be supplied, and a suggested change should be reviewed before it is\nused. Test evidence should come from isolated workspaces or approved fixtures where\npossible. Tests involving destructive actions or access denial must use data created for\n40",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2118
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        42
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 52,
+    "text": "that purpose, rather than an existing project audit or an account outside the evaluation\nscope.\nThese limits also apply to the thesis. A figure or result should identify what was observed\nand avoid implying proof of a condition that was not tested. An uncertain finding can still\nbe a useful example of how the interface supports review. Its value lies in showing the\ndeveloper where to check, not in inflating the number of confirmed vulnerabilities.\nWhere the institution requires a statement on writing or tool assistance, that statement\nshould follow the applicable submission guidelines.\n41",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        597
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 53,
+    "text": "CHAPTER 4\nDATA COLLECTION, TOOLS AND COMPUTATIONAL PLATFORM",
+    "fonts": [
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        60
+      ],
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 54,
+    "text": "4.1 Hardware and Operating Environment\nThreatLens was developed and reviewed in a Windows environment. The local\ndevelopment profile runs the browser application and Python API separately, with the\nbrowser handling interaction and the API handling audit requests. This arrangement\nmade it possible to work on the audit flow without relying on every optional service in\nthe worker-based profile.\nThe installation notes describe Python 3.12 for the supported Windows setup and record\na separate clean-install check with Python 3.12.14. That record helps reproduce the\ninstallation profile. It does not establish the exact Python version for every screenshot or\naudit in this thesis. The version used for a new run should be read from its active\ninterpreter and saved with the run result.\nThe machine specifications, browser build, and service versions were not recorded\nalongside every application capture. It would therefore be inappropriate to use those\ncaptures to infer resource requirements or compare execution speed. When a model\nrequest uses a remote provider, the local workstation also does not perform the model\ninference. Response times in that case may depend on network conditions and provider\navailability as well as the application.\nFor a repeatable performance run, the environment record should include the operating\nsystem, processor, memory, browser version and the API profile. For a hosted worker,\nthe record also needs the worker resources, concurrency and queue configuration.\nVersions should be recorded from the running processes where possible. A dependency\ndeclared in an installation file may not be the executable or package loaded by a\nparticular process.\n4.2 Programming Languages and Frameworks\nThe frontend uses TypeScript with React. TypeScript is useful at the point where API data\nbecomes interface state: a pending scan, an audit with a saved finding, and a failed\nrequest need different rendering decisions. Static typing makes those distinctions visible\nduring development, but still depends on checking inputs received at runtime. A typed\n43",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2002
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        82
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 55,
+    "text": "response alone does not prove that access was authorised or that its contents are\ncomplete.\nThe API and processing modules are written in Python, with FastAPI handling HTTP\nrequests. Python also connects the archive, analysis, evidence and reporting stages.\nPostgreSQL stores persistent records, with schema changes maintained as SQL\nmigrations. The boundary is intentional: transient progress belongs to the processing\nflow, while saved records should be available to an authorised user without restarting\nthe scan.\nThe declared dependency files and lockfiles provide the basis for a clean installation. To\nreproduce an evaluation, however, they should be tied to a source revision and an actual\nenvironment. Changes to rule packs, scanners, model settings or migrations can affect\nwhat a run produces even when the audit uses the same project archive. A comparison\nshould capture these differences rather than describe both setups only by the application\nname.\n4.3 Frontend Technologies\nThe browser client uses React 19, TanStack Router for routes and TanStack Query for\nserver state. Routing allows the same selected audit to be opened from different views.\nThe query layer helps keep server data separate from temporary interface state, such as\na drawer being open. Tailwind CSS and shared interface components define the\npresentation; Monaco provides the read-only source view in the Workbench.\nPersistent information and interface state serve different purposes. The active audit\nreference can be used when a user returns to the Workbench, but evidence and access\nstatus still need to come from the server. Workspace-specific query keys help prevent a\nresult fetched for one workspace from being displayed after another is selected. Source\ntext is not needed in browser persistence to restore a reference to the audit.\nInterface verification should include more than an ideal desktop screenshot. Long paths,\nempty results, active jobs, loading failures and narrow screens exercise different parts of\nthe layout. A source panel can scroll without altering the record it displays. Availability\n44",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2076
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        27
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 56,
+    "text": "and readability can be observed in a browser, while server-authorisation behaviour\nrequires separate checks with users who have different permissions.\n4.4 Backend Technologies\nFastAPI exposes the intake and review operations used by the application. An audit\nrequest is checked before acceptance, and later requests retrieve progress, saved\nfindings or available source evidence using the audit reference. Separating these requests\nprevents a slow processing stage from having to hold open the upload request for the\nentire scan. It also gives the interface a way to recover the current state after navigation.\nThe backend applies validation at the boundaries where the frontend cannot be\nauthoritative. In particular, workspace selection in the browser is an input to verify rather\nthan proof of membership. Scan and finding identifiers have to refer to the same\nauthorised workspace. A separate file lookup should also take account of the source\npreview's retention status instead of assuming that every saved finding still has an\naccessible file.\nHealth endpoints and configuration checks are useful for deployment, but they answer\nnarrow questions. A reachable API does not prove that authentication, storage access,\noptional model calls and report rendering all work. When these services are part of a\ndemonstration, the record should identify which operations were actually exercised. An\nunavailable optional service should be reported with its effect on coverage, rather than\ndescribed as an application-wide failure or a passed check.\n4.5 Database, Authentication and Storage\nSupabase supplies authentication, the PostgreSQL database and private object storage.\nThese services have separate roles: authentication identifies the signed-in account;\ndatabase records hold workspaces, scans and findings; and private storage holds retained\nobjects such as source previews. The Workbench connects those objects to saved\nmetadata at the point of authorised access.\n45",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1905
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        68
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 57,
+    "text": "PostgreSQL row-level security restricts which rows may be read or changed under a given\npolicy [7]. Workspace membership is a useful basis for these decisions, but additional\nchecks are needed when a server reads private storage or performs a privileged\noperation on behalf of a user. The trusted relationship is between the current user,\nworkspace and specific saved record. It should not be derived solely from an identifier\npassed by the client.\nThe project distinguishes owner, administrator, analyst and viewer roles. This allows read\naccess to be separated from actions such as starting an audit or changing workspace\nconfiguration. Stored source previews have a configured 30-day retention window. A\npreview can therefore expire while its audit history and finding summaries remain. The\ndata record should say whether code is still available instead of returning an empty\nexcerpt as if the file had never contained evidence.\n4.6 Background Processing and Deployment Modes\nTwo processing modes are described in the project documentation. In the local profile,\nthe API process coordinates the supported audit stages. This is the simpler path for\ndevelopment and for checking the browser-to-API workflow. In the full worker profile,\nbackground tasks are handled separately, with Celery and Redis providing task delivery.\nFigure 4.1 compares the modes in terms of where processing occurs.\nThe profiles expose different operational questions. For the in-process path, interruption\nof the API process may affect an accepted job. For worker execution, a job can wait in the\nqueue, be picked up by a worker or lose the worker while running. Both modes need a\ndurable outcome that the browser can interpret. The queue's state, the worker's state\nand the saved audit state are related, but a signal from one is not always proof of the\nothers.\nQdrant is a supporting service in configurations with vector retrieval. It performs a\ndifferent job from the task queue: it helps select reference material for later\ninterpretation. Its inclusion in the full architecture does not mean that every installation\n46",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2056
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        48
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 58,
+    "text": "retrieves documents or that it is needed for a static scan. The chapter therefore describes\navailable components separately from the services evidenced by a particular run.\nFigure 4.1: Separation between the local API/workbench environment and the\noptional scanner-worker and retrieval environment.\nThe mode should be stated wherever it affects interpretation. The application captures\nestablish user-visible behaviour, but do not record the process that performed every\nbackground step. For that reason, the figures do not serve as proof of worker execution,\nqueue throughput or equivalence between the two deployment modes.\n4.7 Security Scanners, AI and Retrieval Services\nThe scanner profile determines which checks and supporting tools are available. The\nwider project includes static analysis, secret and dependency checks, and optional model\nassistance. A full installation may make specialist tools available that are absent from a\nsmaller development profile. The useful record is the list of checks that actually ran, with\nthe rules or advisory data they used, rather than the list of tools named in the\narchitecture.\n47",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        957
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        127
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        50
+      ]
+    ],
+    "outside_border": [],
+    "images": [
+      {
+        "x0": 108.68,
+        "x1": 537.04,
+        "width": 428.35999999999996,
+        "height": 276.25,
+        "top": 130.39,
+        "bottom": 406.64
+      }
+    ]
+  },
+  {
+    "page": 59,
+    "text": "Dependency analysis has a separate input boundary. The presence of a requirements or\npackage file does not establish that exact installed versions are known. The supported\nPython audit path works with eligible exact package versions without installing uploaded\ndependencies. Unsupported inputs limit the review; they should not be interpreted as\nevidence that the associated components have no known issues. The same distinction\napplies when a scanner is not installed or a service is not configured.\nModel providers and retrieval services can contribute explanations and reference\nmaterial when enabled. Their availability varies by profile and configuration. A\nreproducible run should record whether a model stage ran, which model or fallback\nserved the request if known, and whether retrieval produced usable references.\nDocumentation naming a provider cannot establish which service produced a particular\nsaved answer.\nReport generation introduces a further tool boundary. The application prepares the\nreport content from saved records and uses a browser-based renderer for PDF output,\nwith a fallback where the required dependencies are installed. A rendering check should\nrecord the actual engine used. The goal is to verify readable text, complete findings and\nconsistent pagination, not simply to confirm that a file with a PDF extension was\nproduced. The rendering engine does not take part in detection or choose which findings\nbelong in the audit.\n4.8 Data Sources and Reference Material\nThe study uses application captures, project documentation, test records and technical\nreferences. The saved MERN application audit provides a case for examining reported\nfindings and source coverage. An existing portal audit provides an example of the\nrelationship between recorded evidence and contextual remediation. Neither project is\ntreated as an independently labelled vulnerability dataset.\nThe sources should be used for the questions they can answer. A screenshot shows a\nstate presented to a user. A report records the saved findings and scope returned by the\naudit. A test log can show the outcome of a specified assertion. A standard or catalogue\n48",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2123
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        41
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 60,
+    "text": "defines terminology and evaluation criteria. None of these, on its own, establishes the\ndetection rate of the system against a collection of real projects.\nReference data can change independently of the application. Tool rules, published\nadvisories and compliance references may be updated between runs. The date or version\nused should be kept wherever the result depends on it, particularly when comparing a\nlater run with older evidence. If a reference version is missing, that should be recorded\nas a limitation instead of assuming it matches the currently available material.\n4.9 Reproducibility and Version Control\nFor an audit to be repeated, a reviewer needs to be able to identify the source revision,\ninput archive and processing profile. A compact record should include the archive\nchecksum, selected frameworks, enabled stages and relevant versions. It should also\ndistinguish the time at which evidence was captured from the time of the audit itself.\nReproducibility does not require preserving credentials, private prompts or unrestricted\ncopies of submitted code. A log can retain a scan reference, counts, status, duration and\na sanitised failure category. A synthetic input or approved public fixture can be shared\nwith a report where that is necessary to repeat the run. Private evidence should be\nrestricted to the people and retention period agreed for its review.\nThe project records provide a basis for repeating individual workflows, but not every field\nin this recommended record is available for older demonstrations. Chapter 6 identifies\nthe claims affected by those gaps. Stating the missing information is more useful for\nfuture testing than assigning an exact configuration or result after the fact.\nVersion control and evaluation records should be connected without being confused. A\nsource revision identifies what the team intended to run, while the evaluation record\nidentifies the inputs, tools and configuration it actually used. A working copy may include\nlocal changes, and optional tools may be absent even on a clean checkout. For a later\nthesis experiment, the team should first record the revision and any relevant local\nchanges, then save the enabled check list with the results. The archive checksum and a\n49",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2212
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        41
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 61,
+    "text": "dated outcome record are enough to link those records without storing credentials in the\nresearch material.\nIt is also helpful to separate test materials by purpose. An input fixture belongs with its\nexpected result and any permission to use it. A screenshot belongs with the capture date\nand the state it demonstrates. An exported report belongs with the scan reference and\nthe filters used to produce it. When these records are stored together under an undated\nname, it is difficult to tell whether a difference represents a new run, a formatting change\nor an altered input. This separation is the reason that the saved application captures and\nthe separate regression record are identified independently in Chapter 6.\n50",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        725
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 62,
+    "text": "CHAPTER 5\nSYSTEM DESIGN AND IMPLEMENTATION",
+    "fonts": [
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        43
+      ],
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 63,
+    "text": "5.1 Overall ThreatLens Architecture\nThreatLens separates the work of accepting a request from the work of analysing the\nrequest and presenting the result. The browser handles interaction through the API. The\nprocessing layer prepares eligible files and produces findings. The database retains the\naudit state, and private storage provides source previews when an authorised reviewer\nopens them. Figure 1.1 shows these boundaries. The individual pages are different ways\nto inspect the same saved audit, rather than independent scans of the same upload.\nSource preparation and analysis can advance separately. The source view answers\nwhether evidence can be opened, while analysis answers which checks have produced\nfindings. If a preview becomes unavailable, that does not erase a saved finding or make\nthe scan result clean. Conversely, the availability of a file preview does not show that the\nfile has been analysed. The API therefore needs enough information to report the state\nof each stage without combining the two into one progress indicator.\nThe scan reference links progress, findings, evidence and the eventual report. It also\nprovides a way to resume review after leaving the page. The browser can keep a\nreference to the selected audit, but its access to the underlying records is checked again\nwhen they are requested. That is important because membership or retention can\nchange after an audit has been run.\n5.2 User Interface and Application Navigation\nThe Dashboard summarises recent activity and completed audits. Codebase Audit\nprovides the upload and history entry points. The Workbench places source and finding\ndetails beside each other, while Findings supports triage across the selected audit. Attack\nGraph presents source relationships, Reports provides saved report access, and Security\nAdvisor supports follow-up questions. Each view is designed around a different review\ntask, but links between them should retain the selected audit or finding when one is\navailable.\nA reviewer can enter the workflow at several points. Opening an audit from History\nshould show the saved record rather than beginning a new upload. An audit that is still\n52",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2089
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        84
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 64,
+    "text": "running can be reopened for progress, and a completed audit can be resumed directly at\nits Workbench. Navigation behaviour should remain separate from account and\nappearance settings so that changing the interface does not change the record under\nreview.\nThe interface needs to make the source of the content visible. A Dashboard summary\nmay represent the latest completed audit rather than the one still running. An example\ngraph is not necessarily built from the user's scan. In a narrow layout, the source panel\nand finding details may be viewed one at a time, but the association between them must\nsurvive the switch. The read-only nature of the source view does not change with the size\nof the screen.\n5.3 Authentication, Authorization and Workspaces\nAuthentication identifies the user making a request. Authorisation determines whether\nthat identity can perform an action in the chosen workspace. Ownership and\nmembership are therefore evaluated with the requested scan or finding, rather than\ninferred from the route that opened it. A valid session for one workspace does not grant\naccess to records from another.\nDatabase policies protect workspace records at the data layer. The API also verifies the\nrelationships it acts on, including where an operation is performed using server-side\nprivileges. For example, an authorised scan identifier should not be paired with a finding\nfrom a different scan. The source and report endpoints need a corresponding access\ncheck because an identifier copied from an earlier session is not current authorisation.\nRoles distinguish reading from changes to records or settings. A viewer can be permitted\nto read shared findings without having the right to delete audits or publish a repository\nchange. Repository actions add a separate GitHub permission check; workspace\npermission by itself does not supply access to the external repository. The\nimplementation should be evaluated with representative allowed and denied requests,\nincluding a membership change while access to an audit is being reviewed.\n53",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2004
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        50
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 65,
+    "text": "5.4 Local In-Process Scanning Pipeline\nThe local saved-ZIP flow begins with a POST to the workspace's audits endpoint under\nthe versioned API. On acceptance, the API returns HTTP 202 and a scan reference.\nAcceptance is not a synchronous scan result. The request can carry an idempotency key\nso that a repeated submission after an uncertain response need not create a second\naudit.\nThe processing flow records progress for analysis and source handling. The frontend can\nretrieve a partial source manifest when it is ready, and the list may grow while file\npreparation continues. It should not render a pending list as a final count. A completed\nassessment is presented only after its results have been saved. If source handling fails\nbut findings have been saved, the resulting view should explain which evidence remains\naccessible.\nThe audit is associated with the workspace rather than the component that initiated the\nupload. After a request has been accepted, opening another page does not intentionally\ncancel it. Returning to Codebase Audit can restore the scoped reference and retrieve the\ncurrent status. An inaccessible or deleted scan does not become accessible because that\nreference is still present in the browser; the system revalidates it before showing the\naudit.\n5.5 Hosted Scanning and Worker-Orchestrated Pipeline\nThe repository also defines a worker-oriented profile for scans handled outside the API\nprocess. In this profile the API and the worker communicate through a task queue, using\nCelery and Redis. The worker carries out configured processing and updates the saved\nstate. Moving work out of the request process can reduce contention there, but the\nbrowser still needs an authoritative status from the application.\nThis profile has additional operational dependencies. The broker can accept a task before\na worker is ready to run it, and an interrupted worker may leave behind an accepted but\nincomplete operation. Recovery needs to know the saved state before retrying a task. A\nuseful verification would cover queue delay, worker interruption and restart, and confirm\n54",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2009
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        94
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 66,
+    "text": "that repeated delivery does not create duplicate saved results. These are different checks\nfrom verifying the same browser interaction in the local profile.\nThe available audit captures do not identify a worker deployment for the runs shown in\nthis thesis. The mode is described here as a supported deployment design, without\nattributing the observed local workflow or its timing to the worker. The comparison in\nSection 4.6 should be read in that context.\n5.6 Static Scanning Engines and Finding Normalization\nThe project uses a common finding structure for rule-based output and other eligible\nsources of analysis. The normalisation stage makes the path, severity, evidence and origin\navailable to the same review interface. Where an analysis source provides no valid\nlocation or score, the common record can retain the rest of the finding without\nmanufacturing the missing field. The original detector or analysis origin remains useful\nwhen a reviewer wants to understand why a candidate was reported.\nFinding identity matters after normalisation. The same title can appear in several files,\nwhile multiple rules can report overlapping evidence within one file. The interface uses\nsaved identities to keep those cases distinct. Filtering selects a subset of saved results\nand pagination displays part of that subset. Neither changes the audit's overall findings\ncount. A report or export must use the intended collection rather than treating the\ncurrently visible page as the complete dataset.\nThe installed and enabled checks depend on the profile. A saved findings record shows\nthat a result was returned; it does not establish that every listed engine ran. Stage status\nand coverage information need to accompany the record. If a detector was unavailable,\nor a file type fell outside the supported set, the report should retain that limit alongside\nany findings from stages that did finish.\n5.7 AI Agent Pipeline and Prompt Design\nModel-assisted review is intended to explain evidence or provide a starting point for a\nchange. A finding-specific request uses the selected saved finding and a bounded source\n55",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2023
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        96
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 67,
+    "text": "context, subject to access and availability. It should not take instructions from uploaded\ncode. The output presented to the reviewer is advice, separate from the stored source\nand separate from any formal proposal that can reach a repository.\nThe link from the Workbench to Security Advisor should preserve the workspace, scan\nand finding. Without that association, an apparently relevant answer may be based on a\ngeneral question instead of the recorded evidence. If the requested finding no longer\nexists or its evidence has expired, the application should make the limitation clear. A\nrejected or disconnected request should not be treated as a successful response merely\nbecause some text arrived before it stopped.\nThe remediation view separates an assessment, optional code and suggested verification.\nThis structure gives the reviewer a way to see whether the recommendation is justified\nbefore reading the replacement example. An unclosed code block or interrupted answer\nremains incomplete. A user may review a proposal or request another suggestion, but\nthe system should not execute free-form model output or automatically change a\nfinding's state.\n5.8 CVSS Scoring and Vulnerability Classification\nClassification and severity are stored as separate kinds of information. A weakness\nidentifier describes a category, while CVSS 3.1 assigns severity using a defined vector [6].\nThe vector describes the assumptions under which the score applies. The user interface\nshould preserve a valid zero score and distinguish it from an unavailable score.\nConverting both cases to a blank value would hide a relevant distinction in the saved\nrecord.\nA numerical score should not imply more certainty than the evidence provides. If the\nanalysis cannot establish the conditions required for a vector, the reviewer needs to\nknow which assumptions remain unverified. A high score can help decide what to\nexamine first, but it does not confirm reachability or impact in the deployment. An\nexplanation that mentions a possible consequence should be read alongside the actual\nsource location and coverage.\n56",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2053
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        51
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 68,
+    "text": "Triage records a separate human decision. A reviewer may leave a candidate open,\naccept a risk, reject a false positive or close an issue after checking the change. Opening\na pull request, passing CI or obtaining a different score in a later scan can inform that\ndecision. None is equivalent to a reviewed change in the finding's state.\n5.9 RAG and Compliance Mapping\nRetrieval-augmented generation is an optional way to add reference material to an\nexplanation. The repository includes supporting components for embeddings, vector\nsearch and corpus preparation. A retrieval-enabled flow can look up relevant material for\na finding before the model writes the explanation. The presence of these modules is\nevidence of the design; it does not show that retrieval ran for any screenshot presented\nhere.\nA useful mapping needs to identify the applicable framework or control and say why the\navailable evidence is relevant. A reference selected because it uses similar vocabulary\nmay still be inappropriate for the case. Reviewers should check the underlying text and\nthe scope of the recommendation. To reproduce this stage, a run should record the\ncorpus version, retrieved reference identifiers and services that were available.\nThe framework signals displayed by ThreatLens relate to the assessed scope. They cannot\ncover requirements that depend on organisational procedures, contractual obligations\nor operational settings missing from the submitted source. A missing reference must\nremain visible as a coverage limit. The output is a starting point for reviewing controls,\nrather than a claim that a project complies with an entire legal or technical framework.\nThe extension-review profile illustrates why policy status is separate from application\nsecurity severity. A package can provide enough information for an automated manifest\ncheck while providing too little to judge how the developer obtains consent. The latter\nbelongs in review or unassessed coverage, not as a pass. The selected store and policy\nversion matter, because two stores can define different obligations for similar behaviour.\nThe policy result should still be linked to its evidence, whether that evidence is a\npackaged file, a declaration or an identified gap.\n57",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2214
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        32
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 69,
+    "text": "5.10 Scan Visualization and Attack Graph\nThe Workbench places files, source, findings and remediation close enough to be used in\none review. The source viewer is read-only and can show the line associated with a saved\nfinding when the record supports that location. The evidence panel retains the finding\ndescription and available context. Figure 5.1 shows these pieces together. It documents\nthe review interface, not proof that the reported behaviour happened at runtime.\nThe Attack Graph provides a different view of the same type of evidence. Its nodes\norganise components and findings around saved source associations. Selecting a relevant\nnode can help the reviewer locate the evidence in a larger set of results. A connector\nderived from a saved finding does not show a verified network route or demonstrate\nexploitation. This limit matters because a diagram can look more conclusive than the\nunderlying evidence.\nFigure 5.2 uses isolated fixture data to show the graph controls and a selected finding.\nThis makes it possible to explain what selection and evidence inspection do without\nrelying on a live project. Illustrative scenarios should be labelled separately from graphs\nderived from the user's own audit, even when both use the same layout.\n58",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1220
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        42
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 70,
+    "text": "Figure 5.1: Read-only Audit Workbench showing source navigation, a selected finding\nand its recorded evidence.\n59",
+    "fonts": [
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        111
+      ],
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        5
+      ]
+    ],
+    "outside_border": [],
+    "images": [
+      {
+        "x0": 108.68,
+        "x1": 537.0699999999999,
+        "width": 428.38999999999993,
+        "height": 317.65000000000003,
+        "top": 79.44999999999993,
+        "bottom": 397.09999999999997
+      }
+    ]
+  },
+  {
+    "page": 71,
+    "text": "60",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        5
+      ]
+    ],
+    "outside_border": [],
+    "images": [
+      {
+        "x0": 108.68,
+        "x1": 537.02,
+        "width": 428.34,
+        "height": 329.85003051800004,
+        "top": 79.44996948199991,
+        "bottom": 409.29999999999995
+      }
+    ]
+  },
+  {
+    "page": 72,
+    "text": "Figure 5.2: Attack Graph interface using isolated test-fixture data: (a) source\nassociations and graph controls; (b) selected finding evidence and remediation\nguidance. Connections do not establish confirmed exploitability.\nThe two figures demonstrate different ways of navigating a finding. The Workbench\nstarts with the code and its saved location. The graph starts with a relationship and guides\nthe reviewer toward the associated evidence. In both cases, the underlying record\ndetermines what can be claimed. For a team member who receives a report instead of\nusing either view, the report needs to retain the same distinction between association\nand confirmation.\n61",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        450
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        225
+      ]
+    ],
+    "outside_border": [],
+    "images": [
+      {
+        "x0": 109.88,
+        "x1": 535.28,
+        "width": 425.4,
+        "height": 441.0,
+        "top": 79.44999999999993,
+        "bottom": 520.4499999999999
+      }
+    ]
+  },
+  {
+    "page": 73,
+    "text": "5.11 Reporting, Exports and Audit Events\nThe Reports area opens completed saved assessments and prepares a PDF on demand.\nPreparing a PDF does not rerun the scan or ask the model to generate new evidence. The\nreport uses stored findings, recorded scope and available remediation. This makes it\npossible to share the audit without suggesting that a newer analysis was performed at\nthe time of download.\nScan history and audit events answer different questions. History helps a reviewer locate\na saved assessment and its outcome. Audit events record actions or changes for\naccountability, where the application records them. A history entry can identify when a\nscan was started or completed, but does not replace the event record for later actions\non its findings or workspace.\nStructured exports can also be used to review a selected set of findings. An export should\npreserve the selection or filter requested and retrieve all matching rows, rather than\nexporting only the first page visible in the browser. Verification should check the saved\nidentities and the count included in each export. The report itself should remain readable\nwhere a value or preview is unavailable, and should communicate the limits of the\nassessment wherever the findings are read.\n5.12 Database Schema and Data Relationships\nWorkspace membership connects users to the workspaces in which they can act. A\nworkspace owns scans, and each scan can have a set of findings, scope details and source\nsnapshot metadata. A file preview is stored separately from the structured finding\nrecord. The metadata lets a Workbench request the relevant object without putting\nunrestricted source content into a data row intended for summary views.\nOptional features extend those relationships. A repository reference can associate an\naudit with a repository and commit. A reviewed proposal can refer to an eligible scan and\nfinding. A saved Advisor conversation may be private to the user in the workspace even\nwhere the underlying audit is shared. These extensions do not change the meaning of a\ncore scan or automatically grant access to private conversations or repository operations.\n62",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2068
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        87
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 74,
+    "text": "Foreign-key relationships prevent some inconsistent records, but they do not determine\nwho may read a valid row or object. Access policies and server checks remain necessary.\nRecord deletion and expiry also have different effects. Removing an audit can make its\nfindings and related metadata unavailable, while retained private objects may require a\nseparate cleanup step. Expiry of source previews by itself should not erase the\nassessment's non-source history.\n5.13 API Design and Data Flow\nThe versioned API separates commands from read operations. The upload command\nacknowledges an accepted job, while progress and overview requests read its changing\nstate. Bounded list requests load source entries or findings in parts. The source file\nendpoint returns a bounded line window, allowing the viewer to retrieve an excerpt\nwithout requiring all source files to be sent to the browser together.\nThese contracts allow each interface to report failure at the correct point. For example,\nan account may have a valid session but lack permission for the chosen workspace, or an\naudit may be accessible while its preview has expired. These responses should not be\nshown as the same error. When a network response is delayed, the client must also\ndistinguish a request that was never accepted from an accepted audit that is still\nprocessing.\nReloading a safe read after a recoverable failure is different from replaying a command.\nUploads and publishing can change persistent state. Retrying these operations requires\nownership of the original request or an explicit decision, supported by an idempotency\nkey or saved operation state where provided. Diagnostic records should identify the\noperation and error category without copying account credentials or uploaded source\ninto logs.\n5.14 Security and Reliability Controls\nAn upload passes through several defensive boundaries. Archive validation limits paths\nand expansion before file inspection. Source previews are bounded and sensitive values\nmay be masked. Access to the preview is checked in the scope of the audit. These controls\n63",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2017
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        71
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 75,
+    "text": "address different risks; passing an archive validation step does not grant access to the\nextracted files, and redaction does not make the files suitable for public distribution.\nThe package type also influences file selection. A general source audit may exclude build\noutput to avoid reviewing generated files twice. Packaged browser extensions are a\ndifferent case: a bundled script may be exactly what the store and user receive. The\nextension profile therefore treats shipped files as assessment inputs where supported. It\ninspects the package without installing the extension or fetching the referenced remote\nresources. Runtime behaviour and user consent remain matters for separate verification\nwhen they cannot be established from the package.\nThe system does not need to run the uploaded program to perform static inspection.\nSupported dependency checks should not install packages from the submitted input on\nthe API host. Report rendering uses saved content and restricts access to external\nresources. Generated remediation stays read-only in the Workbench. Any supported\nrepository publication is a separate, approved operation using a new branch and pull\nrequest rather than a silent edit to the target branch.\nThe controls should be tested through the failures they are designed to handle. Archive\nchecks need malformed or oversized inputs, access checks need denied and revoked\nusers, and report handling needs saved text that is rendered safely. A successful run in\none profile cannot establish that all of these controls work in another. Status and error\nmessages also matter: the user needs to know when the system stopped rather than\nbeing left with a result that appears complete.\n5.15 Deployment and Configuration\nThe frontend production build is served by a standalone Node.js process. FastAPI runs\nseparately, and the configured deployment profile determines whether background work\nalso runs in a separate service. This separation lets the browser application and API be\nbuilt and checked independently. It also means that a healthy frontend response alone\ndoes not establish that backend services are reachable or correctly configured.\n64",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2130
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        35
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 76,
+    "text": "Client and API configuration must agree on the intended identity project, and permitted\norigins must match the deployed browser application. Optional model and repository\nintegrations have their own configuration and access rules. Being able to sign in with an\nidentity provider is not sufficient to perform a repository operation. A deployment check\nshould exercise the operations the environment is expected to support, and mark\noptional services as unavailable where they have not been set up.\nA repeatable configuration records the selected profile, revision, dependency set and\nenabled capabilities. Frontend settings that are intended for the browser belong on the\nclient side; server credentials remain outside browser bundles and thesis evidence. The\nconfiguration described here documents how the services fit together. It does not claim\nthat all profiles or integrations were verified on a hosted instance for the captures in\nChapter 6.\nA practical deployment check starts by confirming that a permitted account can open its\nworkspace and an unpermitted account cannot. It can then follow a small authorised\nfixture through acceptance, source review and report download. The fixture should be\nretained only for the time needed to check the outcome. If repository or extension\nfeatures are part of the profile, they need separate fixtures and an explicit record of\nwhich permissions and external services were used. These checks help establish what the\nrunning release supports without using a production repository as the test environment.\nThe same checks provide a useful distinction when a service is unavailable. A frontend\nthat can serve the sign-in page is not necessarily ready to accept a scan. A deployment\nthat can save static findings may still lack an optional model provider. The appropriate\nconclusion should name the working path and the capability that was not verified. This is\nthe basis on which the observed outcomes are presented in the next chapter.\n65",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1984
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 77,
+    "text": "CHAPTER 6\nTESTING AND SUMMARY OF RESULTS",
+    "fonts": [
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        41
+      ],
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 78,
+    "text": "6.1 Experimental Environment\nThis chapter reviews application captures dated 12 November 2026 and separately\ndocumented test results. The captures show how ThreatLens presents saved evidence\nduring a review. The test records describe checks run for particular implementations,\nwith their own scope and limitations. The two sources are useful for different questions.\nThey should not be combined into one result set or interpreted as measurements from a\nsingle experiment.\nThe principal demonstration followed a saved application audit through the Workbench,\nfindings and the report. The observed evidence was a source selection linked to a\ncandidate finding, a visible findings count, coverage information and a report excerpt.\nThis is enough to discuss the review workflow. It does not establish that each available\nanalysis engine ran or that an independently labelled dataset was scanned.\nThe exact application revision, machine specification, enabled engines and model or\ncorpus settings were not recorded with every capture. Section 4.1 describes the known\ndevelopment environment and distinguishes it from a fully specified benchmark\nenvironment. Because those details are incomplete, the demonstration is not used to\nestimate performance or compare analysis profiles.\nThe study reports an outcome only at the level supported by its record. An interface\ncapture can establish an observed state but rarely the full set of actions leading to it. A\nregression log can identify a checked behaviour if the test and expected result are known.\nAn experimental conclusion about detection would require a different record, including\nindependent labels and a consistent matching process.\n6.2 Test Dataset and Ground Truth\nGround truth should identify the weakness, its location and the relevant code behaviour\nindependently of the detector. A corrected counterpart helps show that the detector is\nreacting to the weakness and not simply to a familiar API or file pattern. Similar benign\ncases are useful for much the same reason. For these cases, reviewers should record why\nthe condition is absent, not only that the scanner returned no finding.\n67",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2084
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        65
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 79,
+    "text": "The saved project alerts could not serve as their own ground truth. Counting every\ncandidate as valid would measure agreement with the system's own output rather than\nits ability to detect independently established issues. A sound comparison also needs a\nprocess for adjudicating disputed cases. If a reviewer cannot determine whether a\ncondition is present, the case should remain unresolved in the recorded results.\nThe available engine-results worksheet was a template without completed observations.\nThere was no matched inventory with independently labelled positives, verified clean\ncontrols and a corresponding set of engine outputs for the application captures. This\nlimits the chapter to functional evidence and discussion of individual saved candidates. It\nalso prevents constructing an evidence-based bar chart or ranking of the scanners.\nFor a future evaluation, each project should have a stable identifier, an input checksum\nand a reviewable set of expected issues. If a private project must be described without\nits name, those identifiers can be recorded in an appropriately restricted run log.\nAnonymising a project does not remove the need to account for how it was selected,\nwhat it contained, or which files the tools were able to analyse.\n6.3 Functional Test Cases\nTable 6.1 separates the expected outcome of each functional case from the evidence\nretained for this chapter. Reopening an audit, for example, should demonstrate that the\nsame server-side reference survives navigation. Seeing a completed item in History is not\nenough to prove that a recent upload resumed without duplication. The observation has\nto cover the state change being tested.\nThe retained Workbench observation shows a selected finding alongside the source view.\nThe report observation shows saved evidence and remediation in an exported document.\nThese are useful demonstrations of working output paths. Neither observation includes\na complete test trace for all possible selections, every PDF entry, or every possible access\nrole. The table makes that difference explicit.\nThe verification plan also includes denied requests, unavailable source, errors from\noptional services and malformed uploads. Section 6.8 records a separate set of historical\n68",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2225
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        27
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 80,
+    "text": "regression checks where the project notes describe the scenarios. Cases not observed in\nthe main capture are not treated as failures; they are left unverified for that evidence\nset.\nTable 6.1: Functional Test Matrix\nObserved result\nTest case Expected behaviour\nand evidence\nNo linked resume\nAccepted ZIP followed by Reopen the same server-side scan and duplicate-\nnavigation to another page without duplicate submission submission trace\nfor this audit.\nFigure 5.1 shows\nFinding selected in the Correct evidence and source the source view\nworkbench location remain associated and selected\nfinding together.\nNot observed in\nProvider or source-preview Explicit limitation without a false the saved\nfailure clean or completed state application\ncapture.\nAccess checks are\nViewer and outsider Only authorised reads and actions recorded\nrequests are permitted separately in\nSection 6.8.\nFigure 6.1 shows\nexported\nSaved finding identities and\nPDF export evidence. Full\nlimitations match the report\nparity was not\nmeasured.\n6.4 Vulnerability Detection Results\nThe saved MERN application audit contains six reported findings. The figures show the\ninformation presented to the reviewer, including severity, source references and\nguidance where available. These six records describe the output of the audit. The study\ndoes not treat them as six independently confirmed vulnerabilities or as the sum of all\nweaknesses present in the application.\n69",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1322
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        91
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        37
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 81,
+    "text": "The saved evidence also illustrates why a title should be read together with the source.\nA location may contain a short expression but miss the caller, entry point or data origin\nneeded to establish the reported condition. A productive review starts with the recorded\nfile and then checks the surrounding code and assumptions. Where that context is\nmissing, the result remains a candidate for review.\nThe Workbench capture lists 90 preview entries, while the related reporting evidence\nrecords 81 scanned files. The two counts refer to different stages. Without a matched file\ninventory, their difference cannot be interpreted as nine particular excluded files, nor\ncan the counts be used to calculate detector recall. What they establish is that source\navailability and analysed-file coverage are not interchangeable.\nFigure 6.1 shows how the saved report presents the evidence, remediation and\nsuggested verification. The report extends review beyond the browser session and\nretains useful context. The figure does not establish complete data parity across every\npage, nor does it show that any suggested check was executed. A separate parity test\nwould compare every report entry with the saved assessment under the same scope.\nFor someone reading the result outside the application, the excerpt also shows why the\nreport needs to name the source of each statement. The path and recorded code\ndescribe evidence retained by the audit. The remediation describes a possible change,\nand the verification section describes checks that a reviewer could perform. If these are\npresented as one undifferentiated narrative, the reader may conclude that the suggested\nchange was already applied or that the check passed. The excerpt supports a check of the\npresentation of those categories, not of the outcome of the suggested test.\n70",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1829
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 82,
+    "text": "Figure 6.1: Saved audit report excerpt showing recorded source evidence,\nremediation and suggested verification checks. The excerpt illustrates reporting\nbehaviour, not independently validated detection accuracy.\n6.5 Detection Quality Metrics\nNo precision, recall or F1 result is reported for the demonstration audit. The necessary\ntrue-positive, false-positive and false-negative counts were not available. A high number\nof reported items can reflect either useful coverage or additional review work; a low\nnumber can reflect either a cleaner sample or limited coverage. Without the reference\nset, neither pattern can be interpreted reliably.\n71",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        406
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        214
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        31
+      ]
+    ],
+    "outside_border": [],
+    "images": [
+      {
+        "x0": 108.68,
+        "x1": 537.0699999999999,
+        "width": 428.38999999999993,
+        "height": 434.3,
+        "top": 79.44999999999993,
+        "bottom": 513.75
+      }
+    ]
+  },
+  {
+    "page": 83,
+    "text": "When evaluating several engines, the unit of comparison matters. If two engines report\nthe same weakness at the same underlying location, the combined result should receive\none match, with both origins retained. Two weak points in different files should not be\ncollapsed only because their titles match. These rules need to be fixed before the counts\nare compared. Changing the matching policy after seeing the results can change the\napparent ranking.\nAggregate metrics should be accompanied by the number of supported examples in each\nrelevant category. A tool may perform well on a language represented by many fixtures\nwhile providing little evidence on another. Precision by group and recall by group can\nmake that imbalance visible. An unsupported language or a skipped analysis stage should\nbe shown as a coverage limitation instead of disappearing from the dataset summary.\nA useful results table would report the matched counts, unresolved candidates and scope\nalongside the derived measures. A future figure comparing engines should use those\nsame numbers and identify its denominator. The saved demonstration outputs do not\nsupport such a figure, so the chapter retains the case-based evidence rather than\nsubstituting estimated or illustrative performance values.\n6.6 Performance and Scan Duration\nPerformance has several user-visible boundaries. A scan can be accepted before any\nsource is available; a preview can appear before analysis has finished; and the Workbench\nmay still wait for a saved final result after processing. Useful timing therefore identifies\nthe beginning and end of each measurement. Total elapsed time should be measured\ndirectly from defined events, not inferred by adding the stage durations.\nA repeatable test would use the same input, enabled stages and service profile for several\nruns, and would report the number of runs as well as a median and range. Runs with a\nwarm cache can be reported separately from first runs. If queueing or a remote service\nis part of the path, that time should be identified. A timeout or skipped stage also belongs\nin the record, since it changes the interpretation of any reported duration.\n72",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2133
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        35
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 84,
+    "text": "Some stages can overlap. Source preparation may take place while analysis is already\nrunning, so adding them would count part of the waiting time twice. The useful\nengineering diagnosis is to determine which phase delayed the visible result. Separate\ntimestamps for acceptance, first preview, analysis and result persistence provide more\ninformation than one number for the whole request.\nThe selected application captures did not include a timing series with these boundaries.\nNo median scan duration or performance improvement is therefore asserted for them.\nThe project does contain isolated feature demonstrations from other profiles; those can\ndocument a working flow, but their elapsed times cannot be used as a comparable\nbenchmark for the saved MERN audit.\n6.7 AI, RAG and Remediation Evaluation\nThe model-assisted review should be assessed on whether it stays close to the saved\nevidence. A good explanation identifies the observed operation, states the additional\ncondition that would make it unsafe, and makes any uncertainty clear. A proposed\nchange should then explain the behaviour it aims to preserve and name a useful check.\nPolished wording alone does not establish any of these properties.\nThe portal audit provides an example involving fixed SVG markup assigned through an\nHTML insertion operation. The excerpt establishes that the operation was used. It does\nnot show attacker-controlled input reaching it. The useful distinction is between a risky\noperation in the general case and the specific evidence available here. If an alternative\nimplementation is suggested, the reviewer should check that it preserves the SVG\nstructure and the password visibility behaviour. The saved answer is not evidence that a\nproposed replacement was executed or verified.\nRetrieval and remediation require different evaluations. Retrieval should be checked\nagainst a set of reference passages or controls independently judged relevant.\nRemediation should be checked against the application behaviour and the original issue.\nA retrieved document can be relevant even if a proposed code change is incorrect.\n73",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2075
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        40
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 85,
+    "text": "Conversely, a reasonable change may be proposed without proving that retrieval helped.\nThe two outcomes should be recorded separately.\nThe available material gives examples of contextual guidance, but it does not include\nenough independent reviewer ratings, adjudicated retrieval cases or tested patches to\nquantify improvement. Cases where the evidence does not justify changing code should\nbe included in a larger study. Otherwise, a model could be rewarded for always proposing\na change, even when restraint would produce a better review outcome.\n6.8 Robustness, Security and Error Handling\nRobustness concerns what happens when a normal request cannot finish. Relevant cases\ninclude malformed input, a revoked member, expired source and an interrupted\nresponse from a provider. Expected behaviour depends on the failure. Missing access\nshould prevent disclosure. Expired source should prevent preview without rewriting the\nhistory of the audit. A provider interruption should remain distinguishable from a\ncompleted answer.\nThe project's extension-review implementation record documents a separate set of\nregression checks: 360 backend tests passed, five environment-dependent tests were\nskipped, and 72 frontend checks passed. The same record notes 437 checks in isolated\nPostgreSQL for access and related data behaviour, including viewer, outsider and\nrevoked-member cases. These are historical results for the documented feature and test\nconfigurations, not checks independently rerun for this thesis revision.\nThe same notes describe a disposable hosted extension-review workflow using synthetic\npackages and test accounts. It exercised report download and selected access\nrestrictions. The primary model provider failed authorisation in that run and a fallback\ncompleted the model-assisted step. This supports the narrower observation that the\nconfigured fallback worked in that test. It does not establish that the primary provider\nwas functional or that every upload profile handles an outage in the same way.\nThe limits of these records are important. A test in isolated PostgreSQL does not by itself\nverify every hosted configuration. A hosted extension-review workflow does not exercise\n74",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2161
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        45
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 86,
+    "text": "every original ZIP or worker path. The author's application captures and the historical\nregressions can support one another where they concern the same behaviour, but\nneither should be used to claim broader verification than the relevant record describes.\nOne way to make the separation more useful in a future release is to retain a small\nevidence pack for each acceptance test. A test for expired source would record the\navailability of the finding before and after expiry, as well as the response when the\npreview is requested. A test for a provider interruption would record whether partial\nadvice was visibly marked and whether the saved result remained intact. These records\nwould give precise answers about individual failure paths without requiring broad claims\nabout all deployments.\n6.9 Comparison with Baselines\nA controlled baseline would compare static-only operation with the combined workflow\non the same labelled inputs. It would use the same rules for eligible files and matching\nresults, and would retain cases where a stage is unsupported. That makes the comparison\nabout the contribution of the additional analysis rather than about two groups of projects\nwith different content.\nIf retrieval is being compared, the model and generation settings should be held constant\nwhere possible. Prompts should ask for the same task and the evaluation should use the\nsame independent relevance judgements. For runtime measurements, the reference\ncorpus, model-service conditions and queue settings should be recorded. Without these\ncontrols, the difference could come from configuration or availability rather than the\nfeature under evaluation.\nNo completed controlled baseline was available for this chapter. The literature\ncomparison describes features and purposes, not measured performance under a\ncommon protocol. The saved application audit cannot show that a combined run\nperforms better than its static baseline, or that one named engine is faster or more\naccurate than another.\n75",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1971
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        31
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 87,
+    "text": "The remaining comparison should be built from test inputs and outcomes that another\nreviewer can trace. It would report the number of labelled cases, deduplicated results,\nunresolved findings and any skipped stage. If the combined workflow improves\nexplanation but does not change detection, that is a useful finding in its own right. It\nshould not be turned into a detection improvement simply because it contributes to the\nsame user workflow.\n6.10 Discussion and Limitations\nFor the first research question, the observed interfaces show that scan outputs can be\nreviewed through a shared record containing the source location and recorded evidence.\nThe model-assisted example illustrates how that evidence can inform an explanation.\nThis is a demonstration of the integration, not a systematic check of provenance across\nall engines. For the second question, the Workbench and report show how a reviewer\ncan read recorded evidence separately from suggested changes. The SVG case shows why\nthat distinction matters: a useful explanation can still describe the evidence as\ninsufficient to confirm a vulnerability.\n76",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1086
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        33
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 88,
+    "text": "The third question asks how findings and policy assessments can be presented together\nwithout confusing severity, policy outcome and coverage. The extension-review design\nand test record provide an example: a security finding and an unassessed policy\nrequirement can be reported separately. That separation does not establish that every\npolicy decision is correct. The fourth question concerns how well the workflow handles\naccess restrictions, incomplete processing, unavailable services and reopening. The\nhistorical tests support specific cases, such as revoked access and provider fallback, while\nthe saved captures show reopening and review states. They do not establish reliability\nacross every failure mode or deployment.\nThreatLens is therefore strongest as a tool for organising a review, showing where the\nevidence comes from and making unresolved questions visible. The limitations are\nconcrete: available file coverage varies, external services may not run, and source\nexcerpts can leave important conditions unverified. A broader validation should test the\nsystem where those limitations are most likely to affect a review decision rather than\ntreating successful demonstration cases as typical of all audits.\n77",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1227
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 89,
+    "text": "CHAPTER 7\nCONCLUSION",
+    "fonts": [
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        21
+      ],
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 90,
+    "text": "7.1 Summary of Achieved Objectives\n\u2022 The first objective was to bring intake, analysis and review into one workspace.\nThreatLens provides a route from a project submission to a saved audit, with views for\nsource, findings, guidance and reporting. The figures show how a reviewer can return\nto the completed assessment and inspect its evidence. This is a more precise outcome\nthan saying that a scan alone gives the developer everything needed to assess the\nproject.\n\u2022 The implementation separates source readiness from analysis completion. This was\nimportant for the Workbench because files may become visible while a job is still\nprocessing. It also matters later, when a saved finding can remain visible after a\npreview expires. The review can continue using the information that remains,\nprovided the interface explains which evidence is no longer available.\n\u2022 The reporting objective was to take the saved assessment beyond the interactive\nWorkbench without performing a new scan. The report example shows that a finding\ncan be presented with recorded evidence, remediation and suggested checks in one\ndocument. The absence of a full parity trace limits the conclusion to the report path\nand content demonstrated in Chapter 6.\n7.2 Key Findings and Contributions\n\u2022 The main engineering contribution is the connection between findings and the\nmaterial used to review them. The Workbench brings the evidence and advice\ntogether while leaving the two distinguishable. The graph helps the reviewer navigate\nsaved associations, and the report preserves those limitations for a reader who does\nnot have the interactive view. None of these views needs to imply confirmed runtime\nimpact to be useful.\n\u2022 The study also shows why several apparently similar counts need separate labels. An\narchive contains files, the preview service makes some entries viewable, and the\nanalysis stages examine eligible inputs. The findings count describes output from\nthose stages. Detection accuracy would describe agreement with an independent\n79",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1947
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        72
+      ],
+      [
+        [
+          "BCDKEE+Calibri",
+          12.0
+        ],
+        5
+      ],
+      [
+        [
+          "BCDLEE+ArialMT",
+          12.0
+        ],
+        5
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 91,
+    "text": "reference. Presenting those values as if they measured the same thing would make\nthe study harder to interpret.\n\u2022 The combined workflow gives the developer a way to revisit a finding and form a\njudgement. The saved SVG example is a useful reminder that a risky operation can be\npresent without sufficient evidence of vulnerable behaviour. The proposed guidance\nshould preserve that distinction rather than promote a possible condition to a\nconfirmed defect. The effectiveness of that support across projects is still an open\nevaluation question.\nFigure 7.1: Summary of project objectives, corresponding implementation evidence\nand remaining validation needs.\nFigure 7.1 relates the project objectives to available evidence and the checks still needed.\nIt is best read as a summary of scope. A system component can be implemented and\nillustrated before there is enough evidence to judge its effectiveness across\nenvironments, languages or user groups.\n80",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        841
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        114
+      ],
+      [
+        [
+          "BCDKEE+Calibri",
+          12.0
+        ],
+        1
+      ],
+      [
+        [
+          "BCDLEE+ArialMT",
+          12.0
+        ],
+        1
+      ]
+    ],
+    "outside_border": [],
+    "images": [
+      {
+        "x0": 108.68,
+        "x1": 537.01,
+        "width": 428.33,
+        "height": 257.00000000000006,
+        "top": 269.2299999999999,
+        "bottom": 526.23
+      }
+    ]
+  },
+  {
+    "page": 92,
+    "text": "7.3 Limitations and Final Remarks\n\u2022 ThreatLens should be used as support for defensive review. The reviewer still needs\nto inspect the relevant behaviour, decide how much confidence to place in the finding\nand verify a proposed change. When an input ruleset, source excerpt or service is\nincomplete, the application can make that limitation visible but cannot remove it by\npresenting a more definitive answer.\n\u2022 The available results do not establish the application's detection accuracy or\nsuperiority over a static baseline. A separate deployment and performance study\nwould also be needed to compare local and worker processing. The captured case\nexamples remain useful for their intended purpose: showing how a developer can\nread the result and where further evidence would be needed.\n\u2022 The most defensible conclusion is that the project connects several review tasks that\nwould otherwise require separate tools or files. It preserves a path from the saved\nfinding to source evidence where available, then to advice and a report. The value of\nthat connection should now be tested with labelled projects and independent\nreviewers rather than inferred from the completeness of the interface.\n81",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1158
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        35
+      ],
+      [
+        [
+          "BCDKEE+Calibri",
+          12.0
+        ],
+        3
+      ],
+      [
+        [
+          "BCDLEE+ArialMT",
+          12.0
+        ],
+        3
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 93,
+    "text": "CHAPTER 8\nFUTURE SCOPE",
+    "fonts": [
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        23
+      ],
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        2
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 94,
+    "text": "8.1 Scanning Coverage and Language Support\n\u2022 Broader language support should begin with an explicit inventory of the formats\nalready analysed and the rule coverage for each. New parsers and rules can then be\nadded against representative projects and small controlled fixtures. Each release\nshould state which files were eligible, which checks actually ran and what remained\noutside scope. A file extension appearing in the source viewer is not evidence of\nanalysis support.\n\u2022 Cross-file analysis could help in cases where a saved line gives only part of the\nevidence. For example, a review may need to know whether a value was validated\nbefore it reached the reported operation. New checks should retain usable source\nlocations and record uncertainty when the connection cannot be established\nstatically. Vulnerable and corrected counterparts, along with similar benign fixtures,\nshould be used to test that behaviour.\n\u2022 Browser-extension packages and infrastructure configuration need policies\nappropriate to their formats. A packaged extension can ship built bundles that a\ngeneral project audit would normally omit. An infrastructure file may supply only part\nof the deployment context. Progress in either area should be documented as broader,\nmeasurable coverage rather than a guarantee that a package complies with every\napplicable rule.\n8.2 AI and Retrieval Improvements\n\u2022 The first improvement for model-assisted review is a set of cases with independently\njudged evidence. The set should include clear cases, cases with ambiguous evidence\nand cases in which no code change is justified. Reviewers can then judge whether the\nmodel explains the right issue, preserves relevant behaviour and states a useful\nverification step. This would allow a model or prompt change to be measured on a\ntask rather than judged by answer length.\n\u2022 Retrieval should be evaluated with versioned corpora and reference judgements. A\nreviewer should be able to trace a proposed mapping to the material returned for that\n83",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1922
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        79
+      ],
+      [
+        [
+          "BCDKEE+Calibri",
+          12.0
+        ],
+        5
+      ],
+      [
+        [
+          "BCDLEE+ArialMT",
+          12.0
+        ],
+        5
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 95,
+    "text": "request and decide whether it applies. Comparisons between retrieval-enabled and\nplain generation should keep other settings consistent. Recording irrelevant or\nunavailable references is as useful as counting successful matches because it shows\nwhere the system needs to abstain.\n\u2022 Context selection remains a privacy and quality decision. Sending more source can put\nunrelated material at risk without clarifying the finding. Extra excerpts should be\nchosen because they help establish a relevant relationship or preserve behaviour in a\nproposed remedy. A follow-up evaluation should examine whether these selections\nimprove the judgement of the reviewer while respecting authorisation and retention\nlimits.\n8.3 Continuous Integration and Workflow Automation\n\u2022 The current architecture already describes configurable repository scanning and\nreviewed publishing. Future work should establish how those capabilities behave\nunder real repository policy in a dedicated test repository. Relevant cases include a\nbranch changing after review, a user losing permission, and a successful branch\noperation followed by a failed pull-request operation. A reliable implementation\nshould show its recorded state and offer a safe recovery path.\n\u2022 Where a team authorises continuous integration, a scan can be associated with a\nspecific revision and a recorded analysis profile. Later comparison should make\nchanged coverage visible instead of assuming that absence of a finding proves it was\ncorrected. CI outcomes should refer to the exact revision that was checked. This would\ngive a reviewer enough information to interpret timing, analysis and test results\ntogether.\n\u2022 Publishing should remain a reviewed decision. A suggested patch, recorded approval,\nexternal test result and triage update are separate steps. An automated check can\nprovide evidence for the decision without resolving a finding on its own. Initial\nevaluation should use isolated repositories and avoid production branches or\naccounts that are outside the test scope.\n84",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1972
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        52
+      ],
+      [
+        [
+          "BCDKEE+Calibri",
+          12.0
+        ],
+        4
+      ],
+      [
+        [
+          "BCDLEE+ArialMT",
+          12.0
+        ],
+        4
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 96,
+    "text": "8.4 Scalability, Security and Deployment\n\u2022 Operational testing should compare the local and worker profiles on the same inputs\nand stage coverage. Acceptance time, time to first usable evidence, persisted\ncompletion time and recovery after failure are useful separate outcomes. Concurrent\nrequests and queue congestion should be added only after the baseline environment\nis documented. This would help identify where a delay occurs instead of attributing\nevery slow response to scanning itself.\n\u2022 Scale should also be evaluated under failure conditions. Rate limits, provider outages\nand interruptions can reveal whether retry behaviour preserves state and avoids\nduplicate results. A membership change or expired source should not be hidden by\nstale cached data. Tests can exercise these cases with isolated accounts and generated\ninputs, recording both the visible response and the state left in storage.\n\u2022 Maintenance of extension policy packs is a separate operational task. New store\nrequirements can change the meaning of an assessment without changing the\npackage. Historical results should retain the policy version they used. A recheck under\na new version should show the change and distinguish new evaluation coverage from\na newly introduced issue in the developer's package.\n8.5 Extended Validation and User Studies\n\u2022 A broader validation study should include independently labelled projects across\nseveral languages and participants who have different levels of experience with\nsecurity review. The first phase can establish how consistently the detector identifies\nexpected issues. A later phase can assess whether participants reach better-supported\ndecisions in the integrated interface than when they review raw tool output.\n\u2022 Useful user-study outcomes include time to locate the recorded evidence, correct\nidentification of unsupported claims and the quality of the recommended verification\nstep. Task completion should be measured alongside mistakes so that a faster review\nis not interpreted as an improvement if it produces more unsupported decisions.\n85",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1985
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        84
+      ],
+      [
+        [
+          "BCDKEE+Calibri",
+          12.0
+        ],
+        5
+      ],
+      [
+        [
+          "BCDLEE+ArialMT",
+          12.0
+        ],
+        5
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 97,
+    "text": "Order and practice effects can be reduced by varying which interface the participant\nuses first.\n\u2022 Participant consent and source confidentiality should be planned before collecting\nobservations. Tasks can use synthetic or approved code with enough context to\nanswer the question without exposing private projects. The study record should state\nthe participant group, task conditions and how uncertain judgements were handled.\nFindings about one group should not automatically be applied to all developers.\nFigure 8.1: Proposed progression from reproducible benchmarks and broader\ncoverage to controlled automation, deployment evaluation and user studies.\n\u2022 Figure 8.1 outlines the order of the proposed work. An evidence baseline comes first\nbecause later comparisons need a stable input set, matching rules and a run record.\nThere is little value in comparing more configurations before the study can identify\nwhat each configuration actually examined.\n\u2022 The first milestone is a shareable fixture inventory with independent labels and\ncorrections. The test record should show how a report was matched, which cases\nremained unresolved and which stages ran. That gives later changes a baseline that\ncan be repeated.\n86",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1067
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          12.0
+        ],
+        150
+      ],
+      [
+        [
+          "BCDKEE+Calibri",
+          12.0
+        ],
+        3
+      ],
+      [
+        [
+          "BCDLEE+ArialMT",
+          12.0
+        ],
+        3
+      ]
+    ],
+    "outside_border": [],
+    "images": [
+      {
+        "x0": 108.68,
+        "x1": 537.01,
+        "width": 428.33,
+        "height": 257.00000000000006,
+        "top": 247.25999999999988,
+        "bottom": 504.25999999999993
+      }
+    ]
+  },
+  {
+    "page": 98,
+    "text": "\u2022 The second milestone extends analysis where the baseline shows a specific gap. The\nnew coverage should be tested on the same supported cases, with extra fixtures that\nexamine the added behaviour. A change in the number of alerts should be interpreted\nalongside matching and review effort.\n\u2022 The third milestone checks repository operations and deployment recovery in isolated\nenvironments. It should establish how accepted work is retried or stopped, and what\nevidence is available after failure. This step gives operational claims the same\ntraceability as findings.\n\u2022 The final milestone studies how reviewers interpret the results. It depends on a stable\nworkflow and tasks with answers that independent reviewers can explain. The study\nshould look for wrong conclusions as well as successful decisions, especially when the\nsource or assessment is incomplete.\n\u2022 The milestones are proposed work. Advancing from one to the next depends on what\nthe previous evaluation shows, rather than on a fixed schedule or assumed\nimprovement. This keeps future changes tied to gaps identified in the project\nevidence.\n87",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        1105
+      ],
+      [
+        [
+          "BCDKEE+Calibri",
+          12.0
+        ],
+        4
+      ],
+      [
+        [
+          "BCDLEE+ArialMT",
+          12.0
+        ],
+        4
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 99,
+    "text": "REFERENCES\n[1] OWASP Foundation, \u201cStatic analysis,\u201d OWASP Developer Guide. Available: OWASP\nStatic Analysis.\n[2] S. K. Basak, L. Neil, B. Reaves and L. Williams, \u201cSecretBench: A Dataset of Software\nSecrets,\u201d 2023, arXiv:2303.06729. Available: SecretBench.\n[3] X. Zhou, S. Cao, X. Sun and D. Lo, \u201cLarge Language Model for Vulnerability Detection\nand Repair: Literature Review and the Road Ahead,\u201d 2024, arXiv:2404.02525. Available:\nVulnerability Detection and Repair Review.\n[4] P. Lewis et al., \u201cRetrieval-Augmented Generation for Knowledge-Intensive NLP Tasks,\u201d\nAdvances in Neural Information Processing Systems, vol. 33, 2020. Available: Retrieval-\nAugmented Generation.\n[5] MITRE, \u201cAbout CWE.\u201d Available: Common Weakness Enumeration.\n[6] FIRST.Org, \u201cCommon Vulnerability Scoring System v3.1: Specification Document,\u201d\n2019. Available: CVSS v3.1 Specification.\n[7] Supabase, \u201cRow Level Security,\u201d Supabase Documentation. Available: Row Level\nSecurity.\n88",
+    "fonts": [
+      [
+        [
+          "BCDKEE+Calibri",
+          12.0
+        ],
+        626
+      ],
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        319
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        11
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  },
+  {
+    "page": 100,
+    "text": "APPENDICES\nAPPENDIX A \u2014 PROJECT AND GROUP PHOTOGRAPHS\n[Insert genuine project and group photographs here.] Add a short caption identifying the\nactivity, location and date where known. Obtain permission from identifiable\nparticipants. These photographs document project activity rather than detection\naccuracy.\nAPPENDIX B \u2014 INDUSTRY PHOTOGRAPHS AND CERTIFICATES\n[Insert relevant industry-visit photographs and authentic certificates here, if applicable.]\nIf no industry visit or certificate applies to the project, remove this appendix or state \u201cNot\napplicable\u201d, according to the institution\u2019s format.\nAPPENDIX C \u2014 PROJECT COMPETITION AND AWARD CERTIFICATES\n[Insert verified participation or award certificates here.] Identify the event and date.\nClearly distinguish participation from an award. The front-matter list of publications,\ncompetitions and patents should use the same verified records.\n89",
+    "fonts": [
+      [
+        [
+          "BCDEEE+Calibri",
+          12.0
+        ],
+        594
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          14.0
+        ],
+        147
+      ],
+      [
+        [
+          "BCDKEE+Calibri",
+          12.0
+        ],
+        146
+      ],
+      [
+        [
+          "BCDIEE+Calibri-Bold",
+          16.0
+        ],
+        11
+      ]
+    ],
+    "outside_border": [],
+    "images": []
+  }
+]
