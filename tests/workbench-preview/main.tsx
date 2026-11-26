@@ -18,6 +18,9 @@ import { Route as GraphRoute } from "../../src/routes/_app/attack-graph";
 import { Route as AdvisorRoute } from "../../src/routes/_app/advisor";
 import { Route as LandingRoute } from "../../src/routes/index";
 import { Route as AboutRoute } from "../../src/routes/about";
+import { Route as DashboardRoute } from "../../src/routes/_app/dashboard";
+import { Route as AuditLogRoute } from "../../src/routes/_app/audit-log";
+import { Route as NewWorkspaceRoute } from "../../src/routes/workspace/new";
 import { Route as WorkbenchRoute } from "../../src/routes/workspace/$workspaceId/scans/$scanId/workbench";
 import { Route as FixRoute } from "../../src/routes/_app/fix-verification";
 import { Route as SettingsRoute } from "../../src/routes/_app/settings";
@@ -320,6 +323,8 @@ window.fetch = async (input, init) => {
   };
   const json = (value: unknown) =>
     new Response(JSON.stringify(value), { headers: { "Content-Type": "application/json" } });
+  if (url.pathname.endsWith("/workbench/findings/dashboard"))
+    return json({ total: 2, open: 2, criticalOpen: 0, items: [finding] });
   if (url.pathname.includes("extension-reviews")) {
     const policy = {
       id: "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
@@ -829,6 +834,11 @@ const home = createRoute({
   component: view === "about" ? About : Preview,
 });
 const upload = createRoute({ getParentRoute: () => root, path: "/workspace", component: Upload });
+const newWorkspace = createRoute({
+  getParentRoute: () => root,
+  path: "/workspace/new",
+  component: NewWorkspaceRoute.options.component,
+});
 const workbench = createRoute({
   getParentRoute: () => root,
   path: "/workspace/$workspaceId/scans/$scanId/workbench",
@@ -858,24 +868,41 @@ const settings = createRoute({
   component: SettingsRoute.options.component,
   validateSearch: SettingsRoute.options.validateSearch,
 });
+const dashboard = createRoute({
+  getParentRoute: () => app,
+  path: "/dashboard",
+  component: DashboardRoute.options.component,
+});
+const auditLog = createRoute({
+  getParentRoute: () => app,
+  path: "/audit-log",
+  component: AuditLogRoute.options.component,
+});
 const router = createRouter({
   routeTree: root.addChildren([
     home,
     upload,
+    newWorkspace,
     workbench,
-    app.addChildren([advisor, fixes, settings]),
+    app.addChildren([advisor, fixes, settings, dashboard, auditLog]),
   ]),
   history: createMemoryHistory({
     initialEntries: [
-      view === "preferences"
-        ? `/settings?section=${options.get("section") || "overview"}`
-        : view === "advisor"
-          ? options.get("context") === "finding"
-            ? `/advisor?workspaceId=${workspace.id}&scanId=${scanId}&findingId=${finding.id}`
-            : "/advisor"
-          : view === "fixes"
-            ? `/fix-verification?scanId=${scanId}&findingId=${finding.id}`
-            : "/",
+      view === "dashboard"
+        ? "/dashboard"
+        : view === "audit-log"
+          ? "/audit-log"
+          : view === "new-workspace"
+            ? "/workspace/new"
+            : view === "preferences"
+              ? `/settings?section=${options.get("section") || "overview"}`
+              : view === "advisor"
+                ? options.get("context") === "finding"
+                  ? `/advisor?workspaceId=${workspace.id}&scanId=${scanId}&findingId=${finding.id}`
+                  : "/advisor"
+                : view === "fixes"
+                  ? `/fix-verification?scanId=${scanId}&findingId=${finding.id}`
+                  : "/",
     ],
   }),
 });

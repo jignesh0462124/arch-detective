@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const local = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 export default defineConfig({
+  cacheDir: local("../../node_modules/.vite-workbench-preview"),
   plugins: [react(), tailwindcss()],
   optimizeDeps: { entries: ["tests/workbench-preview/index.html"] },
   resolve: {
@@ -13,7 +14,7 @@ export default defineConfig({
       { find: "@/hooks/useAuth", replacement: local("./hooks.ts") },
       { find: "@/hooks/useWorkspace", replacement: local("./hooks.ts") },
       { find: "@/hooks/useScans", replacement: local("./hooks.ts") },
-      { find: "@/lib/supabase", replacement: local("./supabase.ts") },
+      { find: /^(?:@\/lib\/supabase|\.\.\/supabase)$/, replacement: local("./supabase.ts") },
       { find: "@", replacement: local("../../src") },
     ],
   },

@@ -85,6 +85,18 @@ export const supabase = {
                     finding_count: 2,
                   }))
                 : [];
+      if (table === "audit_events") {
+        rows = ["report.generated", "scan.completed", "scan.started"].map((type, index) => ({
+          id: `fixture-event-${index}`,
+          workspace_id: workspace.id,
+          actor_user_id: "fixture-user",
+          event_type: type,
+          resource_type: "scan",
+          resource_id: scanId,
+          event_metadata: { target: "Fixture project 1" },
+          created_at: new Date(Date.now() - index * 60000).toISOString(),
+        }));
+      }
       rows = rows.filter(
         (row) =>
           !removed.has(String(row.id)) &&
@@ -130,6 +142,10 @@ export const supabase = {
     query.range = (start: number, end: number) => {
       from = start;
       to = end;
+      return query;
+    };
+    query.limit = (limit: number) => {
+      to = from + limit - 1;
       return query;
     };
     query.maybeSingle = query.single = () => {

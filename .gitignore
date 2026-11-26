@@ -15,7 +15,6 @@ dist-ssr
 .tanstack/**
 .nitro
 *.local
-graphify-out/cache/
 
 # Wrangler / Cloudflare
 .wrangler/
@@ -40,7 +39,8 @@ __pycache__/
 venv/
 *.egg
 .env
-threatlens/.env
+.env.*
+!.env.example
 threatlens/data/
 
 # Celery
@@ -49,15 +49,33 @@ celerybeat.pid
 
 backend-deploy/
 
-# Reproducible test output; curated documentation screenshots remain tracked.
+# Local working files and generated output. Keep curated assets under docs/ or public/.
 .pytest_cache/
-.playwright-cli/page-*.yml
-output/pytest-*/
-output/reports-test-temp/
-output/cleanup-*/
-output/cleanup-*.json
-output/team-legal-qa-20261116/
-
-# Disposable extension-review verification and scoped migration deployment.
-tmp/extension-review/
-tmp/extension-deploy-20261105/
+/.playwright-cli/
+/output/
+/tmp/
+/graphify-out/
+/thesis/
+/.github/Research/
+/.github/Security Skill/
+/.github/Security Skill*.zip
+/.github/Backend/
+/.github/future-scope/
+/.github/design/
+/.github/design-assets/
+/.github/instruction/
+/.github/ui/
+/.github/maintenance/
+/.github/security-fixes/
+/.github/artwork/
+/.agents/
+/skills-lock.json
+/design-qa.md
+/docs/paper_figures/
+/docs/brand/candidates/
+/docs/brand/archon-refined-v1-assets/
+/public/test-project.zip
+/tests/threatlens-audit-report.pdf
+/scripts/generate_fig[1-9]_*.py
+/scripts/generate_paper_evaluation_charts.py
+/scripts/refine_all_paper_figures.py

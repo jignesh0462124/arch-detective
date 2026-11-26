@@ -1,5 +1,8 @@
 <div align="center">
-  <img src="public/brand/archon-wordmark.svg" alt="Archon" width="280" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/brand/archon-wordmark-inverse.svg" />
+    <img src="public/brand/archon-wordmark.svg" alt="Archon" width="280" />
+  </picture>
   <p>Security audits and threat modeling for project code.</p>
 </div>
 
@@ -7,7 +10,7 @@ Archon lets a workspace upload a project ZIP, review recorded findings beside so
 
 ## Explore the product
 
-The screenshots below follow the main workflow. Captures containing sample projects or findings use isolated demonstration data; they do not show a live user's audit. Screenshots are stored in [docs/screenshots](docs/screenshots).
+The screenshots below follow the main workflow. See the [page-by-page screenshot gallery](docs/screenshots/README.md) for the public pages, account flows, and workspace console. Sample audits are demonstrations, not live customer data.
 
 ### 1. Start and sign in
 
@@ -15,21 +18,13 @@ The landing page introduces the workflow and opens the console. Sign in with ema
 
 ![Archon landing page](docs/screenshots/landing.png)
 
-![Sign-in page](docs/screenshots/login.png)
-
 ### 2. Choose a source and run an audit
 
 Codebase Audit accepts ZIP projects. If the GitHub App is configured, a user can connect GitHub, choose an authorized repository and branch, and start a repository scan. Returning to Codebase Audit shows a resume card for the last opened audit. The History button reopens saved scans. Owners and admins can delete completed or failed scans there.
 
 **Browser extension** reviews the built ZIP intended for Chrome Web Store, Microsoft Edge Add-ons, or both. Supply listing/privacy declarations and optional screenshots, inspect policy evidence and remedies in the workbench, open clearly labelled notice examples, and recheck a corrected package. Policy coverage includes explicit manual and unassessed checks; store approval remains with Google or Microsoft. Setup and verification are documented in [Extension Review](.github/implementation-notes/EXTENSION_REVIEW.md).
 
-![Codebase Audit upload and settings, isolated fixture](docs/screenshots/codebase-audit.png)
-
-![Scan progress, isolated fixture](docs/screenshots/scan-progress.png)
-
-![Codebase Audit history](docs/screenshots/audit-history.png)
-
-![GitHub repository selection](docs/screenshots/github-repository.png)
+![Dashboard showing the latest completed audit and open findings, with sample data](docs/screenshots/dashboard.png)
 
 ### 3. Investigate the result
 
@@ -37,17 +32,9 @@ The workbench presents a file tree, source preview, findings, and framework cont
 
 ![Audit Workbench with source and finding, isolated fixture](docs/screenshots/workbench.png)
 
-![Saved findings and detail view](docs/screenshots/findings.png)
-
-![Attack Graph, isolated fixture](docs/screenshots/attack-graph.png)
-
 ### 4. Review a fix and share a report
 
 For eligible repository findings, Fix Verification displays a proposed diff and validation state. Publishing requires review and appropriate workspace and GitHub permissions; it creates a branch and pull request. Reports lists completed saved audits, with on-demand PDF downloads and selected-report ZIP export.
-
-![Fix Verification page](docs/screenshots/fix-verification.png)
-
-![Reports library](docs/screenshots/reports.png)
 
 ![Report detail](docs/screenshots/report-detail.png)
 
@@ -57,23 +44,17 @@ Security Advisor answers general questions and can explain an authorized finding
 
 Settings, below Security Advisor in navigation, brings account controls, appearance, workspace management, GitHub connections, privacy/data notices, proposed pricing and help into one place. Personal settings remain available without a workspace. Pricing is informational; billing is not enabled. Existing Profile and workspace-settings links remain supported.
 
-![Settings overview, isolated fixture](docs/screenshots/settings.png)
-
-![Security Advisor](docs/screenshots/advisor.png)
-
-![Workspace Settings](docs/screenshots/workspace-settings.png)
-
-![Profile, isolated fixture](docs/screenshots/profile.png)
-
 ### Page guide
 
 | Page                     | Route                                             | Purpose                                                        |
 | ------------------------ | ------------------------------------------------- | -------------------------------------------------------------- |
 | Landing                  | `/`                                               | Product overview and entry point                               |
 | About                    | `/about`                                          | Product background                                             |
+| Team                     | `/team`                                           | Project and credits                                            |
 | Sign in / create account | `/login`, `/register`                             | Account access                                                 |
 | Password recovery        | `/reset-password`                                 | Set a new password from a recovery link                        |
 | Dashboard                | `/dashboard`                                      | Latest completed audit, attention items, recent scans          |
+| Create workspace         | `/workspace/new`                                  | Start a new workspace                                          |
 | Codebase Audit           | `/workspace`                                      | Upload, repository selection, progress, History                |
 | Audit Workbench          | `/workspace/:workspaceId/scans/:scanId/workbench` | Source and finding review                                      |
 | Attack Graph             | `/attack-graph`                                   | Finding topology and threat vectors                            |
@@ -101,6 +82,23 @@ Sign in → Select workspace → Upload ZIP or select authorized GitHub reposito
 Scanning and source preparation are distinct stages. A pending source preview is not a clean result; saved findings remain visible if a preview cannot be prepared. Repository changes are not applied automatically.
 
 ## Architecture
+
+```mermaid
+flowchart LR
+    User[Developer or reviewer] --> Web[React and TanStack Start]
+    Web -->|Sign in| Auth[Supabase Auth]
+    Web -->|User-scoped reads| DB[Postgres with workspace RLS]
+    Web -->|Authorized API requests| API[FastAPI]
+    API -->|Validate ZIP or fetch authorized repository| Scan[Audit and source preparation]
+    Scan -->|Save findings and progress| DB
+    Scan -->|Keep source previews private| Storage[Supabase Storage]
+    API -->|Read authorized audit evidence| DB
+    API -->|Read source previews| Storage
+    API -->|Render saved results| PDF[PDF reports]
+    API <-->|When configured| Integrations[GitHub App and model providers]
+```
+
+![Archon workflow illustration: intake, analysis, evidence and review](public/assets/marketing/archon-review-workflow-v1.webp)
 
 - **Frontend:** React 19, TypeScript, TanStack Router and Query, Tailwind CSS, and Monaco for source viewing.
 - **API:** FastAPI handles scan intake, workbench reads, report generation, guidance, and GitHub operations.
@@ -139,8 +137,6 @@ npm start
 
 Build output is `.output/server/index.mjs` with public assets in `.output/public`. The production server defaults to port 3000; set `HOST` and `PORT` for your environment. Keep the FastAPI service running separately and configure the frontend API URL and backend's exact CORS origin for the deployment. Build-time `VITE_*` values are public and require rebuilding when changed; never place server secrets in them. The development commands and Supabase configuration are unchanged.
 
-The local hosting adapter/link metadata has been removed. No remote hosting account, deployment, domain or environment setting is deleted by this repository change.
-
 ```text
 npm run typecheck       TypeScript
 npm run lint            ESLint
@@ -151,8 +147,12 @@ python -m pytest threatlens/tests -q
 
 The tests use isolated fixtures where possible. Do not use a production repository for patch publishing or deletion checks.
 
-See the [cleanup and security verification report](.github/maintenance/CLEANUP_REPORT.md) for the removal manifest, exact changed-file inventory, verification results and remaining deployment checks.
+## Repository layout
 
-## Screenshot notes
+- [`src/`](src/): frontend, routes, and application components.
+- [`threatlens/`](threatlens/): FastAPI backend, scanners, report templates, and backend tests.
+- [`supabase/`](supabase/): database migrations and access policies.
+- [`public/`](public/) and [`docs/screenshots/`](docs/screenshots/): application assets, logo variants, and curated product captures.
+- [`tests/`](tests/) and [`scripts/`](scripts/): regression checks and development tools.
 
-The gallery uses desktop light-mode captures for a consistent reading path. Most captured pages also have mobile and dark-mode QA images under `output/playwright`. Fixture captures are labeled in their UI when sample data is shown. Screenshots may show a particular configured capability, such as GitHub repository access; availability depends on deployment settings and user permissions.
+Generated browser captures, temporary test files, build output, and local thesis files are not tracked. Add reviewed screenshots to `docs/screenshots/`, not `output/`.
